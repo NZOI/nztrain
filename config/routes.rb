@@ -1,4 +1,6 @@
 NztrainV2::Application.routes.draw do
+  resources :problems
+
   root :to => "home#index"
   devise_for :users
 
