@@ -1,9 +1,11 @@
 NztrainV2::Application.routes.draw do
-  resources :test_cases
+  root :to => "problems#index"
+  resources :submissions
 
   resources :problems
 
-  root :to => "home#index"
+  resources :test_cases
+
   devise_for :users
 
   # The priority is based upon order of creation:
