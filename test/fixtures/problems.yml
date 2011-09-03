@@ -1,0 +1,19 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  title: MyString
+  statement: MyText
+  input: MyString
+  output: MyString
+  memory_limit: 1
+  time_limit: 9.99
+  user_id: 1
+
+two:
+  title: MyString
+  statement: MyText
+  input: MyString
+  output: MyString
+  memory_limit: 1
+  time_limit: 9.99
+  user_id: 1

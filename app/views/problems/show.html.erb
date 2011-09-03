@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Title:</b>
+  <%= @problem.title %>
+</p>
+
+<p>
+  <b>Statement:</b>
+  <%= @problem.statement %>
+</p>
+
+<p>
+  <b>Input:</b>
+  <%= @problem.input %>
+</p>
+
+<p>
+  <b>Output:</b>
+  <%= @problem.output %>
+</p>
+
+<p>
+  <b>Memory limit:</b>
+  <%= @problem.memory_limit %>
+</p>
+
+<p>
+  <b>Time limit:</b>
+  <%= @problem.time_limit %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%= @problem.user_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_problem_path(@problem) %> |
+<%= link_to 'Submit', new_submission_path(:problem => @problem.id) %> |
+<%= link_to 'Back', problems_path %>

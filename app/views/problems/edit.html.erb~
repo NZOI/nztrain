@@ -1,0 +1,7 @@
+<h1>Editing problem</h1>
+
+<%= render 'form' %>
+
+<%= link_to 'Add test case', new_test_case_path(:problem_id => @problem.id) %> |
+<%= link_to 'Show', @problem %> |
+<%= link_to 'Back', problems_path %>

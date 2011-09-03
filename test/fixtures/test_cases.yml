@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  input: MyText
+  output: MyText
+  points: 1
+  description: MyString
+  problem_id: 1
+
+two:
+  input: MyText
+  output: MyText
+  points: 1
+  description: MyString
+  problem_id: 1
