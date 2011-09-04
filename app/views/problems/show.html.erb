@@ -35,7 +35,7 @@
   <%= @problem.user_id %>
 </p>
 
-<% form_tag(:controller => "problem_contest", :action => "add_to_contest", :method => "post", :problem_id => @problem) do %>
+<% form_tag(:controller => "problem_contest", :action => "add", :method => "post", :problem_id => @problem) do %>
   <%= collection_select :problem, :contest_ids, @contests, :id, :title %>
   <%= submit_tag "Add to contest" %>
 <% end %>
