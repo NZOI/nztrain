@@ -14,6 +14,8 @@ class ProblemsController < ApplicationController
   # GET /problems/1.xml
   def show
     @problem = Problem.find(params[:id])
+    #TODO: restrict to problems that current user owns
+    @contests = Contest.all
 
     respond_to do |format|
       format.html # show.html.erb

@@ -1,11 +1,17 @@
 NztrainV2::Application.routes.draw do
+  resources :contests
+
+  resources :contest_relations
+
+  root :to => "problems#index"
   resources :submissions
+
+  match 'addProblemToContest' => 'problem_contest#add_to_contest'
 
   resources :problems
 
   resources :test_cases
 
-  root :to => "problems#index"
   devise_for :users
 
   # The priority is based upon order of creation:

@@ -6,6 +6,8 @@ NztrainV2::Application.routes.draw do
   root :to => "problems#index"
   resources :submissions
 
+  match 'addProblemToContest' => 'problem_contest#add_to_contest'
+
   resources :problems
 
   resources :test_cases
