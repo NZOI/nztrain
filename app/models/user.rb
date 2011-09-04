@@ -9,5 +9,7 @@ class User < ActiveRecord::Base
 
   has_many :problems
   has_many :submissions
+  has_many :contest_relations
+  has_many :contests, :through => :contest_relations
 
 end

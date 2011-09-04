@@ -8,5 +8,8 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me
 
   has_many :problems
+  has_many :submissions
+  has_many :contest_relations
+  has_many :contests, :through => :contest_relations
 
 end

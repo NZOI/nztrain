@@ -1,4 +1,8 @@
 NztrainV2::Application.routes.draw do
+  resources :contests
+
+  resources :contest_relations
+
   root :to => "problems#index"
   resources :submissions
 
