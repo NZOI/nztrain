@@ -21,7 +21,7 @@
                   <a href="<%= problems_path %>">problems</a>
                 </li>
                 <li>
-                  <a href="<%= destroy_user_session_path %>">sign out</a>
+                  <%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
                 </li>
               <% else %>
                 <li>

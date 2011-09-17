@@ -1,7 +1,9 @@
 class ProblemsController < ApplicationController
+  before_filter :check_signed_in
   # GET /problems
   # GET /problems.xml
   def index
+
     @problems = Problem.all
 
     respond_to do |format|

@@ -1,4 +1,5 @@
 class SubmissionsController < ApplicationController
+  before_filter :check_signed_in
   # GET /submissions
   # GET /submissions.xml
   def index
@@ -43,6 +44,7 @@ class SubmissionsController < ApplicationController
   # POST /submissions.xml
   def create
     @submission = Submission.new(params[:submission])
+    @submission.user = current_user
     logger.debug "creating new submission"
 
     respond_to do |format|
