@@ -1,0 +1,38 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Title:</b>
+  <%= @contest.title %>
+</p>
+
+<p>
+  <b>Start time:</b>
+  <%= @contest.start_time %>
+</p>
+
+<p>
+  <b>End time:</b>
+  <%= @contest.end_time %>
+</p>
+
+<p>
+  <b>Duration:</b>
+  <%= @contest.duration %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%= @contest.user_id %>
+</p>
+
+<p>
+<b> Problems: </b>
+<% @problems.each do |problem| %>
+  <%= link_to problem.title, problem_path(problem) %>
+<% end %>
+</p>
+
+
+<%= link_to 'Edit', edit_contest_path(@contest) %> |
+<%= link_to 'Start Contest', new_contest_relation_path(@contest) %> |
+<%= link_to 'Back', contests_path %>

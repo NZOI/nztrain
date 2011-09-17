@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>User:</b>
+  <%= @contest_relation.user_id %>
+</p>
+
+<p>
+  <b>Contest:</b>
+  <%= @contest_relation.contest_id %>
+</p>
+
+<p>
+  <b>Started at:</b>
+  <%= @contest_relation.started_at %>
+</p>
+
+
+<%= link_to 'Edit', edit_contest_relation_path(@contest_relation) %> |
+<%= link_to 'Back', contest_relations_path %>

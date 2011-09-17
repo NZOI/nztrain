@@ -1,0 +1,27 @@
+<h1>Listing contest_relations</h1>
+
+<table>
+  <tr>
+    <th>User</th>
+    <th>Contest</th>
+    <th>Started at</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @contest_relations.each do |contest_relation| %>
+  <tr>
+    <td><%= contest_relation.user_id %></td>
+    <td><%= contest_relation.contest_id %></td>
+    <td><%= contest_relation.started_at %></td>
+    <td><%= link_to 'Show', contest_relation %></td>
+    <td><%= link_to 'Edit', edit_contest_relation_path(contest_relation) %></td>
+    <td><%= link_to 'Destroy', contest_relation, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Contest relation', new_contest_relation_path %>
