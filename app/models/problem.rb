@@ -3,6 +3,7 @@ class Problem < ActiveRecord::Base
   has_many :submissions
   has_and_belongs_to_many :contests 
   belongs_to :user
+  has_many :groups
 
   #bit of a hack
   def get_score(user, from = DateTime.new(0), to = DateTime.now)

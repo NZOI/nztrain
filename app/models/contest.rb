@@ -3,6 +3,7 @@ class Contest < ActiveRecord::Base
   has_many :contest_relations
   has_many :users, :through => :contest_relations
   belongs_to :user
+  has_many :groups
 
   def get_relation(user)
     return self.contest_relations.where(:user_id => user)[0] 

@@ -1,9 +1,12 @@
 NztrainV2::Application.routes.draw do
+  resources :groups
+
   resources :contests
 
   resources :contest_relations
 
   root :to => "problems#index"
+
   resources :submissions
 
   resources :problems
@@ -11,6 +14,18 @@ NztrainV2::Application.routes.draw do
   resources :test_cases
 
   devise_for :users
+
+  match 'problem_contest/:action(:format)' => "problem_contest"
+
+  resources :groups do
+    member do
+      get 'add_user'
+      get 'remove_user'
+    end
+  end
+
+  #match 'groups/:id/add_user(:format)' => 'groups#add_user'
+  #match 'groups/:id/remove_user(:format)' => 'groups#remove_user'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
@@ -69,5 +84,4 @@ NztrainV2::Application.routes.draw do
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id(.:format)))'
   #
-  match 'problem_contest/:action(:format)' => "problem_contest"
 end

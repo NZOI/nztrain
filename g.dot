@@ -1,6 +1,7 @@
 digraph models_diagram {
 	graph[overlap=false, splines=true]
 	"User" [shape=Mrecord, label="{User|email :string\lencrypted_password :string\lreset_password_token :string\lreset_password_sent_at :datetime\lremember_created_at :datetime\lcurrent_sign_in_at :datetime\llast_sign_in_at :datetime\lcurrent_sign_in_ip :string\llast_sign_in_ip :string\lcreated_at :datetime\lupdated_at :datetime\l}"]
+	"Group" [shape=Mrecord, label="{Group|name :string\lcreated_at :datetime\lupdated_at :datetime\l}"]
 	"ContestRelation" [shape=Mrecord, label="{ContestRelation|started_at :datetime\lcreated_at :datetime\lupdated_at :datetime\l}"]
 	"TestCase" [shape=Mrecord, label="{TestCase|input :text\loutput :text\lpoints :integer\ldescription :string\lcreated_at :datetime\lupdated_at :datetime\l}"]
 	"Contest" [shape=Mrecord, label="{Contest|title :string\lstart_time :datetime\lend_time :datetime\lduration :decimal\lcreated_at :datetime\lupdated_at :datetime\l}"]
@@ -10,8 +11,11 @@ digraph models_diagram {
 	"User" -> "Submission" [arrowtail=crow, arrowhead=dot, dir=both]
 	"User" -> "ContestRelation" [arrowtail=crow, arrowhead=dot, dir=both]
 	"User" -> "Contest" [arrowtail=crow, arrowhead=crow, dir=both]
+	"Group" -> "User" [arrowtail=crow, arrowhead=crow, dir=both]
 	"Contest" -> "Problem" [arrowtail=crow, arrowhead=crow, dir=both]
 	"Contest" -> "ContestRelation" [arrowtail=crow, arrowhead=dot, dir=both]
+	"Contest" -> "Group" [arrowtail=crow, arrowhead=dot, dir=both]
 	"Problem" -> "TestCase" [arrowtail=crow, arrowhead=dot, dir=both]
 	"Problem" -> "Submission" [arrowtail=crow, arrowhead=dot, dir=both]
+	"Problem" -> "Group" [arrowtail=crow, arrowhead=dot, dir=both]
 }
