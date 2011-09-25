@@ -35,9 +35,14 @@
   <%= @problem.user_id %>
 </p>
 
-<% form_tag(:controller => "problem_contest", :action => "add", :method => "post", :problem_id => @problem) do %>
+<% form_tag(:controller => "problem_contest", :action => "add", :method => :put, :problem_id => @problem) do %>
   <%= collection_select :problem, :contest_ids, @contests, :id, :title %>
   <%= submit_tag "Add to contest" %>
+<% end %>
+
+<% form_tag( add_problem_group_path(:problem_id => @problem), :method => :put) do %>
+  <%= collection_select :problem, :group_ids, @groups, :id, :name %>
+  <%= submit_tag "Give group access" %>
 <% end %>
 
 <%= link_to 'Edit', edit_problem_path(@problem) %> |

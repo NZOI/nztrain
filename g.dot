@@ -12,10 +12,10 @@ digraph models_diagram {
 	"User" -> "ContestRelation" [arrowtail=crow, arrowhead=dot, dir=both]
 	"User" -> "Contest" [arrowtail=crow, arrowhead=crow, dir=both]
 	"Group" -> "User" [arrowtail=crow, arrowhead=crow, dir=both]
+	"Group" -> "Problem" [arrowtail=crow, arrowhead=crow, dir=both]
 	"Contest" -> "Problem" [arrowtail=crow, arrowhead=crow, dir=both]
 	"Contest" -> "ContestRelation" [arrowtail=crow, arrowhead=dot, dir=both]
 	"Contest" -> "Group" [arrowtail=crow, arrowhead=dot, dir=both]
 	"Problem" -> "TestCase" [arrowtail=crow, arrowhead=dot, dir=both]
 	"Problem" -> "Submission" [arrowtail=crow, arrowhead=dot, dir=both]
-	"Problem" -> "Group" [arrowtail=crow, arrowhead=dot, dir=both]
 }

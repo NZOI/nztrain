@@ -18,6 +18,7 @@ class ProblemsController < ApplicationController
     @problem = Problem.find(params[:id])
     #TODO: restrict to problems that current user owns
     @contests = Contest.all
+    @groups = Group.all
 
     respond_to do |format|
       format.html # show.html.erb
