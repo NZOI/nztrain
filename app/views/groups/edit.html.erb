@@ -1,0 +1,15 @@
+<h1>Editing group</h1>
+
+<%= render 'form' %>
+
+<b> Problems this group has access to:</b>
+<% @group.problems.each do |problem| %>
+  <li>
+  <%= problem.title %> (<%= link_to("remove", remove_problem_group_path(@group, :problem_id => problem.id )) %>)
+  </li>
+<% end %>
+</p>
+
+
+<%= link_to 'Show', @group %> |
+<%= link_to 'Back', groups_path %>
