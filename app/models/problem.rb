@@ -12,4 +12,14 @@ class Problem < ActiveRecord::Base
     return scores.max 
   end
 
+  def can_be_viewed_by(user)
+    self.groups.each do |g|
+      if(g.users.include?(user))
+        return true
+      end
+    end
+
+    return false
+  end
+
 end

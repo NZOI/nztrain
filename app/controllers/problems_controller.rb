@@ -1,10 +1,22 @@
 class ProblemsController < ApplicationController
   before_filter :check_signed_in
+  before_filter :check_access, :only => [:show, :edit]
+
+
+  def check_access
+    prob = Problem.find(params[:id])
+    
+    if !prob.can_be_viewed_by(current_user)
+      redirect_to(problems_path, :alert => "You do not have access to this problem!")
+    end
+  end
+
   # GET /problems
   # GET /problems.xml
   def index
 
     @problems = Problem.all
+    @problems = @problems.find_all {|p| p.can_be_viewed_by(current_user) }
 
     respond_to do |format|
       format.html # index.html.erb

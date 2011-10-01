@@ -1,12 +1,12 @@
 class ContestsController < ApplicationController
   before_filter :check_signed_in
-  before_filter :check_access, :only => [:show,:edit]
+  before_filter :check_access, :only => [:show, :edit]
 
   def check_access
     @contest = Contest.find(params[:id])
 
     if !@contest.allows(current_user.id)
-      redirect("You do not have access to this contest!")
+      redirect_to(contests_path, :alert => "You do not have access to this contest!")
     end
   end
   # GET /contests
