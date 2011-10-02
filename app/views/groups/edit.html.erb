@@ -13,7 +13,7 @@
 <b> Contests this group has access to:</b>
 <% @group.contests.each do |contest| %>
   <li>
-  <%= contest.title %> (<%= link_to("remove", remove_contest_group_path(@group, :contest_id => problem.id )) %>)
+  <%= contest.title %> (<%= link_to("remove", remove_contest_group_path(@group, :contest_id => contest.id )) %>)
   </li>
 <% end %>
 </p>

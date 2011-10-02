@@ -17,8 +17,15 @@ class Problem < ActiveRecord::Base
       return true
     end
 
+    #might be painfully slow?
+    self.contests.each do |contest|
+      if contest.can_be_viewed_by(user)
+        return true
+      end
+    end
+
     self.groups.each do |g|
-      if(g.users.include?(user))
+      if g.users.include?(user)
         return true
       end
     end

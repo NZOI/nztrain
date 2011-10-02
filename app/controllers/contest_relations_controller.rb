@@ -34,10 +34,15 @@ class ContestRelationsController < ApplicationController
       redirect("You have already started this contest!")
       return
     end
-    
-      @contest_relation.user = current_user
-      @contest_relation.started_at = DateTime.now
-      @contest_relation.contest = @contest
+
+    if !@contest.can_be_viewed_by(current_user)
+      redirect_to(contests_url, :alert => "You do not have access to this contest!")
+      return
+    end
+
+    @contest_relation.user = current_user
+    @contest_relation.started_at = DateTime.now
+    @contest_relation.contest = @contest
 
     respond_to do |format|
       if @contest_relation.save

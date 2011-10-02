@@ -23,6 +23,17 @@ class Contest < ActiveRecord::Base
     return DateTime.now < relation.finish_at
   end
 
+  def can_be_viewed_by(user)
+    self.groups.each do |g|
+      if g.users.include?(user)
+        return true
+      end
+    end
+
+    return false
+  end
+
+
   def get_score(user)
     #should check that only one contest relation exists -- rails validation magic?
     relation = self.contest_relations.where(:user_id => user)[0]

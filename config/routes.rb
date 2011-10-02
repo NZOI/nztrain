@@ -13,6 +13,8 @@ NztrainV2::Application.routes.draw do
 
   resources :test_cases
 
+  resources :users
+
   devise_for :users
 
   match 'problem_contest/:action(:format)' => "problem_contest"

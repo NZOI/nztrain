@@ -22,7 +22,7 @@
     <td><%= contest.user_id %></td>
     <td><%= contest.get_score(current_user) %></td>
     <td>
-      <% if contest.get_relation(current_user) %>
+      <% if !contest.get_relation(current_user) %>
         <%= link_to 'Start Contest', new_contest_relation_path(:contest => contest.id) %> 
       <% else %>
         <%= link_to 'Show', contest %>
