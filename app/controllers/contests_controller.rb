@@ -26,6 +26,7 @@ class ContestsController < ApplicationController
   def show
     @contest = Contest.find(params[:id])
     @problems = @contest.problems
+    @groups = Group.all
 
     respond_to do |format|
       format.html # show.html.erb

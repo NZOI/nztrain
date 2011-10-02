@@ -13,6 +13,10 @@ class Problem < ActiveRecord::Base
   end
 
   def can_be_viewed_by(user)
+    if user == self.user
+      return true
+    end
+
     self.groups.each do |g|
       if(g.users.include?(user))
         return true

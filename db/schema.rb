@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110925021620) do
+ActiveRecord::Schema.define(:version => 20111002021523) do
 
   create_table "contest_relations", :force => true do |t|
     t.integer  "user_id"
@@ -28,6 +28,11 @@ ActiveRecord::Schema.define(:version => 20110925021620) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "contests_groups", :id => false, :force => true do |t|
+    t.integer "contest_id"
+    t.integer "group_id"
   end
 
   create_table "contests_problems", :id => false, :force => true do |t|

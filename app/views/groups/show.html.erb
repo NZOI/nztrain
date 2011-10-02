@@ -23,6 +23,14 @@
 <% end %>
 </p>
 
+<b> Contests this group has access to:</b>
+<% @group.contests.each do |contest| %>
+  <li>
+  <%= contest.title %>
+  </li>
+<% end %>
+</p>
+
 <%= link_to 'Add yourself', add_user_group_path(@group), :method => :put %> |
 <%= link_to 'Remove yourself', remove_user_group_path(@group), :method => :put %> |
 <%= link_to 'Edit', edit_group_path(@group) %> |

@@ -21,8 +21,12 @@ NztrainV2::Application.routes.draw do
     member do
       put 'add_user'
       put 'remove_user'
+
       put 'add_problem'
       put 'remove_problem'
+
+      put 'add_contest'
+      put 'remove_contest'
     end
   end
 

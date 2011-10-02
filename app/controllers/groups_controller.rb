@@ -20,7 +20,6 @@ class GroupsController < ApplicationController
   def add_problem
     @group = Group.find(params[:id])
     problem = Problem.find(params[:problem_id])
-    logger.debug problem
     if @group.problems.exists?(problem)
       redirect_to(problem, :alert => "This group already has access to this problem")
       return
@@ -34,6 +33,24 @@ class GroupsController < ApplicationController
     problem = Problem.find(params[:problem_id])
     @group.problems.delete(problem)
     redirect_to(@group, :notice => "Problem removed.")
+  end
+
+  def add_contest
+    @group = Group.find(params[:id])
+    contest = Contest.find(params[:contest_id])
+    if @group.contests.exists?(contest)
+      redirect_to(contest, :alert => "This group already has access to this contest")
+      return
+    end
+    @group.contests.push(contest)
+    redirect_to(contest, :notice => "Contest added.")
+  end
+
+  def remove_contest
+    @group = Group.find(params[:id])
+    contest = Contest.find(params[:contest_id])
+    @group.contests.delete(contest)
+    redirect_to(@group, :notice => "Contest removed.")
   end
 
   # GET /groups
