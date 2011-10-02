@@ -1,0 +1,50 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Title:</b>
+  <%= @problem.title %>
+</p>
+
+<p>
+  <b>Statement:</b>
+  <%= @problem.statement %>
+</p>
+
+<p>
+  <b>Input:</b>
+  <%= @problem.input %>
+</p>
+
+<p>
+  <b>Output:</b>
+  <%= @problem.output %>
+</p>
+
+<p>
+  <b>Memory limit:</b>
+  <%= @problem.memory_limit %>
+</p>
+
+<p>
+  <b>Time limit:</b>
+  <%= @problem.time_limit %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%= @problem.user_id %>
+</p>
+
+<% form_tag(:controller => "problem_contest", :action => "add", :method => :put, :problem_id => @problem) do %>
+  <%= collection_select :problem, :contest_ids, @contests, :id, :title %>
+  <%= submit_tag "Add to contest" %>
+<% end %>
+
+<% form_tag( add_problem_group_path(:problem_id => @problem), :method => :put) do %>
+  <%= collection_select :problem, :group_ids, @groups, :id, :name %>
+  <%= submit_tag "Give group access" %>
+<% end %>
+
+<%= link_to 'Edit', edit_problem_path(@problem) %> |
+<%= link_to 'Submit', new_submission_path(:problem => @problem.id) %> |
+<%= link_to 'Back', problems_path %>

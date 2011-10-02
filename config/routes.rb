@@ -13,7 +13,7 @@ NztrainV2::Application.routes.draw do
 
   resources :test_cases
 
-  resources :users
+  #resources :users
 
   devise_for :users
 
