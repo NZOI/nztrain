@@ -6,7 +6,7 @@ class DeviseCreateUsers < ActiveRecord::Migration
       t.rememberable
       t.trackable
       
-      t.boolean :is_admin
+      t.boolean :is_admin, :default => false
 
       # t.encryptable
       # t.confirmable

@@ -13,9 +13,9 @@ NztrainV2::Application.routes.draw do
 
   resources :test_cases
 
-  #resources :users
+  resources :users
 
-  devise_for :users
+  devise_for :users, :path => "accounts"
 
   match 'problem_contest/:action(:format)' => "problem_contest"
 
