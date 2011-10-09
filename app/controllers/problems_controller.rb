@@ -1,7 +1,7 @@
 class ProblemsController < ApplicationController
   before_filter :check_signed_in
   before_filter :check_access, :only => [:show, :edit]
-
+  before_filter :check_admin, :only => [:new, :edit, :create, :destroy, :update]
 
   def check_access
     prob = Problem.find(params[:id])
