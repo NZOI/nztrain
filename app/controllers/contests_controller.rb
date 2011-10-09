@@ -1,6 +1,7 @@
 class ContestsController < ApplicationController
   before_filter :check_signed_in
-  before_filter :check_access, :only => [:show, :edit]
+  before_filter :check_access, :only => [:show]
+  before_filter :check_admin, :only => [:edit, :create, :update, :destroy]
 
   def check_access
     @contest = Contest.find(params[:id])

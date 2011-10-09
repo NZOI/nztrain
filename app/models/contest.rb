@@ -10,6 +10,10 @@ class Contest < ActiveRecord::Base
   end
 
   def allows(user)
+    if user.is_admin
+      return true
+    end
+
     if user == self.user_id
       return true
     end

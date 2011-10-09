@@ -1,4 +1,12 @@
 class UsersController < ApplicationController
+  before_filter :check_signed_in
+  before_filter :check_access, :only => [:edit, :update, :destroy]
+
+  def check_access
+    if !current_user.is_admin
+      redirect_to(users_path, :alert => "Only admins can do this!")
+    end
+  end
 
   def index
     @users = User.all

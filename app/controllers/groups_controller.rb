@@ -1,5 +1,12 @@
 class GroupsController < ApplicationController
   before_filter :check_signed_in
+  before_filter :check_access, :except => [:add_user, :remove_user, :index, :show]
+
+  def check_access
+    if !current_user.is_admin
+      redirect_to(groups_path, :alert => "You must be an admin to do that!")
+    end
+  end
 
   def add_user
     @group = Group.find(params[:id])

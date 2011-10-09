@@ -17,4 +17,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def check_admin
+    if !current_user.is_admin
+      redirect("You must be an admin to perform this operation")
+    end
+  end
+
 end

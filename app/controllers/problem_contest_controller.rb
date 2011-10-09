@@ -1,4 +1,6 @@
 class ProblemContestController < ApplicationController
+  before_filter :check_admin
+
   def add
     @problem = Problem.find(params[:problem_id])
     @contest = Contest.find(params[:problem][:contest_ids])

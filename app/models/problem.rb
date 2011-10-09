@@ -13,6 +13,10 @@ class Problem < ActiveRecord::Base
   end
 
   def can_be_viewed_by(user)
+    if user.is_admin
+      return true
+    end
+
     if user == self.user
       return true
     end
