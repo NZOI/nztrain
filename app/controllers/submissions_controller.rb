@@ -45,6 +45,7 @@ class SubmissionsController < ApplicationController
   def create
     @submission = Submission.new(params[:submission])
     @submission.user = current_user
+    @submission.score = 0
     logger.debug "creating new submission"
 
     respond_to do |format|

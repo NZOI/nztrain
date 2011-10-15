@@ -32,6 +32,12 @@ NztrainV2::Application.routes.draw do
     end
   end
 
+  resources :zipped_test_cases do
+    member do
+      post 'upload'
+    end
+  end
+
   #match 'groups/:id/add_user(:format)' => 'groups#add_user'
   #match 'groups/:id/remove_user(:format)' => 'groups#remove_user'
 

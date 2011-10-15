@@ -1,2 +1,2 @@
-module SubmissionsHelper
+module SubmissionsHelper  
 end

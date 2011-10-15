@@ -4,6 +4,14 @@ class TestCasesController < ApplicationController
   def index
     @test_cases = TestCase.all
 
+    if params[:problem]
+      logger.debug "problem is " + params[:problem]
+      @test_cases.select! do |tc|
+        logger.debug "test case problem is " + tc.problem.id.to_s
+        return tc.problem.id == params[:problem]
+      end
+    end
+    
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @test_cases }

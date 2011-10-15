@@ -2,6 +2,7 @@ class Submission < ActiveRecord::Base
   belongs_to :user
   belongs_to :problem
 
+  validates :score, :presence => true
   def judge
     working_directory = '/tmp/submission_' + id.to_s + '/'
     if not File.directory? working_directory 
@@ -23,6 +24,8 @@ class Submission < ActiveRecord::Base
     comp_sandbox_opts='-m262144 -w60 -e -i/dev/null'
     comp_output = `box #{comp_sandbox_opts} -- #{compiler} #{source_file} -o #{exe_file}`
 
+    logger.debug 'compiling with ' +  "box #{comp_sandbox_opts} -- #{compiler} #{source_file} -o #{exe_file}"
+    logger.debug 'compiler output: ' + comp_output
     # TODO: check compiler output here (compile errors, warnings, etc)
 
     input_file = problem.input

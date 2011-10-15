@@ -31,6 +31,7 @@ class ProblemsController < ApplicationController
     #TODO: restrict to problems that current user owns
     @contests = Contest.all
     @groups = Group.all
+    @submissions = @problem.submission_history(current_user)
 
     respond_to do |format|
       format.html # show.html.erb

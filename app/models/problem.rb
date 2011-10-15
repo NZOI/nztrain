@@ -12,6 +12,10 @@ class Problem < ActiveRecord::Base
     return scores.max 
   end
 
+  def submission_history(user, from = DateTime.new(0), to = DateTime.now)
+    return Submission.find(:all, :conditions => ["created_at between ? and ? and user_id = ? and problem_id = ?", from, to, user, self])
+  end
+
   def can_be_viewed_by(user)
     if user.is_admin
       return true
