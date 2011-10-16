@@ -25,7 +25,7 @@ class GroupsController < ApplicationController
   end
 
   def add_problem
-    @group = Group.find(params[:id])
+    @group = Group.find(params[:problem][:group_ids])
     problem = Problem.find(params[:problem_id])
     if @group.problems.exists?(problem)
       redirect_to(problem, :alert => "This group already has access to this problem")

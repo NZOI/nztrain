@@ -14,7 +14,7 @@
 
 <% @submissions.each do |submission| %>
   <tr>
-    <td><%= submission.source %></td>
+    <td><%= simple_format(submission.source) %></td>
     <td><%= submission.language %></td>
     <td><%= submission.score %></td>
     <td><%= submission.user_id %></td>

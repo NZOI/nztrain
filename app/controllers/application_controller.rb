@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
   def redirect(message)
       if !request.env["HTTP_REFERER"].blank? and request.env["HTTP_REFERER"] != request.env["REQUEST_URI"]
         redir = :back
+      elsif user_signed_in?
+        redir = root_path
       else
         redir = new_user_session_path
       end

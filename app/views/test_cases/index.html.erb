@@ -14,8 +14,8 @@
 
 <% @test_cases.each do |test_case| %>
   <tr>
-    <td><%= test_case.input.shorten %></td>
-    <td><%= test_case.output.shorten %></td>
+    <td><%= simple_format(test_case.input.shorten) %></td>
+    <td><%= simple_format(test_case.output.shorten) %></td>
     <td><%= test_case.points %></td>
     <td><%= test_case.description %></td>
     <td><%= test_case.problem_id %></td>

@@ -1,4 +1,6 @@
 class TestCasesController < ApplicationController
+  before_filter :check_signed_in
+  before_filter :check_admin
   # GET /test_cases
   # GET /test_cases.xml
   def index

@@ -1,7 +1,19 @@
 class SubmissionsController < ApplicationController
   before_filter :check_signed_in
+  before_filter :check_access, :only => [:show]
+  before_filter :check_admin, :only => [:edit, :index, :update, :destroy]
   # GET /submissions
   # GET /submissions.xml
+
+  def check_access
+    if current_user.is_admin
+      return true
+    end
+
+    @submission = Submission.find(params[:id])
+    return @submission.user_id == current_user
+  end
+
   def index
     @submissions = Submission.all
 
