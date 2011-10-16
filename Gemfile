@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'devise', '1.4.2'
-gem 'rails', '3.0.6'
+gem 'rails', '3.0.8'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -9,6 +9,13 @@ gem 'rails', '3.0.6'
 gem 'sqlite3'
 
 gem 'rubyzip', :require => 'zip/zip'
+
+gem 'jquery-rails', '>= 1.0.12'
+
+gem "redcarpet"
+gem "albino"
+gem "nokogiri"
+gem 'rails_markitup'
 
 # Use unicorn as the web server
 # gem 'unicorn'
