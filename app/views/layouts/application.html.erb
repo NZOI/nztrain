@@ -2,16 +2,15 @@
 <html>
   <head>
     <title>Nztrain</title>
-    <%= javascript_include_tag "jquery.js" %>
-    <%= javascript_include_tag "jquery-1.6.2.min.js", "jquery-ui-1.8.16.custom.min.js" %>
-    <%= stylesheet_link_tag "jquery-ui-1.8.16.custom.css" %>
-
-    <%= stylesheet_link_tag :all %>
 
     <%= javascript_include_tag :defaults %>
-
-    <%= stylesheet_link_tag :markitup %>
+    <%= javascript_include_tag "jquery.js" %>
+    <%= javascript_include_tag "jquery-1.6.2.min.js", "jquery-ui-1.8.16.custom.min.js" %>
     <%= javascript_include_tag :markitup %>
+
+    <%= stylesheet_link_tag "jquery-ui-1.8.16.custom.css" %>
+    <%= stylesheet_link_tag :markitup %>
+    <%= stylesheet_link_tag :all %>
 
 
 
@@ -52,7 +51,7 @@
       </nav>
       </header>
     </div>
-    <div class="centered_div">
+    <div class="bright">
       <section class="round" id="main-section">
       <% if notice %><p id="notice"><%= notice %></p><% end %>
       <% if alert %><p id="alert"><%= alert %></p><% end %>

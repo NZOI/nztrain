@@ -3,4 +3,5 @@
 //
 $(document).ready(function() {
     $('.markdown').markItUp(myMarkdownSettings);
+    $('.date-picker').datepicker()
 });

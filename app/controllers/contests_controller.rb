@@ -6,7 +6,7 @@ class ContestsController < ApplicationController
   def check_access
     @contest = Contest.find(params[:id])
 
-    if !@contest.allows(current_user.id)
+    if !@contest.allows(current_user)
       redirect_to(contests_path, :alert => "You do not have access to this contest!")
     end
   end
@@ -55,6 +55,8 @@ class ContestsController < ApplicationController
   # POST /contests
   # POST /contests.xml
   def create
+    params[:contest][:start_time] = DateTime.parse(params[:contest][:start_time])
+    params[:contest][:end_time] = DateTime.parse(params[:contest][:end_time])
     @contest = Contest.new(params[:contest])
     @contest.user_id = current_user
 
