@@ -29,5 +29,24 @@ $(document).ready(function() {
 
         $(this).children("td").toggleClass("ui-state-highlight");
     });
+    //make buttons look good
+    $("input").button().css({
+        'margin' : '0',
+        'vertical-align' : 'top'
+    });
+    $('input:text, input:password')
+        .button()
+        .css({
+            'font' : 'inherit',
+            'color' : 'inherit',
+            'text-align' : 'left',
+            'outline' : 'none',
+            'cursor' : 'text',
+            'height' : '15px'
+        });
 
+    $("#file-form").fileinput();
+    $("select").attr("class", "ui-button ui-widget ui-state-default ui-corner-all");
+    $("select").attr("role","button");
+    $("select").attr("aria-disabled","false")
 });

@@ -111,35 +111,13 @@ table td, table th {
 }
 
 td{font-weight: bold;}
-/* progress bar */
 
-.meter-wrap{
-    position: relative;
-    /* TODO: turn pink into hex */
-    background: pink;
-    margin-bottom: 1em;
-    margin-left: auto;
-    margin-right: auto;
-    border: solid black 1px;
-}
+/* file upload */
 
-.meter-wrap {
-    -moz-border-radius:    11px;
-    -webkit-border-radius: 11px;
-    border-radius:         11px;
-    height: auto;
-}
-
-.meter-value {
-    -moz-border-radius:    9px;
-    -webkit-border-radius: 9px;
-    border-radius:         9px;
-    height: auto;
-    float:left;
-    /* TODO: turn lightgreen into hex */
-    background: lightgreen;
-    padding-left:1em;
-    padding-right:1em;
+#file-form {
+    width:0px;
+    height:0px;
+    position:absolute
 }
 
 /* the rest is scaffolding added (change?) */

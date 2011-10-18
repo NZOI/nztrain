@@ -3,7 +3,7 @@
 <%= render 'form' %>
 
 <% form_tag( upload_zipped_test_case_path(:problem_id => @problem), :multipart => true) do %>
-  <%= file_field_tag 'test_cases_zip' %>
+  <%= file_field_tag 'test_cases_zip', :id => "file-form"%>
   <%= submit_tag 'Add zipped test cases' %>
 <% end %>
 

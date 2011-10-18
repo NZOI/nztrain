@@ -1,12 +1,11 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <b>Name:</b>
-  <%= @group.name %>
+<b>Name:</b>
+<%= @group.name %>
 </p>
 
 <p>
-
 <b> Users in this group:</b>
 <% @group.users.each do |user| %>
   <li>
@@ -15,6 +14,7 @@
 <% end %>
 </p>
 
+<p>
 <b> Problems this group has access to:</b>
 <% @group.problems.each do |problem| %>
   <li>
@@ -23,6 +23,7 @@
 <% end %>
 </p>
 
+<p>
 <b> Contests this group has access to:</b>
 <% @group.contests.each do |contest| %>
   <li>
