@@ -65,6 +65,9 @@ a:visited {
 
 /* Navigation */
 nav {
+    -moz-border-radius:    10px;
+    -webkit-border-radius: 10px;
+    border-radius:         10px;
     float: right;
     background-color: white;
     white-space: nowrap;
@@ -72,7 +75,8 @@ nav {
 
 nav ul {
     margin: 0;
-    padding: 0;
+    padding-left: 1em;
+    padding-right: 1em;
 }
 
 nav ul li {
@@ -107,7 +111,6 @@ table td, table th {
 }
 
 td{font-weight: bold;}
-
 /* progress bar */
 
 .meter-wrap{
