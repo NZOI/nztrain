@@ -6,4 +6,8 @@ class String
     
     return self
   end
+
+  def get_date
+    return DateTime.strptime(self, "%m/%d/%Y %H:%M")
+  end
 end

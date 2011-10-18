@@ -55,8 +55,10 @@ class ContestsController < ApplicationController
   # POST /contests
   # POST /contests.xml
   def create
-    params[:contest][:start_time] = DateTime.parse(params[:contest][:start_time])
-    params[:contest][:end_time] = DateTime.parse(params[:contest][:end_time])
+    logger.debug params[:contest][:start_time].get_date
+    logger.debug params[:contest][:end_time].get_date
+    params[:contest][:start_time] = params[:contest][:start_time].get_date
+    params[:contest][:end_time] = params[:contest][:end_time].get_date
     @contest = Contest.new(params[:contest])
     @contest.user_id = current_user
 
@@ -74,6 +76,8 @@ class ContestsController < ApplicationController
   # PUT /contests/1
   # PUT /contests/1.xml
   def update
+    params[:contest][:start_time] = params[:contest][:start_time].get_date
+    params[:contest][:end_time] = params[:contest][:end_time].get_date
     @contest = Contest.find(params[:id])
 
     respond_to do |format|

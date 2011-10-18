@@ -22,10 +22,10 @@
     <td><%= contest.user_id %></td>
     <td><%= contest.get_score(current_user) %></td>
     <td>
-      <% if !contest.get_relation(current_user) %>
-        <%= link_to 'Start Contest', new_contest_relation_path(:contest => contest.id) %> 
-      <% else %>
+      <% if current_user.is_admin || contest.get_relation(current_user) %>
         <%= link_to 'Show', contest %>
+      <% else %>
+        <%= link_to 'Start Contest', new_contest_relation_path(:contest => contest.id) %> 
       <% end %>
     </td>
     <td><%= link_to 'Edit', edit_contest_path(contest) %></td>

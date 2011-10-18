@@ -1,0 +1,193 @@
+.header-container {
+    margin-bottom: 2em;
+}
+
+body {
+    background: #abc;
+    text-align: center;
+}
+
+/* added by rails scaffold (change maybe?) */
+body, p, ol, ul, td {
+    font-family: verdana, arial, helvetica, sans-serif;
+    font-size:   13px;
+    line-height: 18px;
+}
+
+header {
+    padding-top: 20px;
+}
+
+header img {
+    padding: 1em;
+    background: #fff;
+}
+
+section {
+    text-align: left;
+    float: left;
+    font-size: 120%;
+    margin: 0 auto;
+    width: 100%;
+    margin-top: 3em;
+    padding: 20px;
+    background: #fff;
+}
+
+section h1 {
+    font-size: 200%;
+}
+
+.round {
+    margin-left:  15%;
+    margin-right:  15%;
+    -moz-border-radius:    10px;
+    -webkit-border-radius: 10px;
+    border-radius:         10px;
+    width:         70%;
+}
+
+/* Links */
+
+a {
+    color: #09c;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #069;
+    text-decoration: underline;
+}
+
+a:visited {
+    color: #069;
+}
+
+/* Navigation */
+nav {
+    float: right;
+    background-color: white;
+    white-space: nowrap;
+}
+
+nav ul {
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    list-style-type: none;
+    display: inline-block;
+    padding: 0.2em 0;
+}
+
+nav ul li a {
+    padding: 0 5px;
+    font-weight: bold;
+    color: #000;
+}
+
+nav ul li a:visited {
+    color: #000;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* tables */
+
+table {
+    border-collapse: collapse;
+}
+
+table td, table th {
+    border: 1px solid #999;
+    padding: 3px;
+}
+
+td{font-weight: bold;}
+
+/* progress bar */
+
+.meter-wrap{
+    position: relative;
+    /* TODO: turn pink into hex */
+    background: pink;
+    margin-bottom: 1em;
+    margin-left: auto;
+    margin-right: auto;
+    border: solid black 1px;
+}
+
+.meter-wrap {
+    -moz-border-radius:    11px;
+    -webkit-border-radius: 11px;
+    border-radius:         11px;
+    height: auto;
+}
+
+.meter-value {
+    -moz-border-radius:    9px;
+    -webkit-border-radius: 9px;
+    border-radius:         9px;
+    height: auto;
+    float:left;
+    /* TODO: turn lightgreen into hex */
+    background: lightgreen;
+    padding-left:1em;
+    padding-right:1em;
+}
+
+/* the rest is scaffolding added (change?) */
+pre {
+    background-color: #eee;
+    padding: 5px;
+    margin: 0;
+    font-size: 11px;
+}
+
+div.field, div.actions {
+    margin-bottom: 10px;
+}
+
+#notice {
+    text-align: center;
+    color: green;
+}
+
+.field_with_errors {
+    padding: 2px;
+    background-color: red;
+    display: table;
+}
+
+#error_explanation {
+    width: 450px;
+    border: 2px solid red;
+    padding: 7px;
+    padding-bottom: 0;
+    margin-bottom: 20px;
+    background-color: #f0f0f0;
+}
+
+#error_explanation h2 {
+    text-align: left;
+    font-weight: bold;
+    padding: 5px 5px 5px 15px;
+    font-size: 12px;
+    margin: -7px;
+    margin-bottom: 0px;
+    background-color: #c00;
+    color: #fff;
+}
+
+#error_explanation ul li {
+    font-size: 12px;
+    list-style: square;
+}
+
+.centered_div {
+    margin: 3em auto;
+    width: 100px;
+}
