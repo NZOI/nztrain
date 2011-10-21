@@ -117,7 +117,17 @@ td{font-weight: bold;}
 #file-form {
     width:0px;
     height:0px;
-    position:absolute
+    position:absolute;
+}
+
+.fileinput-input {
+    /* bit annoying to have to duplicate, but ui-widget makes everything blue and bold */
+    font-family: verdana, arial, helvetica, sans-serif;
+    color: black;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    font-size: 16px;
 }
 
 /* the rest is scaffolding added (change?) */

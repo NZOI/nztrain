@@ -2,10 +2,12 @@
 
 <%= render 'form' %>
 
+<p>
 <% form_tag( upload_zipped_test_case_path(:problem_id => @problem), :multipart => true) do %>
   <%= file_field_tag 'test_cases_zip', :id => "file-form"%>
   <%= submit_tag 'Add zipped test cases' %>
 <% end %>
+</p>
 
 <%= link_to 'Show test cases', test_cases_path(:problem => @problem.id) %> |
 <%= link_to 'Add test case', new_test_case_path(:problem => @problem.id) %> |

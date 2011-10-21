@@ -45,24 +45,34 @@
  * allotted space.
  */
 .fileinput-wrapper {
-    width: 234px;
+    width: 290px;
     height: 37px;
 }
 
 .fileinput-input {
+    font: inherit;
+    color: inherit;
     position: absolute;
+    padding-bottom: 6px;
+    padding-top: 6px;
+    padding-left: 15px;
+    padding-right: 15px;
     top: 50%;
-    margin-top: -14px;
+    margin-top: -17px;
     height:20px;
-    width:200px;
+    width:250px;
     background: url('gradient-input.gif') repeat-x;
     border:0;
 }
 .fileinput-button {
+    padding-bottom: 6px;
+    padding-top: 6px;
+    padding-left: 15px;
+    padding-right: 15px;
     position: absolute;
     top: 50%;
-    left: 157px;
-    margin-top: -14px;
+    left: 190px;
+    margin-top: -17px;
     height:20px;
     background: #617798;
     border: 0;

@@ -30,11 +30,12 @@ $(document).ready(function() {
         $(this).children("td").toggleClass("ui-state-highlight");
     });
     //make buttons look good
-    $("input").button().css({
+    $("#file-form").fileinput();
+    $("input:submit").button().css({
         'margin' : '0',
         'vertical-align' : 'top'
     });
-    $('input:text, input:password')
+    $('input:text, input:password, input[type=email]')
         .button()
         .css({
             'font' : 'inherit',
@@ -42,10 +43,8 @@ $(document).ready(function() {
             'text-align' : 'left',
             'outline' : 'none',
             'cursor' : 'text',
-            'height' : '15px'
         });
 
-    $("#file-form").fileinput();
     $("select").attr("class", "ui-button ui-widget ui-state-default ui-corner-all");
     $("select").attr("role","button");
     $("select").attr("aria-disabled","false")
