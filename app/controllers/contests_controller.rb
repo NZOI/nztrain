@@ -39,6 +39,8 @@ class ContestsController < ApplicationController
   # GET /contests/new.xml
   def new
     @contest = Contest.new
+    @start_time = ""
+    @end_time = ""
 
     respond_to do |format|
       format.html # new.html.erb
@@ -50,6 +52,8 @@ class ContestsController < ApplicationController
   def edit
     @contest = Contest.find(params[:id])
     @problems = @contest.problems
+    @start_time = @contest.start_time.strftime("%m/%d/%Y %H:%M")
+    @end_time = @contest.end_time.strftime("%m/%d/%Y %H:%M")
   end
 
   # POST /contests
