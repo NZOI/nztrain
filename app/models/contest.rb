@@ -37,6 +37,12 @@ class Contest < ActiveRecord::Base
     return false
   end
 
+  def problem_score(user, problem)
+    #can probably pass this in if the database query is too slow
+    relation = self.contest_relations.where(:user_id => user)[0]
+
+    return (relation and problem.get_score(user, relation.started_at, relation.finish_at)) || "no submission"
+  end
 
   def get_score(user)
     #should check that only one contest relation exists -- rails validation magic?
@@ -46,7 +52,7 @@ class Contest < ActiveRecord::Base
       return "not started"
     end
 
-    scores = self.problems.map {|p| p.get_score(user, relation.started_at, relation.finish_at) }
+    scores = self.problems.map {|p| self.problem_score(user, p)}
     return scores.inject(:+) || 0
   end
 

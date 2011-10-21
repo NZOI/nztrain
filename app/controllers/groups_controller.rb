@@ -43,7 +43,7 @@ class GroupsController < ApplicationController
   end
 
   def add_contest
-    @group = Group.find(params[:id])
+    @group = Group.find(params[:contest][:group_ids])
     contest = Contest.find(params[:contest_id])
     if @group.contests.exists?(contest)
       redirect_to(contest, :alert => "This group already has access to this contest")
@@ -54,7 +54,7 @@ class GroupsController < ApplicationController
   end
 
   def remove_contest
-    @group = Group.find(params[:id])
+    @group = Group.find(params[:contest][:group_ids])
     contest = Contest.find(params[:contest_id])
     @group.contests.delete(contest)
     redirect_to(@group, :notice => "Contest removed.")

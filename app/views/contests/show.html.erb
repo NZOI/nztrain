@@ -27,9 +27,19 @@
 
 <p>
 <b> Problems: </b>
-<% @problems.each do |problem| %>
-  <%= link_to problem.title, problem_path(problem) %>
-<% end %>
+<table>
+  <tr>
+    <th> Name </th>
+    <th> Score </th>
+  </tr>
+
+  <% @problems.each do |problem| %>
+    <tr>
+      <td> <%= link_to problem.title, problem_path(problem) %> </td>
+      <td> <%= @contest.problem_score(current_user, problem) %> </td>
+    </tr>
+  <% end %>
+</table>
 </p>
 
 <% form_tag( add_contest_group_path(:contest_id => @contest), :method => :put) do %>
