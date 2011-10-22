@@ -12,6 +12,7 @@ class Submission < ActiveRecord::Base
 
     source_file = 'program.c'
     exe_file = 'program.exe'
+    judge_file = "judge.info"
 
     # TODO: store compiler info in config file
     compiler = '/usr/bin/gcc'
@@ -21,56 +22,90 @@ class Submission < ActiveRecord::Base
 
     File.open(source_file, 'w') { |f| f.write(source) }
 
+    self.judge_output = "Judging...\n"
+
     comp_sandbox_opts='-m262144 -w60 -e -i/dev/null'
-    comp_output = `box #{comp_sandbox_opts} -- #{compiler} #{source_file} -o #{exe_file}`
+    comp_output = `box #{comp_sandbox_opts} -- #{compiler} #{source_file} -o #{exe_file} 2>&1`
 
-    logger.debug 'compiling with ' +  "box #{comp_sandbox_opts} -- #{compiler} #{source_file} -o #{exe_file}"
-    logger.debug 'compiler output: ' + comp_output
-    # TODO: check compiler output here (compile errors, warnings, etc)
+    if comp_output == ""
+      comp_output = "nothing"
+    end
 
-    input_file = problem.input
-    output_file = problem.output
+    self.judge_output += 'compiling with ' +  "box #{comp_sandbox_opts} -- #{compiler} #{source_file} -o #{exe_file}\n"
 
-    judge_file = "judge.info"
-
-    mem_limit = problem.memory_limit * 1024
-    stack_limit = 1024 * 4
-    time_limit = problem.time_limit
+    self.judge_output += "compiler output:\n" + comp_output + "\n"
 
     self.score = 0
     total_points = 0
 
-    problem.test_cases.each do |test_case|
-      File.open(input_file, 'w') { |f| f.write(test_case.input) }
 
-      system("box -a2 -f -M#{judge_file} -m#{mem_limit} -k#{stack_limit} " +
-             " -t#{time_limit} -o/dev/null -r/dev/null -- #{exe_file}" )
+    # TODO: check compiler output here (compile errors, warnings, etc)
+    if FileTest.exist? exe_file
+      input_file = problem.input
+      output_file = problem.output
 
-      print File.open(judge_file, 'r') { |f| f.read } + "\n"
-      their_output = File.open(output_file, 'r') { |f| f.read }
+      mem_limit = problem.memory_limit * 1024
+      stack_limit = 1024 * 4
+      time_limit = problem.time_limit
+      number = 0
 
-      # TODO: different evaluators.
-      actual = their_output.split('\n').each{|s|s.strip!}.join('\n')
-      expected = test_case.output.split('\n').each{|s| s.strip!}.join('\n')
+      problem.test_cases.each do |test_case|
+        number += 1
+        self.judge_output += "Test Case #{number} (#{test_case.points} points):\n"
+        total_points += test_case.points
 
-      logger.debug "actual output was #{actual}, expected #{expected}"
+        File.open(input_file, 'w') { |f| f.write(test_case.input) }
 
-      self.score += test_case.points if actual == expected
-      total_points += test_case.points
+        system("box -a2 -f -M#{judge_file} -m#{mem_limit} -k#{stack_limit} " +
+               " -t#{time_limit} -o/dev/null -r/dev/null -- #{exe_file}" )
 
-      # TODO: error checking necessary here?
-      # or ruby exceptions takes care of it?
-      File.delete(input_file)
-      File.delete(output_file)
+        self.judge_output += IO.read(judge_file)
+        
+        if FileTest.exist? output_file
+          their_output = IO.read(output_file)
+
+          # TODO: different evaluators.
+          actual = their_output.split('\n').each{|s|s.strip!}.join('\n')
+          expected = test_case.output.split('\n').each{|s| s.strip!}.join('\n')
+
+          logger.debug "actual output was #{actual}, expected #{expected}"
+
+          if actual == expected
+            self.score += test_case.points 
+            self.judge_output += "Correct!\n"
+          else
+            self.judge_output += "Incorrect :(\n"
+          end
+
+          File.delete(output_file)
+        else
+          self.judge_output += "No output, probably crashed"
+        end
+
+        self.judge_output += "\n"
+        # TODO: error checking necessary here?
+        # or ruby exceptions takes care of it?
+        File.delete(input_file)
+      end
+
+      self.judge_output += "Submission scored #{self.score} points out of #{total_points}\n"
+
+      self.score *= 100
+      self.score /= total_points
+
+      if self.score == 100
+        self.judge_output += "Congratulations! 100%!\n"
+      end
+
+      File.delete(exe_file)
+    else
+      self.judge_output += "Program did not compile!\n"
     end
-    self.score *= 100
-    self.score /= total_points
 
     self.save
 
-    File.delete(source_file)
-    File.delete(exe_file)
-    File.delete(judge_file)
+    File.delete(source_file) if FileTest.exist? source_file
+    File.delete(judge_file) if FileTest.exist? judge_file
     Dir.chdir('/')
     Dir.rmdir(working_directory)
   end

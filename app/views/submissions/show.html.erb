@@ -1,28 +1,33 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <b>Source:</b>
-  <%= simple_format(@submission.source) %>
+<b>Source:</b>
+<pre><%= @submission.source %></pre>
 </p>
 
 <p>
-  <b>Language:</b>
-  <%= @submission.language %>
+<b>Judge Output:</b>
+<%= simple_format(@submission.judge_output) %>
 </p>
 
 <p>
-  <b>Score:</b>
-  <%= @submission.score %>
+<b>Language:</b>
+<%= @submission.language %>
 </p>
 
 <p>
-  <b>User:</b>
-  <%= @submission.user_id %>
+<b>Score:</b>
+<%= @submission.score %>
 </p>
 
 <p>
-  <b>Problem:</b>
-  <%= @submission.problem_id %>
+<b>User:</b>
+<%= @submission.user_id %>
+</p>
+
+<p>
+<b>Problem:</b>
+<%= @submission.problem_id %>
 </p>
 
 
