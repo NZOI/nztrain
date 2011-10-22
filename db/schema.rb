@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111002021523) do
+ActiveRecord::Schema.define(:version => 20111022023246) do
 
   create_table "contest_relations", :force => true do |t|
     t.integer  "user_id"
@@ -76,6 +76,7 @@ ActiveRecord::Schema.define(:version => 20111002021523) do
     t.integer  "problem_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "judge_output"
   end
 
   create_table "test_cases", :force => true do |t|

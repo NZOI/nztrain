@@ -39,7 +39,8 @@ class SubmissionsController < ApplicationController
   def new
     @submission = Submission.new
     @defaultProblem = params[:problem]
-    logger.debug "going to submit, problem is #{@defaultProblem}"
+    logger.debug "going to submit, problem is #{@defaultProblem} and params are:"
+    logger.debug params
 
     respond_to do |format|
       format.html # new.html.erb
@@ -55,10 +56,12 @@ class SubmissionsController < ApplicationController
   # POST /submissions
   # POST /submissions.xml
   def create
+    logger.debug "creating new submission , problem is #{@defaultProblem} and params are:"
+    logger.debug params
     @submission = Submission.new(params[:submission])
+    @submission.source = IO.read(params[:submission][:source].path)
     @submission.user = current_user
     @submission.score = 0
-    logger.debug "creating new submission"
 
     respond_to do |format|
       if @submission.save
@@ -76,6 +79,7 @@ class SubmissionsController < ApplicationController
   # PUT /submissions/1.xml
   def update
     @submission = Submission.find(params[:id])
+    @submission.source = IO.read(params[:submission][:source].path)
 
     respond_to do |format|
       if @submission.update_attributes(params[:submission])
