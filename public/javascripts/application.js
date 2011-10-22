@@ -45,7 +45,12 @@ $(document).ready(function() {
             'cursor' : 'text',
         });
 
-    $("select").attr("class", "ui-button ui-widget ui-state-default ui-corner-all");
-    $("select").attr("role","button");
-    $("select").attr("aria-disabled","false")
+    $("select").attr("class", "ui-button ui-widget ui-state-default ui-corner-all").css({
+        'font' : 'inherit',
+        'color' : 'inherit',
+        'text-align' : 'left',
+        'outline' : 'none',
+        'cursor' : 'text',
+    });
+
 });

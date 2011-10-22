@@ -13,11 +13,11 @@
 
   <div class="field">
     <%= f.label :source %><br />
-    <%= f.text_area :source %>
+    <%= f.file_field :source, :id => "file-form"%>
   </div>
   <div class="field">
     <%= f.label :language %><br />
-    <%= f.text_field :language %>
+    <%= f.select :language, ['C', 'C++']%>
   </div>
   <div class="field">
     <%= f.label :problem_id %><br />
