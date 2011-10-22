@@ -4,6 +4,7 @@ class Submission < ActiveRecord::Base
 
   validates :score, :presence => true
   def judge
+    box_path = File.expand_path(Rails.root)+"/bin/box"
     working_directory = '/tmp/submission_' + id.to_s + '/'
     if not File.directory? working_directory 
       Dir.mkdir(working_directory)
@@ -25,7 +26,7 @@ class Submission < ActiveRecord::Base
     self.judge_output = "Judging...\n"
 
     comp_sandbox_opts='-m262144 -w60 -e -i/dev/null'
-    comp_output = `box #{comp_sandbox_opts} -- #{compiler} #{source_file} -o #{exe_file} 2>&1`
+    comp_output = `#{box_path} #{comp_sandbox_opts} -- #{compiler} #{source_file} -o #{exe_file} 2>&1`
 
     if comp_output == ""
       comp_output = "nothing"
