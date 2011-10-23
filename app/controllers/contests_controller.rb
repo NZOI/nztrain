@@ -31,7 +31,7 @@ class ContestsController < ApplicationController
     @contest_message = nil
 
     respond_to do |format|
-      if DateTime.now > @contest.end_time
+      if !@contest.is_running?
         #render contest report page
         format.html { render "report" }
         format.xml  { render :xml => @contest }
@@ -77,11 +77,10 @@ class ContestsController < ApplicationController
   # POST /contests
   # POST /contests.xml
   def create
-    logger.debug params[:contest][:start_time].get_date
-    logger.debug params[:contest][:end_time].get_date
-    params[:contest][:start_time] = params[:contest][:start_time].get_date
-    params[:contest][:end_time] = params[:contest][:end_time].get_date
     @contest = Contest.new(params[:contest])
+    @contest.start_time = params[:contest][:start_time].get_date(Time.zone)
+    @contest.end_time = params[:contest][:end_time].get_date(Time.zone)
+    logger.debug "time zone is " + Time.zone.to_s
     @contest.user_id = current_user
 
     respond_to do |format|
@@ -98,8 +97,8 @@ class ContestsController < ApplicationController
   # PUT /contests/1
   # PUT /contests/1.xml
   def update
-    params[:contest][:start_time] = params[:contest][:start_time].get_date
-    params[:contest][:end_time] = params[:contest][:end_time].get_date
+    params[:contest][:start_time] = params[:contest][:start_time].get_date(Time.zone)
+    params[:contest][:end_time] = params[:contest][:end_time].get_date(Time.zone)
     @contest = Contest.find(params[:id])
 
     respond_to do |format|

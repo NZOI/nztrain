@@ -7,9 +7,9 @@ class String
     return self
   end
 
-  def get_date
+  def get_date(zone)
     date = DateTime.strptime(self, "%m/%d/%Y %H:%M").in_time_zone("UTC")
-    date.zone = Time.zone
+    date.zone = zone
     return date
   end
 end

@@ -9,6 +9,10 @@ class Contest < ActiveRecord::Base
     return self.contest_relations.where(:user_id => user)[0] 
   end
 
+  def is_running?
+    return DateTime.now >= self.start_time && DateTime.now < self.end_time
+  end
+
   def has_current_competitor(user)
     relation = self.get_relation(user)
 

@@ -16,6 +16,7 @@ gem "redcarpet"
 gem "albino"
 gem "nokogiri"
 gem 'rails_markitup'
+gem 'ruby-debug19', :require => 'ruby-debug'
 
 # Use unicorn as the web server
 # gem 'unicorn'

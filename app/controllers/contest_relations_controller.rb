@@ -40,6 +40,11 @@ class ContestRelationsController < ApplicationController
       return
     end
 
+    if !@contest.is_running
+      redirect_to(contests_url, :alert => "This contest is not currently running.")
+      return
+    end
+
     @contest_relation.user = current_user
     @contest_relation.started_at = DateTime.now
     @contest_relation.contest = @contest
