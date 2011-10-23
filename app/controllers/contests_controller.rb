@@ -6,7 +6,7 @@ class ContestsController < ApplicationController
   def check_access
     @contest = Contest.find(params[:id])
 
-    if !@contest.allows(current_user)
+    if !@contest.can_be_viewed_by(current_user)
       redirect_to(contests_path, :alert => "You do not have access to this contest!")
     end
   end
@@ -28,10 +28,28 @@ class ContestsController < ApplicationController
     @contest = Contest.find(params[:id])
     @problems = @contest.problems
     @groups = Group.all
+    @contest_message = nil
 
     respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @contest }
+      if DateTime.now > @contest.end_time
+        #render contest report page
+        format.html { render "report" }
+        format.xml  { render :xml => @contest }
+      elsif current_user.is_admin || @contest.has_current_competitor(current_user)
+        #render proper contest page
+        format.html
+        format.xml  { render :xml => @contest }
+      elsif @contest.get_relation(current_user)
+        #user has finished contest. render contest page, but with a message saying "you're done"
+        logger.debug "got finished contest\n"
+        @contest_message = "Your time slot is over and you can no longer submit for this contest."
+
+        format.html 
+        format.xml  { render :xml => @contest }
+      else
+        #redirect, user doesn't have access
+        redirect("You have not started this contest.")
+      end
     end
   end
 

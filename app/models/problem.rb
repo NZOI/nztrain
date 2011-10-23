@@ -27,7 +27,7 @@ class Problem < ActiveRecord::Base
 
     #might be painfully slow?
     self.contests.each do |contest|
-      if contest.can_be_viewed_by(user)
+      if contest.has_current_competitor(user)
         return true
       end
     end

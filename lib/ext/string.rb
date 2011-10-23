@@ -8,6 +8,8 @@ class String
   end
 
   def get_date
-    return DateTime.strptime(self, "%m/%d/%Y %H:%M")
+    date = DateTime.strptime(self, "%m/%d/%Y %H:%M").in_time_zone("UTC")
+    date.zone = Time.zone
+    return date
   end
 end

@@ -9,15 +9,7 @@ class Contest < ActiveRecord::Base
     return self.contest_relations.where(:user_id => user)[0] 
   end
 
-  def allows(user)
-    if user.is_admin
-      return true
-    end
-
-    if user == self.user_id
-      return true
-    end
-
+  def has_current_competitor(user)
     relation = self.get_relation(user)
 
     if !relation
@@ -28,6 +20,10 @@ class Contest < ActiveRecord::Base
   end
 
   def can_be_viewed_by(user)
+    if user.is_admin
+      return true
+    end
+
     self.groups.each do |g|
       if g.users.include?(user)
         return true
