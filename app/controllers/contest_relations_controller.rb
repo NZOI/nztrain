@@ -40,7 +40,7 @@ class ContestRelationsController < ApplicationController
       return
     end
 
-    if !@contest.is_running
+    if !@contest.is_running?
       redirect_to(contests_url, :alert => "This contest is not currently running.")
       return
     end

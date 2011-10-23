@@ -13,8 +13,8 @@ class ContestsController < ApplicationController
   # GET /contests
   # GET /contests.xml
   def index
-    
     @contests = Contest.all
+    @contests = @contests.find_all {|c| c.can_be_viewed_by(current_user)}
 
     respond_to do |format|
       format.html # index.html.erb
