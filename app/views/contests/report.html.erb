@@ -1,10 +1,5 @@
 
-contest report goes here
-
-<p>
-  <b>Title:</b>
-  <%= @contest.title %>
-</p>
+<h1> Contest Report: <%= @contest.title %> </h1>
 
 <p>
   <b>Start time:</b>
@@ -22,9 +17,23 @@ contest report goes here
 </p>
 
 <p>
-  <b>User:</b>
-  <%= @contest.user_id %>
-</p>
+<b> Score Table </b>
+<table>
+  <tr>
+    <th> User </th>
+    <th> Score </th>
+    <th> Placing </th>
+  </tr>
+
+  <% @high_scorers.each do |person| %>
+    <tr>
+      <td> <%= User.find(person[:user]).email %> </td>
+      <td> <%= person[:score] %> </td>
+      <td> <%= person[:placing] %> </td>
+    </tr>
+  <% end %>
+</table>
+<p>
 
 <p>
 <b> Problems: </b>

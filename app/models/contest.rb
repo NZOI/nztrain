@@ -13,6 +13,30 @@ class Contest < ActiveRecord::Base
     return DateTime.now >= self.start_time && DateTime.now < self.end_time
   end
 
+  def get_high_scorers
+    people = self.contest_relations.map {|cr| {:score => self.get_score(cr.user_id), :user => cr.user_id}}
+    people.sort! {|a,b| a[:score] <=> b[:score]}
+    limit = (self.contest_relations.size * HIGH_SCORE_LIMIT).ceil - 1
+    newLimit = limit
+
+    while newLimit < people.size && people[newLimit][0] == people[limit][0]
+      newLimit += 1
+    end
+
+    placing = 0
+    oldScore = -1
+
+    people.each do |person|
+      if person[:score] != oldScore
+        placing += 1
+      end
+      oldScore = person[:score]
+      person[:placing] = placing
+    end
+
+    return people[0, newLimit]
+  end
+
   def has_current_competitor(user)
     relation = self.get_relation(user)
 

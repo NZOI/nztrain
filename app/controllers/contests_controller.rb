@@ -33,6 +33,9 @@ class ContestsController < ApplicationController
     respond_to do |format|
       if !@contest.is_running?
         #render contest report page
+        @high_scorers = @contest.get_high_scorers
+        logger.debug @high_scorers
+
         format.html { render "report" }
         format.xml  { render :xml => @contest }
       elsif current_user.is_admin || @contest.has_current_competitor(current_user)
