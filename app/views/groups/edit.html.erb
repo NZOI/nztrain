@@ -5,7 +5,7 @@
 <b> Problems this group has access to:</b>
 <% @group.problems.each do |problem| %>
   <li>
-  <%= problem.title %> (<%= link_to("remove", remove_problem_group_path(@group, :problem_id => problem.id )) %>)
+  <%= problem.title %> (<%= link_to("remove", remove_problem_group_path(@group, :problem_id => problem.id ), :method => "put") %>)
   </li>
 <% end %>
 </p>
@@ -13,7 +13,7 @@
 <b> Contests this group has access to:</b>
 <% @group.contests.each do |contest| %>
   <li>
-  <%= contest.title %> (<%= link_to("remove", remove_contest_group_path(@group, :contest_id => contest.id )) %>)
+  <%= contest.title %> (<%= link_to("remove", remove_contest_group_path(@group, :contest_id => contest.id ), :method => "put") %>)
   </li>
 <% end %>
 </p>

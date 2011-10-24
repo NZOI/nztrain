@@ -54,7 +54,7 @@ class GroupsController < ApplicationController
   end
 
   def remove_contest
-    @group = Group.find(params[:contest][:group_ids])
+    @group = Group.find(params[:id])
     contest = Contest.find(params[:contest_id])
     @group.contests.delete(contest)
     redirect_to(@group, :notice => "Contest removed.")
