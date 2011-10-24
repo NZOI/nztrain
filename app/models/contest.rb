@@ -15,14 +15,16 @@ class Contest < ActiveRecord::Base
 
   def get_high_scorers
     people = self.contest_relations.map {|cr| {:score => self.get_score(cr.user_id), :user => cr.user_id}}
-    people.sort! {|a,b| a[:score] <=> b[:score]}
+    people.sort_by! {|a| -a[:score]}
     limit = (self.contest_relations.size * HIGH_SCORE_LIMIT).ceil - 1
+    logger.debug "initial limit is " + limit.to_s
     newLimit = limit
 
-    while newLimit < people.size && people[newLimit][0] == people[limit][0]
+    while newLimit < people.size && people[newLimit][:score] == people[limit][:score]
       newLimit += 1
     end
 
+    logger.debug "after adding same scores, limit is " + newLimit.to_s
     placing = 0
     oldScore = -1
 
@@ -65,7 +67,7 @@ class Contest < ActiveRecord::Base
     #can probably pass this in if the database query is too slow
     relation = self.contest_relations.where(:user_id => user)[0]
 
-    return (relation and problem.get_score(user, relation.started_at, relation.finish_at)) || "no submission"
+    return (relation and problem.get_score(user, relation.started_at, relation.finish_at)) || 0
   end
 
   def get_score(user)
