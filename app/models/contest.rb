@@ -72,6 +72,7 @@ class Contest < ActiveRecord::Base
 
   def get_score(user)
     #should check that only one contest relation exists -- rails validation magic?
+    #can probably pass this in if the database query is too slow
     relation = self.contest_relations.where(:user_id => user)[0]
 
     if !relation
@@ -80,6 +81,22 @@ class Contest < ActiveRecord::Base
 
     scores = self.problems.map {|p| self.problem_score(user, p)}
     return scores.inject(:+) || 0
+  end
+
+  def num_solved(problem)
+    total = 0
+
+    self.contest_relations.each do |relation|
+      if self.get_score(relation.user) == 100
+        total += 1
+      end
+    end
+
+    return total
+  end
+
+  def num_competitors
+    return self.contest_relations.size
   end
 
 end

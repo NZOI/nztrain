@@ -2,6 +2,10 @@
 <h1> Contest Report: <%= @contest.title %> </h1>
 
 <p>
+<%= @contest.num_competitors %> people competed in this contest.
+</p>
+
+<p>
   <b>Start time:</b>
   <%= @contest.start_time %>
 </p>
@@ -40,13 +44,15 @@
 <table>
   <tr>
     <th> Name </th>
-    <th> Score </th>
+    <th> Your Score </th>
+    <th> Correct Solutions </th>
   </tr>
 
   <% @problems.each do |problem| %>
     <tr>
       <td> <%= link_to problem.title, problem_path(problem) %> </td>
       <td> <%= @contest.problem_score(current_user, problem) %> </td>
+      <td> <%= @contest.num_solved(problem) %> </td>
     </tr>
   <% end %>
 </table>
