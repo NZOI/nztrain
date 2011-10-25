@@ -38,12 +38,14 @@ class ContestsController < ApplicationController
 
         format.html { render "report" }
         format.xml  { render :xml => @contest }
-      elsif current_user.is_admin || @contest.has_current_competitor(current_user)
+      elsif @contest.has_current_competitor(current_user)
+        @contest_relation = @contest.get_relation(current_user)
         #render proper contest page
         format.html
         format.xml  { render :xml => @contest }
       elsif @contest.get_relation(current_user)
         #user has finished contest. render contest page, but with a message saying "you're done"
+        @contest_relation = @contest.get_relation(current_user)
         logger.debug "got finished contest\n"
         @contest_message = "Your time slot is over and you can no longer submit for this contest."
 

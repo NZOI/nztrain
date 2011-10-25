@@ -133,6 +133,12 @@ td{font-weight: bold;}
 select.ui-button {
     padding: .4em 1em;
 }
+
+/* countdown */
+div#countDownTimer {
+    text-align: center;
+}
+
 /* the rest is scaffolding added (change?) */
 pre {
     background-color: #eee;

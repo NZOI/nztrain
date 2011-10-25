@@ -1,6 +1,6 @@
 class Contest < ActiveRecord::Base
   has_and_belongs_to_many :problems
-  has_many :contest_relations
+  has_many :contest_relations, :dependent => :destroy
   has_many :users, :through => :contest_relations
   belongs_to :user
   has_and_belongs_to_many :groups

@@ -1,32 +1,30 @@
-<% if @contest_message %>
-  <p>
-  <b><%= @contest_message %></b>
-  </p>
-<% end %>
+<script>
+  $(document).ready(function(){
+    var datesec = <%= @contest_relation.finish_at.to_i %>;
+    var date = new Date(Number(datesec) * 1000);
+    $("#countDownTimer").countdown({until: date, layout: '{sn} {sl}, {mn} {ml}, {hn} {hl}, and {dn} {dl} remaining'});
+  });
+</script>
+
+<h1>
+Contest: <%= @contest.title %>
+</h1>
+
+<div id="countDownTimer"></div>
 
 <p>
-  <b>Title:</b>
-  <%= @contest.title %>
+<b>Started at:</b>
+<%= @contest_relation.started_at %>
 </p>
 
 <p>
-  <b>Start time:</b>
-  <%= @contest.start_time %>
+<b>Duration:</b>
+<%= @contest.duration %>
 </p>
 
 <p>
-  <b>End time:</b>
-  <%= @contest.end_time %>
-</p>
-
-<p>
-  <b>Duration:</b>
-  <%= @contest.duration %>
-</p>
-
-<p>
-  <b>User:</b>
-  <%= @contest.user_id %>
+<b>User:</b>
+<%= @contest.user_id %>
 </p>
 
 <p>
