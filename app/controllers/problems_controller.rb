@@ -28,6 +28,7 @@ class ProblemsController < ApplicationController
   # GET /problems/1.xml
   def show
     @problem = Problem.find(params[:id])
+    @submission = Submission.new
     #TODO: restrict to problems that current user owns
     @contests = Contest.all
     @groups = Group.all

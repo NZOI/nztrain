@@ -38,8 +38,8 @@ class SubmissionsController < ApplicationController
   # GET /submissions/new.xml
   def new
     @submission = Submission.new
-    @defaultProblem = params[:problem]
-    logger.debug "going to submit, problem is #{@defaultProblem} and params are:"
+    @problem = params[:problem]
+    logger.debug "going to submit, problem is #{@problem} and params are:"
     logger.debug params
 
     respond_to do |format|
@@ -58,6 +58,7 @@ class SubmissionsController < ApplicationController
   def create
     logger.debug "creating new submission , problem is #{@defaultProblem} and params are:"
     logger.debug params
+    debugger
     @submission = Submission.new(params[:submission])
     @submission.source = IO.read(params[:submission][:source].path)
     @submission.user = current_user

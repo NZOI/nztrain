@@ -1,5 +1,3 @@
-<p id="notice"><%= notice %></p>
-
 <h1>
 <%= @problem.title %>
 </h1>
@@ -46,18 +44,14 @@
 </p>
 
 <p>
-<% form_tag(:controller => "problem_contest", :action => "add", :method => :put, :problem_id => @problem) do %>
-  <%= collection_select :problem, :contest_ids, @contests, :id, :title %>
-  <%= submit_tag 'Add to contest' %>
-<% end %>
+<b> Make new submission: </b>
+<%= render 'submissions/form' %>
 </p>
 
-<p>
-<% form_tag( add_problem_group_path(:problem_id => @problem), :method => :put) do %>
-  <%= collection_select :problem, :group_ids, @groups, :id, :name %>
-  <%= submit_tag "Give group access" %>
+<% if current_user.is_admin %>
+  <%= render 'admin' %>
 <% end %>
-</p>
+<p>
 
 <%= link_to 'Edit', edit_problem_path(@problem) %> |
 <%= link_to 'Submit', new_submission_path(:problem => @problem.id) %> |

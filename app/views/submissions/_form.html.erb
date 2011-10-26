@@ -1,4 +1,5 @@
 <%= form_for(@submission, :html => {:multipart => true}) do |f| %>
+  <%= f.hidden_field :problem_id, :value => @problem.id %>
   <% if @submission.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@submission.errors.count, "error") %> prohibited this submission from being saved:</h2>
@@ -10,18 +11,11 @@
       </ul>
     </div>
   <% end %>
-
   <div class="field">
-    <%= f.label :source %><br />
     <%= f.file_field :source, :id => "file-form"%>
   </div>
   <div class="field">
-    <%= f.label :language %><br />
     <%= f.select :language, ['C', 'C++']%>
-  </div>
-  <div class="field">
-    <%= f.label :problem_id %><br />
-    <%= f.text_field :problem_id , :value => @defaultProblem%>
   </div>
   <div class="actions">
     <%= f.submit %>
