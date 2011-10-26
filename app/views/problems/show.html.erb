@@ -44,15 +44,13 @@
 </p>
 
 <p>
-<b> Make new submission: </b>
+<b> New submission: </b>
 <%= render 'submissions/form' %>
 </p>
 
 <% if current_user.is_admin %>
   <%= render 'admin' %>
 <% end %>
-<p>
 
 <%= link_to 'Edit', edit_problem_path(@problem) %> |
-<%= link_to 'Submit', new_submission_path(:problem => @problem.id) %> |
 <%= link_to 'Back', problems_path %>
