@@ -5,6 +5,9 @@ class Submission < ActiveRecord::Base
   validates :score, :presence => true
   def judge
     box_path = File.expand_path(Rails.root)+"/bin/box"
+    if Config::CONFIG["host_cpu"] == "x86_64"
+      box_path += "64"
+    end
     working_directory = '/tmp/submission_' + id.to_s + '/'
     if not File.directory? working_directory 
       Dir.mkdir(working_directory)
@@ -57,7 +60,7 @@ class Submission < ActiveRecord::Base
 
         File.open(input_file, 'w') { |f| f.write(test_case.input) }
 
-        system("box -a2 -f -M#{judge_file} -m#{mem_limit} -k#{stack_limit} " +
+        system("#{box_path} -a2 -f -M#{judge_file} -m#{mem_limit} -k#{stack_limit} " +
                " -t#{time_limit} -o/dev/null -r/dev/null -- #{exe_file}" )
 
         self.judge_output += IO.read(judge_file)
