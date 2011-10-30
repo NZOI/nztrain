@@ -35,6 +35,7 @@ section {
 }
 
 section h1 {
+    text-align: center;
     font-size: 200%;
 }
 
@@ -97,6 +98,10 @@ nav ul li a:visited {
 
 nav ul li a:hover {
     text-decoration: underline;
+}
+
+div#footer {
+    text-align: center;
 }
 
 /* tables */
