@@ -35,7 +35,7 @@ class Submission < ActiveRecord::Base
       comp_output = "nothing"
     end
 
-    self.judge_output += 'compiling with ' +  "box #{comp_sandbox_opts} -- #{compiler} #{source_file} -o #{exe_file}\n"
+    self.judge_output += 'compiling with ' +  "#{box_path} #{comp_sandbox_opts} -- #{compiler} #{source_file} -o #{exe_file}\n"
 
     self.judge_output += "compiler output:\n" + comp_output + "\n"
 
