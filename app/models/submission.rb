@@ -60,7 +60,7 @@ class Submission < ActiveRecord::Base
 
         File.open(input_file, 'w') { |f| f.write(test_case.input) }
 
-        system("#{box_path} -a2 -f -M#{judge_file} -m#{mem_limit} -k#{stack_limit} " +
+        system("#{box_path} -a2 -M#{judge_file} -m#{mem_limit} -k#{stack_limit} " +
                " -t#{time_limit} -o/dev/null -r/dev/null -- #{exe_file}" )
 
         self.judge_output += IO.read(judge_file)
