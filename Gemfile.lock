@@ -32,6 +32,7 @@ GEM
       posix-spawn (>= 0.3.6)
     arel (2.0.10)
     bcrypt-ruby (2.1.4)
+    bluecloth (2.2.0)
     builder (2.1.2)
     devise (1.4.2)
       bcrypt-ruby (~> 2.1.2)
@@ -93,11 +94,11 @@ PLATFORMS
 
 DEPENDENCIES
   albino
+  bluecloth
   devise (= 1.4.2)
   jquery-rails (>= 1.0.12)
   nokogiri
   rails (= 3.0.8)
   rails_markitup
-  redcarpet
   rubyzip
   sqlite3

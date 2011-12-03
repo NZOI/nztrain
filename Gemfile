@@ -12,7 +12,7 @@ gem 'rubyzip', :require => 'zip/zip'
 
 gem 'jquery-rails', '>= 1.0.12'
 
-gem "redcarpet"
+gem "bluecloth"
 gem "albino"
 gem "nokogiri"
 gem 'rails_markitup'
