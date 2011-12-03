@@ -119,11 +119,11 @@ td{font-weight: bold;}
 
 /* file upload */
 
-#file-form {
+/*#file-form {
     width:0px;
     height:0px;
     position:absolute;
-}
+}*/
 
 .fileinput-input {
     /* bit annoying to have to duplicate, but ui-widget makes everything blue and bold */
