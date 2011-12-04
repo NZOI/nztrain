@@ -36,7 +36,7 @@
 
   <% @submissions.each do |sub| %>
     <tr>
-      <td> <%= link_to sub.created_at, sub %> </td>
+      <td> <%= link_to sub.created_at.strftime("%b %d %Y, %H:%M"), sub %> </td>
       <td> <%= sub.score %> </td>
     </tr>
   <% end %>
