@@ -10,8 +10,10 @@
     <th>User</th>
     <th>Score</th>
     <th></th>
-    <th></th>
-    <th></th>
+    <% if current_user.is_admin %>
+      <th></th>
+      <th></th>
+    <% end %>
   </tr>
 
 <% @problems.each do |problem| %>
@@ -24,12 +26,16 @@
     <td><%= problem.user_id %></td>
     <td><%= problem.get_score(current_user) %></td>
     <td><%= link_to 'Show', problem %></td>
-    <td><%= link_to 'Edit', edit_problem_path(problem) %></td>
-    <td><%= link_to 'Destroy', problem, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% if current_user.is_admin %>
+      <td><%= link_to 'Edit', edit_problem_path(problem) %></td>
+      <td><%= link_to 'Destroy', problem, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% end %>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New Problem', new_problem_path %>
+<% if current_user.is_admin %>
+  <%= link_to 'New Problem', new_problem_path %>
+<% end %>

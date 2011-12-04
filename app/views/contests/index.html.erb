@@ -9,8 +9,10 @@
     <th>User</th>
     <th>Score</th>
     <th></th>
-    <th></th>
-    <th></th>
+    <% if current_user.is_admin %>
+      <th></th>
+      <th></th>
+    <% end %>
   </tr>
 
 <% @contests.each do |contest| %>
@@ -28,12 +30,16 @@
         <%= link_to 'Show', contest %>
       <% end %>
     </td>
-    <td><%= link_to 'Edit', edit_contest_path(contest) %></td>
-    <td><%= link_to 'Destroy', contest, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% if current_user.is_admin %>
+      <td><%= link_to 'Edit', edit_contest_path(contest) %></td>
+      <td><%= link_to 'Destroy', contest, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% end %>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New Contest', new_contest_path %>
+<% if current_user.is_admin %>
+  <%= link_to 'New Contest', new_contest_path %>
+<% end %>

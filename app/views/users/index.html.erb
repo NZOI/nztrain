@@ -5,8 +5,10 @@
     <th>Email</th>
     <th>Admin?</th>
     <th></th>
-    <th></th>
-    <th></th>
+    <% if current_user.is_admin %>
+      <th></th>
+      <th></th>
+    <% end %>
   </tr>
 
   <% @users.each do |user| %>
@@ -14,8 +16,10 @@
       <td><%= user.email %></td>
       <td><%= user.is_admin %></td>
       <td><%= link_to 'Show', user %></td>
-      <td><%= link_to 'Edit', edit_user_path(user) %></td>
-      <td><%= link_to 'Destroy', user, :confirm => 'Are you sure?', :method => :delete %></td>
+      <% if current_user.is_admin %>
+        <td><%= link_to 'Edit', edit_user_path(user) %></td>
+        <td><%= link_to 'Destroy', user, :confirm => 'Are you sure?', :method => :delete %></td>
+      <% end %>
     </tr>
   <% end %>
 </table>
