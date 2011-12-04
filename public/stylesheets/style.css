@@ -1,5 +1,7 @@
 .header-container {
-    margin-bottom: 2em;
+    font-size: 70px;
+    font-family: monospace;
+    margin-top: 25px;
 }
 
 body {
@@ -16,6 +18,7 @@ body, p, ol, ul, td {
 
 header {
     padding-top: 20px;
+    margin-bottom: 20px;
 }
 
 header img {

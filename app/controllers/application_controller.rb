@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
 
   def check_signed_in
     if !user_signed_in?
-      redirect("You must be signed in to perform this operation")
+      redirect("Welcome to nztrain. Please log in or sign up to continue.")
     end
   end
 

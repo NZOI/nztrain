@@ -22,8 +22,6 @@
     <%= csrf_meta_tag %>
   </head>
   <body>
-    <div class="header-container">
-      <header>
       <nav>
       <ul>
         <% if user_signed_in? %>
@@ -52,7 +50,10 @@
         <% end %>
       </ul>
       </nav>
+    <div class="header-container">
+      <header>
       </header>
+      <%= image_tag "nzoi-banner.png" %>
     </div>
     <div class="bright">
       <section class="round" id="main-section">
