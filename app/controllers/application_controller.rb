@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
 
   def check_signed_in
     if !user_signed_in?
-      redirect("Welcome to nztrain. Please log in or sign up to continue.")
+      redirect_to(new_user_session_path, :alert => "Welcome to nztrain. Please log in or sign up to continue.")
     end
   end
 
