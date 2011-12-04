@@ -11,14 +11,16 @@
   </tr>
 
 <% @contest_relations.each do |contest_relation| %>
-  <tr>
-    <td><%= link_to contest_relation.user.email, contest_relation.user %></td>
-    <td><%= link_to contest_relation.contest.title, contest_relation.contest %></td>
-    <td><%= contest_relation.started_at %></td>
-    <td><%= link_to 'Show', contest_relation %></td>
-    <td><%= link_to 'Edit', edit_contest_relation_path(contest_relation) %></td>
-    <td><%= link_to 'Destroy', contest_relation, :confirm => 'Are you sure?', :method => :delete %></td>
-  </tr>
+  <% if contest_relation.user %>
+    <tr>
+      <td><%= link_to contest_relation.user.email, contest_relation.user %></td>
+      <td><%= link_to contest_relation.contest.title, contest_relation.contest %></td>
+      <td><%= contest_relation.started_at %></td>
+      <td><%= link_to 'Show', contest_relation %></td>
+      <td><%= link_to 'Edit', edit_contest_relation_path(contest_relation) %></td>
+      <td><%= link_to 'Destroy', contest_relation, :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+  <% end %>
 <% end %>
 </table>
 
