@@ -38,6 +38,23 @@ module NztrainV2
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
+
     config.time_zone = "Auckland"
+    config.action_mailer.default_url_options = { :host => 'http://young-wind-5220.heroku.com' }
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.perform_deliveries = true
+    config.action_mailer.raise_delivery_errors = true
+    config.action_mailer.default :charset => "utf-8"
+
+    ActionMailer::Base.smtp_settings = {
+      :address => "smtp.gmail.com",
+      :port => 587,
+      :authentication => :plain,
+      :domain => 'nztrain.org',
+      :user_name => 'nztrain',
+      :password => 'new zealand training site',
+      :enable_starttls_auto => true
+    }
+
   end
 end
