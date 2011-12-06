@@ -55,6 +55,9 @@
       </header>
       <%= image_tag "nzoi-banner.png" %>
     </div>
+    <p>
+    Congratulations to our current brownie point leader <%= @brownie_leader.email %> who has <%= @brownie_leader.brownie_points %> points!
+    </p>
     <div class="bright">
       <section class="round" id="main-section">
       <% if notice %><p id="notice"><%= notice %></p><% end %>

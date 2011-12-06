@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  before_filter :set_leader
   protect_from_forgery
 
   def redirect(message)
@@ -24,5 +25,8 @@ class ApplicationController < ActionController::Base
       redirect("You must be an admin to perform this operation")
     end
   end
-
+  
+  def set_leader
+    @brownie_leader = User.find(:first, :order => "brownie_points DESC")
+  end
 end
