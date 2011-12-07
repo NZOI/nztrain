@@ -65,7 +65,9 @@ class SubmissionsController < ApplicationController
 
     respond_to do |format|
       if @submission.save
-        @submission.judge
+        spawn do 
+          @submission.judge
+        end
         format.html { redirect_to(@submission, :notice => 'Submission was successfully created.') }
         format.xml  { render :xml => @submission, :status => :created, :location => @submission }
       else
