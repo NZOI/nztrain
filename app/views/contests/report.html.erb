@@ -25,13 +25,20 @@
 <table>
   <tr>
     <th> User </th>
-    <th> Score </th>
+    <% @contest.problems.each do |prob|%>
+      <th> <%= prob.title %> </th>
+    <% end %>
+    <th> Total Score </th>
     <th> Placing </th>
   </tr>
 
   <% @high_scorers.each do |person| %>
     <tr>
-      <td> <%= User.find(person[:user]).email %> </td>
+      <% u = User.find(person[:user]) %>
+      <td> <%= u.email %> </td>
+      <% @contest.problems.each do |prob|%>
+        <td> <%= @contest.problem_score(u, prob) %> </td>
+      <% end %>
       <td> <%= person[:score] %> </td>
       <td> <%= person[:placing] %> </td>
     </tr>
