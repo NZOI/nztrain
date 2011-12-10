@@ -8,9 +8,8 @@ class TestCasesController < ApplicationController
 
     if params[:problem]
       logger.debug "problem is " + params[:problem]
-      @test_cases.select! do |tc|
-        logger.debug "test case problem is " + tc.problem.id.to_s
-        return tc.problem.id == params[:problem]
+      @test_cases = @test_cases.find_all do |tc|
+        tc.problem_id == params[:problem].to_i
       end
     end
     
