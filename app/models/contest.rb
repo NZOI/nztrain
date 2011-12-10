@@ -15,7 +15,7 @@ class Contest < ActiveRecord::Base
 
   def get_high_scorers
     people = self.contest_relations.map {|cr| {:score => self.get_score(cr.user_id), :user => cr.user_id}}
-    people = people.find_all {|p| User.find(p[:user]) != nil }
+    people = people.find_all {|p| User.exists?(p[:user])}
     people.sort_by! {|a| -a[:score]}
     limit = (self.contest_relations.size * HIGH_SCORE_LIMIT).ceil - 1
     logger.debug "initial limit is " + limit.to_s
@@ -28,10 +28,12 @@ class Contest < ActiveRecord::Base
     logger.debug "after adding same scores, limit is " + newLimit.to_s
     placing = 0
     oldScore = -1
+    currPlace = 0;
 
     people.each do |person|
+      currPlace += 1
       if person[:score] != oldScore
-        placing += 1
+        placing = currPlace
       end
       oldScore = person[:score]
       person[:placing] = placing
@@ -88,7 +90,7 @@ class Contest < ActiveRecord::Base
     total = 0
 
     self.contest_relations.each do |relation|
-      if self.get_score(relation.user) == 100
+      if self.problem_score(relation.user, problem) == 100
         total += 1
       end
     end

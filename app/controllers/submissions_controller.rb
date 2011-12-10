@@ -51,6 +51,7 @@ class SubmissionsController < ApplicationController
   # GET /submissions/1/edit
   def edit
     @submission = Submission.find(params[:id])
+    @problem = @submission.problem
   end
 
   # POST /submissions
