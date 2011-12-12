@@ -4,6 +4,8 @@
   <tr>
     <th>Email</th>
     <th>Admin?</th>
+    <th>Solved Problems</th>
+    <th>Brownie Points</th>
     <th></th>
     <% if current_user.is_admin %>
       <th></th>
@@ -15,6 +17,8 @@
     <tr>
       <td><%= user.email %></td>
       <td><%= user.is_admin %></td>
+      <td><%= user.get_solved.size %></td>
+      <td><%= user.brownie_points %></td>
       <td><%= link_to 'Show', user %></td>
       <% if current_user.is_admin %>
         <td><%= link_to 'Edit', edit_user_path(user) %></td>
