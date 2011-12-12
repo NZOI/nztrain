@@ -13,5 +13,16 @@
 <%= @user.brownie_points %>
 </p>
 
+<p>
+<b> <%= @solved_problems.size %> solved problems: </b>
+<ul>
+<% @solved_problems.each do |prob| %>
+  <li>
+  <%= link_to prob.title, prob %>
+  </li>
+<% end %>
+</ul>
+</p>
+
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>

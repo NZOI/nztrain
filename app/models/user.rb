@@ -12,4 +12,14 @@ class User < ActiveRecord::Base
   has_many :contest_relations
   has_many :contests, :through => :contest_relations
 
+  def get_solved
+    solved = []
+    Problem.all.each do |prob|
+      if prob.get_score(self) == 100
+        solved << prob
+      end
+    end
+    return solved
+  end
+
 end
