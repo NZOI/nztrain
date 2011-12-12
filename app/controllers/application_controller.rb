@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   before_filter :set_leader
+  before_filter :wrong_site
   protect_from_forgery
 
   def redirect(message)
@@ -28,5 +29,9 @@ class ApplicationController < ActionController::Base
   
   def set_leader
     @brownie_leader = User.find(:first, :order => "brownie_points DESC")
+  end
+
+  def wrong_site
+    redirect_to "http://nztrain.com"
   end
 end
