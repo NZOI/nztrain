@@ -17,6 +17,8 @@ gem "albino"
 gem "nokogiri"
 gem 'rails_markitup'
 
+
+gem 'pg'
 # Use unicorn as the web server
 # gem 'unicorn'
 
