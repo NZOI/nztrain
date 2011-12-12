@@ -32,6 +32,5 @@ class ApplicationController < ActionController::Base
   end
 
   def wrong_site
-    redirect_to "http://nztrain.com"
   end
 end
