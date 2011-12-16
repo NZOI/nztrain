@@ -11,7 +11,9 @@ class SubmissionsController < ApplicationController
     end
 
     @submission = Submission.find(params[:id])
-    return @submission.user_id == current_user
+    if @submission.user_id != current_user
+	    redirect("This is not your submission!")
+    end
   end
 
   def index
