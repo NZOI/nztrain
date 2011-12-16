@@ -69,8 +69,8 @@ class Submission < ActiveRecord::Base
           their_output = IO.read(output_file)
 
           # TODO: different evaluators.
-          actual = their_output.split('\n').each{|s|s.strip!}.join('\n')
-          expected = test_case.output.split('\n').each{|s| s.strip!}.join('\n')
+          actual = their_output.split('\n').each{|s|s.strip!}.join('\n').chomp
+          expected = test_case.output.split('\n').each{|s| s.strip!}.join('\n').chomp
 
           logger.debug "actual output was #{actual}, expected #{expected}"
 
