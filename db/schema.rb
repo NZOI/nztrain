@@ -13,21 +13,21 @@
 ActiveRecord::Schema.define(:version => 20111206102437) do
 
   create_table "contest_relations", :force => true do |t|
-    t.integer   "user_id"
-    t.integer   "contest_id"
-    t.timestamp "started_at"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.integer  "user_id"
+    t.integer  "contest_id"
+    t.datetime "started_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "contests", :force => true do |t|
-    t.string    "title"
-    t.timestamp "start_time"
-    t.timestamp "end_time"
-    t.decimal   "duration"
-    t.integer   "user_id"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.string   "title"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.decimal  "duration"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "contests_groups", :id => false, :force => true do |t|
@@ -41,9 +41,9 @@ ActiveRecord::Schema.define(:version => 20111206102437) do
   end
 
   create_table "groups", :force => true do |t|
-    t.string    "name"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "groups_problems", :id => false, :force => true do |t|
@@ -57,53 +57,53 @@ ActiveRecord::Schema.define(:version => 20111206102437) do
   end
 
   create_table "problems", :force => true do |t|
-    t.string    "title"
-    t.text      "statement"
-    t.string    "input"
-    t.string    "output"
-    t.integer   "memory_limit"
-    t.decimal   "time_limit"
-    t.integer   "user_id"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.string   "title"
+    t.text     "statement"
+    t.string   "input"
+    t.string   "output"
+    t.integer  "memory_limit"
+    t.decimal  "time_limit"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "submissions", :force => true do |t|
-    t.text      "source"
-    t.string    "language"
-    t.integer   "score"
-    t.integer   "user_id"
-    t.integer   "problem_id"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
-    t.text      "judge_output"
+    t.text     "source"
+    t.string   "language"
+    t.integer  "score"
+    t.integer  "user_id"
+    t.integer  "problem_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "judge_output"
   end
 
   create_table "test_cases", :force => true do |t|
-    t.text      "input"
-    t.text      "output"
-    t.integer   "points"
-    t.string    "description"
-    t.integer   "problem_id"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.text     "input"
+    t.text     "output"
+    t.integer  "points"
+    t.string   "description"
+    t.integer  "problem_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "users", :force => true do |t|
-    t.string    "email",                                 :default => "",    :null => false
-    t.string    "encrypted_password",     :limit => 128, :default => "",    :null => false
-    t.string    "reset_password_token"
-    t.timestamp "reset_password_sent_at"
-    t.timestamp "remember_created_at"
-    t.integer   "sign_in_count",                         :default => 0
-    t.timestamp "current_sign_in_at"
-    t.timestamp "last_sign_in_at"
-    t.string    "current_sign_in_ip"
-    t.string    "last_sign_in_ip"
-    t.boolean   "is_admin",                              :default => false
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
-    t.integer   "brownie_points",                        :default => 0
+    t.string   "email",                                 :default => "",    :null => false
+    t.string   "encrypted_password",     :limit => 128, :default => "",    :null => false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",                         :default => 0
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.boolean  "is_admin",                              :default => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "brownie_points",                        :default => 0
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
