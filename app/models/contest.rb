@@ -26,6 +26,7 @@ class Contest < ActiveRecord::Base
     end
 
     while newLimit < people.size && people[newLimit][:score] == people[limit][:score]
+      logger.info "new limit is now #{newLimit + 1}"
       newLimit += 1
     end
 
