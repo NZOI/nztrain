@@ -15,15 +15,15 @@ class Contest < ActiveRecord::Base
 
   def get_high_scorers
     people = self.contest_relations.map {|cr| {:score => self.get_score(cr.user_id), :user => cr.user_id}}
-    if people == nil
-	    return people
-    end
     people = people.find_all {|p| User.exists?(p[:user])}
     people.sort! {|a,b| a[:score] <=> b[:score]}
     people.reverse!
     limit = (self.contest_relations.size * HIGH_SCORE_LIMIT).ceil - 1
     logger.debug "initial limit is " + limit.to_s
     newLimit = limit
+    if people == nil
+	    return people
+    end
 
     while newLimit < people.size && people[newLimit][:score] == people[limit][:score]
       newLimit += 1
