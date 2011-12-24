@@ -21,7 +21,7 @@ class Contest < ActiveRecord::Base
     limit = (self.contest_relations.size * HIGH_SCORE_LIMIT).ceil - 1
     logger.debug "initial limit is " + limit.to_s
     newLimit = limit
-    if people == nil
+    if limit == 0
 	    return people
     end
 
