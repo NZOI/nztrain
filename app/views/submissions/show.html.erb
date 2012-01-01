@@ -6,11 +6,6 @@
 <% end %>
 
 <p>
-<b>Score:</b>
-<%= @submission.score %>
-</p>
-
-<p>
 <b>Problem:</b>
 <%= link_to @submission.problem.title, @submission.problem %>
 </p>
@@ -21,14 +16,20 @@
 </p>
 
 <p>
-<b>Source:</b>
-<pre><%= @submission.source %></pre>
+<b>Score:</b>
+<%= @submission.score %>
 </p>
 
 <p>
 <b>Detailed Output:</b>
 <%= simple_format(@submission.judge_output) %>
 </p>
+
+<p>
+<b>Source:</b>
+<pre><%= @submission.source %></pre>
+</p>
+
 
 <%= link_to 'Edit', edit_submission_path(@submission) %> |
 <%= link_to 'Back', @submission.problem %>
