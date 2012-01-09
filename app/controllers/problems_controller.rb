@@ -33,6 +33,10 @@ class ProblemsController < ApplicationController
     @contests = Contest.all
     @groups = Group.all
     @submissions = @problem.submission_history(current_user)
+    @all_subs = {};
+    @problem.submissions.each do |sub|
+    	@all_subs[sub.user] = [(@all_subs[sub.user] or sub), sub].max_by {|m| m.score}
+    end
 
     respond_to do |format|
       format.html # show.html.erb

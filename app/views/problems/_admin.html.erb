@@ -10,6 +10,22 @@
 </p>
 
 <p>
+<b>Users that have submitted:</b>
+<table>
+<tr>
+<th> User </th>
+<th> Score </th>
+</tr>
+
+<% @submissions.each do |sub| %>
+    <tr>
+      <td> <%= link_to sub.user.email, sub.user %> </td>
+      <td> <%= link_to sub.score, sub %> </td>
+    </tr>
+<% end %>
+</table>
+
+<p>
 <% form_tag( add_problem_group_path(:problem_id => @problem), :method => :put) do %>
   <%= collection_select :problem, :group_ids, @groups, :id, :name %>
   <%= submit_tag "Give group access" %>
