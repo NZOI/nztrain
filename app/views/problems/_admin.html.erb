@@ -3,13 +3,6 @@
 </p>
 
 <p>
-<% form_tag(:controller => "problem_contest", :action => "add", :method => :put, :problem_id => @problem) do %>
-  <%= collection_select :problem, :contest_ids, @contests, :id, :title %>
-  <%= submit_tag 'Add to contest' %>
-<% end %>
-</p>
-
-<p>
 <b>Users that have submitted:</b>
 <table>
 <tr>
@@ -28,10 +21,23 @@
 </table>
 
 <p>
+<% form_tag(:controller => "problem_contest", :action => "add", :method => :put, :problem_id => @problem) do %>
+  <%= collection_select :problem, :contest_ids, @contests, :id, :title %>
+  <%= submit_tag 'Add to contest' %>
+<% end %>
+</p>
+
+<p>
 <% form_tag( add_problem_group_path(:problem_id => @problem), :method => :put) do %>
   <%= collection_select :problem, :group_ids, @groups, :id, :name %>
   <%= submit_tag "Give group access" %>
 <% end %>
 </p>
 
+<p>
+<b> Evaluator </b>
+<pre>
+<%= @problem.evaluator %>
+</pre>
+</p>
 

@@ -17,14 +17,23 @@ class Submission < ActiveRecord::Base
     source_file = 'program.c'
     exe_file = 'program.exe'
     judge_file = "judge.info"
+    eval_file = "eval.sh"
+    expected_file = "expect.out"
 
     # TODO: store compiler info in config file
     compiler = '/usr/bin/gcc'
     if language == 'C++'
       compiler = '/usr/bin/g++'
     end
+    if language == 'Haskell'
+      compiler = '/usr/bin/ghc'
+    end
 
     File.open(source_file, 'w') { |f| f.write(source) }
+
+    if problem.evaluator
+      File.open(eval_file, 'w') { |f| f.write(problem.evaluator) }
+    end
 
     self.judge_output = "Judging...\n"
 
@@ -66,16 +75,30 @@ class Submission < ActiveRecord::Base
         self.judge_output += IO.read(judge_file)
         
         if FileTest.exist? output_file
-          their_output = IO.read(output_file)
-
-          # TODO: different evaluators.
-          actual = their_output.split('\n').each{|s|s.strip!}.join('\n').chomp.gsub(/\r/, "")
+          correct = false
           expected = test_case.output.split('\n').each{|s| s.strip!}.join('\n').chomp.gsub(/\r/, "")
 
-          logger.debug "actual output was #{actual}, expected #{expected}"
-          logger.debug "sizes are #{actual.size}, #{expected.size}"
+          File.open(expected_file, 'w') { |f| f.write(expected) }
 
-          if actual == expected
+          if !problem.evaluator
+            their_output = IO.read(output_file)
+
+            actual = their_output.split('\n').each{|s|s.strip!}.join('\n').chomp.gsub(/\r/, "")
+
+            logger.debug "actual output was #{actual}, expected #{expected}"
+
+            if actual == expected
+              correct = true
+            end
+          else
+            File.chmod(0100, eval_file)
+            correct = system("./#{eval_file} '#{input_file}' '#{output_file} #{expected_file}'")
+            if correct == nil
+              self.judge_output += "Evaluator packed a sad, sorry :(\n"
+            end
+          end
+
+          if correct
             self.score += test_case.points 
             self.judge_output += "Correct!\n"
           else
@@ -84,7 +107,7 @@ class Submission < ActiveRecord::Base
 
           File.delete(output_file)
         else
-          self.judge_output += "No output, probably crashed"
+          self.judge_output += "No output, probably crashed\n"
         end
 
         self.judge_output += "\n"
@@ -103,6 +126,11 @@ class Submission < ActiveRecord::Base
       end
 
       File.delete(exe_file)
+      File.delete(expected_file)
+
+      if problem.evaluator
+        File.delete(eval_file)
+      end
     else
       self.judge_output += "Program did not compile!\n"
     end
