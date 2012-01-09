@@ -18,10 +18,12 @@
 </tr>
 
 <% @all_subs.each do |sub| %>
-    <tr>
-      <td> <%= link_to sub.user.email, sub.user %> </td>
-      <td> <%= link_to sub.score, sub %> </td>
-    </tr>
+	<% if sub.user != nil %>
+		<tr>
+      		<td> <%= link_to sub.user.email, sub.user %> </td>
+      	<td> <%= link_to sub.score, sub %> </td>
+    	</tr>
+	<% end %>
 <% end %>
 </table>
 
