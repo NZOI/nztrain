@@ -65,6 +65,9 @@ class ProblemsController < ApplicationController
   # POST /problems.xml
   def create
     @problem = Problem.new(params[:problem])
+    if @problem.evaluator != nil
+      @problem.evaluator = IO.read(params[:problem][:evaluator].path)
+    end
 
     respond_to do |format|
       if @problem.save
@@ -81,6 +84,9 @@ class ProblemsController < ApplicationController
   # PUT /problems/1.xml
   def update
     @problem = Problem.find(params[:id])
+    if params[:problem][:evaluator] != nil
+      params[:problem][:evaluator] = IO.read(params[:problem][:evaluator].path)
+    end
 
     respond_to do |format|
       if @problem.update_attributes(params[:problem])

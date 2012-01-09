@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111206102437) do
+ActiveRecord::Schema.define(:version => 20120109132817) do
 
   create_table "contest_relations", :force => true do |t|
     t.integer   "user_id"
@@ -66,6 +66,7 @@ ActiveRecord::Schema.define(:version => 20111206102437) do
     t.integer   "user_id"
     t.timestamp "created_at"
     t.timestamp "updated_at"
+    t.text      "evaluator"
   end
 
   create_table "submissions", :force => true do |t|
