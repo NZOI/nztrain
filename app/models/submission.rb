@@ -73,9 +73,9 @@ class Submission < ActiveRecord::Base
                " -t#{time_limit} -o/dev/null -r/dev/null -- #{exe_file}" )
 
         self.judge_output += IO.read(judge_file)
+        correct = false
         
         if FileTest.exist? output_file
-          correct = false
           expected = test_case.output.split('\n').each{|s| s.strip!}.join('\n').chomp.gsub(/\r/, "")
 
           File.open(expected_file, 'w') { |f| f.write(expected) }
