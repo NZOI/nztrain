@@ -17,7 +17,7 @@
 <th> Score </th>
 </tr>
 
-<% @submissions.each do |sub| %>
+<% @all_subs.each do |sub| %>
     <tr>
       <td> <%= link_to sub.user.email, sub.user %> </td>
       <td> <%= link_to sub.score, sub %> </td>

@@ -37,6 +37,7 @@ class ProblemsController < ApplicationController
     @problem.submissions.each do |sub|
     	@all_subs[sub.user] = [(@all_subs[sub.user] or sub), sub].max_by {|m| m.score}
     end
+    @all_subs = @all_subs.map {|s| s[1]}
 
     respond_to do |format|
       format.html # show.html.erb
