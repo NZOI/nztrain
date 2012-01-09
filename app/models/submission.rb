@@ -25,6 +25,9 @@ class Submission < ActiveRecord::Base
     if language == 'C++'
       compiler = '/usr/bin/g++'
     end
+    if language == 'Haskell'
+      compiler = '/usr/bin/ghc'
+    end
 
     File.open(source_file, 'w') { |f| f.write(source) }
 
