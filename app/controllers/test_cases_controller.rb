@@ -45,6 +45,7 @@ class TestCasesController < ApplicationController
   # GET /test_cases/1/edit
   def edit
     @test_case = TestCase.find(params[:id])
+    @defaultProblem = @test_case.problem.id
   end
 
   # POST /test_cases
