@@ -113,6 +113,7 @@ class Submission < ActiveRecord::Base
           end
 
           File.delete(output_file)
+          File.delete(expected_file)
         else
           self.judge_output += "No output, probably crashed\n"
         end
@@ -133,7 +134,6 @@ class Submission < ActiveRecord::Base
       end
 
       File.delete(exe_file)
-      File.delete(expected_file)
 
       if problem.evaluator
         File.delete(eval_file)
