@@ -95,11 +95,11 @@ class Submission < ActiveRecord::Base
             end
           else
             File.chmod(0100, eval_file)
-            run_string = "./#{eval_file} '#{input_file}' '#{output_file} #{expected_file}'"
+            run_string = "./#{eval_file} #{input_file} #{output_file} #{expected_file}"
             logger.info "running " + run_string
             correct = system(run_string)
-            self.judge_output += "running " + run_string
-            self.judge_output += "correct is " + correct.to_s
+            self.judge_output += "running " + run_string + "\n"
+            self.judge_output += "correct is " + correct.to_s + "\n"
             if correct == nil
               self.judge_output += "Evaluator packed a sad, sorry :(\n"
             end
