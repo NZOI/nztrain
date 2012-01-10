@@ -5,7 +5,7 @@ $(document).ready(function() {
     $('.markdown').markItUp(myMarkdownSettings);
     $('.date-picker').datetimepicker();
     //make tables look good
-    $("th").each(function(){
+    /**$("th").each(function(){
 
         $(this).addClass("ui-state-default");
 
@@ -29,6 +29,7 @@ $(document).ready(function() {
 
         $(this).children("td").toggleClass("ui-state-highlight");
     });
+    **/
     //make buttons look good
     $("#file-form").fileinput();
     $("input:submit").button().css({

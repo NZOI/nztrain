@@ -1,19 +1,16 @@
-<p>
-  <b>Email:</b>
-  <%= @user.email %>
-</p>
+<b>Email:</b>
+<%= @user.email %>
+<br />
 
-<p>
-  <b>Admin:</b>
-  <%= @user.is_admin %>
-</p>
+<b>Admin:</b>
+<%= @user.is_admin %>
+<br />
 
-<p>
-<b>Brownie Points: </b>
+<b>Brownie Points:</b>
 <%= @user.brownie_points %>
-</p>
+<br />
+<br />
 
-<p>
 <b> <%= @solved_problems.size %> solved problems: </b>
 <ul>
 <% @solved_problems.each do |prob| %>
@@ -22,7 +19,7 @@
   </li>
 <% end %>
 </ul>
-</p>
+<br />
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>
