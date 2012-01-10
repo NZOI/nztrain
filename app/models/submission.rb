@@ -26,6 +26,7 @@ class Submission < ActiveRecord::Base
       compiler = '/usr/bin/g++'
     end
     if language == 'Haskell'
+      source_file = 'program.hs'
       compiler = '/usr/bin/ghc'
     end
 
@@ -92,7 +93,10 @@ class Submission < ActiveRecord::Base
             end
           else
             File.chmod(0100, eval_file)
-            correct = system("./#{eval_file} '#{input_file}' '#{output_file} #{expected_file}'")
+            run_string = "./#{eval_file} '#{input_file}' '#{output_file} #{expected_file}'"
+            correct = system(run_string)
+            self.judge_output += "running " + run_string
+            self.judge_output += "correct is " + correct.to_s
             if correct == nil
               self.judge_output += "Evaluator packed a sad, sorry :(\n"
             end
