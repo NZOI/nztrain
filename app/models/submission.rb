@@ -79,9 +79,9 @@ class Submission < ActiveRecord::Base
         if FileTest.exist? output_file
           expected = test_case.output.split('\n').each{|s| s.strip!}.join('\n').chomp.gsub(/\r/, "")
 
-          logger.info("writing expected");
+          #logger.info("writing expected");
           File.open(expected_file, 'w') { |f| f.write(expected) }
-          logger.info("finished writing expected");
+          #logger.info("finished writing expected");
 
           if !problem.evaluator
             their_output = IO.read(output_file)
