@@ -94,7 +94,7 @@ class Submission < ActiveRecord::Base
               correct = true
             end
           else
-            File.chmod(0100, eval_file)
+            File.chmod(0700, eval_file)
             run_string = "./#{eval_file} #{input_file} #{output_file} #{expected_file}"
             logger.info "running " + run_string
             correct = system(run_string)
