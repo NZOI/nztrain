@@ -26,6 +26,7 @@ class Submission < ActiveRecord::Base
       compiler = '/usr/bin/g++'
     end
     if language == 'Haskell'
+      source_file = 'program.hs'
       compiler = '/usr/bin/ghc'
     end
 
