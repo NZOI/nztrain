@@ -18,9 +18,9 @@
 
     <%= csrf_meta_tag %>
 
-<script type="text/javascript">
-$(document).ready(function() {
-   $("#main-message-container-close").click(function() {
+	<script type="text/javascript">
+	$(document).ready(function() {
+		$("#main-message-container-close").click(function() {
       $("#main-message-container").fadeOut();
    });
 });
@@ -33,7 +33,7 @@ $(document).ready(function() {
      Training Site
    </div>
    <% if user_signed_in? %>
-   <%= current_user.email %><br /><br />
+	   <a href="/accounts/edit"><%= current_user.email %></a><br /><br />
    <ul>
       <li><a href="<%= problems_path %>">problems</a></li>
       <li><a href="<%= contests_path %>">contests</a></li>
@@ -51,17 +51,16 @@ $(document).ready(function() {
 </div>
 
 <div id="main">
-<div id="main-message-container">
-    Congratulations to our current brownie point leader <%= @brownie_leader.email %> who has <%= @brownie_leader.brownie_points %> points!<br />
-    <!--Note: each test case in Adding Numbers is in a separate file: you should only read in 2 numbers. <br />
-    Note 2: Actually, this applies for all 3 problems. There is no need to handle multiple test cases per file. <br /> -->
-<div id="main-message-container-close">close</div>
-</div>
-<div id="main-container">
-        <% if notice %><p id="notice"><%= notice %></p><% end %>
-      <% if alert %><p id="alert"><%= alert %></p><% end %>
-      <%= yield %>
-</div>
+	<div id="main-message-container">
+	    Congratulations to our current brownie point leader <%= @brownie_leader.email %> who has <%= @brownie_leader.brownie_points %> points!<br />
+	    <!--Note: each test case in Adding Numbers is in a separate file: you should only read in 2 numbers. <br />
+	    Note 2: Actually, this applies for all 3 problems. There is no need to handle multiple test cases per file. <br /> -->
+	<div id="main-message-container-close">close</div>
+	</div>
+	<div id="main-container">
+	      <% if alert %><p id="alert"><%= alert %></p><% end %>
+	      <%= yield %>
+	</div>
 </div>
 </body>
 </html>
