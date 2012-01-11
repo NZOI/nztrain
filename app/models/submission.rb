@@ -84,7 +84,11 @@ class Submission < ActiveRecord::Base
           #logger.info("finished writing expected");
 
           if !problem.evaluator
-            their_output = IO.read(output_file)
+            if FileTest.exists?(output_file)
+               their_output = IO.read(output_file)
+            else
+               their_output = nil
+            end
 
             actual = their_output.split('\n').each{|s|s.strip!}.join('\n').chomp.gsub(/\r/, "")
 
@@ -106,14 +110,16 @@ class Submission < ActiveRecord::Base
           end
 
           if correct
+            logger.info "test case with id " + test_case.id.to_s + " was correct"
             self.score += test_case.points 
             self.judge_output += "Correct!\n"
           else
+            logger.info "test case with id " + test_case.id.to_s + " was incorrect"
             self.judge_output += "Incorrect :(\n"
           end
 
-          File.delete(output_file)
-          File.delete(expected_file)
+          File.delete(output_file) if FileTest.exists?(output_file)
+          File.delete(expected_file) if FileTest.exists?(expected_file)
         else
           self.judge_output += "No output, probably crashed\n"
         end
@@ -121,7 +127,9 @@ class Submission < ActiveRecord::Base
         self.judge_output += "\n"
         # TODO: error checking necessary here?
         # or ruby exceptions takes care of it?
-        File.delete(input_file)
+        if FileTest.exists?(input_file)
+          File.delete(input_file)
+        end
       end
 
       self.judge_output += "Submission scored #{self.score} points out of #{total_points}\n"
@@ -133,7 +141,7 @@ class Submission < ActiveRecord::Base
         self.judge_output += "Congratulations! 100%!\n"
       end
 
-      File.delete(exe_file)
+      File.delete(exe_file) if FileTest.exists?(exe_file)
 
       if problem.evaluator
         File.delete(eval_file)

@@ -52,7 +52,7 @@ module NztrainV2
       :authentication => :plain,
       :domain => 'nztrain.org',
       :user_name => 'nztrain',
-      :password => 'new zealand training site',
+      :password => 'training site',
       :enable_starttls_auto => true
     }
 
