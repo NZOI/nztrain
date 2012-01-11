@@ -38,6 +38,12 @@ NztrainV2::Application.routes.draw do
     end
   end
 
+  resources :users do
+    member do
+      post 'add_brownie'
+    end
+  end
+
   #match 'groups/:id/add_user(:format)' => 'groups#add_user'
   #match 'groups/:id/remove_user(:format)' => 'groups#remove_user'
 
