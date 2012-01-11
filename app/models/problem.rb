@@ -36,6 +36,12 @@ class Problem < ActiveRecord::Base
         return true
       end
     end
+    
+    user.contests.each do |contest|
+      if contest.is_running?
+        return false
+      end
+    end
 
     self.groups.each do |g|
       if g.users.include?(user)
