@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120109132817) do
+ActiveRecord::Schema.define(:version => 20120111090946) do
 
   create_table "contest_relations", :force => true do |t|
     t.integer   "user_id"
@@ -105,6 +105,7 @@ ActiveRecord::Schema.define(:version => 20120109132817) do
     t.timestamp "created_at"
     t.timestamp "updated_at"
     t.integer   "brownie_points",                        :default => 0
+    t.string    "name"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
