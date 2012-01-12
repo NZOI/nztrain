@@ -5,18 +5,18 @@ class Problem < ActiveRecord::Base
   belongs_to :user
   has_and_belongs_to_many :groups
   
-  def get_highest_scoring_submission(user, from = DateTime.new(0), to = DateTime.now)
+  def get_highest_scoring_submission(user, from = DateTime.new(1), to = DateTime.now)
     subs = self.submissions.find(:all, :conditions => ["created_at between ? and ? and user_id = ?", from, to, user])
     return subs.max_by {|s| s.score}
   end
 
-  def get_score(user, from = DateTime.new(0), to = DateTime.now)
+  def get_score(user, from = DateTime.new(1), to = DateTime.now)
     subs = self.submissions.find(:all, :limit => 1, :order => "score DESC", :conditions => ["created_at between ? and ? and user_id = ?", from, to, user])
     scores = subs.map {|s| s.score}
     return scores.max 
   end
 
-  def submission_history(user, from = DateTime.new(0), to = DateTime.now)
+  def submission_history(user, from = DateTime.new(1), to = DateTime.now)
     return Submission.find(:all, :conditions => ["created_at between ? and ? and user_id = ? and problem_id = ?", from, to, user, self])
   end
 
