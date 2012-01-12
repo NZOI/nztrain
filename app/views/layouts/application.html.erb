@@ -67,14 +67,15 @@
 			duration = 250;
 		}
 		$("#main").show();
-		$("#main-message-container-close").click(function() {
-			$("#main-message-container").fadeOut();
-        	});
 		$('#side-minify').click(function() {
 			if($('#side').width() == 100)
 				expand();
 			else
 				shrink();
+		});
+
+		$("table tr").click(function() {
+			$(this).toggleClass("main-table-highlight");
 		});
 	});
 </script>
@@ -106,7 +107,6 @@
 	    Congratulations to our current brownie point leader <%= @brownie_leader.email %> who has <%= @brownie_leader.brownie_points %> points!<br />
 	    <!--Note: each test case in Adding Numbers is in a separate file: you should only read in 2 numbers. <br />
 	    Note 2: Actually, this applies for all 3 problems. There is no need to handle multiple test cases per file. <br /> -->
-	<div id="main-message-container-close">close</div>
 	</div>
 	<div id="main-container">
 	      <% if alert %><p id="alert"><%= alert %></p><% end %>

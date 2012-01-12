@@ -45,7 +45,7 @@ a:hover {
 #side-minify:hover {
 	background-color: #EEE;
 	color: #2D2D2D;
-	border-right: 1px solid #;
+	border-right: 1px solid #F5F5F5;
 }
 
 
@@ -66,11 +66,7 @@ a:hover {
    border: 1px solid #C1C1C1;
    text-align: center;
    background-color: #333;
-   color: #FAFAFA;
-   margin-right: 70px;
-   border-top-right-radius: 0px;
-   border-bottom-right-radius: 0px;
-   border-right: none;
+   color: #FAFAFA;	
 }
 
 #main-container
@@ -171,6 +167,13 @@ a:hover {
    padding-top: 2px;
 }
 
+.main-table-highlight {
+	background-color: #D2D2D2;
+}
+
+.main-table-highlight:hover {
+	background-color: #D2D2D2 !important;
+} 
 
 
 .main_table td {
