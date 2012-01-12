@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   has_many :submissions
   has_many :contest_relations
   has_many :contests, :through => :contest_relations
-
+  
   def get_solved
     solved = []
     Problem.all.each do |prob|

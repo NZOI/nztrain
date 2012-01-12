@@ -10,8 +10,7 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.all
-    
+    @users = User.find_by_sql("SELECT users.*,count FROM (SELECT user_id,count(*) as count FROM (SELECT user_id,Max(score) as score FROM submissions GROUP BY user_id, problem_id) WHERE score == 100 GROUP BY user_id) JOIN users ON user_id = users.id;") 
     respond_to do |format|
       format.html
       format.xml {render :xml => @users }
