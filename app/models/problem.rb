@@ -10,9 +10,8 @@ class Problem < ActiveRecord::Base
     return subs.max_by {|s| s.score}
   end
 
-  #bit of a hack
   def get_score(user, from = DateTime.new(0), to = DateTime.now)
-    subs = self.submissions.find(:all, :conditions => ["created_at between ? and ? and user_id = ?", from, to, user])
+    subs = self.submissions.find(:all, :limit => 1, :order => "score DESC", :conditions => ["created_at between ? and ? and user_id = ?", from, to, user])
     scores = subs.map {|s| s.score}
     return scores.max 
   end
