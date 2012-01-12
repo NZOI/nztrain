@@ -27,10 +27,33 @@ a:hover {
    color: white;
 }
 
+#side-minify {
+	position: fixed;
+	color: white;
+	border-top-left-radius: 3px;
+	border-bottom-left-radius: 3px;
+	margin-left: 273px;
+	width: 19px;
+	padding: 6px;
+	bottom: 10px;
+	color: #666;
+	background-color: #333;
+	cursor: pointer;
+	padding-right: 2px;
+}
+
+#side-minify:hover {
+	background-color: #EEE;
+	color: #2D2D2D;
+	border-right: 1px solid #;
+}
+
+
 #main {
    width: 100%;
    height: 100%;
    float: left;
+   display: none;
 }
 
 #main-message-container {
@@ -82,10 +105,11 @@ a:hover {
 
 #side-logo
 {
-   width: 250px;
-   height: 300px;
-   background: url("/images/logo.png");
-   margin-left: 15px;out
+   width: 270px;
+   height: 320px;
+   background: url("/images/logo.svg");
+   background-size: 100%;
+   margin-left: 15px;
    margin-top: 25px;
 }
 
@@ -117,16 +141,17 @@ a:hover {
    text-decoration: none;
 }
 
-#side-uac
+.nav-uac
 {
-   position: absolute;
-   bottom: 10px;
-   padding-left: 10px;
-   cursor: pointer;
-   margin-left: 200px;
+	font-weight: normal;
 }
 
-.main_table {
+#uac-user:hover
+{
+	text-decoration: underline;
+}
+
+.main_table {	
    border-collapse: collapse;
    border: 1px solid #DDD;
 }
@@ -159,5 +184,6 @@ a:hover {
 {
 
    font-size: 2.5em;
+   margin-bottom: 25px;
 }
 

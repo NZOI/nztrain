@@ -19,31 +19,82 @@
     <%= csrf_meta_tag %>
 
 	<script type="text/javascript">
+	function createCookie(name,value,days) {
+		if (days) {
+			var date = new Date();
+			date.setTime(date.getTime()+(days*24*60*60*1000));
+			var expires = "; expires="+date.toGMTString();
+		}
+		else var expires = "";
+		document.cookie = name+"="+value+expires+"; path=/";
+	}
+
+	function readCookie(name) {
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for(var i=0;i < ca.length;i++) {
+			var c = ca[i];
+			while (c.charAt(0)==' ') c = c.substring(1,c.length);
+			if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+		}
+		return null;
+	}
+
+	var duration = 250;
+	function shrink() {
+		createCookie("expanded", "false", 31);
+		$("#side").animate({width:'100px'}, duration);
+		$('#side-minify').animate({'margin-left':'73px'}, duration).html("&#9654;");
+		$('#main-container').animate({'margin-left':'122px'}, duration);
+		$('#main-message-container').animate({'margin-left':'122px'}, duration);
+		$('#side-logo').animate({width:'70px', height: '80px'}, duration);
+	}
+
+	function expand() {
+		createCookie("expanded", "true", 31);
+		$("#side").animate({width:'300px'}, duration);
+		$('#side-minify').animate({'margin-left':'273px'}, duration).html("&#9664;");
+		$('#main-container').animate({'margin-left':'322px'}, duration);
+		$('#main-message-container').animate({'margin-left':'322px'}, duration);
+		$('#side-logo').animate({width:'270px', height: '320px'}, duration);
+	}
+
 	$(document).ready(function() {
+		var expanded = readCookie("expanded");
+		if(expanded == "false") {
+			duration = 0;
+			shrink();
+			duration = 250;
+		}
+		$("#main").show();
 		$("#main-message-container-close").click(function() {
-      $("#main-message-container").fadeOut();
-   });
-});
+			$("#main-message-container").fadeOut();
+        	});
+		$('#side-minify').click(function() {
+			if($('#side').width() == 100)
+				expand();
+			else
+				shrink();
+		});
+	});
 </script>
 <body>
 <div id="side">
+	<div id="side-minify">&#9664;</div>
    <div id="side-logo">
    </div>
    <div id="side-title">
      Training Site
    </div>
    <% if user_signed_in? %>
-	   <a href="/accounts/edit"><%= current_user.email %></a><br /><br />
+	   <div id="uac-user"><a href="/accounts/edit"><%= current_user.email %></a></div><br />
    <ul>
       <li><a href="<%= problems_path %>">problems</a></li>
       <li><a href="<%= contests_path %>">contests</a></li>
       <li><a href="<%= groups_path %>">groups</a></li>
-      <li><a href="<%= users_path %>">users</a></li>
+	<li><a href="<%= users_path %>">users</a></li>
+	<li class="nav-uac"><%= link_to "sign out", destroy_user_session_path, :method => :delete %></li>
    </ul>
-
-   <div id="side-uac">
-      <%= link_to "sign out >", destroy_user_session_path, :method => :delete %>
-   </div>
    <% else %>
       <a href="<%= new_user_session_path %>">sign in</a>
    <% end %>
