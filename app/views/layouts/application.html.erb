@@ -26,7 +26,7 @@
       <ul>
         <% if user_signed_in? %>
           <li>
-          signed in as <%= current_user.email %>
+          signed in as <a href="/accounts/edit"><%= current_user.email %></a>
           </li>
           <li>
           <a href="<%= problems_path %>">problems</a>

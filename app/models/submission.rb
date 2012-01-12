@@ -39,13 +39,13 @@ class Submission < ActiveRecord::Base
     self.judge_output = "Judging...\n"
 
     comp_sandbox_opts='-m262144 -w60 -e -i/dev/null'
-    comp_output = `#{box_path} #{comp_sandbox_opts} -- #{compiler} #{source_file} -o #{exe_file} 2>&1`
+    comp_output = `#{box_path} #{comp_sandbox_opts} -- #{compiler} #{source_file} -lm -o #{exe_file} 2>&1`
 
     if comp_output == ""
       comp_output = "nothing"
     end
 
-    self.judge_output += 'compiling with ' +  "#{box_path} #{comp_sandbox_opts} -- #{compiler} #{source_file} -o #{exe_file}\n"
+    self.judge_output += 'compiling with ' +  "#{box_path} #{comp_sandbox_opts} -- #{compiler} #{source_file} -lm -o #{exe_file}\n"
 
     self.judge_output += "compiler output:\n" + comp_output + "\n"
 

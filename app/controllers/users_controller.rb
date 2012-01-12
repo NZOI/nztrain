@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   before_filter :check_signed_in
   before_filter :check_access, :only => [:edit, :update, :destroy]
+  before_filter :check_admin, :only => [:add_brownie]
 
   def check_access
     if !current_user.is_admin
@@ -53,6 +54,14 @@ class UsersController < ApplicationController
       format.html { redirect_to(users_url) }
       format.xml { head :ok }
     end
+  end
+
+  def add_brownie
+    logger.debug "adding brownie"
+    @user = User.find(params[:id])
+    @user.brownie_points += 1
+    @user.save
+    redirect_to @user, :notice => "Brownie point added."
   end
 
 end
