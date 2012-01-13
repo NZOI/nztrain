@@ -31,7 +31,7 @@ class ContestsController < ApplicationController
     @contest_message = nil
 
     respond_to do |format|
-      if !@contest.is_running?
+      if current_user.is_admin || !@contest.is_running?
         #render contest report page
         @high_scorers = @contest.get_high_scorers
         logger.debug @high_scorers
