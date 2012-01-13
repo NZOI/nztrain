@@ -31,8 +31,8 @@ $(document).ready(function() {
     });
     **/
     //make buttons look good
-    $("#file-form").fileinput();
-    $("input:submit").button().css({
+    //$("#file-form").fileinput();
+    /*$("input:submit").button().css({
         'margin' : '0',
         'vertical-align' : 'top'
     });
@@ -52,6 +52,6 @@ $(document).ready(function() {
         'text-align' : 'left',
         'outline' : 'none',
         'cursor' : 'text',
-    });
+    });*/
 
 });
