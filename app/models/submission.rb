@@ -73,10 +73,16 @@ class Submission < ActiveRecord::Base
         system("#{box_path} -a2 -M#{judge_file} -m#{mem_limit} -k#{stack_limit} " +
                " -t#{time_limit} -o/dev/null -r/dev/null -- #{exe_file}" )
 
-        self.judge_output += IO.read(judge_file)
+        judge_msg = IO.read(judge_file)
+
+        self.judge_output += judge_msg
         correct = false
         
-        if FileTest.exist? output_file
+        if FileTest.exist?(output_file) == false
+          self.judge_output += "No output, probably crashed\n"
+        elsif judge_msg.include?("status")
+          self.judge_output += "Terminated by judge\n"
+        else
           expected = test_case.output.split('\n').each{|s| s.strip!}.join('\n').chomp.gsub(/\r/, "")
 
           #logger.info("writing expected");
@@ -120,8 +126,6 @@ class Submission < ActiveRecord::Base
 
           File.delete(output_file) if FileTest.exists?(output_file)
           File.delete(expected_file) if FileTest.exists?(expected_file)
-        else
-          self.judge_output += "No output, probably crashed\n"
         end
 
         self.judge_output += "\n"
