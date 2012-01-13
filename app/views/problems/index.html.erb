@@ -24,7 +24,7 @@
     <td><%= problem.memory_limit %></td>
     <td><%= problem.time_limit %></td>
     <td><%= problem.user_id %></td>
-    <td><%= problem.get_score(current_user) %></td>
+    <td><%= problem.score %></td>
     <td><%= link_to 'Show', problem %></td>
     <% if current_user.is_admin %>
       <td><%= link_to 'Edit', edit_problem_path(problem) %></td>

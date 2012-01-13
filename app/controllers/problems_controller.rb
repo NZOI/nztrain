@@ -15,9 +15,11 @@ class ProblemsController < ApplicationController
   # GET /problems.xml
   def index
 
-    @problems = Problem.all
+    @problems = Problem.select("problems.*, MAX(submissions.score) as score").joins("LEFT OUTER JOIN submissions ON submissions.problem_id = problems.id AND submissions.user_id = #{current_user.id}").group("problems.id")
     @problems = @problems.find_all {|p| p.can_be_viewed_by(current_user) }
 
+
+#@problemscores = Submissions.all#.select("MAX(score)")#.where("user_id = :user_id",{:user_id => current_user}).group("problem_id")
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @problems }
