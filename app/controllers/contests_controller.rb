@@ -33,7 +33,7 @@ class ContestsController < ApplicationController
     respond_to do |format|
       if current_user.is_admin || !@contest.is_running?
         #render contest report page
-        @high_scorers = @contest.get_high_scorers
+        @high_scorers = @contest.get_high_scorers(current_user.is_admin)
         logger.debug @high_scorers
 
         format.html { render "report" }
