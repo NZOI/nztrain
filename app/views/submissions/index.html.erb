@@ -1,27 +1,56 @@
 <h1>Listing submissions</h1>
 
+<% if @submissions.length == 0 %>
+  <% if current_user.id == params[:user_id] %>
+    You have no submissions.
+  <% else %>
+    No submissions found.
+  <% end %>
+<% end %>
+<% @table_columns = 4 %>
 <table>
   <tr>
-    <th>Source</th>
-    <th>Language</th>
+    <th>Submission</th>
+    <th></th>
     <th>Score</th>
-    <th>User</th>
-    <th>Problem</th>
+    <% if !params[:user_id] 
+         @table_columns+=1
+    %>
+      <th>User</th>
+    <% end %>
+    <% if !params[:problem_id] 
+         @table_columns+=1
+    %>
+      <th>Problem</th>
+    <% end %>
     <th></th>
-    <th></th>
-    <th></th>
+    <% if current_user.is_admin
+         @table_columns += 2
+    %>
+      <th></th>
+      <th></th>
+    <% end %>
   </tr>
 
 <% @submissions.each do |submission| %>
-  <tr>
-    <td><%= simple_format(submission.source) %></td>
+  <tr onClick="toggle_visibility(<%= "'submission#{submission.id}source'" %>,'table-row');">
+    <td><%= submission.created_at.strftime("%b %d %Y, %H:%M") %>
     <td><%= submission.language %></td>
     <td><%= submission.score %></td>
-    <td><%= submission.user_id %></td>
-    <td><%= submission.problem_id %></td>
+    <% if !params[:user_id] %>
+      <td><% if submission.user %><%= submission.user.handle %><% end %></td>
+    <% end %>
+    <% if !params[:problem_id] %>
+      <td><%= submission.problem.title %></td>
+    <% end %>
     <td><%= link_to 'Show', submission %></td>
-    <td><%= link_to 'Edit', edit_submission_path(submission) %></td>
-    <td><%= link_to 'Destroy', submission, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% if current_user.is_admin %>
+      <td><%= link_to 'Edit', edit_submission_path(submission) %></td>
+      <td><%= link_to 'Destroy', submission, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% end %>
+  </tr>
+  <tr id="submission<%= submission.id %>source" style="display: none">
+    <td colspan="<%= @table_columns %>"><%= simple_format(submission.source) %></td>
   </tr>
 <% end %>
 </table>

@@ -3,6 +3,22 @@ class Submission < ActiveRecord::Base
   belongs_to :problem
 
   validates :score, :presence => true
+  def self.submission_history(user = nil, problem = nil)
+    if user
+      if problem
+        Submission.find(:all, :conditions => ['user_id = ? and problem_id = ?', user, problem])
+      else
+        Submission.find(:all, :conditions => ['user_id = ?', user])
+      end
+    else
+      if problem
+        Submission.find(:all, :conditions => ['problem_id = ?', problem])
+      else
+        Submission.all
+      end
+    end
+  end
+
   def judge
     box_path = File.expand_path(Rails.root)+"/bin/box"
     if Config::CONFIG["host_cpu"] == "x86_64"

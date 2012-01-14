@@ -22,6 +22,17 @@
     <%= csrf_meta_tag %>
   </head>
   <body>
+      <script type="text/javascript">
+      <!--
+          function toggle_visibility(id,visible) {
+             var e = document.getElementById(id);
+             if(e.style.display == visible)
+                e.style.display = 'none';
+             else
+                e.style.display = visible;
+          }
+      //-->
+      </script>
       <nav>
       <ul>
         <% if user_signed_in? %>
