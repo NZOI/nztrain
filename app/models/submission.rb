@@ -6,17 +6,18 @@ class Submission < ActiveRecord::Base
   def self.submission_history(user = nil, problem = nil)
     if user
       if problem
-        Submission.find(:all, :conditions => ['user_id = ? and problem_id = ?', user, problem])
+        subs = Submission.find(:all, :conditions => ['user_id = ? and problem_id = ?', user, problem], :order => ['created_at desc'])
       else
-        Submission.find(:all, :conditions => ['user_id = ?', user])
+        subs = Submission.find(:all, :conditions => ['user_id = ?', user], :order => ['created_at desc'])
       end
     else
       if problem
-        Submission.find(:all, :conditions => ['problem_id = ?', problem])
+        subs = Submission.find(:all, :conditions => ['problem_id = ?', problem], :order => ['created_at desc'])
       else
-        Submission.all
+        subs = Submission.find(:all, :order => ['created_at desc'])
       end
     end
+    return subs
   end
 
   def judge

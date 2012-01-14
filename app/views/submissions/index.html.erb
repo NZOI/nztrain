@@ -1,5 +1,12 @@
 <h1>Listing submissions</h1>
-
+<% if current_user.is_admin && params[:user_id] 
+     u = User.find(params[:user_id]) %>
+  <p><b>User:</b> <%= link_to u.handle, u %></p>
+<% end %>
+<% if params[:problem_id] 
+     p = Problem.find(params[:problem_id]) %>
+  <p><b>Problem:</b> <%= link_to p.title, p %></p>
+<% end %>
 <% if @submissions.length == 0 %>
   <% if current_user.id == params[:user_id] %>
     You have no submissions.
