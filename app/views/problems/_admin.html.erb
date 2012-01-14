@@ -13,7 +13,7 @@
 <% @all_subs.each do |sub| %>
 	<% if sub.user != nil %>
 		<tr>
-      		<td> <%= link_to sub.user.email, sub.user %> </td>
+      		<td> <%= link_to sub.user.handle, sub.user %> </td>
       	<td> <%= link_to sub.score, sub %> </td>
     	</tr>
 	<% end %>

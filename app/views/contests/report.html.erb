@@ -35,7 +35,7 @@
   <% @high_scorers.each do |person| %>
     <tr>
       <% u = User.find(person[:user]) %>
-      <td> <%= u.email %> </td>
+      <td> <%= link_to u.handle, u %> </td>
       <% @contest.problems.each do |prob|%>
         <td> <%= @contest.problem_score(u, prob) %> </td>
       <% end %>
