@@ -14,7 +14,7 @@
 	<% if sub.user != nil %>
 		<tr>
       		<td> <%= link_to sub.user.handle, sub.user %> </td>
-      	<td> <%= link_to sub.score, sub %> </td>
+      	<td> <%= link_to sub.score, sub %> (<%= @sub_count[sub.user] %>)  </td>
     	</tr>
 	<% end %>
 <% end %>
