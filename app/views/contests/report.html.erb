@@ -1,32 +1,23 @@
-
-<h1> Contest Report: <%= @contest.title %> </h1>
+<script type="text/javascript">
+window.setTimeout("window.location.reload(true);", 60000);
+</script>
+<div id="main-page-title">Contest Report: <%= @contest.title %></div>
+<br />
 
 <p>
-<%= @contest.num_competitors %> people competed in this contest.
+   <%= @contest.num_competitors %> people competed in this contest. <br />
+   <b>Start time:</b>  <%= @contest.start_time %><br />
+   <b>End time:</b>    <%= @contest.end_time %><br />
+   <b>Duration:</b>    <%= @contest.duration %><br />
 </p>
+<br />
 
-<p>
-  <b>Start time:</b>
-  <%= @contest.start_time %>
-</p>
-
-<p>
-  <b>End time:</b>
-  <%= @contest.end_time %>
-</p>
-
-<p>
-  <b>Duration:</b>
-  <%= @contest.duration %>
-</p>
-
-<p>
-<b> High Scorers: </b>
-<table>
+<b>High Scorers</b>
+<table class="main_table" >
   <tr>
     <th> User </th>
-    <% @contest.problems.each do |prob|%>
-      <th> <%= prob.title %> </th>
+    <% @contest.problems.each do |problem|%>
+      <th> <%= link_to problem.title, problem_path(problem) %> </th>
     <% end %>
     <th> Total Score </th>
     <th> Placing </th>
@@ -44,11 +35,10 @@
     </tr>
   <% end %>
 </table>
-<p>
+<br />
 
-<p>
-<b> Problems: </b>
-<table>
+<b>Problems</b>
+<table class="main_table">
   <tr>
     <th> Name </th>
     <th> Your Score </th>
@@ -63,8 +53,7 @@
     </tr>
   <% end %>
 </table>
-</p>
-
+<br />
 <% if current_user.is_admin %>
   <%= render 'admin' %>
 <% end %>
