@@ -18,8 +18,6 @@ class ProblemsController < ApplicationController
     @problems = Problem.select("problems.*, (SELECT MAX(score) FROM submissions WHERE problem_id = problems.id AND user_id = #{current_user.id}) as score")
     @problems = @problems.find_all {|p| p.can_be_viewed_by(current_user) }
 
-
-#@problemscores = Submissions.all#.select("MAX(score)")#.where("user_id = :user_id",{:user_id => current_user}).group("problem_id")
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @problems }
@@ -51,7 +49,7 @@ class ProblemsController < ApplicationController
   # GET /problems/new.xml
   def new
     @problem = Problem.new
-
+    @problem.user_id = current_user.id
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @problem }
