@@ -142,6 +142,12 @@ a:hover {
 	font-weight: normal;
 }
 
+#uac-user {
+	color: white;
+	font-weight: bold;
+	
+}
+
 #uac-user:hover
 {
 	text-decoration: underline;
@@ -200,4 +206,20 @@ a:hover {
 	margin-left: -2px;
 	margin-top: 14px;
 	margin-bottom: 2px;
+}
+
+input, select {
+	padding: 4px;
+	font-size: 12px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-right: 3px;
+}
+
+input[type="file"] {
+	border: 1px solid #d2d2d2;
+}
+
+input[type!="submit"]:focus {
+	box-shadow: 1px 1px 4px 1px #2d2d2d;
 }

@@ -48,6 +48,7 @@
 		$('#main-container').animate({'margin-left':'122px'}, duration);
 		$('#main-message-container').animate({'margin-left':'122px'}, duration);
 		$('#side-logo').animate({width:'70px', height: '80px'}, duration);
+		$('#uac-user').data('email', $('#uac-user').html()).html("<a href=\"/accounts/edit\">account</a>");
 	}
 
 	function expand() {
@@ -57,6 +58,7 @@
 		$('#main-container').animate({'margin-left':'322px'}, duration);
 		$('#main-message-container').animate({'margin-left':'322px'}, duration);
 		$('#side-logo').animate({width:'270px', height: '320px'}, duration);
+		$('#uac-user').html($('#uac-user').data('email'));
 	}
 
 	$(document).ready(function() {

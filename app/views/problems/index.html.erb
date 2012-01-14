@@ -16,7 +16,7 @@
   </tr>
 
 <% @problems.each do |problem| %>
-  <tr>
+    <tr onclick="location.href='<%= url_for(problem) %>'">
     <td><%= problem.title %></td>
     <td><%= problem.input %></td>
     <td><%= problem.output %></td>
