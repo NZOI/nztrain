@@ -10,7 +10,7 @@ SHORTEN_LIMIT = 100
 #value between 0 and 1, used to reduce fraction of competitors shown on high-score table
 HIGH_SCORE_LIMIT = 0.5
 
-Rails.env='development'
+Rails.env='production'
 
 #Initialize the rails application
 NztrainV2::Application.initialize!
