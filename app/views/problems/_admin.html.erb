@@ -14,7 +14,7 @@
 	<% if sub.user != nil %>
 		<tr>
       		<td> <%= link_to sub.user.handle, sub.user %> </td>
-      	<td style="min-width: 4em;"> <span style="text-align: right; float: left; width: 50%;"><%= link_to sub.score, sub %></span> <span style="text-align: right; float: right; width: 50%;">(<%= @sub_count[sub.user] %>)</span> </td>
+      	<td style="min-width: 4em;"> <span style="text-align: right; float: left; width: 50%;"><%= link_to sub.score, sub %></span> <span style="text-align: right; float: right; width: 50%;">(<%= link_to @sub_count[sub.user], :controller => "submissions", :user_id => sub.user, :problem_id => @problem %>)</span> </td>
     	</tr>
 	<% end %>
 <% end %>
