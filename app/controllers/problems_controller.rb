@@ -15,7 +15,7 @@ class ProblemsController < ApplicationController
   # GET /problems.xml
   def index
 
-    @problems = Problem.select("problems.*, (SELECT MAX(score) FROM submissions WHERE problem_id = problems.id AND user_id = #{current_user.id}) as score")
+    @problems = Problem.select("problems.*, MAX(submissions.score) as score").joins("LEFT OUTER JOIN submissions ON submissions.problem_id = problems.id AND submissions.user_id = #{current_user.id}").group("problems.id")
     @problems = @problems.find_all {|p| p.can_be_viewed_by(current_user) }
 
     respond_to do |format|
