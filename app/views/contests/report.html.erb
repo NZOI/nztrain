@@ -22,25 +22,41 @@
 
 <p>
 <b> High Scorers: </b>
+</p>
 <table>
   <tr>
     <th> User </th>
     <% @contest.problems.each do |prob|%>
-      <th> <%= prob.title %> </th>
+      <th style="min-width: 4em;"> <%= prob.title %> </th>
     <% end %>
     <th> Total Score </th>
+    <th> Time Taken </th>
     <th> Placing </th>
   </tr>
-
-  <% @high_scorers.each do |person| %>
+  <% @scoreboard.each do |person| %>
     <tr>
-      <% u = User.find(person[:user]) %>
-      <td> <%= link_to u.handle, u %> </td>
+      <td>
+        <% begin %>
+          <% u = User.find(person[:user_id]) %>
+          <%= link_to u.handle, u %>
+        <% rescue ActiveRecord::RecordNotFound %>
+          <%= "Deleted User ID #{person[:user_id]}" %>
+        <% end %>
+      </td>
       <% @contest.problems.each do |prob|%>
-        <td> <%= @contest.problem_score(u, prob) %> </td>
+        <% @detail = @scoredetails[[person[:user_id],prob.id]]  %>
+        <td>
+          <span style="float: left; width: 2em; text-align: right;">
+            <%= @detail[:score]?link_to_if(person[:user_id] == current_user.id || current_user.is_admin, @detail[:score], submission_path(@detail[:sub_id])):"-" %>
+          </span>
+          <span style="float: left; width: 2em; text-align: right;">
+            (<%= link_to_if person[:user_id] == current_user.id || current_user.is_admin, @detail[:count]?@detail[:count]:0, :controller => "submissions", :user_id => person[:user_id], :problem_id => prob.id %>)
+          </span>
+        </td>
       <% end %>
-      <td> <%= person[:score] %> </td>
-      <td> <%= person[:placing] %> </td>
+      <td align="right"> <%= person[:total_score] %> </td>
+      <td> <%= person[:time_taken].split('.')[0] %> </td>
+      <td align="right"> <%= person[:rank] %> </td>
     </tr>
   <% end %>
 </table>
