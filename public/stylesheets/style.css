@@ -1,201 +1,225 @@
-.header-container {
-    font-size: 70px;
-    font-family: monospace;
-    margin-top: 25px;
+* {
+   margin: 0;
+   padding: 0;
+   font-family: Arial;
+   color: #2D2D2D;
 }
-
-body {
-    background: #abc;
-    text-align: center;
-}
-
-/* added by rails scaffold (change maybe?) */
-body, p, ol, ul, td {
-    font-family: verdana, arial, helvetica, sans-serif;
-    font-size:   13px;
-    line-height: 18px;
-}
-
-header {
-    padding-top: 20px;
-    margin-bottom: 20px;
-}
-
-header img {
-    padding: 1em;
-    background: #fff;
-}
-
-section {
-    text-align: left;
-    float: left;
-    font-size: 120%;
-    margin: 0 auto;
-    width: 100%;
-    margin-top: 3em;
-    padding: 20px;
-    background: #fff;
-}
-
-section h1 {
-    text-align: center;
-    font-size: 200%;
-}
-
-.round {
-    margin-left:  15%;
-    margin-right:  15%;
-    -moz-border-radius:    10px;
-    -webkit-border-radius: 10px;
-    border-radius:         10px;
-    width:         70%;
-}
-
-/* Links */
 
 a {
-    color: #09c;
-    text-decoration: none;
+   color: #2D2D2D;
+   text-decoration: none;
 }
 
 a:hover {
-    color: #069;
-    text-decoration: underline;
+   text-decoration: underline;
 }
 
-a:visited {
-    color: #069;
+#side {
+   position: fixed;
+   width: 300px;
+   height: 100%;
+   background: #2D2D2D;
+   border-right: 1px solid #9A9A9A;
+   border-radius: 3px;
+   border-top-left-radius: 0px;
+   border-bottom-left-radius: 0px;
+   padding-left: 10px;
+   color: white;
 }
 
-/* Navigation */
-nav {
-    -moz-border-radius:    10px;
-    -webkit-border-radius: 10px;
-    border-radius:         10px;
-    float: right;
-    background-color: white;
-    white-space: nowrap;
+#side-minify {
+	position: fixed;
+	color: white;
+	border-top-left-radius: 3px;
+	border-bottom-left-radius: 3px;
+	margin-left: 273px;
+	width: 19px;
+	padding: 6px;
+	bottom: 10px;
+	color: #666;
+	background-color: #333;
+	cursor: pointer;
+	padding-right: 2px;
 }
 
-nav ul {
-    margin: 0;
-    padding-left: 1em;
-    padding-right: 1em;
+#side-minify:hover {
+	background-color: #EEE;
+	color: #2D2D2D;
+	border-right: 1px solid #F5F5F5;
 }
 
-nav ul li {
-    list-style-type: none;
-    display: inline-block;
-    padding: 0.2em 0;
+
+#main {
+   width: 100%;
+   height: 100%;
+   float: left;
+   display: none;
 }
 
-nav ul li a {
-    padding: 0 5px;
-    font-weight: bold;
-    color: #000;
+#main-message-container {
+   margin: 10px;
+   margin-left: 322px;
+   border-radius: 3px;
+   -moz-border-radius: 3px;
+   -webkit-border-radius: 3px;
+   padding: 10px;
+   border: 1px solid #C1C1C1;
+   text-align: center;
+   background-color: #333;
+   color: #FAFAFA;	
 }
 
-nav ul li a:visited {
-    color: #000;
+#main-container
+{
+   margin: 10px;
+   margin-left: 322px;
+   padding: 10px;
 }
 
-nav ul li a:hover {
-    text-decoration: underline;
+#main-message-container-close {
+   float: right;
+   background: #333;
+   border: 1px solid #C1C1C1;
+   border-left: none;
+   color: white;
+   padding-top: 3px;
+   margin: 10px;
+   padding: 10px;
+   border-radius: 3px;
+   margin-right: -68px;
+   margin-top: -30px;
+   border-top-left-radius: 0px;
+   border-bottom-left-radius: 0px;
+   cursor: pointer;
 }
 
-div#footer {
-    text-align: center;
+#main-message-container-close:hover
+{
+   background-color: #666;
+   color: black;
 }
 
-/* tables */
-
-table {
-    border-collapse: collapse;
+#side-logo
+{
+   width: 270px;
+   height: 320px;
+   background: url("/images/logo.svg");
+   background-size: 100%;
+   margin-left: 15px;
+   margin-top: 25px;
 }
 
-table td, table th {
-    border: 1px solid #999;
-    padding: 3px;
+#side-title {
+   text-align: center;
+   width: 100%;
+   margin-top: 10px;
+   color: white;
+   font-weight: bold;
+   padding-bottom: 30px;
 }
 
-td{font-weight: bold;}
-
-/* file upload */
-
-/*#file-form {
-    width:0px;
-    height:0px;
-    position:absolute;
-}*/
-
-.fileinput-input {
-    /* bit annoying to have to duplicate, but ui-widget makes everything blue and bold */
-    font-family: verdana, arial, helvetica, sans-serif;
-    color: black;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    font-size: 16px;
+#side ul {
+   font-weight: bold;
 }
 
-select.ui-button {
-    padding: .4em 1em;
+#side ul li {
+   cursor: pointer;
 }
 
-/* countdown */
-div#countDownTimer {
-    text-align: center;
+#side ul li:hover {
+   text-decoration: underline;
+   color: #FAFAFA;
+   user-select: none;
 }
 
-/* the rest is scaffolding added (change?) */
-pre {
-    background-color: #eee;
-    padding: 5px;
-    margin: 0;
-    font-size: 11px;
+#side a {
+   color: white;
+   text-decoration: none;
 }
 
-div.field, div.actions {
-    margin-bottom: 10px;
+.nav-uac
+{
+	font-weight: normal;
 }
 
-#notice {
-    text-align: center;
-    color: green;
+#uac-user {
+	color: white;
+	font-weight: bold;
+	
 }
 
-.field_with_errors {
-    padding: 2px;
-    background-color: red;
-    display: table;
+#uac-user:hover
+{
+	text-decoration: underline;
 }
 
-#error_explanation {
-    width: 450px;
-    border: 2px solid red;
-    padding: 7px;
-    padding-bottom: 0;
-    margin-bottom: 20px;
-    background-color: #f0f0f0;
+.main_table, #main-container table{	
+   border-collapse: collapse;
+   border: 1px solid #DDD;
 }
 
-#error_explanation h2 {
-    text-align: left;
-    font-weight: bold;
-    padding: 5px 5px 5px 15px;
-    font-size: 12px;
-    margin: -7px;
-    margin-bottom: 0px;
-    background-color: #c00;
-    color: #fff;
+.main_table, #main-container  tr {
+   border: 1px solid #DDD;
 }
 
-#error_explanation ul li {
-    font-size: 12px;
-    list-style: square;
+.main_table, #main-container  tr:hover {
+   background-color: #EEE;
 }
 
-.centered_div {
-    margin: 3em auto;
-    width: 100px;
+.main_table, #main-container th {
+   padding-left: 10px;
+   padding-right: 10px;
+   text-align: left;
+   padding-top: 2px;
+}
+
+.main-table-highlight {
+	background-color: #D2D2D2;
+}
+
+.main-table-highlight:hover {
+	background-color: #D2D2D2 !important;
+} 
+
+
+.main_table td {
+   padding-left: 10px;
+   padding-right: 10px;
+   border: 1px solid #DDD;
+   padding-top: 2px;
+}
+
+#main-page-title
+{
+
+   font-size: 2.5em;
+   margin-bottom: 25px;
+}
+
+#main-container pre {
+	padding: 4px;
+	border: 1px solid #D2D2D2;
+	background-color: #EEE;
+}
+
+#main-container h1, h2, h3, h4, h5, h6, h7 {
+	margin-left: -2px;
+	margin-top: 14px;
+	margin-bottom: 2px;
+}
+
+input, select {
+	padding: 4px;
+	font-size: 12px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-right: 3px;
+}
+
+input[type="file"] {
+	border: 1px solid #d2d2d2;
+}
+
+input[type!="submit"]:focus {
+	box-shadow: 1px 1px 4px 1px #2d2d2d;
 }

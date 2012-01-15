@@ -44,7 +44,7 @@ class Submission < ActiveRecord::Base
     end
     if language == 'Haskell'
       source_file = 'program.hs'
-      compiler = '/usr/bin/ghc'
+      compiler = '/usr/bin/ghc --make'
     end
 
     File.open(source_file, 'w') { |f| f.write(source) }

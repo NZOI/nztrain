@@ -1,10 +1,7 @@
-<p>
-<b>Admin:</b>
-</p>
+<b>Admin</b><br />
 
-<p>
 <b>Users that have submitted:</b>
-<table>
+<table class="main_table">
 <tr>
 <th> User </th>
 <th> Score </th>
@@ -19,7 +16,7 @@
 	<% end %>
 <% end %>
 </table>
-
+<br />
 <p>
 <% form_tag(:controller => "problem_contest", :action => "add", :method => :put, :problem_id => @problem) do %>
   <%= collection_select :problem, :contest_ids, @contests, :id, :title %>
