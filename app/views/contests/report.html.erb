@@ -1,11 +1,16 @@
-<script type="text/javascript">
-<!--
-window.setTimeout("window.location.reload(true);", 60000);
-//-->
-</script>
+<% if @contest.end_time >= DateTime.now() %>
+  <script type="text/javascript">
+  <!--
+<% if @contest.start_time >= DateTime.now() %>
+  window.setTimeout("window.location.reload(true);", <%= ((@contest.start_time-Time.now())*1000).round %>);
+<% else # contest currently running!!! %>
+  window.setTimeout("window.location.reload(true);", 60000);
+<% end %>
+  //-->
+  </script>
+<% end %>
 <div id="main-page-title">Contest Report: <%= @contest.title %></div>
 <br />
-
 <p>
    <%= @contest.num_competitors %> people competed in this contest. <br />
    <b>Start time:</b>  <%= @contest.start_time %><br />
