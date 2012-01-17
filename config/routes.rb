@@ -11,6 +11,9 @@ NztrainV2::Application.routes.draw do
     collection do
       get '(by_user/:user_id)(/by_problem/:problem_id)', :action => :index, :constraints => {:user_id => /\d+/, :problem_id => /\d+/}
     end
+    member do
+      post 'rejudge'
+    end
   end
 
   resources :problems

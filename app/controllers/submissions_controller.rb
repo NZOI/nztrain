@@ -1,7 +1,7 @@
 class SubmissionsController < ApplicationController
   before_filter :check_signed_in
   before_filter :check_access, :only => [:show]
-  before_filter :check_admin, :only => [:edit, :update, :destroy]
+  before_filter :check_admin, :only => [:edit, :update, :destroy, :rejudge]
   # GET /submissions
   # GET /submissions.xml
 
@@ -57,6 +57,18 @@ class SubmissionsController < ApplicationController
   def edit
     @submission = Submission.find(params[:id])
     @problem = @submission.problem
+  end
+
+  def rejudge
+    @submission = Submission.find(params[:id])
+    @submission.judge_output = nil
+    if @submission.save
+      logger.debug "rejudging submission id #{@submission.id}"
+      spawn do
+        @submission.judge
+      end
+      redirect_to @submission, :notice => "Rejudge request queued."
+    end
   end
 
   # POST /submissions

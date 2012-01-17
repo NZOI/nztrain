@@ -5,7 +5,11 @@
   </b>
   </p>
 <% end %>
-
+<% if current_user.is_admin %>
+<p>
+<%= link_to "Rejudge", rejudge_submission_path(@submission), :confirm => "Are you sure?", :method => "post" %>
+</p>
+<% end %>
 <p>
 <b>Problem:</b>
 <%= link_to @submission.problem.title, @submission.problem %>
