@@ -1,3 +1,5 @@
+<% content_for :title, @contest.title %>
+
 <% if @contest.end_time >= DateTime.now() %>
   <script type="text/javascript">
   <!--
