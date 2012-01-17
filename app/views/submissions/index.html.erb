@@ -15,7 +15,7 @@
   <% end %>
 <% end %>
 <% @table_columns = 4 %>
-<table>
+<table width="100%">
   <tr>
     <th>Submission</th>
     <th></th>
@@ -57,7 +57,7 @@
     <% end %>
   </tr>
   <tr id="submission<%= submission.id %>source" style="display: none">
-    <td colspan="<%= @table_columns %>"><%= simple_format(submission.source) %></td>
+    <td colspan="<%= @table_columns %>"><pre><%= submission.source %></pre></td>
   </tr>
 <% end %>
 </table>
