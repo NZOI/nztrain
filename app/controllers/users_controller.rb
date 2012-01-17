@@ -11,15 +11,7 @@ class UsersController < ApplicationController
 
   def index
     @users = User.find_by_sql <<-EOSQL
-			SELECT users.*, num_solved.count
-			FROM users
-			LEFT JOIN (SELECT user_id,count(max_score.*) as count
-				FROM (SELECT user_id,Max(score) as score
-					FROM submissions
-					GROUP BY user_id, problem_id
-				) as max_score
-				WHERE score = 100 GROUP BY user_id
-			) as num_solved ON user_id = users.id;
+			SELECT users.*, num_solved.count FROM users LEFT JOIN (SELECT user_id,count(*) as count FROM (SELECT user_id,Max(score) as score FROM submissions GROUP BY user_id, problem_id ) as max_score WHERE score = 100 GROUP BY user_id) as num_solved ON user_id = users.id;
 			EOSQL
     respond_to do |format|
       format.html

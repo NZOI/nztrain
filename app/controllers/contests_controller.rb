@@ -46,6 +46,15 @@ class ContestsController < ApplicationController
     @sub_count.each do |s|
       @scoredetails[[s[:user_id],s[:problem_id]]][:count] = s[:count]
     end
+    if @scoreboard.length>0 && !@scoreboard[0][:rank] # SQLite3 doesn't have Rank() Windowing function
+      @current_rank = 0
+      @scoreboard.each_with_index do |row, i|
+        if i==0 || row[:score].to_i < @scoreboard[i-1][:score].to_i  || (row[:score].to_i  == @scoreboard[i-1][:score].to_i  && row[:time_taken]  > @scoreboard[i-1][:time_taken] )
+          @current_rank = i+1;
+        end
+        @scoreboard[i][:rank] = @current_rank
+      end
+    end
     if !current_user.is_admin
       @median = @scoreboard[@scoreboard.length/2][:rank].to_i
       @scoreboard = @scoreboard.reject{|row| (row[:rank].to_i >= @median)}
