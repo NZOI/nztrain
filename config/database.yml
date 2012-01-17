@@ -17,7 +17,8 @@ test:
 
 production:
   adapter: postgresql
-  database: db/production.sqlite3
-  host: /tmp
+  encoding: unicode
+  database: nztrain
   pool: 5
-  timeout: 5000
+  username: www-data
+  password:

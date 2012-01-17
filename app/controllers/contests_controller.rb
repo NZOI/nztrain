@@ -29,12 +29,32 @@ class ContestsController < ApplicationController
     @problems = @contest.problems
     @groups = Group.all
     @contest_message = nil
-
+    
+    @realtimejudging = true # if false, scores only revealed at the end
+    if @realtimejudging
+      @scoreboard = Submission.find_by_sql("SELECT * FROM contests_max_score_scoreboard WHERE contest_id = #{params[:id]}")
+      @scores = Submission.find_by_sql("SELECT * FROM contests_max_score_submissions WHERE contest_id = #{params[:id]}")
+    else
+      @scoreboard = Submission.find_by_sql("SELECT * FROM contests_latest_scoreboard WHERE contest_id = #{params[:id]}")
+      @scores = Submission.find_by_sql("SELECT * FROM contests_latest_submissions WHERE contest_id = #{params[:id]}")
+    end
+    @sub_count = Submission.find_by_sql("SELECT * FROM contests_count_submissions WHERE contest_id = #{params[:id]}")
+    @scoredetails = Hash.new({})
+    @scores.each do |s|
+      @scoredetails[[s[:user_id],s[:problem_id]]] = {:score => s[:score], :sub_id => s[:id], :count => 0}
+    end
+    @sub_count.each do |s|
+      @scoredetails[[s[:user_id],s[:problem_id]]][:count] = s[:count]
+    end
+    if !current_user.is_admin
+      @median = @scoreboard[@scoreboard.length/2][:rank].to_i
+      @scoreboard = @scoreboard.reject{|row| (row[:rank].to_i >= @median)}
+    end
     respond_to do |format|
-      if !@contest.is_running?
+      if current_user.is_admin || !@contest.is_running?
         #render contest report page
-        @high_scorers = @contest.get_high_scorers
-        logger.debug @high_scorers
+        #@high_scorers = @contest.get_high_scorers(current_user.is_admin)
+        #logger.debug @high_scorers
 
         format.html { render "report" }
         format.xml  { render :xml => @contest }

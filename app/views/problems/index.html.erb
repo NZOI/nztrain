@@ -1,7 +1,6 @@
-<h1>Listing problems</h1>
-
-<table>
-  <tr class="jtable tr">
+<div id="main-page-title">Problems</div>
+<table class="main_table">
+  <tr>
     <th>Title</th>
     <th>Input</th>
     <th>Output</th>
@@ -17,14 +16,14 @@
   </tr>
 
 <% @problems.each do |problem| %>
-  <tr>
+    <tr onclick="location.href='<%= url_for(problem) %>'">
     <td><%= problem.title %></td>
     <td><%= problem.input %></td>
     <td><%= problem.output %></td>
     <td><%= problem.memory_limit %></td>
     <td><%= problem.time_limit %></td>
     <td><%= problem.user_id %></td>
-    <td><%= problem.get_score(current_user) %></td>
+    <td><%= problem.score %></td>
     <td><%= link_to 'Show', problem %></td>
     <% if current_user.is_admin %>
       <td><%= link_to 'Edit', edit_problem_path(problem) %></td>

@@ -40,7 +40,7 @@ module NztrainV2
     config.filter_parameters += [:password]
 
     config.time_zone = "Auckland"
-    config.action_mailer.default_url_options = { :host => 'http://young-wind-5220.heroku.com' }
+    config.action_mailer.default_url_options = { :host => 'nztrain.com' }
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.perform_deliveries = true
     config.action_mailer.raise_delivery_errors = true
@@ -50,9 +50,9 @@ module NztrainV2
       :address => "smtp.gmail.com",
       :port => 587,
       :authentication => :plain,
-      :domain => 'nztrain.org',
+      :domain => 'nztrain.com',
       :user_name => 'nztrain',
-      :password => 'new zealand training site',
+      :password => 'training site',
       :enable_starttls_auto => true
     }
 

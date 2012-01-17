@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   before_filter :check_signed_in
   before_filter :check_access, :only => [:edit, :update, :destroy]
+  before_filter :check_admin, :only => [:add_brownie]
 
   def check_access
     if !current_user.is_admin
@@ -9,8 +10,17 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.all
-    
+    @users = User.find_by_sql <<-EOSQL
+			SELECT users.*, num_solved.count
+			FROM users
+			LEFT JOIN (SELECT user_id,count(max_score.*) as count
+				FROM (SELECT user_id,Max(score) as score
+					FROM submissions
+					GROUP BY user_id, problem_id
+				) as max_score
+				WHERE score = 100 GROUP BY user_id
+			) as num_solved ON user_id = users.id;
+			EOSQL
     respond_to do |format|
       format.html
       format.xml {render :xml => @users }
@@ -20,7 +30,7 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     @solved_problems = @user.get_solved
-    
+
     respond_to do |format|
       format.html
       format.xml {render :xml => @users }
@@ -53,6 +63,14 @@ class UsersController < ApplicationController
       format.html { redirect_to(users_url) }
       format.xml { head :ok }
     end
+  end
+
+  def add_brownie
+    logger.debug "adding brownie"
+    @user = User.find(params[:id])
+    @user.brownie_points += 1
+    @user.save
+    redirect_to @user, :notice => "Brownie point added."
   end
 
 end

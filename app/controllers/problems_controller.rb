@@ -14,8 +14,7 @@ class ProblemsController < ApplicationController
   # GET /problems
   # GET /problems.xml
   def index
-
-    @problems = Problem.all
+    @problems = Problem.select("problems.*, (SELECT MAX(score) FROM submissions WHERE problem_id = problems.id AND user_id = #{current_user.id}) as score")
     @problems = @problems.find_all {|p| p.can_be_viewed_by(current_user) }
 
     respond_to do |format|
@@ -34,6 +33,14 @@ class ProblemsController < ApplicationController
     @groups = Group.all
     @submissions = @problem.submission_history(current_user)
 
+    @all_subs = {};
+    @sub_count = {};
+    @problem.submissions.each do |sub|
+    	@all_subs[sub.user] = [(@all_subs[sub.user] or sub), sub].max_by {|m| m.score}
+        @sub_count[sub.user] = (@sub_count[sub.user] or 0) + 1
+    end
+    @all_subs = @all_subs.map {|s| s[1]}
+
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @problem }
@@ -44,7 +51,7 @@ class ProblemsController < ApplicationController
   # GET /problems/new.xml
   def new
     @problem = Problem.new
-
+    @problem.user_id = current_user.id
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @problem }
@@ -60,6 +67,9 @@ class ProblemsController < ApplicationController
   # POST /problems.xml
   def create
     @problem = Problem.new(params[:problem])
+    if @problem.evaluator != nil
+      @problem.evaluator = IO.read(params[:problem][:evaluator].path)
+    end
 
     respond_to do |format|
       if @problem.save
@@ -76,6 +86,9 @@ class ProblemsController < ApplicationController
   # PUT /problems/1.xml
   def update
     @problem = Problem.find(params[:id])
+    if params[:problem][:evaluator] != nil
+      params[:problem][:evaluator] = IO.read(params[:problem][:evaluator].path)
+    end
 
     respond_to do |format|
       if @problem.update_attributes(params[:problem])

@@ -12,10 +12,10 @@
     </div>
   <% end %>
   <div class="field">
-    <%= f.file_field :source, :id => "file-form"%>
+    <%= f.file_field :source %>
   </div>
   <div class="field">
-    <%= f.select :language, ['C++', 'C']%>
+    <%= f.select :language, ['C++', 'C', 'Haskell']%>
   </div>
   <div class="actions">
     <%= f.submit %>

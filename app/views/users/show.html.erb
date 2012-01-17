@@ -1,19 +1,21 @@
-<p>
-  <b>Email:</b>
-  <%= @user.email %>
-</p>
 
-<p>
-  <b>Admin:</b>
-  <%= @user.is_admin %>
-</p>
+<b>Name:</b>
+<%= @user.name %>
+<br />
 
-<p>
-<b>Brownie Points: </b>
+<b>Email:</b>
+<%= @user.email %>
+<br />
+
+<b>Admin:</b>
+<%= @user.is_admin %>
+<br />
+
+<b>Brownie Points:</b>
 <%= @user.brownie_points %>
-</p>
+<br />
+<br />
 
-<p>
 <b> <%= @solved_problems.size %> solved problems: </b>
 <ul>
 <% @solved_problems.each do |prob| %>
@@ -22,7 +24,10 @@
   </li>
 <% end %>
 </ul>
-</p>
+<br />
 
+<% if current_user.is_admin %>
+  <%= render 'admin' %>
+<% end %>
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>

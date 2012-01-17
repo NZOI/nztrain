@@ -3,6 +3,23 @@ class Submission < ActiveRecord::Base
   belongs_to :problem
 
   validates :score, :presence => true
+  def self.submission_history(user = nil, problem = nil)
+    if user
+      if problem
+        subs = Submission.find(:all, :conditions => ['user_id = ? and problem_id = ?', user, problem], :order => ['created_at desc'])
+      else
+        subs = Submission.find(:all, :conditions => ['user_id = ?', user], :order => ['created_at desc'])
+      end
+    else
+      if problem
+        subs = Submission.find(:all, :conditions => ['problem_id = ?', problem], :order => ['created_at desc'])
+      else
+        subs = Submission.find(:all, :order => ['created_at desc'])
+      end
+    end
+    return subs
+  end
+
   def judge
     box_path = File.expand_path(Rails.root)+"/bin/box"
     if Config::CONFIG["host_cpu"] == "x86_64"
@@ -17,25 +34,35 @@ class Submission < ActiveRecord::Base
     source_file = 'program.c'
     exe_file = 'program.exe'
     judge_file = "judge.info"
+    eval_file = "eval.sh"
+    expected_file = "expect.out"
 
     # TODO: store compiler info in config file
     compiler = '/usr/bin/gcc'
     if language == 'C++'
       compiler = '/usr/bin/g++'
     end
+    if language == 'Haskell'
+      source_file = 'program.hs'
+      compiler = '/usr/bin/ghc --make'
+    end
 
     File.open(source_file, 'w') { |f| f.write(source) }
+
+    if problem.evaluator
+      File.open(eval_file, 'w') { |f| f.write(problem.evaluator) }
+    end
 
     self.judge_output = "Judging...\n"
 
     comp_sandbox_opts='-m262144 -w60 -e -i/dev/null'
-    comp_output = `#{box_path} #{comp_sandbox_opts} -- #{compiler} #{source_file} -o #{exe_file} 2>&1`
+    comp_output = `#{box_path} #{comp_sandbox_opts} -- #{compiler} #{source_file} -O2 -lm -o #{exe_file} 2>&1`
 
     if comp_output == ""
       comp_output = "nothing"
     end
 
-    self.judge_output += 'compiling with ' +  "#{box_path} #{comp_sandbox_opts} -- #{compiler} #{source_file} -o #{exe_file}\n"
+    self.judge_output += 'compiling with ' +  "#{box_path} #{comp_sandbox_opts} -- #{compiler} #{source_file} -O2 -lm -o #{exe_file}\n"
 
     self.judge_output += "compiler output:\n" + comp_output + "\n"
 
@@ -63,33 +90,67 @@ class Submission < ActiveRecord::Base
         system("#{box_path} -a2 -M#{judge_file} -m#{mem_limit} -k#{stack_limit} " +
                " -t#{time_limit} -o/dev/null -r/dev/null -- #{exe_file}" )
 
-        self.judge_output += IO.read(judge_file)
+        judge_msg = IO.read(judge_file)
+
+        self.judge_output += judge_msg
+        correct = false
         
-        if FileTest.exist? output_file
-          their_output = IO.read(output_file)
+        if FileTest.exist?(output_file) == false
+          self.judge_output += "No output, probably crashed\n"
+        elsif judge_msg.include?("status")
+          self.judge_output += "Terminated by judge\n"
+        else
+          expected = test_case.output.split('\n').each{|s| s.strip!}.join('\n').chomp.gsub(/\r/, "")
 
-          # TODO: different evaluators.
-          actual = their_output.split('\n').each{|s|s.strip!}.join('\n')
-          expected = test_case.output.split('\n').each{|s| s.strip!}.join('\n')
+          #logger.info("writing expected");
+          File.open(expected_file, 'w') { |f| f.write(expected) }
+          #logger.info("finished writing expected");
 
-          logger.debug "actual output was #{actual}, expected #{expected}"
+          if !problem.evaluator
+            if FileTest.exists?(output_file)
+               their_output = IO.read(output_file)
+            else
+               their_output = nil
+            end
 
-          if actual == expected
+            actual = their_output.split('\n').each{|s|s.strip!}.join('\n').chomp.gsub(/\r/, "")
+
+            logger.debug "actual output was #{actual}, expected #{expected}"
+
+            if actual == expected
+              correct = true
+            end
+          else
+            File.chmod(0700, eval_file)
+            run_string = "./#{eval_file} #{input_file} #{output_file} #{expected_file}"
+            logger.info "running " + run_string
+            correct = system(run_string)
+            self.judge_output += "running " + run_string + "\n"
+            self.judge_output += "correct is " + correct.to_s + "\n"
+            if correct == nil
+              self.judge_output += "Evaluator packed a sad, sorry :(\n"
+            end
+          end
+
+          if correct
+            logger.info "test case with id " + test_case.id.to_s + " was correct"
             self.score += test_case.points 
             self.judge_output += "Correct!\n"
           else
+            logger.info "test case with id " + test_case.id.to_s + " was incorrect"
             self.judge_output += "Incorrect :(\n"
           end
 
-          File.delete(output_file)
-        else
-          self.judge_output += "No output, probably crashed"
+          File.delete(output_file) if FileTest.exists?(output_file)
+          File.delete(expected_file) if FileTest.exists?(expected_file)
         end
 
         self.judge_output += "\n"
         # TODO: error checking necessary here?
         # or ruby exceptions takes care of it?
-        File.delete(input_file)
+        if FileTest.exists?(input_file)
+          File.delete(input_file)
+        end
       end
 
       self.judge_output += "Submission scored #{self.score} points out of #{total_points}\n"
@@ -101,7 +162,11 @@ class Submission < ActiveRecord::Base
         self.judge_output += "Congratulations! 100%!\n"
       end
 
-      File.delete(exe_file)
+      File.delete(exe_file) if FileTest.exists?(exe_file)
+
+      if problem.evaluator
+        File.delete(eval_file)
+      end
     else
       self.judge_output += "Program did not compile!\n"
     end

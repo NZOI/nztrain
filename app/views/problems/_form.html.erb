@@ -1,4 +1,4 @@
-<%= form_for(@problem) do |f| %>
+<%= form_for(@problem, :html => {:multipart => true}) do |f| %>
   <% if @problem.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@problem.errors.count, "error") %> prohibited this problem from being saved:</h2>
@@ -34,6 +34,10 @@
   <div class="field">
     <%= f.label :time_limit %><br />
     <%= f.text_field :time_limit %>
+  </div>
+  <div class="field">
+    <%= f.label :evaluator %><br />
+    <%= f.file_field :evaluator, :id => "file-form"%>
   </div>
   <div class="field">
     <%= f.label :user_id %><br />

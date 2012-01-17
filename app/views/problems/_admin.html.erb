@@ -1,7 +1,22 @@
-<p>
-<b>Admin:</b>
-</p>
+<b>Admin</b><br />
 
+<b>Users that have submitted:</b>
+<table class="main_table">
+<tr>
+<th> User </th>
+<th> Score </th>
+</tr>
+
+<% @all_subs.each do |sub| %>
+	<% if sub.user != nil %>
+		<tr>
+      		<td> <%= link_to sub.user.handle, sub.user %> </td>
+      	<td style="min-width: 4em;"> <span style="text-align: right; float: left; width: 50%;"><%= link_to sub.score, sub %></span> <span style="text-align: right; float: right; width: 50%;">(<%= link_to @sub_count[sub.user], :controller => "submissions", :user_id => sub.user, :problem_id => @problem %>)</span> </td>
+    	</tr>
+	<% end %>
+<% end %>
+</table>
+<br />
 <p>
 <% form_tag(:controller => "problem_contest", :action => "add", :method => :put, :problem_id => @problem) do %>
   <%= collection_select :problem, :contest_ids, @contests, :id, :title %>
@@ -16,4 +31,10 @@
 <% end %>
 </p>
 
+<p>
+<b> Evaluator </b>
+<pre>
+<%= @problem.evaluator %>
+</pre>
+</p>
 

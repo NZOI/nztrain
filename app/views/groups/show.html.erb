@@ -1,34 +1,31 @@
-<p>
 <b>Name:</b>
 <%= @group.name %>
-</p>
+<br />
+<br />
 
-<p>
-<b> Users in this group:</b>
+<b>Users in this group:</b>
 <% @group.users.each do |user| %>
   <li>
   <%= user.email %>
   </li>
 <% end %>
-</p>
+<br />
 
-<p>
-<b> Problems this group has access to:</b>
+<b>Problems this group has access to:</b>
 <% @group.problems.each do |problem| %>
   <li>
   <%= problem.title %>
   </li>
 <% end %>
-</p>
+<br />
 
-<p>
-<b> Contests this group has access to:</b>
+<b>Contests this group has access to:</b>
 <% @group.contests.each do |contest| %>
   <li>
   <%= contest.title %>
   </li>
 <% end %>
-</p>
+<br />
 
 <%= link_to 'Add yourself', add_user_group_path(@group), :method => :put %> |
 <%= link_to 'Remove yourself', remove_user_group_path(@group), :method => :put %> |

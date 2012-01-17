@@ -1,7 +1,7 @@
 class SubmissionsController < ApplicationController
   before_filter :check_signed_in
   before_filter :check_access, :only => [:show]
-  before_filter :check_admin, :only => [:edit, :index, :update, :destroy]
+  before_filter :check_admin, :only => [:edit, :update, :destroy]
   # GET /submissions
   # GET /submissions.xml
 
@@ -11,11 +11,16 @@ class SubmissionsController < ApplicationController
     end
 
     @submission = Submission.find(params[:id])
-    return @submission.user_id == current_user
+    if @submission.user_id != current_user.id
+	    redirect("This is not your submission!")
+    end
   end
 
   def index
-    @submissions = Submission.all
+    if !current_user.is_admin
+      params[:user_id]=current_user.id # non-admins can only browse their own submissions
+    end
+    @submissions = Submission.submission_history(params[:user_id], params[:problem_id])
 
     respond_to do |format|
       format.html # index.html.erb

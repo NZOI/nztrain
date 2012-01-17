@@ -4,18 +4,30 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
+  validates :name, :length => {:maximum => 100}
+
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :is_admin, :brownie_points
+  attr_accessible :name, :email, :password, :password_confirmation, :remember_me, :is_admin, :brownie_points
 
   has_many :problems
   has_many :submissions
   has_many :contest_relations
   has_many :contests, :through => :contest_relations
+  
+  def handle
+    if !self.name
+      return "<#{self.email}>"
+    else
+      return "#{self.name} <#{self.email}>"
+    end
+  end
 
   def get_solved
     solved = []
-    Problem.all.each do |prob|
-      if prob.get_score(self) == 100
+    @solved_problems = Problem.select("problems.*, (SELECT MAX(score) FROM submissions WHERE problem_id = problems.id AND user_id = #{self.id}) as score")
+
+    @solved_problems.each do |prob|
+      if prob.score == 100
         solved << prob
       end
     end

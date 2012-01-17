@@ -7,7 +7,11 @@ NztrainV2::Application.routes.draw do
 
   root :to => "problems#index"
 
-  resources :submissions
+  resources :submissions do
+    collection do
+      get '(by_user/:user_id)(/by_problem/:problem_id)', :action => :index, :constraints => {:user_id => /\d+/, :problem_id => /\d+/}
+    end
+  end
 
   resources :problems
 
@@ -35,6 +39,12 @@ NztrainV2::Application.routes.draw do
   resources :zipped_test_cases do
     member do
       post 'upload'
+    end
+  end
+
+  resources :users do
+    member do
+      post 'add_brownie'
     end
   end
 

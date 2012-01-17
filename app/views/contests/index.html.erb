@@ -1,6 +1,6 @@
-<h1>Listing contests</h1>
+<div id="main-page-title">Listing contests</div>
 
-<table>
+<table class="main_table">
   <tr>
     <th>Title</th>
     <th>Start time</th>
@@ -25,7 +25,12 @@
     <td><%= contest.get_score(current_user) %></td>
     <td>
       <% if contest.is_running? && (contest.get_relation(current_user) == nil) %>
-        <%= link_to 'Start Contest', new_contest_relation_path(:contest => contest.id) %> 
+        <% if current_user.is_admin %>
+          <%= link_to 'Start', new_contest_relation_path(:contest => contest.id) %>
+          <%= link_to 'Show', contest %>
+        <% else %>
+          <%= link_to 'Start Contest', new_contest_relation_path(:contest => contest.id) %>
+        <% end %>
       <% else %>
         <%= link_to 'Show', contest %>
       <% end %>

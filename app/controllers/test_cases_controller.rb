@@ -4,13 +4,12 @@ class TestCasesController < ApplicationController
   # GET /test_cases
   # GET /test_cases.xml
   def index
-    @test_cases = TestCase.all
 
     if params[:problem]
       logger.debug "problem is " + params[:problem]
-      @test_cases = @test_cases.find_all do |tc|
-        tc.problem_id == params[:problem].to_i
-      end
+      @test_cases = TestCase.where("problem_id = ?", params[:problem])
+    else
+      @test_cases = TestCase.all
     end
     
     respond_to do |format|
@@ -45,6 +44,7 @@ class TestCasesController < ApplicationController
   # GET /test_cases/1/edit
   def edit
     @test_case = TestCase.find(params[:id])
+    @defaultProblem = @test_case.problem.id
   end
 
   # POST /test_cases

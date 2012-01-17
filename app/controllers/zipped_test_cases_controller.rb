@@ -19,7 +19,7 @@ class ZippedTestCasesController < ApplicationController
       end
     end
 
-    [["in", "out"], ["in", "ans"], ["i", "o"]].each do |replacement|
+    [[".in", ".out"], [".in", ".ans"], [".i", ".o"]].each do |replacement|
       file_counts = Hash.new(0)
       files_in_zip.each_key do |filename|
         other_filename = filename.gsub replacement[0], replacement[1]
