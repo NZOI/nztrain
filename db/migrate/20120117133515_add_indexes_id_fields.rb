@@ -9,7 +9,7 @@ class AddIndexesIdFields < ActiveRecord::Migration
   #   - getting the test cases for a problem
   def self.up
     add_index(:contest_relations, [:contest_id, :user_id], :unique => true)
-    add_index(:contest_relations, [:user_id])
+    add_index(:contest_relations, [:user_id, :created_at])
 
     add_index(:submissions, [:user_id, :problem_id])
     add_index(:submissions, [:problem_id, :created_at])
@@ -29,7 +29,7 @@ class AddIndexesIdFields < ActiveRecord::Migration
     remove_index(:submissions, [:problem_id, :created_at])
     remove_index(:submissions, [:user_id, :problem_id])
 
-    remove_index(:contest_relations, [:user_id])
+    remove_index(:contest_relations, [:user_id, :created_at])
     remove_index(:contest_relations, [:contest_id, :user_id])
   end
 end
