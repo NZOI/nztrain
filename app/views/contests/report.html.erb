@@ -31,7 +31,7 @@
     <th> Placing </th>
   </tr>
   <% @scoreboard.each do |person| %>
-    <tr>
+    <tr <% if (person[:user_id]==current_user.id) %> class="emphasized"<% end %>>
       <td>
         <% begin %>
           <% u = User.find(person[:user_id]) %>
