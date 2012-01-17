@@ -52,7 +52,7 @@
         </td>
       <% end %>
       <td align="right"> <%= person[:total_score] %> </td>
-      <td> <%= person[:time_taken] %> </td>
+      <td> <%= person[:time_taken].to_s.split('.')[0] %> </td>
       <td align="right"> <%= person[:rank] %> </td>
     </tr>
   <% end %>
