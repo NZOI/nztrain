@@ -1,3 +1,4 @@
+<% content_for :title, "Submissions" %>
 <h1>Listing submissions</h1>
 <% if current_user.is_admin && params[:user_id] 
      u = User.find(params[:user_id]) %>

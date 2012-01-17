@@ -1,3 +1,4 @@
+<% content_for :title, "Editing #{@problem.title}" %>
 <h1>Editing problem</h1>
 
 <%= render 'form' %>
@@ -9,7 +10,7 @@
 <% end %>
 </p>
 
-<%= link_to 'Show test cases', test_cases_path(:problem => @problem.id) %> |
-<%= link_to 'Add test case', new_test_case_path(:problem => @problem.id) %> |
+<%= link_to 'Show test cases', test_cases_path(:problem_id => @problem.id) %> |
+<%= link_to 'Add test case', new_test_case_path(:problem_id => @problem.id) %> |
 <%= link_to 'Show', @problem %> |
 <%= link_to 'Back', problems_path %>

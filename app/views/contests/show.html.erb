@@ -1,3 +1,5 @@
+<% content_for :title, @contest.title %>
+
 <script>
   $(document).ready(function(){
     var datesec = <%= @contest_relation.finish_at.to_i %>;

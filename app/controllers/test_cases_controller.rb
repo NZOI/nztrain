@@ -5,9 +5,9 @@ class TestCasesController < ApplicationController
   # GET /test_cases.xml
   def index
 
-    if params[:problem]
-      logger.debug "problem is " + params[:problem]
-      @test_cases = TestCase.where("problem_id = ?", params[:problem])
+    if params[:problem_id]
+      logger.debug "problem is " + params[:problem_id]
+      @test_cases = TestCase.where("problem_id = ?", params[:problem_id])
     else
       @test_cases = TestCase.all
     end
@@ -33,7 +33,7 @@ class TestCasesController < ApplicationController
   # GET /test_cases/new.xml
   def new
     @test_case = TestCase.new
-    @defaultProblem = params[:problem]
+    @defaultProblem = params[:problem_id]
 
     respond_to do |format|
       format.html # new.html.erb
