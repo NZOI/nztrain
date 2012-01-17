@@ -99,6 +99,13 @@ a:hover {
    color: black;
 }
 
+#alert
+{
+   background-color: #D2D2D2;
+   padding: 5px;
+   margin-bottom: 5px;
+}
+
 #side-logo
 {
    width: 270px;

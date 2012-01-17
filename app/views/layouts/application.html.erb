@@ -121,7 +121,12 @@
 	    Congratulations to our current brownie point leader <%= @brownie_leader.email %> who has <%= @brownie_leader.brownie_points %> points!<br />
 	</div>
 	<div id="main-container">
-	      <% if alert %><p id="alert"><%= alert %></p><% end %>
+	      <% if alert %>
+	        <p id="alert"><%= alert %></p>
+              <% end %>
+	      <% if flash[:notice] %>
+	        <p id="alert"><%= flash[:notice] %></p>
+	      <% end %>
 	      <%= yield %>
 	</div>
 </div>
