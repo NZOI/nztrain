@@ -57,7 +57,7 @@ class ContestsController < ApplicationController
     end
     if !current_user.is_admin
       @median = @scoreboard[@scoreboard.length/2][:rank].to_i
-      @scoreboard = @scoreboard.reject{|row| (row[:rank].to_i >= @median)}
+      @scoreboard = @scoreboard.reject{|row| (row[:rank].to_i >= @median && row[:user_id] != current_user.id)}
     end
     respond_to do |format|
       if current_user.is_admin || !@contest.is_running?
