@@ -176,7 +176,6 @@ class Submission < ActiveRecord::Base
     File.delete(source_file) if FileTest.exist? source_file
     File.delete(judge_file) if FileTest.exist? judge_file
     Dir.chdir('/')
-    Dir.rmdir(working_directory)
+    FileUtils.rm_rf(working_directory)
   end
 end
-
