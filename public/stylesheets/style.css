@@ -200,6 +200,8 @@ a:hover {
 	padding: 4px;
 	border: 1px solid #D2D2D2;
 	background-color: #EEE;
+	font-family: monospace;
+	overflow-x: scroll;
 }
 
 #main-container h1, h2, h3, h4, h5, h6, h7 {
