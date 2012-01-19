@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
   has_many :submissions
   has_many :contest_relations
   has_many :contests, :through => :contest_relations
+  has_and_belongs_to_many :groups
   
   def handle
     if !self.name

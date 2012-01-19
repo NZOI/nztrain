@@ -16,6 +16,10 @@
     <%= f.text_field :title %>
   </div>
   <div class="field">
+    <%= f.label :problem_set_id %><br />
+    <%= f.collection_select :problem_set_id, @problem_sets, :id, :title %>
+  </div>
+  <div class="field">
     <%= f.label :start_time %><br />
     <%= f.text_field :start_time, :class => "date-picker", :value => @start_time %>
   </div>

@@ -1,5 +1,5 @@
 class Contest < ActiveRecord::Base
-  has_and_belongs_to_many :problems
+  belongs_to :problem_set
   has_many :contest_relations, :dependent => :destroy
   has_many :users, :through => :contest_relations
   belongs_to :user
@@ -86,7 +86,7 @@ class Contest < ActiveRecord::Base
       return "not started"
     end
 
-    scores = self.problems.map {|p| self.problem_score(user, p)}
+    scores = self.problem_set.problems.map {|p| self.problem_score(user, p)}
     return scores.inject(:+) || 0
   end
 

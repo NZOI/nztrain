@@ -26,7 +26,7 @@ class ContestsController < ApplicationController
   # GET /contests/1.xml
   def show
     @contest = Contest.find(params[:id])
-    @problems = @contest.problems
+    @problems = @contest.problem_set.problems
     @groups = Group.all
     @contest_message = nil
     
@@ -106,7 +106,8 @@ class ContestsController < ApplicationController
   # GET /contests/1/edit
   def edit
     @contest = Contest.find(params[:id])
-    @problems = @contest.problems
+    #@problems = @contest.problem_set.problems
+    @problem_sets = ProblemSet.all
     @start_time = @contest.start_time.strftime("%m/%d/%Y %H:%M")
     @end_time = @contest.end_time.strftime("%m/%d/%Y %H:%M")
   end

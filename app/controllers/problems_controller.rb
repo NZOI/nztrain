@@ -29,8 +29,7 @@ class ProblemsController < ApplicationController
     @problem = Problem.find(params[:id])
     @submission = Submission.new
     #TODO: restrict to problems that current user owns
-    @contests = Contest.all
-    @groups = Group.all
+    @problem_sets = ProblemSet.all
     @submissions = @problem.submission_history(current_user)
 
     @all_subs = {};
