@@ -54,13 +54,16 @@
 
         function toggle_height(id) {
            var e = document.getElementById(id);
-           if(e.style.display=="none") {
+           if (e.style.display=="none") {
               var height = $('#'+id).height();
-              e.style.height = '0px';
-              e.style.display = 'block';
-              $("#"+id).animate({'height':height},duration);
+              e.style.height = "0px";
+              e.style.display = "block";
+              $("#"+id).animate({'height':height},duration, function() {
+                 e.style.display = "inline-block";
+              });
            }
-           else {
+           else if (e.style.display=="inline-block") {
+              e.style.display = "block";
               var height = $('#'+id).height();
               $("#"+id).animate({'height':0},duration, function() {
                  e.style.display = "none";
