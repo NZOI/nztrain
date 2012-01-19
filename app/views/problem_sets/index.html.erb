@@ -12,8 +12,8 @@
   </tr>
 
 <% @problem_sets.each do |problem_set| %>
-  <tr class="emphasized" onClick="toggle_visibility(<%= "'problemset#{problem_set.id}problems'" %>,'table-row');">
-    <td><%= problem_set.title %></td>
+  <tr class="emphasized">
+    <td onClick="toggle_visibility(<%= "'problemset#{problem_set.id}problems'" %>,'table-row');"><%= problem_set.title %> <span style="font-weight: normal; font-style: italic;">(<%= problem_set.problems.length %> problem<%= problem_set.problems.length==1?"":"s" %>)</span></td>
     <td><%= link_to 'Show', problem_set %></td>
     <% if current_user.is_admin %>
       <td><%= link_to 'Edit', edit_problem_set_path(problem_set) %></td>
