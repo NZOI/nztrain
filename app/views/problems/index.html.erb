@@ -17,14 +17,14 @@
   </tr>
 
 <% @problems.each do |problem| %>
-    <tr onclick="location.href='<%= url_for(problem) %>'">
-    <td><%= problem.title %></td>
-    <td><%= problem.input %></td>
-    <td><%= problem.output %></td>
-    <td><%= problem.memory_limit %></td>
-    <td><%= problem.time_limit %></td>
-    <td><%= problem.user_id %></td>
-    <td><%= problem.score %></td>
+    <tr>
+    <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.title %></td>
+    <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.input %></td>
+    <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.output %></td>
+    <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.memory_limit %></td>
+    <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.time_limit %></td>
+    <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.user_id %></td>
+    <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.score %></td>
     <td><%= link_to 'Show', problem %></td>
     <% if current_user.is_admin %>
       <td><%= link_to 'Edit', edit_problem_path(problem) %></td>
