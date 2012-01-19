@@ -3,10 +3,10 @@
 
 <%= render 'form' %>
 
-<b> Problems this group has access to:</b>
-<% @group.problems.each do |problem| %>
+<b> Problem sets this group has access to:</b>
+<% @group.problem_sets.each do |problem_set| %>
   <li>
-  <%= problem.title %> (<%= link_to("remove", remove_problem_group_path(@group, :problem_id => problem.id ), :method => "put") %>)
+  <%= problem_set.title %> (<%= link_to("remove", remove_problem_set_group_path(@group, :problem_set_id => problem_set.id ), :method => "put") %>)
   </li>
 <% end %>
 </p>

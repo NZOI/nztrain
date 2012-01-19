@@ -1,4 +1,6 @@
 NztrainV2::Application.routes.draw do
+  resources :problem_sets
+
   resources :groups
 
   resources :contests
@@ -18,21 +20,28 @@ NztrainV2::Application.routes.draw do
 
   resources :problems
 
+  resources :problem_sets do
+    member do
+      put 'add_problem'
+      put 'remove_problem'
+    end
+  end
+
   resources :test_cases
 
   resources :users
 
   devise_for :users, :path => "accounts"
 
-  match 'problem_contest/:action(:format)' => "problem_contest"
+  match 'problem_problem_set/:action(:format)' => "problem_problem_set"
 
   resources :groups do
     member do
       put 'add_user'
       put 'remove_user'
 
-      put 'add_problem'
-      put 'remove_problem'
+      put 'add_problem_set'
+      put 'remove_problem_set'
 
       put 'add_contest'
       put 'remove_contest'

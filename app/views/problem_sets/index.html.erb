@@ -1,0 +1,41 @@
+<% content_for :title, "Problem Sets" %>
+<div id="main-page-title">Problems</div>
+
+<table class="main_table">
+  <tr>
+    <th>Title</th>
+    <th></th>
+    <% if current_user.is_admin %>
+      <th></th>
+      <th></th>
+    <% end %>
+  </tr>
+
+<% @problem_sets.each do |problem_set| %>
+  <tr class="emphasized">
+    <td><%= problem_set.title %></td>
+    <td><%= link_to 'Show', problem_set %></td>
+    <% if current_user.is_admin %>
+      <td><%= link_to 'Edit', edit_problem_set_path(problem_set) %></td>
+      <td><%= link_to 'Destroy', problem_set, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% end %>
+  </tr>
+  <% problem_set.problems.each do |problem| %>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;<%= problem.title %></td>
+      <td><%= link_to 'Show', problem %></td>
+      <% if current_user.is_admin %>
+        <td><%= link_to 'Edit', edit_problem_path(problem) %></td>
+        <td><%= link_to 'Destroy', problem, :confirm => 'Are you sure?', :method => :delete %></td>
+      <% end %>
+    </tr>
+  <% end %>
+
+<% end %>
+</table>
+
+<br />
+
+<% if current_user.is_admin %>
+  <%= link_to 'New Problem set', new_problem_set_path %>
+<% end %>

@@ -105,6 +105,7 @@
    <% if user_signed_in? %>
 	   <div id="uac-user"><a href="/accounts/edit"><%= current_user.email %></a></div><br />
    <ul>
+      <li><a href="<%= problem_sets_path %>">problem sets</a></li>
       <li><a href="<%= problems_path %>">problems</a></li>
       <li><a href="<%= contests_path %>">contests</a></li>
       <li><a href="<%= groups_path %>">groups</a></li>

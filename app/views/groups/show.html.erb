@@ -12,10 +12,10 @@
 <% end %>
 <br />
 
-<b>Problems this group has access to:</b>
-<% @group.problems.each do |problem| %>
+<b>Problem sets this group has access to:</b>
+<% @group.problem_sets.each do |problem_set| %>
   <li>
-  <%= problem.title %>
+  <%= problem_set.title %>
   </li>
 <% end %>
 <br />

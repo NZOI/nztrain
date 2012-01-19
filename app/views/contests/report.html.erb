@@ -24,13 +24,13 @@
 <b>High Scorers</b>
 <table class="main_table" >
   <tr>
-    <th> User </th>
-    <% @contest.problems.each do |problem|%>
+    <th style="min-width: 25%;"> User </th>
+    <% @contest.problem_set.problems.each do |problem|%>
       <th> <%= link_to problem.title, problem_path(problem) %> </th>
     <% end %>
-    <th> Total Score </th>
-    <th> Time Taken </th>
-    <th> Placing </th>
+    <th> Score </th>
+    <th> Time </th>
+    <th> Rank </th>
   </tr>
   <% @scoreboard.each do |person| %>
     <tr <% if (person[:user_id]==current_user.id) %> class="emphasized"<% end %>>
@@ -42,7 +42,7 @@
           <%= "Deleted User ID #{person[:user_id]}" %>
         <% end %>
       </td>
-      <% @contest.problems.each do |prob|%>
+      <% @contest.problem_set.problems.each do |prob|%>
         <% @detail = @scoredetails[[person[:user_id],prob.id]]  %>
         <td style="min-width: 5em;">
           <span style="float: left; width: 2em; text-align: right;">

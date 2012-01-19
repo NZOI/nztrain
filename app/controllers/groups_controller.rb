@@ -24,22 +24,22 @@ class GroupsController < ApplicationController
     redirect_to(@group, :notice => "You are no longer a member of this group")
   end
 
-  def add_problem
-    @group = Group.find(params[:problem][:group_ids])
-    problem = Problem.find(params[:problem_id])
-    if @group.problems.exists?(problem)
-      redirect_to(problem, :alert => "This group already has access to this problem")
+  def add_problem_set
+    @group = Group.find(params[:problem_set][:group_ids])
+    problem_set = ProblemSet.find(params[:problem_set_id])
+    if @group.problem_sets.exists?(problem_set)
+      redirect_to(problem, :alert => "This group already has access to this problem set")
       return
     end
-    @group.problems.push(problem)
-    redirect_to(problem, :notice => "Problem added.")
+    @group.problem_sets.push(problem_set)
+    redirect_to(problem_set, :notice => "Problem set added.")
   end
 
-  def remove_problem
+  def remove_problem_set
     @group = Group.find(params[:id])
-    problem = Problem.find(params[:problem_id])
-    @group.problems.delete(problem)
-    redirect_to(@group, :notice => "Problem removed.")
+    problem_set = ProblemSet.find(params[:problem_set_id])
+    @group.problem_sets.delete(problem_set)
+    redirect_to(@group, :notice => "Problem set removed.")
   end
 
   def add_contest

@@ -1,9 +1,8 @@
 class Problem < ActiveRecord::Base
+  has_and_belongs_to_many :problem_sets
   has_many :test_cases, :dependent => :destroy
   has_many :submissions, :dependent => :destroy
-  has_and_belongs_to_many :contests 
   belongs_to :user
-  has_and_belongs_to_many :groups
   
   def get_highest_scoring_submission(user, from = DateTime.new(1), to = DateTime.now)
     subs = self.submissions.find(:all, :conditions => ["created_at between ? and ? and user_id = ?", from, to, user])
@@ -30,8 +29,8 @@ class Problem < ActiveRecord::Base
     end
 
     #might be painfully slow?
-    self.contests.each do |contest|
-      if contest.has_current_competitor(user)
+    self.problem_sets.each do |problem_set|
+      if problem_set.contest && problem_set.contest.has_current_competitor(user)
         return true
       end
     end
@@ -42,8 +41,8 @@ class Problem < ActiveRecord::Base
       end
     end
 
-    self.groups.each do |g|
-      if g.users.include?(user)
+    user.groups.each do |g|
+      if (self.problem_sets & g.problem_sets).any?
         return true
       end
     end
