@@ -51,6 +51,24 @@
 	}
 
 	var duration = 250;
+
+        function toggle_height(id) {
+           var e = document.getElementById(id);
+           if(e.style.display=="none") {
+              var height = $('#'+id).height();
+              e.style.height = '0px';
+              e.style.display = 'block';
+              $("#"+id).animate({'height':height},duration);
+           }
+           else {
+              var height = $('#'+id).height();
+              $("#"+id).animate({'height':0},duration, function() {
+                 e.style.display = "none";
+                 $('#'+id).height(height);
+              });
+           }
+        }
+
 	function shrink() {
 		createCookie("expanded", "false", 31);
 		$("#side").animate({width:'100px'}, duration);

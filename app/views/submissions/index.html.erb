@@ -15,6 +15,15 @@
     No submissions found.
   <% end %>
 <% end %>
+<style>
+p.test {
+	border: 1px solid #000000;
+	white-space: nowrap;
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+</style>
 <% @table_columns = 4 %>
 <table width="100%">
   <tr>
@@ -41,7 +50,7 @@
   </tr>
 
 <% @submissions.each do |submission| %>
-  <tr onClick="toggle_visibility(<%= "'submission#{submission.id}source'" %>,'table-row');">
+  <tr onClick="toggle_height(<%= "'submission#{submission.id}source'" %>);">
     <td><%= submission.created_at.strftime("%b %d %Y, %H:%M") %>
     <td><%= submission.language %></td>
     <td><%= submission.score %></td>
@@ -57,12 +66,11 @@
       <td><%= link_to 'Destroy', submission, :confirm => 'Are you sure?', :method => :delete %></td>
     <% end %>
   </tr>
-  <tr class="submission<%= submission.id %>source" style="display: none">
-    <td colspan="<%= @table_columns %>"><pre><%= submission.source %></pre></td>
+  <tr>
+    <td colspan="<%= @table_columns %>"><pre id="submission<%= submission.id %>source" style="overflow-y: hidden; width: 100%; display: none; border: 0px; padding: 0px;"><%= submission.source %></pre></td>
   </tr>
 <% end %>
 </table>
-
 <br />
 
 <%= link_to 'New Submission', new_submission_path %>
