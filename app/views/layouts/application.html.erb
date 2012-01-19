@@ -53,22 +53,20 @@
 	var duration = 250;
 
         function toggle_height(id) {
-           var e = document.getElementById(id);
-           if (e.style.display=="none") {
-              var height = $('#'+id).height();
+           if ($("#"+id).data("height")==undefined) {
+              $("#"+id).data("height",$('#'+id).height());
+              $("#"+id).data("state",0);
+              var e = document.getElementById(id);
               e.style.height = "0px";
               e.style.display = "block";
-              $("#"+id).animate({'height':height},duration, function() {
-                 e.style.display = "inline-block";
-              });
            }
-           else if (e.style.display=="inline-block") {
-              e.style.display = "block";
-              var height = $('#'+id).height();
-              $("#"+id).animate({'height':0},duration, function() {
-                 e.style.display = "none";
-                 $('#'+id).height(height);
-              });
+           if ($("#"+id).data("state")==0) {
+              $("#"+id).animate({'height':$("#"+id).data("height")},duration);
+              $("#"+id).data("state",1);
+           }
+           else {
+              $("#"+id).animate({'height':0},duration);
+              $("#"+id).data("state",0);
            }
         }
 
