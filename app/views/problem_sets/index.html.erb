@@ -12,7 +12,7 @@
   </tr>
 
 <% @problem_sets.each do |problem_set| %>
-  <tr class="emphasized">
+  <tr class="emphasized" onClick="toggle_visibility(<%= "'problemset#{problem_set.id}problems'" %>,'table-row');">
     <td><%= problem_set.title %></td>
     <td><%= link_to 'Show', problem_set %></td>
     <% if current_user.is_admin %>
@@ -21,7 +21,7 @@
     <% end %>
   </tr>
   <% problem_set.problems.each do |problem| %>
-    <tr>
+    <tr class="problemset<%= problem_set.id %>problems" style="display: none">
       <td>&nbsp;&nbsp;&nbsp;<%= problem.title %></td>
       <td><%= link_to 'Show', problem %></td>
       <% if current_user.is_admin %>
