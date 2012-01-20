@@ -132,7 +132,7 @@ class Submission < ActiveRecord::Base
           File.delete(expected_file) if FileTest.exists?(expected_file)
         end
 
-        self.judge_output += "\n"
+        self.judge_output += "\n<br />\n"
         # TODO: error checking necessary here?
         # or ruby exceptions takes care of it?
         if FileTest.exists?(input_file)
