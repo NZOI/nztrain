@@ -1,11 +1,13 @@
 <% content_for :title, "Problem Sets" %>
 <div id="main-page-title">Problems</div>
 
-<table class="main_table">
+<% @colspan = 2 %>
+<table class="main_table" style="width: 100%;">
   <tr>
-    <th>Title</th>
+    <th width="100%">Title</th>
     <th></th>
     <% if current_user.is_admin %>
+      <% @colspan += 2 %>
       <th></th>
       <th></th>
     <% end %>
@@ -13,23 +15,31 @@
 
 <% @problem_sets.each do |problem_set| %>
   <tr class="emphasized">
-    <td onClick="toggle_visibility(<%= "'problemset#{problem_set.id}problems'" %>,'table-row');"><%= problem_set.title %> <span style="font-weight: normal; font-style: italic;">(<%= problem_set.problems.length %> problem<%= problem_set.problems.length==1?"":"s" %>)</span></td>
+    <td onClick="toggle_height('<%= "problemset#{problem_set.id}problems" %>');"><%= problem_set.title %> <span style="font-weight: normal; font-style: italic;">(<%= problem_set.problems.length %> problem<%= problem_set.problems.length==1?"":"s" %>)</span></td>
     <td><%= link_to 'Show', problem_set %></td>
     <% if current_user.is_admin %>
       <td><%= link_to 'Edit', edit_problem_set_path(problem_set) %></td>
       <td><%= link_to 'Destroy', problem_set, :confirm => 'Are you sure?', :method => :delete %></td>
     <% end %>
   </tr>
-  <% problem_set.problems.each do |problem| %>
-    <tr class="problemset<%= problem_set.id %>problems" style="display: none">
-      <td>&nbsp;&nbsp;&nbsp;<%= problem.title %></td>
-      <td><%= link_to 'Show', problem %></td>
-      <% if current_user.is_admin %>
-        <td><%= link_to 'Edit', edit_problem_path(problem) %></td>
-        <td><%= link_to 'Destroy', problem, :confirm => 'Are you sure?', :method => :delete %></td>
-      <% end %>
-    </tr>
-  <% end %>
+  <tr>
+    <td colspan="<%= @colspan %>" style="padding: 0px;">
+      <div id="problemset<%= problem_set.id %>problems" style="display: none; overflow-y: hidden;">
+        <table width="100%" onClick="event.cancelBubble = true;">
+          <% problem_set.problems.each do |problem| %>
+            <tr>
+              <td width="100%">&nbsp;&nbsp;&nbsp;<%= problem.title %></td>
+              <td><%= link_to 'Show', problem %></td>
+              <% if current_user.is_admin %>
+                <td><%= link_to 'Edit', edit_problem_path(problem) %></td>
+                <td><%= link_to 'Destroy', problem, :confirm => 'Are you sure?', :method => :delete %></td>
+              <% end %>
+            </tr>
+          <% end %>
+        </table>
+      </div>
+    </td>
+  </tr>
 
 <% end %>
 </table>

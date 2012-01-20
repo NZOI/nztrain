@@ -51,22 +51,23 @@
 	}
 
         var expandspeed = 1;
-        function toggle_height(id) {
+        var minduration = 250;
+        function toggle_height(id, displaytype) {
            if ($("#"+id).data("height")==undefined) {
               $("#"+id).data("height",$('#'+id).height());
               $("#"+id).data("state",0);
               var e = document.getElementById(id);
               e.style.height = "0px";
-              e.style.display = "block";
+              e.style.display = ((typeof(displaytype)=="undefined")?"block":displaytype);
            }
            if ($("#"+id).data("state")==0) {
               $("#"+id).stop();
-              $("#"+id).animate({'height':$("#"+id).data("height")},($("#"+id).data("height")-$("#"+id).height())/expandspeed);
+              $("#"+id).animate({'height':$("#"+id).data("height")},Math.max(($("#"+id).data("height")-$("#"+id).height())/expandspeed,minduration));
               $("#"+id).data("state",1);
            }
            else {
               $("#"+id).stop();
-              $("#"+id).animate({'height':0},$("#"+id).height()/expandspeed);
+              $("#"+id).animate({'height':0},Math.max($("#"+id).height()/expandspeed,minduration));
               $("#"+id).data("state",0);
            }
         }
