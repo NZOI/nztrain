@@ -2,23 +2,10 @@ class Submission < ActiveRecord::Base
   belongs_to :user
   belongs_to :problem
 
+  named_scope :by_user, proc {|user_id| { :conditions => { :user_id => user_id } } }
+  named_scope :by_problem, proc {|problem_id| { :conditions => { :problem_id => problem_id } } }
+
   validates :score, :presence => true
-  def self.submission_history(user = nil, problem = nil)
-    if user
-      if problem
-        subs = Submission.find(:all, :conditions => ['user_id = ? and problem_id = ?', user, problem], :order => ['created_at desc'])
-      else
-        subs = Submission.find(:all, :conditions => ['user_id = ?', user], :order => ['created_at desc'])
-      end
-    else
-      if problem
-        subs = Submission.find(:all, :conditions => ['problem_id = ?', problem], :order => ['created_at desc'])
-      else
-        subs = Submission.find(:all, :order => ['created_at desc'])
-      end
-    end
-    return subs
-  end
 
   def judge
     box_path = File.expand_path(Rails.root)+"/bin/box"

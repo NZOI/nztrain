@@ -2,8 +2,9 @@ class SubmissionsController < ApplicationController
   before_filter :check_signed_in
   before_filter :check_access, :only => [:show]
   before_filter :check_admin, :only => [:edit, :update, :destroy, :rejudge]
-  # GET /submissions
-  # GET /submissions.xml
+
+  has_scope :by_user
+  has_scope :by_problem
 
   def check_access
     if current_user.is_admin
@@ -16,14 +17,17 @@ class SubmissionsController < ApplicationController
     end
   end
 
+  # GET /submissions
+  # GET /submissions.xml
   def index
     if !current_user.is_admin
-      params[:user_id]=current_user.id # non-admins can only browse their own submissions
+      params[:by_user] = current_user.id # non-admins can only browse their own submissions
     end
-    @submissions = Submission.submission_history(params[:user_id], params[:problem_id])
+    @submissions = apply_scopes(Submission).paginate(:order => "created_at DESC", :page => params[:page], :per_page => 100)
 
     respond_to do |format|
       format.html # index.html.erb
+      format.js # index.js.erb (for AJAX pagination)
       format.xml  { render :xml => @submissions }
     end
   end

@@ -49,7 +49,7 @@
             <%= @detail[:score]?link_to_if(person[:user_id] == current_user.id || current_user.is_admin, @detail[:score], submission_path(@detail[:sub_id])):"-" %>
           </span>
           <span style="float: left; width: 3em; text-align: right;">
-            (<%= link_to_if person[:user_id] == current_user.id || current_user.is_admin, @detail[:count]?@detail[:count]:0, :controller => "submissions", :user_id => person[:user_id], :problem_id => prob.id %>)
+            (<%= link_to_if person[:user_id] == current_user.id || current_user.is_admin, @detail[:count]?@detail[:count]:0, :controller => "submissions", :by_user => person[:user_id], :by_problem => prob.id %>)
           </span>
         </td>
       <% end %>

@@ -7,6 +7,7 @@
     <%= javascript_include_tag "jquery-ui-timepicker-addon.js" %>
     <%= javascript_include_tag "jquery.fileinput.js" %>
     <%= javascript_include_tag "jquery.countdown.js" %>
+    <%= javascript_include_tag "jquery.ba-bbq.min.js" %>
 
     <%= stylesheet_link_tag "jquery-ui-1.8.16.custom.css" %>
     <%= stylesheet_link_tag  "fileinput.css" %>
@@ -14,7 +15,7 @@
     <%= stylesheet_link_tag :markitup %>
     <%= stylesheet_link_tag :all, :cache => false%>
 
-
+    <%= javascript_include_tag 'pagination' %>
 
     <%= csrf_meta_tag %>
 
@@ -123,8 +124,9 @@
       <li><a href="<%= problems_path %>">problems</a></li>
       <li><a href="<%= contests_path %>">contests</a></li>
       <li><a href="<%= groups_path %>">groups</a></li>
-	<li><a href="<%= users_path %>">users</a></li>
-	<li class="nav-uac"><%= link_to "sign out", destroy_user_session_path, :method => :delete %></li>
+      <li><a href="<%= submissions_path %>">submissions</a></li>
+      <li><a href="<%= users_path %>">users</a></li>
+      <li class="nav-uac"><%= link_to "sign out", destroy_user_session_path, :method => :delete %></li>
    </ul>
    <% else %>
       <a href="<%= new_user_session_path %>">sign in</a>

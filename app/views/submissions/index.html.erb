@@ -1,76 +1,19 @@
 <% content_for :title, "Submissions" %>
-<h1>Listing submissions</h1>
-<% if current_user.is_admin && params[:user_id] 
-     u = User.find(params[:user_id]) %>
-  <p><b>User:</b> <%= link_to u.handle, u %></p>
-<% end %>
-<% if params[:problem_id] 
-     p = Problem.find(params[:problem_id]) %>
-  <p><b>Problem:</b> <%= link_to p.title, p %></p>
-<% end %>
-<% if @submissions.length == 0 %>
-  <% if current_user.id == params[:user_id] %>
-    You have no submissions.
-  <% else %>
-    No submissions found.
+<% if current_user.id == params[:by_user].to_i %>
+  <h1>My submissions</h1>
+<% else %>
+  <h1>Listing submissions</h1>
+  <% if current_user.is_admin && params[:by_user] 
+       u = User.find(params[:by_user]) %>
+    <p><b>User:</b> <%= link_to u.handle, u %></p>
   <% end %>
 <% end %>
-<style>
-p.test {
-	border: 1px solid #000000;
-	white-space: nowrap;
-	width: 100%;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-</style>
-<% @table_columns = 4 %>
-<table width="100%">
-  <tr>
-    <th>Submission</th>
-    <th></th>
-    <th>Score</th>
-    <% if !params[:user_id] 
-         @table_columns+=1
-    %>
-      <th>User</th>
-    <% end %>
-    <% if !params[:problem_id] 
-         @table_columns+=1
-    %>
-      <th>Problem</th>
-    <% end %>
-    <th></th>
-    <% if current_user.is_admin
-         @table_columns += 2
-    %>
-      <th></th>
-      <th></th>
-    <% end %>
-  </tr>
-
-<% @submissions.each do |submission| %>
-  <tr onClick="toggle_height(<%= "'submission#{submission.id}source'" %>);">
-    <td><%= submission.created_at.strftime("%b %d %Y, %H:%M") %>
-    <td><%= submission.language %></td>
-    <td><%= submission.score %></td>
-    <% if !params[:user_id] %>
-      <td><% if submission.user %><%= submission.user.handle %><% end %></td>
-    <% end %>
-    <% if !params[:problem_id] %>
-      <td><%= submission.problem.title %></td>
-    <% end %>
-    <td><%= link_to 'Show', submission %></td>
-    <% if current_user.is_admin %>
-      <td><%= link_to 'Edit', edit_submission_path(submission) %></td>
-      <td><%= link_to 'Destroy', submission, :confirm => 'Are you sure?', :method => :delete %></td>
-    <% end %>
-  </tr>
-  <tr>
-    <td colspan="<%= @table_columns %>"><pre id="submission<%= submission.id %>source" style="overflow-y: hidden; width: 100%; display: none; border: 0px; padding: 0px;"><%= submission.source %></pre></td>
-  </tr>
+<% if params[:by_problem] 
+     p = Problem.find(params[:by_problem]) %>
+  <p><b>Problem:</b> <%= link_to p.title, p %></p>
 <% end %>
-</table>
 <br />
 
-<%= link_to 'New Submission', new_submission_path %>
+<div id="pagination_content">
+  <%= render 'submissions' %>
+</div>
