@@ -21,7 +21,7 @@ class SubmissionsController < ApplicationController
   # GET /submissions.xml
   def index
     if !current_user.is_admin
-      params[:by_user] = current_user.id # non-admins can only browse their own submissions
+      params[:by_user] = current_user.id.to_s # non-admins can only browse their own submissions
     end
     @submissions = apply_scopes(Submission).paginate(:order => "created_at DESC", :page => params[:page], :per_page => 50)
 

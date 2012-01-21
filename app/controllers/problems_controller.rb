@@ -14,7 +14,8 @@ class ProblemsController < ApplicationController
   # GET /problems
   # GET /problems.xml
   def index
-    @problems = Problem.select("problems.*, (SELECT MAX(score) FROM submissions WHERE problem_id = problems.id AND user_id = #{current_user.id}) as score")
+    @problems = Problem.score_by_user(current_user.id)
+    # after CanCan, following line is replaced with .accessible_by(current_user)
     @problems = @problems.find_all {|p| p.can_be_viewed_by(current_user) }
 
     respond_to do |format|

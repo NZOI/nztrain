@@ -247,6 +247,11 @@ input[type!="submit"]:focus {
 	position: relative;
 }
 
+#paginated_section {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
 .pagination {
 	margin-top: 10px;
 	margin-bottom: 10px;

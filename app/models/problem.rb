@@ -3,7 +3,14 @@ class Problem < ActiveRecord::Base
   has_many :test_cases, :dependent => :destroy
   has_many :submissions, :dependent => :destroy
   belongs_to :user
-  
+
+  # scopes
+  def self.score_by_user(user_id)
+    select("problems.*, (SELECT MAX(submissions.score) FROM submissions WHERE submissions.problem_id = problems.id AND user_id = #{user_id.to_i}) AS score")
+  end
+
+  # methods
+
   def get_highest_scoring_submission(user, from = DateTime.new(1), to = DateTime.now)
     subs = self.submissions.find(:all, :conditions => ["created_at between ? and ? and user_id = ?", from, to, user])
     return subs.max_by {|s| s.score}

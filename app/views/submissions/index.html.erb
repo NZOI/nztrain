@@ -1,14 +1,14 @@
 <% content_for :title, "Submissions" %>
-<% if current_user.id == params[:by_user].to_i %>
+<% if current_user.id.to_s == params[:by_user] %>
   <h1>My submissions</h1>
 <% else %>
   <h1>Listing submissions</h1>
-  <% if current_user.is_admin && params[:by_user] 
+  <% if current_user.is_admin && params[:by_user] && !params[:by_user][',']
        u = User.find(params[:by_user]) %>
     <p><b>User:</b> <%= link_to u.handle, u %></p>
   <% end %>
 <% end %>
-<% if params[:by_problem] 
+<% if params[:by_problem] && !params[:by_problem][',']
      p = Problem.find(params[:by_problem]) %>
   <p><b>Problem:</b> <%= link_to p.title, p %></p>
 <% end %>

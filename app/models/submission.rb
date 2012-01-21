@@ -2,10 +2,15 @@ class Submission < ActiveRecord::Base
   belongs_to :user
   belongs_to :problem
 
-  named_scope :by_user, proc {|user_id| { :conditions => { :user_id => user_id } } }
-  named_scope :by_problem, proc {|problem_id| { :conditions => { :problem_id => problem_id } } }
-
   validates :score, :presence => true
+
+  # scopes (lazy running SQL queries)
+  def self.by_user(user_id)
+    where("submissions.user_id IN (?)", user_id.to_s.split(','))
+  end
+  def self.by_problem(problem_id)
+    where("submissions.problem_id IN (?)", problem_id.to_s.split(','))
+  end
 
   def judge
     box_path = File.expand_path(Rails.root)+"/bin/box"

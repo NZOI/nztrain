@@ -14,12 +14,12 @@
         <th>Submission</th>
         <th></th>
         <th>Score</th>
-        <% if !params[:by_user] 
+        <% if !params[:by_user] || params[:by_user][',']
              @table_columns+=1
         %>
         <th>User</th>
         <% end %>
-          <% if !params[:by_problem] 
+          <% if !params[:by_problem] || params[:by_problem][',']
              @table_columns+=1
         %>
           <th>Problem</th>
@@ -38,10 +38,10 @@
         <td><%= submission.created_at.strftime("%b %d %Y, %H:%M") %>
           <td><%= submission.language %></td>
         <td><%= submission.score %></td>
-        <% if !params[:by_user] %>
+        <% if !params[:by_user] || params[:by_user][','] %>
           <td><% if submission.user %><%= submission.user.handle %><% end %></td>
         <% end %>
-        <% if !params[:by_problem] %>
+        <% if !params[:by_problem] || params[:by_problem][','] %>
           <td><%= submission.problem.title %></td>
         <% end %>
           <td><%= link_to 'Show', submission %></td>
