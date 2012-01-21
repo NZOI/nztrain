@@ -1,60 +1,59 @@
 <%= will_paginate @submissions %>
-<br />
-<% if @submissions.length == 0 %>
-  <% if current_user.id == params[:by_user] %>
-    You have no submissions.
+<div id="paginated_content">
+  <% if @submissions.length == 0 %>
+    <% if current_user.id == params[:by_user] %>
+      You have no submissions.
+    <% else %>
+      No submissions found.
+    <% end %>
   <% else %>
-    No submissions found.
+
+    <% @table_columns = 4 %>
+    <table width="100%">
+      <tr>
+        <th>Submission</th>
+        <th></th>
+        <th>Score</th>
+        <% if !params[:by_user] 
+             @table_columns+=1
+        %>
+        <th>User</th>
+        <% end %>
+          <% if !params[:by_problem] 
+             @table_columns+=1
+        %>
+          <th>Problem</th>
+        <% end %>
+        <th></th>
+          <% if current_user.is_admin
+             @table_columns += 2
+        %>
+          <th></th>
+          <th></th>
+        <% end %>
+      </tr>
+    
+    <% @submissions.each do |submission| %>
+      <tr onClick="toggle_height(<%= "'submission#{submission.id}source'" %>);">
+        <td><%= submission.created_at.strftime("%b %d %Y, %H:%M") %>
+          <td><%= submission.language %></td>
+        <td><%= submission.score %></td>
+        <% if !params[:by_user] %>
+          <td><% if submission.user %><%= submission.user.handle %><% end %></td>
+        <% end %>
+        <% if !params[:by_problem] %>
+          <td><%= submission.problem.title %></td>
+        <% end %>
+          <td><%= link_to 'Show', submission %></td>
+          <% if current_user.is_admin %>
+          <td><%= link_to 'Edit', edit_submission_path(submission) %></td>
+          <td><%= link_to 'Destroy', submission, :confirm => 'Are you sure?', :method => :delete %></td>
+        <% end %>
+      </tr>
+        <tr>
+        <td colspan="<%= @table_columns %>"><pre id="submission<%= submission.id %>source" style="overflow-y: hidden; width: 100%; display: none; border: 0px; padding: 0px;"><%= submission.source %></pre></td>
+      </tr>
+    <% end %>
+    </table>
   <% end %>
-<% else %>
-
-<% @table_columns = 4 %>
-<table width="100%">
-  <tr>
-    <th>Submission</th>
-    <th></th>
-    <th>Score</th>
-    <% if !params[:by_user] 
-         @table_columns+=1
-    %>
-      <th>User</th>
-    <% end %>
-    <% if !params[:by_problem] 
-         @table_columns+=1
-    %>
-      <th>Problem</th>
-    <% end %>
-    <th></th>
-    <% if current_user.is_admin
-         @table_columns += 2
-    %>
-      <th></th>
-      <th></th>
-    <% end %>
-  </tr>
-
-<% @submissions.each do |submission| %>
-  <tr onClick="toggle_height(<%= "'submission#{submission.id}source'" %>);">
-    <td><%= submission.created_at.strftime("%b %d %Y, %H:%M") %>
-    <td><%= submission.language %></td>
-    <td><%= submission.score %></td>
-    <% if !params[:by_user] %>
-      <td><% if submission.user %><%= submission.user.handle %><% end %></td>
-    <% end %>
-    <% if !params[:by_problem] %>
-      <td><%= submission.problem.title %></td>
-    <% end %>
-    <td><%= link_to 'Show', submission %></td>
-    <% if current_user.is_admin %>
-      <td><%= link_to 'Edit', edit_submission_path(submission) %></td>
-      <td><%= link_to 'Destroy', submission, :confirm => 'Are you sure?', :method => :delete %></td>
-    <% end %>
-  </tr>
-  <tr>
-    <td colspan="<%= @table_columns %>"><pre id="submission<%= submission.id %>source" style="overflow-y: hidden; width: 100%; display: none; border: 0px; padding: 0px;"><%= submission.source %></pre></td>
-  </tr>
-<% end %>
-</table>
-<% end %>
-<br />
 <%= will_paginate @submissions %>

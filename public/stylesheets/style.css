@@ -242,3 +242,44 @@ input[type="file"] {
 input[type!="submit"]:focus {
 	box-shadow: 1px 1px 4px 1px #2d2d2d;
 }
+
+#paginated_content {
+	position: relative;
+}
+
+.pagination {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	text-align: center;
+}
+
+.pagination a {
+	border: 1px solid #2D2D2D;
+	padding: 3px;
+	margin: 1px;
+	display: inline-block;
+	min-width: 20px;
+}
+
+.pagination .current {
+	padding: 3px;
+	margin: 1px;
+	font-weight: bold;
+	font-style: normal;
+	display: inline-block;
+	min-width: 20px;
+}
+
+.pagination .disabled {
+	padding: 3px;
+	margin: 1px;
+	display: inline-block;
+	min-width: 20px;
+	color: #888888;
+}
+
+.pagination .previous_page, .pagination .next_page {
+	margin-left: 50px;
+	margin-right: 50px;
+	font-family: monospace;
+}

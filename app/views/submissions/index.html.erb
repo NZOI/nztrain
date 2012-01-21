@@ -12,8 +12,7 @@
      p = Problem.find(params[:by_problem]) %>
   <p><b>Problem:</b> <%= link_to p.title, p %></p>
 <% end %>
-<br />
 
-<div id="pagination_content">
+<div id="paginated_section">
   <%= render 'submissions' %>
 </div>
