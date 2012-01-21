@@ -23,7 +23,7 @@ class SubmissionsController < ApplicationController
     if !current_user.is_admin
       params[:by_user] = current_user.id # non-admins can only browse their own submissions
     end
-    @submissions = apply_scopes(Submission).paginate(:order => "created_at DESC", :page => params[:page], :per_page => 100)
+    @submissions = apply_scopes(Submission).paginate(:order => "created_at DESC", :page => params[:page], :per_page => 50)
 
     respond_to do |format|
       format.html # index.html.erb
