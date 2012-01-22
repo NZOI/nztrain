@@ -9,13 +9,13 @@ $(function () {
     });
 
     $(window).bind( 'hashchange', function(e) {
-        $('#paginated_content').css({'opacity': 0.3}); // loading visual cue
+        //$('#paginated_content').css({'opacity': 0.3}); // loading visual cue
 	var img = document.createElement("IMG");
 	img.src = "images/ajax-loader.gif";
-        $(img).css({'margin': '20px'});
+        $(img).css({'margin': '100px'});
         var div = document.createElement("DIV");
         $(div).append(img);
-        $(div).css({'position': 'absolute', 'left': 0, 'top': 0, 'width': '100%', 'height': '100%'});
+        $(div).css({'position': 'absolute', 'left': 0, 'top': 0, 'width': '100%', 'height': '100%', 'background-color': 'rgba(255,255,255,0.7)', 'text-align': 'center', 'opacity': 0.9});
 	$('#paginated_content').append(div);
 
         // scroll to top of paginated_section if it is not visible
