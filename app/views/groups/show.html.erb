@@ -28,6 +28,15 @@
 <% end %>
 <br />
 
+<b>Problems this group has access to:</b>
+<% Problem.by_group(@group.id).each do |problem| %>
+  <li>
+  <%= problem.title %>
+  </li>
+<% end %>
+<br />
+
+
 <%= link_to 'Add yourself', add_user_group_path(@group), :method => :put %> |
 <%= link_to 'Remove yourself', remove_user_group_path(@group), :method => :put %> |
 <%= link_to 'Edit', edit_group_path(@group) %> |
