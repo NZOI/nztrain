@@ -1,4 +1,6 @@
 NztrainV2::Application.routes.draw do
+  resources :roles
+
   resources :problem_sets
 
   resources :groups

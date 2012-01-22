@@ -5,3 +5,21 @@
 #
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
+
+["superadmin","admin","staff","manager","author"].each do |role|
+  Role.find_or_create_by_name(role)
+end
+
+# If no users exist in database
+  # then create a root superadmin user
+#
+
+# give superadmin status to set everything up
+# once migrated, change this to add root superadmin user if it was created for new installations
+unless Role.find_by_name("superadmin").users.include? (User.find_by_id_and_name(35, "Ronald Chan"))
+  Role.find_by_name("superadmin").users.push(User.find_by_id_and_name(35, "Ronald Chan"))
+end
+
+
+
+

@@ -18,6 +18,7 @@ gem "nokogiri"
 gem 'rails_markitup'
 gem 'will_paginate'
 gem 'has_scope'
+gem 'cancan'
 
 gem 'pg'
 # Use unicorn as the web server

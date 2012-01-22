@@ -7,13 +7,17 @@ class User < ActiveRecord::Base
   validates :name, :length => {:maximum => 100}
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :name, :email, :password, :password_confirmation, :remember_me, :is_admin, :brownie_points
+  attr_accessible :name, :email, :password, :password_confirmation, :remember_me, :brownie_points
 
   has_many :problems
   has_many :submissions
   has_many :contest_relations
   has_many :contests, :through => :contest_relations
+  # NOTE: difference between groups and roles
+  # Groups are used to assign local permissions, eg. access to individual problems/problem sets
+  # Roles are used to assign global permissions, eg. access to problems on the whole site
   has_and_belongs_to_many :groups
+  has_and_belongs_to_many :roles
   
   def handle
     if !self.name
@@ -35,4 +39,13 @@ class User < ActiveRecord::Base
     return solved
   end
 
+  def has_role(role)
+    roles.include?(Role.find_by_name(role.to_s))
+  end
+  def is_superadmin
+    has_role(:superadmin)
+  end
+  def is_admin
+    has_role(:admin) || has_role(:superadmin)
+  end
 end
