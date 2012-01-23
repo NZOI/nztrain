@@ -1,16 +1,6 @@
 class ProblemsController < ApplicationController
   before_filter :check_signed_in
   load_and_authorize_resource
-  #before_filter :check_access, :only => [:show, :edit]
-  #before_filter :check_admin, :only => [:new, :edit, :create, :destroy, :update]
-
-  def check_access
-    prob = Problem.find(params[:id])
-    
-    if !prob.can_be_viewed_by(current_user)
-      redirect_to(problems_path, :alert => "You do not have access to this problem!")
-    end
-  end
 
   # GET /problems
   # GET /problems.xml
@@ -27,8 +17,8 @@ class ProblemsController < ApplicationController
   # GET /problems/1.xml
   def show
     @problem = Problem.find(params[:id])
-    @submission = Submission.new
-    #TODO: restrict to problems that current user owns
+    @submission = Submission.new # for submitting problem
+    #TODO: restrict to problems that current user owns/manages
     @problem_sets = ProblemSet.all
     @submissions = @problem.submission_history(current_user)
 

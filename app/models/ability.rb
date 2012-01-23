@@ -1,6 +1,11 @@
 class Ability
   include CanCan::Ability
-
+  # Note, :create, :update, :read, :destroy are the 4 RESTful actions controlled
+  # :manage = all possible actions
+  # Custom actions used:
+  # :add_brownie, User
+  # :use, [Problem, ProblemSet, Contest]
+  # [:join, :leave], Group
   def initialize(user)
     # Define abilities for the passed in user here
     user ||= User.new # guest user (not logged in)
@@ -22,6 +27,9 @@ class Ability
     # can [:update, :destroy], User, :user_id => user.id # Not used - account updated through the devise controller/views
     # Can browse all users
     can :read, User
+    can :read, Group # for now, can see all groups, change later to can see public groups
+    can :join, Group # can join all groups
+    can :leave, Group, :users => {:id => user.id} # can leave any group user is part of
     can :read, Contest, :groups.outer => {:users.outer => {:id => user.id}}
     if !Contest.user_currently_in(user.id).exists? # can do only if not in a contest
       # Objects owned by the user
@@ -38,11 +46,12 @@ class Ability
       can :read, ProblemSet, :contest.outer => {:users.outer => {:id => user.id}, :start_time => (DateTime.now-30.year)..DateTime.now, :end_time => DateTime.now..(DateTime.now+30.year)}
       can :read, Submission, :problems.outer => {:problem_sets.outer => {:contest.outer => {:users.outer => {:id => user.id}, :start_time => (DateTime.now-30.year)..DateTime.now, :end_time => DateTime.now..(DateTime.now+30.year)}}}
     end
-    cannot :create, [Problem, ProblemSet] # must secure evaluator
+    cannot :create, [Problem, ProblemSet] # must secure evaluator, after which, there is no reason not to allow
     user.roles.each do |role|
       case role.name
       when 'staff' # full read access
         can :read, :all
+        can :add_brownie, User
         can :create, [Problem, ProblemSet, Group, Contest]
       when 'manager' # can create new groups, problems, problem sets, contests
         can :create, [Problem, ProblemSet, Group, Contest]

@@ -25,10 +25,14 @@
           <th>Problem</th>
         <% end %>
         <th></th>
-          <% if current_user.is_admin
-             @table_columns += 2
+          <% if can? :update, Submission
+             @table_columns += 1
         %>
           <th></th>
+        <% end %>
+          <% if can? :destroy, Submission
+             @table_columns += 1
+        %>
           <th></th>
         <% end %>
       </tr>
@@ -44,9 +48,11 @@
         <% if !params[:by_problem] || params[:by_problem][','] %>
           <td><%= submission.problem.title %></td>
         <% end %>
-          <td><%= link_to 'Show', submission %></td>
-          <% if current_user.is_admin %>
+        <td><%= link_to 'Show', submission %></td>
+        <% if can? :update, submission %>
           <td><%= link_to 'Edit', edit_submission_path(submission) %></td>
+        <% end %>
+        <% if can? :destroy, submission %>
           <td><%= link_to 'Destroy', submission, :confirm => 'Are you sure?', :method => :delete %></td>
         <% end %>
       </tr>

@@ -37,7 +37,7 @@
 <br />
 
 
-<%= link_to 'Add yourself', add_user_group_path(@group), :method => :put %> |
-<%= link_to 'Remove yourself', remove_user_group_path(@group), :method => :put %> |
-<%= link_to 'Edit', edit_group_path(@group) %> |
+<%= link_to 'Join group', join_group_path(@group), :method => :put if can? :join, @group %>
+<%= link_to 'Leave group', leave_group_path(@group), :method => :put if can? :leave, @group %>
+<%= link_to 'Edit', edit_group_path(@group) if can? :update, @group %>
 <%= link_to 'Back', groups_path %>

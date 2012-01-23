@@ -5,8 +5,10 @@
   <tr>
     <th>Name</th>
     <th></th>
-    <% if current_user.is_admin %>
+    <% if can? :update, Group %>
       <th></th>
+    <% end %>
+    <% if can? :destroy, Group %>
       <th></th>
     <% end %>
   </tr>
@@ -15,9 +17,11 @@
   <tr>
     <td><%= group.name %></td>
     <td><%= link_to 'Show', group %></td>
-    <% if current_user.is_admin %>
-      <td><%= link_to 'Edit', edit_group_path(group) %></td>
-      <td><%= link_to 'Destroy', group, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% if can? :update, Group %>
+      <td><%= link_to 'Edit', edit_group_path(group) if can? :update, group %></td>
+    <% end %>
+    <% if can? :destroy, Group %>
+      <td><%= link_to 'Destroy', group, :confirm => 'Are you sure?', :method => :delete if can? :destroy, group %></td>
     <% end %>
   </tr>
 <% end %>
@@ -25,6 +29,6 @@
 
 <br />
 
-<% if current_user.is_admin %>
+<% if can? :create, Group %>
   <%= link_to 'New Group', new_group_path %>
 <% end %>

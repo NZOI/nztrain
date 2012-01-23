@@ -9,8 +9,10 @@
     <th>Solved Problems</th>
     <th>Brownie Points</th>
     <th></th>
-    <% if current_user.is_admin %>
+    <% if can? :update, User %>
       <th></th>
+    <% end %>
+    <% if can? :destroy, User %>
       <th></th>
     <% end %>
   </tr>
@@ -20,12 +22,14 @@
       <td><%= user.name %></td>
       <td><%= user.email %></td>
       <td><%= user.is_admin %></td>
-      <td><%= user.count %></td>
+      <td><%= user.num_solved %></td>
       <td><%= user.brownie_points %></td>
       <td><%= link_to 'Show', user %></td>
-      <% if current_user.is_admin %>
-        <td><%= link_to 'Edit', edit_user_path(user) %></td>
-        <td><%= link_to 'Destroy', user, :confirm => 'Are you sure?', :method => :delete %></td>
+      <% if can? :update, User %>
+        <td><%= link_to 'Edit', edit_user_path(user) if can? :update, user%></td>
+      <% end %>
+      <% if can? :destroy, User %>
+        <td><%= link_to 'Destroy', user, :confirm => 'Are you sure?', :method => :delete if can? :destroy, user %></td>
       <% end %>
     </tr>
   <% end %>

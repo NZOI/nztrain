@@ -39,8 +39,8 @@ NztrainV2::Application.routes.draw do
 
   resources :groups do
     member do
-      put 'add_user'
-      put 'remove_user'
+      put 'join'
+      put 'leave'
 
       put 'add_problem_set'
       put 'remove_problem_set'

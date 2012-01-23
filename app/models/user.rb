@@ -18,7 +18,11 @@ class User < ActiveRecord::Base
   # Roles are used to assign global permissions, eg. access to problems on the whole site
   has_and_belongs_to_many :groups
   has_and_belongs_to_many :roles
-  
+
+  # Scopes
+  scope :distinct, select("distinct(users.id), users.*")
+  scope :num_solved, select("(SELECT COUNT(DISTINCT submissions.problem_id) FROM submissions WHERE submissions.user_id = users.id AND submissions.score = 100) as num_solved")
+
   def handle
     if !self.name
       return "<#{self.email}>"

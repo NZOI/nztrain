@@ -26,8 +26,7 @@
 </ul>
 <br />
 
-<% if current_user.is_admin %>
-  <%= render 'admin' %>
-<% end %>
-<%= link_to 'Edit', edit_user_path(@user) %> |
+<%= render 'admin' %>
+
+<%= link_to 'Edit', edit_user_path(@user) if can? :update, @user %>
 <%= link_to 'Back', users_path %>

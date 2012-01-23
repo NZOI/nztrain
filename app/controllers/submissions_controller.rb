@@ -1,7 +1,6 @@
 class SubmissionsController < ApplicationController
   before_filter :check_signed_in
-  before_filter :check_access, :only => [:show]
-  before_filter :check_admin, :only => [:edit, :update, :destroy, :rejudge]
+  load_and_authorize_resource
 
   has_scope :by_user
   has_scope :by_problem
@@ -20,10 +19,7 @@ class SubmissionsController < ApplicationController
   # GET /submissions
   # GET /submissions.xml
   def index
-    if !current_user.is_admin
-      params[:by_user] = current_user.id.to_s # non-admins can only browse their own submissions
-    end
-    @submissions = apply_scopes(Submission).paginate(:order => "created_at DESC", :page => params[:page], :per_page => 50)
+    @submissions = apply_scopes(Submission).accessible_by(current_ability).distinct.paginate(:order => "created_at DESC", :page => params[:page], :per_page => 50)
 
     respond_to do |format|
       format.html # index.html.erb

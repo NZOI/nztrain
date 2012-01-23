@@ -5,6 +5,8 @@ class Submission < ActiveRecord::Base
   validates :score, :presence => true
 
   # scopes (lazy running SQL queries)
+  scope :distinct, select("distinct(submissions.id), submissions.*")
+
   def self.currently_in_users_contest(user_id)
     joins(:problems => {:problem_sets => {:contests => :users}}).where(:users => { :id => user_id }).where("contests.start_time <= :time AND contests.end_time > :time",{:time => DateTime.now}).where("submissions.created_at >= contests.start_time")
   end

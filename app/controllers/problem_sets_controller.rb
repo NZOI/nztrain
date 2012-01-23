@@ -1,16 +1,8 @@
 class ProblemSetsController < ApplicationController
   before_filter :check_signed_in
-  before_filter :check_access, :only => [:show, :edit]
-  before_filter :check_admin, :only => [:new, :edit, :create, :destroy, :update]
+  load_and_authorize_resource
 
-  def check_access
-    problemset = ProblemSet.find(params[:id])
-    
-    if !problemset.can_be_viewed_by(current_user)
-      redirect_to(problems_path, :alert => "You do not have access to this problem set!")
-    end
-  end
-
+  # need to be secured (2 functions)
   def add_problem
     @problem_set = ProblemSet.find(params[:problem][:problem_set_ids])
     problem = Problem.find(params[:problem_id])
@@ -32,8 +24,7 @@ class ProblemSetsController < ApplicationController
   # GET /problem_sets
   # GET /problem_sets.xml
   def index
-    @problem_sets = ProblemSet.all
-    @problem_sets = @problem_sets.find_all {|p| p.can_be_viewed_by(current_user) }
+    @problem_sets = ProblemSet.accessible_by(current_ability).distinct
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @problem_sets }

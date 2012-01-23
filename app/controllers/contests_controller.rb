@@ -1,7 +1,6 @@
 class ContestsController < ApplicationController
   before_filter :check_signed_in
-  before_filter :check_access, :only => [:show]
-  before_filter :check_admin, :only => [:edit, :create, :update, :destroy]
+  load_and_authorize_resource
 
   def check_access
     @contest = Contest.find(params[:id])
@@ -13,8 +12,7 @@ class ContestsController < ApplicationController
   # GET /contests
   # GET /contests.xml
   def index
-    @contests = Contest.all
-    @contests = @contests.find_all {|c| c.can_be_viewed_by(current_user)}
+    @contests = Contest.accessible_by(current_ability).distinct
 
     respond_to do |format|
       format.html # index.html.erb
@@ -58,7 +56,7 @@ class ContestsController < ApplicationController
         @scoreboard[i][:rank] = @current_rank
       end
     end
-    if !current_user.is_admin
+    if cannot? :manage, @contest
       @median = @scoreboard[@scoreboard.length/2][:rank].to_i
       @scoreboard = @scoreboard.reject{|row| (row[:rank].to_i >= @median && row[:user_id] != current_user.id)}
     end

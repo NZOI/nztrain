@@ -5,6 +5,9 @@ class Contest < ActiveRecord::Base
   belongs_to :user
   has_and_belongs_to_many :groups
 
+  # Scopes
+  scope :distinct, select("distinct(contests.id), contests.*")
+
   def self.user_currently_in(user_id)
     joins(:users).where(:users => { :id => user_id }).where("contests.start_time <= :time AND contests.end_time > :time",{:time => DateTime.now})
   end

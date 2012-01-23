@@ -1,15 +1,10 @@
 class GroupsController < ApplicationController
   before_filter :check_signed_in
-  before_filter :check_access, :except => [:add_user, :remove_user, :index, :show]
+  load_and_authorize_resource
 
-  def check_access
-    if !current_user.is_admin
-      redirect_to(groups_path, :alert => "You must be an admin to do that!")
-    end
-  end
-
-  def add_user
+  def join
     @group = Group.find(params[:id])
+    authorize! :join, @group
     if @group.users.exists?(current_user)
       redirect_to(@group, :alert => "You are already a member of this group")
       return
@@ -18,15 +13,17 @@ class GroupsController < ApplicationController
     redirect_to(@group, :notice => "You are now a member of this group")
   end
 
-  def remove_user
+  def leave
     @group = Group.find(params[:id])
+    authorize! :leave, @group
     @group.users.delete(current_user)
     redirect_to(@group, :notice => "You are no longer a member of this group")
   end
-
   def add_problem_set
     @group = Group.find(params[:problem_set][:group_ids])
+    authorize! :update, @group
     problem_set = ProblemSet.find(params[:problem_set_id])
+    authorize! :use, problem_set # cannot add problem sets without use permission
     if @group.problem_sets.exists?(problem_set)
       redirect_to(problem, :alert => "This group already has access to this problem set")
       return
@@ -37,6 +34,7 @@ class GroupsController < ApplicationController
 
   def remove_problem_set
     @group = Group.find(params[:id])
+    authorize! :update, @group
     problem_set = ProblemSet.find(params[:problem_set_id])
     @group.problem_sets.delete(problem_set)
     redirect_to(@group, :notice => "Problem set removed.")
@@ -44,7 +42,9 @@ class GroupsController < ApplicationController
 
   def add_contest
     @group = Group.find(params[:contest][:group_ids])
+    authorize! :update, @group
     contest = Contest.find(params[:contest_id])
+    authorize! :use, contest # cannot add contests without use permission
     if @group.contests.exists?(contest)
       redirect_to(contest, :alert => "This group already has access to this contest")
       return
@@ -55,6 +55,7 @@ class GroupsController < ApplicationController
 
   def remove_contest
     @group = Group.find(params[:id])
+    authorize! :update, @group
     contest = Contest.find(params[:contest_id])
     @group.contests.delete(contest)
     redirect_to(@group, :notice => "Contest removed.")
@@ -63,7 +64,7 @@ class GroupsController < ApplicationController
   # GET /groups
   # GET /groups.xml
   def index
-    @groups = Group.all
+    @groups = Group.accessible_by(current_ability).distinct
 
     respond_to do |format|
       format.html # index.html.erb

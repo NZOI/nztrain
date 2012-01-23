@@ -10,8 +10,10 @@
     <th>User</th>
     <th>Score</th>
     <th></th>
-    <% if current_user.is_admin %>
+    <% if can? :update, Contest %>
       <th></th>
+    <% end %>
+    <% if can? :destroy, Contest %>
       <th></th>
     <% end %>
   </tr>
@@ -36,9 +38,11 @@
         <%= link_to 'Show', contest %>
       <% end %>
     </td>
-    <% if current_user.is_admin %>
-      <td><%= link_to 'Edit', edit_contest_path(contest) %></td>
-      <td><%= link_to 'Destroy', contest, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% if can? :update, Contest %>
+      <td><%= link_to 'Edit', edit_contest_path(contest) if can? :update, contest %></td>
+    <% end %>
+    <% if can? :destroy, Contest %>
+      <td><%= link_to 'Destroy', contest, :confirm => 'Are you sure?', :method => :delete if can? :destroy, contest %></td>
     <% end %>
   </tr>
 <% end %>
@@ -46,6 +50,6 @@
 
 <br />
 
-<% if current_user.is_admin %>
+<% if can? :create, Contest %>
   <%= link_to 'New Contest', new_contest_path %>
 <% end %>
