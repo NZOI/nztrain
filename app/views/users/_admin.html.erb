@@ -1,3 +1,13 @@
+
+<% if can? :assign, Role %>
+<p>
+<% form_tag( add_role_user_path(@user), :method => :put) do %>
+  <%= collection_select :user, :role_ids, Role.accessible_by(current_ability, :assign), :id, :name %>
+  <%= submit_tag "Add role" %>
+<% end %>
+</p>
+<% end %>
+
 <p>
 <%= link_to "Add brownie point", add_brownie_user_path(@user), :method => "post" if can? :add_brownie, @user %>
 </p>

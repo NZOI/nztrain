@@ -1,11 +1,13 @@
 class ProblemSetsController < ApplicationController
   before_filter :check_signed_in
   load_and_authorize_resource
+  skip_authorization_check :only => [:add_problem, :remove_problem]
 
-  # need to be secured (2 functions)
   def add_problem
     @problem_set = ProblemSet.find(params[:problem][:problem_set_ids])
+    authorize! :update, @problem_set
     problem = Problem.find(params[:problem_id])
+    authorize! :use, problem
     if @problem_set.problems.exists?(problem)
       redirect_to(problem, :alert => "This problem set already contains this problem")
       return
@@ -16,6 +18,7 @@ class ProblemSetsController < ApplicationController
 
   def remove_problem
     @problem_set = ProblemSet.find(params[:id])
+    authorize! :update, @problem_set
     problem = Problem.find(params[:problem_id])
     @problem_set.problems.delete(problem)
     redirect_to(@problem_set, :notice => "Problem removed.")

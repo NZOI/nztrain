@@ -133,6 +133,7 @@ class ContestsController < ApplicationController
   # PUT /contests/1
   # PUT /contests/1.xml
   def update
+    authorize! :use, params[:contest][:problem_set_id] if params[:contest][:problem_set] # can only use problem sets which user has permission to use
     params[:contest][:start_time] = params[:contest][:start_time].get_date(Time.zone)
     params[:contest][:end_time] = params[:contest][:end_time].get_date(Time.zone)
     @contest = Contest.find(params[:id])

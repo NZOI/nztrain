@@ -1,12 +1,7 @@
 class UsersController < ApplicationController
   before_filter :check_signed_in
   load_and_authorize_resource
-
-  def check_access
-    if !current_user.is_admin
-      redirect_to(users_path, :alert => "Only admins can do this!")
-    end
-  end
+  skip_authorize_resource :only => [:add_role, :remove_role]
 
   def index
     @users = User.accessible_by(current_ability).distinct.num_solved.order(:email)
@@ -42,6 +37,26 @@ class UsersController < ApplicationController
         format.xml { render :xml => @user.errors, :status => :unprocessable_entity }
       end
     end
+  end
+
+  def add_role
+    @user = User.find(params[:id])
+    role = Role.find(params[:user][:role_ids])
+    authorize! :assign, role
+    if @user.roles.exists?(role)
+      redirect_to(@user, :alert => "This user already has this role")
+      return
+    end
+    @user.roles.push(role)
+    redirect_to(@user, :notice => "Role #{role.name} added.")
+  end
+  def remove_role
+    @user = User.find(params[:id])
+    authorize! :update, @user # don't want bad people removing roles from others
+    role = Role.find(params[:role_id])
+    authorize! :assign, role # can't remove a role, if can't assign this role
+    @user.roles.delete(role)
+    redirect_to(@user, :notice => "Role #{role.name} removed.")
   end
 
   def destroy

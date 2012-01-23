@@ -25,7 +25,8 @@
 <% end %>
 </ul>
 <br />
-
+<b> Roles: </b>
+<%= @user.roles.map {|r| r.name}.join(', ') %>
 <%= render 'admin' %>
 
 <%= link_to 'Edit', edit_user_path(@user) if can? :update, @user %>

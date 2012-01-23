@@ -19,6 +19,8 @@ class Ability
       cannot :manage, Role
       cannot :manage, User, :is_superadmin => true
       can :read, :all
+      can :assign, Role
+      cannot :assign, Role, :name => 'superadmin' # can assign all roles except superadmin
       return
     end
 
@@ -53,6 +55,8 @@ class Ability
         can :read, :all
         can :add_brownie, User
         can :create, [Problem, ProblemSet, Group, Contest]
+        can :assign, Role
+        cannot :assign, Role, :name => ['superadmin','admin','staff']
       when 'manager' # can create new groups, problems, problem sets, contests
         can :create, [Problem, ProblemSet, Group, Contest]
       when 'author' # can create new problems, problem sets

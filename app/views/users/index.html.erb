@@ -5,7 +5,7 @@
   <tr>
     <th>Name</th>
     <th>Email</th>
-    <th>Admin?</th>
+    <th>Roles</th>
     <th>Solved Problems</th>
     <th>Brownie Points</th>
     <th></th>
@@ -21,7 +21,7 @@
     <tr>
       <td><%= user.name %></td>
       <td><%= user.email %></td>
-      <td><%= user.is_admin %></td>
+      <td><%= user.roles.map {|r| r.name}.join(', ') %></td>
       <td><%= user.num_solved %></td>
       <td><%= user.brownie_points %></td>
       <td><%= link_to 'Show', user %></td>

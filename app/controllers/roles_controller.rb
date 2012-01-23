@@ -1,12 +1,11 @@
 class RolesController < ApplicationController
   before_filter :check_signed_in
-  before_filter :check_access, :only => :show
-  before_filter :check_admin, :only => [:new, :edit, :create, :destroy, :update]
+  load_and_authorize_resource
 
   # GET /roles
   # GET /roles.xml
   def index
-    @roles = Role.all
+    @roles = Role.accessible_by(current_ability).distinct
 
     respond_to do |format|
       format.html # index.html.erb

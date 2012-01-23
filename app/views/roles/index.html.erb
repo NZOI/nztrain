@@ -4,16 +4,24 @@
   <tr>
     <th>Name</th>
     <th></th>
-    <th></th>
-    <th></th>
+    <% if can? :update, Role %>
+      <th></th>
+    <% end %>
+    <% if can? :destroy, Role %>
+      <th></th>
+    <% end %>
   </tr>
 
 <% @roles.each do |role| %>
   <tr>
     <td><%= role.name %></td>
     <td><%= link_to 'Show', role %></td>
-    <td><%= link_to 'Edit', edit_role_path(role) %></td>
-    <td><%= link_to 'Destroy', role, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% if can? :update, Role %>
+      <td><%= link_to 'Edit', edit_role_path(role) if can? :update, role %></td>
+    <% end %>
+    <% if can? :destroy, Role %>
+      <td><%= link_to 'Destroy', role, :confirm => 'Are you sure?', :method => :delete if can? :destroy, role %></td>
+    <% end %>
   </tr>
 <% end %>
 </table>

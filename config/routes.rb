@@ -31,7 +31,12 @@ NztrainV2::Application.routes.draw do
 
   resources :test_cases
 
-  resources :users
+  resources :users do
+    member do
+      put 'add_role'
+      put 'remove_role'
+    end
+  end
 
   devise_for :users, :path => "accounts"
 
