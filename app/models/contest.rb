@@ -5,7 +5,9 @@ class Contest < ActiveRecord::Base
   belongs_to :user
   has_and_belongs_to_many :groups
 
-  scope :user_currently_in, lambda { joins(:users).where(:users => { :id => current_user.id }).where("contests.start_time <= :time AND contests.end_time > :time",{:time => DateTime.now}) }
+  def self.user_currently_in(user_id)
+    joins(:users).where(:users => { :id => user_id }).where("contests.start_time <= :time AND contests.end_time > :time",{:time => DateTime.now})
+  end
   def self.group_can_read(group_id)
     joins(:groups).where(:groups => {:id => group_id}).select("distinct(problems.id), problems.*")
   end

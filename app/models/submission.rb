@@ -5,7 +5,9 @@ class Submission < ActiveRecord::Base
   validates :score, :presence => true
 
   # scopes (lazy running SQL queries)
-  scope :currently_in_users_contest, lambda { joins(:problems => {:problem_sets => {:contests => :users}}).where(:users => { :id => current_user.id }).where("contests.start_time <= :time AND contests.end_time > :time",{:time => DateTime.now}).where("submissions.created_at >= contests.start_time") }
+  def self.currently_in_users_contest(user_id)
+    joins(:problems => {:problem_sets => {:contests => :users}}).where(:users => { :id => user_id }).where("contests.start_time <= :time AND contests.end_time > :time",{:time => DateTime.now}).where("submissions.created_at >= contests.start_time")
+  end
   def self.by_user(user_id)
     where("submissions.user_id IN (?)", user_id.to_s.split(','))
   end

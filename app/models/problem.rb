@@ -3,9 +3,13 @@ class Problem < ActiveRecord::Base
   has_many :test_cases, :dependent => :destroy
   has_many :submissions, :dependent => :destroy
   belongs_to :user
-  
+
   # Scopes
-  scope :currently_in_users_contest, lambda { joins(:problem_sets => {:contests => :users}).where(:users => { :id => current_user.id }).where("contests.start_time <= :time AND contests.end_time > :time",{:time => DateTime.now}) }
+  scope :distinct, select("distinct(problems.id), problems.*")
+
+  def self.currently_in_users_contest(user_id)
+    joins(:problem_sets => {:contests => :users}).where(:users => { :id => user_id }).where("contests.start_time <= :time AND contests.end_time > :time",{:time => DateTime.now})
+  end
   #scope :visible, lambda { joins(:problem_sets => :groups => :users).where( :users => { :id => current_user.id } ).select("distinct(problems.id), problems.*") }
   def self.score_by_user(user_id)
     select("problems.*, (SELECT MAX(submissions.score) FROM submissions WHERE submissions.problem_id = problems.id AND user_id = #{user_id.to_i}) AS score")

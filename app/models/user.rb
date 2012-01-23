@@ -38,14 +38,13 @@ class User < ActiveRecord::Base
     end
     return solved
   end
-
   def has_role(role)
     roles.include?(Role.find_by_name(role.to_s))
   end
   def is_superadmin
-    has_role(:superadmin)
+    self.has_role(:superadmin)
   end
   def is_admin
-    has_role(:admin) || has_role(:superadmin)
+    self.has_role(:admin) || self.has_role(:superadmin)
   end
 end

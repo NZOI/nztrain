@@ -10,8 +10,10 @@
     <th>User</th>
     <th>Score</th>
     <th></th>
-    <% if current_user.is_admin %>
+    <% if can? :update, Problem %>
       <th></th>
+    <% end %>
+    <% if can? :destroy, Problem %>
       <th></th>
     <% end %>
   </tr>
@@ -26,9 +28,11 @@
     <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.user_id %></td>
     <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.score %></td>
     <td><%= link_to 'Show', problem %></td>
-    <% if current_user.is_admin %>
-      <td><%= link_to 'Edit', edit_problem_path(problem) %></td>
-      <td><%= link_to 'Destroy', problem, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% if can? :update, Problem %>
+      <td><%= link_to 'Edit', edit_problem_path(problem) if can? :update, problem %></td>
+    <% end %>
+    <% if can? :destroy, Problem %>
+      <td><%= link_to 'Destroy', problem, :confirm => 'Are you sure?', :method => :delete if can? :destroy, problem %></td>
     <% end %>
   </tr>
 <% end %>
@@ -36,6 +40,6 @@
 
 <br />
 
-<% if current_user.is_admin %>
+<% if can? :create, Problem %>
   <%= link_to 'New Problem', new_problem_path %>
 <% end %>

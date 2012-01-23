@@ -4,8 +4,9 @@ class ProblemSet < ActiveRecord::Base
   has_and_belongs_to_many :groups
   belongs_to :user
   # Scopes
-  scope :currently_in_users_contest, lambda { joins(:contests => :users).where(:users => { :id => current_user.id }).where("contests.start_time <= :time AND contests.end_time > :time",{:time => DateTime.now}) }
-
+  def self.currently_in_users_contest(user_id)
+    joins(:contests => :users).where(:users => { :id => user_id }).where("contests.start_time <= :time AND contests.end_time > :time",{:time => DateTime.now})
+  end
   def self.group_can_read(group_id)
     joins(:groups).where(:groups => {:id => group_id}).select("distinct(problem_sets.id), problem_sets.*")
   end

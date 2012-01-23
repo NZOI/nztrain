@@ -1,7 +1,8 @@
 class ProblemsController < ApplicationController
   before_filter :check_signed_in
-  before_filter :check_access, :only => [:show, :edit]
-  before_filter :check_admin, :only => [:new, :edit, :create, :destroy, :update]
+  load_and_authorize_resource
+  #before_filter :check_access, :only => [:show, :edit]
+  #before_filter :check_admin, :only => [:new, :edit, :create, :destroy, :update]
 
   def check_access
     prob = Problem.find(params[:id])
@@ -14,9 +15,7 @@ class ProblemsController < ApplicationController
   # GET /problems
   # GET /problems.xml
   def index
-    @problems = Problem.score_by_user(current_user.id)
-    # after CanCan, following line is replaced with .accessible_by(current_user)
-    @problems = @problems.find_all {|p| p.can_be_viewed_by(current_user) }
+    @problems = Problem.accessible_by(current_ability).distinct.score_by_user(current_user.id)
 
     respond_to do |format|
       format.html # index.html.erb
