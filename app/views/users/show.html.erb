@@ -25,8 +25,6 @@
 <% end %>
 </ul>
 <br />
-<b> Roles: </b>
-<% @user.roles.each_with_index do |role, i|%><%= ', ' if i > 0 %><%= role.name %> <%= raw "(#{link_to 'remove', remove_role_user_path(@user, :role_id => role.id), :method => "put"})" if can? :revoke, role %><% end %>
 
 <%= render 'admin' %>
 
