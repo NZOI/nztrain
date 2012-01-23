@@ -42,7 +42,7 @@ class UsersController < ApplicationController
   def add_role
     @user = User.find(params[:id])
     role = Role.find(params[:user][:role_ids])
-    authorize! :assign, role
+    authorize! :grant, role
     if @user.roles.exists?(role)
       redirect_to(@user, :alert => "This user already has this role")
       return
@@ -52,9 +52,8 @@ class UsersController < ApplicationController
   end
   def remove_role
     @user = User.find(params[:id])
-    authorize! :update, @user # don't want bad people removing roles from others
     role = Role.find(params[:role_id])
-    authorize! :assign, role # can't remove a role, if can't assign this role
+    authorize! :revoke, role
     @user.roles.delete(role)
     redirect_to(@user, :notice => "Role #{role.name} removed.")
   end

@@ -56,7 +56,7 @@ class ContestsController < ApplicationController
         @scoreboard[i][:rank] = @current_rank
       end
     end
-    if cannot? :manage, @contest
+    if cannot? :review, @contest
       @median = @scoreboard[@scoreboard.length/2][:rank].to_i
       @scoreboard = @scoreboard.reject{|row| (row[:rank].to_i >= @median && row[:user_id] != current_user.id)}
     end

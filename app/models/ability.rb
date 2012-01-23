@@ -6,7 +6,13 @@ class Ability
   # :add_brownie, User
   # :use, [Problem, ProblemSet, Contest]
   # [:join, :leave], Group
+  # [:grant, :revoke], Role (or :regrant for both abilities)
+  # :review, [Problem, Contest] # to be implemented - intended to be a super-reader right
+  #                               can see objects private info
+  #                               eg. full contest scoreboard, object history
   def initialize(user)
+    alias_action :read, :to => :review
+    alias_action :grant, :revoke, :to => :regrant # roles, ie. move role privileges around to a different set of users
     # Define abilities for the passed in user here
     user ||= User.new # guest user (not logged in)
     if user.is_superadmin
@@ -18,9 +24,9 @@ class Ability
       can :manage, :all
       cannot :manage, Role
       cannot :manage, User, :is_superadmin => true
-      can :read, :all
-      can :assign, Role
-      cannot :assign, Role, :name => 'superadmin' # can assign all roles except superadmin
+      can :review, :all
+      can :regrant, Role
+      cannot :regrant, Role, :name => 'superadmin' # can assign all roles except superadmin
       return
     end
 
@@ -36,6 +42,7 @@ class Ability
     if !Contest.user_currently_in(user.id).exists? # can do only if not in a contest
       # Objects owned by the user
       can :manage, [Problem, ProblemSet], :user_id => user.id # to add can manage Group, Contest
+      # can :manage, [TestCase], :problem.outer => {:user_id => user.id} # may add Testset between testcase and problems
       can [:read, :create], Submission, :user_id => user.id
       # Permissions by virtue of being in a group
       can :read, Problem, :problem_sets.outer => {:groups.outer => {:users.outer => {:id => user.id}}} # ie. can read any problem in a problem set, assigned to a group that the user is part of
@@ -52,11 +59,11 @@ class Ability
     user.roles.each do |role|
       case role.name
       when 'staff' # full read access
-        can :read, :all
+        can :review, :all
         can :add_brownie, User
         can :create, [Problem, ProblemSet, Group, Contest]
-        can :assign, Role
-        cannot :assign, Role, :name => ['superadmin','admin','staff']
+        can :regrant, Role
+        cannot :regrant, Role, :name => ['superadmin','admin','staff'] # can only assign roles for lower tiers
       when 'manager' # can create new groups, problems, problem sets, contests
         can :create, [Problem, ProblemSet, Group, Contest]
       when 'author' # can create new problems, problem sets
