@@ -29,7 +29,7 @@
 <br />
 
 <b>Problems this group has access to:</b>
-<% Problem.group_can_read(@group.id).each do |problem| %>
+<% Problem.by_group(@group.id).each do |problem| %>
   <li>
   <%= problem.title %>
   </li>

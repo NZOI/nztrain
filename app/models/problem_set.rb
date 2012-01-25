@@ -6,16 +6,6 @@ class ProblemSet < ActiveRecord::Base
   # Scopes
   scope :distinct, select("distinct(problem_sets.id), problem_sets.*")
 
-  def self.currently_in_users_contest(user_id)
-    joins(:contests => :users).where(:users => { :id => user_id }).where("contests.start_time <= :time AND contests.end_time > :time",{:time => DateTime.now})
-  end
-  def self.group_can_read(group_id)
-    joins(:groups).where(:groups => {:id => group_id}).select("distinct(problem_sets.id), problem_sets.*")
-  end
-  def self.users_group_can_read(user_id)
-    joins(:groups => :users).where(:users => {:id => user_id}).select("distinct(problem_sets.id), problem_sets.*")
-  end
-
   def can_be_viewed_by(user)
     if user.is_admin
       return true

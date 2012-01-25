@@ -11,12 +11,6 @@ class Contest < ActiveRecord::Base
   def self.user_currently_in(user_id)
     joins(:users).where(:users => { :id => user_id }).where("contests.start_time <= :time AND contests.end_time > :time",{:time => DateTime.now})
   end
-  def self.group_can_read(group_id)
-    joins(:groups).where(:groups => {:id => group_id}).select("distinct(problems.id), problems.*")
-  end
-  def self.users_group_can_read(user_id)
-    joins(:groups => :users).where(:users => {:id => user_id}).select("distinct(problems.id), problems.*")
-  end
 
   def get_relation(user)
     return self.contest_relations.where(:user_id => user)[0] 

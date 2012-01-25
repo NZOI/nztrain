@@ -7,18 +7,12 @@ class Problem < ActiveRecord::Base
   # Scopes
   scope :distinct, select("distinct(problems.id), problems.*")
 
-  def self.currently_in_users_contest(user_id)
-    joins(:problem_sets => {:contests => :users}).where(:users => { :id => user_id }).where("contests.start_time <= :time AND contests.end_time > :time",{:time => DateTime.now})
-  end
   #scope :visible, lambda { joins(:problem_sets => :groups => :users).where( :users => { :id => current_user.id } ).select("distinct(problems.id), problems.*") }
   def self.score_by_user(user_id)
     select("(SELECT MAX(submissions.score) FROM submissions WHERE submissions.problem_id = problems.id AND user_id = #{user_id.to_i}) AS score")
   end
-  def self.group_can_read(group_id)
-    joins(:problem_sets => :groups).where(:groups => {:id => group_id}).select("distinct(problems.id), problems.*")
-  end
-  def self.users_group_can_read(user_id)
-    joins(:problem_sets => {:groups => :users}).where(:users => {:id => user_id}).select("distinct(problems.id), problems.*")
+  def self.by_group(group_id)
+    joins(:problem_sets => :groups).where(:groups => {:id => group_id}).distinct
   end
 
   # methods
