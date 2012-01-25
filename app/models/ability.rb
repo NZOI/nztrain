@@ -7,11 +7,11 @@ class Ability
   # :use, [Problem, ProblemSet, Contest]
   # [:join, :leave], Group
   # [:grant, :revoke], Role (or :regrant for both abilities)
-  # :review, [Problem, Contest] # to be implemented - intended to be a super-reader right
+  # :inspect, [Problem, Contest] # to be implemented - intended to be a super-reader right
   #                               can see objects private info
   #                               eg. full contest scoreboard, object history
   def initialize(user)
-    alias_action :read, :to => :review
+    alias_action :read, :to => :inspect
     alias_action :grant, :revoke, :to => :regrant # roles, ie. move role privileges around to a different set of users
     # Define abilities for the passed in user here
     user ||= User.new # guest user (not logged in)
@@ -24,7 +24,7 @@ class Ability
       can :manage, :all
       cannot :manage, Role
       cannot :manage, User, :is_superadmin => true
-      can :review, :all
+      can :inspect, :all
       can :regrant, Role
       cannot :regrant, Role, :name => 'superadmin' # can assign all roles except superadmin
       return
@@ -59,12 +59,12 @@ class Ability
     user.roles.each do |role|
       case role.name
       when 'staff' # full read access
-        can :review, :all
+        can :inspect, :all
         can :add_brownie, User
         can :create, [Problem, ProblemSet, Group, Contest]
         can :regrant, Role
         cannot :regrant, Role, :name => ['superadmin','admin','staff'] # can only assign roles for lower tiers
-      when 'manager' # can create new groups, problems, problem sets, contests
+      when 'organizer' # can create new groups, problems, problem sets, contests
         can :create, [Problem, ProblemSet, Group, Contest]
       when 'author' # can create new problems, problem sets
         can :create, [Problem, ProblemSet]

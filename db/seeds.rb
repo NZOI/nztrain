@@ -6,7 +6,7 @@
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
 
-["superadmin","admin","staff","manager","author"].each do |role|
+["superadmin","admin","staff","organizer","author"].each do |role|
   Role.find_or_create_by_name(role)
 end
 
