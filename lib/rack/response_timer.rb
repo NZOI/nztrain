@@ -8,16 +8,6 @@ class Rack::ResponseTimer
     @start = Time.now
     status, headers, @response = @app.call(env)
     @stop = Time.now
-    #returning @app.call(env) do |response|
-    #  response.last.body.gsub! /\$responsetime(?:\((.+)\))?/ do
-    #    diff = stop - start
-    #    if @format.respond_to? :call
-    #      @format.call(diff)
-    #    else
-    #      ($1 || @format) % diff
-    #    end
-    #  end
-    #end
     [status, headers, self]
   end
 
