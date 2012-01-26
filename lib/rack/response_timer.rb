@@ -12,14 +12,13 @@ class Rack::ResponseTimer
   end
 
   def each(&block)
+    if @format.respond_to? :call
+      responsetime = @format.call(@stop-@start)
+    else
+      responsetime = ($1 || @format) % (@stop-@start)
+    end
     @response.each do |msg|
-      block.call(msg.gsub /\$responsetime(?:\((.+)\))?/ do
-        if @format.respond_to? :call
-          @format.call(@stop-@start)
-        else
-          ($1 || @format) % (@stop-@start)
-        end
-      end)
+      block.call(msg.gsub(/(.*)\$responsetime(?:\((.+)\))?(.*)/m,'\1' + responsetime + '\3'))
     end
   end
 end
