@@ -4,6 +4,10 @@ class Rack::ResponseTimer
   end
   
   def call(env)
+    dup._call(env) # making copy for thread-safety (so we can modify instance variables)
+  end
+
+  def _call(env)
     @start = Time.now
     @status, @headers, @response = @app.call(env)
     @stop = Time.now
