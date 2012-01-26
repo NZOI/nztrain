@@ -1,6 +1,7 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
+require 'lib/rack/response_timer.rb'
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
@@ -32,6 +33,8 @@ module NztrainV2
 
     # JavaScript files you want as :defaults (application.js is always included).
     # config.action_view.javascript_expansions[:defaults] = %w(jquery rails)
+
+    config.middleware.use Rack::ResponseTimer
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"

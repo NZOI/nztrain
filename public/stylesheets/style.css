@@ -5,6 +5,10 @@
    color: #2D2D2D;
 }
 
+html, body {
+   height: 100%;
+}
+
 a {
    color: #2D2D2D;
    text-decoration: none;
@@ -74,6 +78,12 @@ a:hover {
    margin: 10px;
    margin-left: 322px;
    padding: 10px;
+   height: 70%;
+}
+
+#footer {
+   text-align: left;
+   margin-top: 25px;
 }
 
 #main-message-container-close {

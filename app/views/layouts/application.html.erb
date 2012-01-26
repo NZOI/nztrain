@@ -147,7 +147,9 @@
 	        <p id="alert"><%= flash[:notice] %></p>
 	      <% end %>
 	      <%= yield %>
+              <div id="footer">/usr/bin/time -f "%e seconds" curl --silent <%= request.url %> &gt; /dev/null<br /> $responsetime seconds.</div>
 	</div>
+
 </div>
 </body>
 </html>
