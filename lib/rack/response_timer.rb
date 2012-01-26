@@ -6,9 +6,13 @@ class Rack::ResponseTimer
   
   def call(env)
     @start = Time.now
-    status, headers, @response = @app.call(env)
+    @status, @headers, @response = @app.call(env)
     @stop = Time.now
-    [status, headers, self]
+    if @headers["Content-Type"].to_s.include? "text/html"
+      [@status, @headers, self] # allow injection of response time
+    else
+      [@status, @headers, @response] # no modification if not html
+    end
   end
 
   def each(&block)
@@ -17,7 +21,7 @@ class Rack::ResponseTimer
     else
       responsetime = ($1 || @format) % (@stop-@start)
     end
-    @response.each do |msg|
+    @response.each do |msg| # replace only last occurrence of $responsetime
       block.call(msg.gsub(/(.*)\$responsetime(?:\((.+)\))?(.*)/m,'\1' + responsetime + '\3'))
     end
   end
