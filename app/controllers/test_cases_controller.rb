@@ -9,9 +9,9 @@ class TestCasesController < ApplicationController
 
     if params[:problem_id]
       logger.debug "problem is " + params[:problem_id]
-      @test_cases = TestCase.accessible_by(current_ability).distinct.where("problem_id = ?", params[:problem_id])
+      @test_cases = @test_cases.distinct.where("problem_id = ?", params[:problem_id])
     else
-      @test_cases = TestCase.accessible_by(current_ability).distinct
+      @test_cases = @test_cases.distinct
     end
     
     respond_to do |format|
@@ -23,7 +23,6 @@ class TestCasesController < ApplicationController
   # GET /test_cases/1
   # GET /test_cases/1.xml
   def show
-    @test_case = TestCase.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -35,7 +34,6 @@ class TestCasesController < ApplicationController
   # GET /test_cases/new.xml
   def new
     #authorize! :update, Problem.find(params[:problem_id])
-    @test_case = TestCase.new
     @defaultProblem = params[:problem_id]
 
     respond_to do |format|
@@ -46,7 +44,6 @@ class TestCasesController < ApplicationController
 
   # GET /test_cases/1/edit
   def edit
-    @test_case = TestCase.find(params[:id])
     authorize! :update, Problem.find(@test_case[:problem_id])
     @defaultProblem = @test_case.problem.id
   end
@@ -71,7 +68,6 @@ class TestCasesController < ApplicationController
   # PUT /test_cases/1
   # PUT /test_cases/1.xml
   def update
-    @test_case = TestCase.find(params[:id])
     authorize! :update, Problem.find(@test_case[:problem_id])
     authorize! :update, Problem.find(params[:test_case][:problem_id])
 
@@ -89,7 +85,6 @@ class TestCasesController < ApplicationController
   # DELETE /test_cases/1
   # DELETE /test_cases/1.xml
   def destroy
-    @test_case = TestCase.find(params[:id])
     @test_case.destroy
 
     respond_to do |format|

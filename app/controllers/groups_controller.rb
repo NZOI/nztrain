@@ -1,9 +1,9 @@
 class GroupsController < ApplicationController
   before_filter :check_signed_in
   load_and_authorize_resource
+  skip_load_and_authorize_resource :only => [:add_contest]
 
   def join
-    @group = Group.find(params[:id])
     authorize! :join, @group
     if @group.users.exists?(current_user)
       redirect_to(@group, :alert => "You are already a member of this group")
@@ -14,12 +14,11 @@ class GroupsController < ApplicationController
   end
 
   def leave
-    @group = Group.find(params[:id])
     authorize! :leave, @group
     @group.users.delete(current_user)
     redirect_to(@group, :notice => "You are no longer a member of this group")
   end
-  def add_problem_set
+  def add_problem_set # not currently used (setup like problem_problem_sets_controller method, other way is to setup like the add_contest method)
     @group = Group.find(params[:problem_set][:group_ids])
     authorize! :update, @group
     problem_set = ProblemSet.find(params[:problem_set_id])
@@ -33,7 +32,6 @@ class GroupsController < ApplicationController
   end
 
   def remove_problem_set
-    @group = Group.find(params[:id])
     authorize! :update, @group
     problem_set = ProblemSet.find(params[:problem_set_id])
     @group.problem_sets.delete(problem_set)
@@ -54,7 +52,6 @@ class GroupsController < ApplicationController
   end
 
   def remove_contest
-    @group = Group.find(params[:id])
     authorize! :update, @group
     contest = Contest.find(params[:contest_id])
     @group.contests.delete(contest)
@@ -64,7 +61,7 @@ class GroupsController < ApplicationController
   # GET /groups
   # GET /groups.xml
   def index
-    @groups = Group.accessible_by(current_ability).distinct
+    @groups = @groups.distinct
 
     respond_to do |format|
       format.html # index.html.erb
@@ -75,7 +72,6 @@ class GroupsController < ApplicationController
   # GET /groups/1
   # GET /groups/1.xml
   def show
-    @group = Group.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -86,7 +82,6 @@ class GroupsController < ApplicationController
   # GET /groups/new
   # GET /groups/new.xml
   def new
-    @group = Group.new
 
     respond_to do |format|
       format.html # new.html.erb
@@ -96,7 +91,6 @@ class GroupsController < ApplicationController
 
   # GET /groups/1/edit
   def edit
-    @group = Group.find(params[:id])
   end
 
   # POST /groups
@@ -118,7 +112,6 @@ class GroupsController < ApplicationController
   # PUT /groups/1
   # PUT /groups/1.xml
   def update
-    @group = Group.find(params[:id])
 
     respond_to do |format|
       if @group.update_attributes(params[:group])
@@ -134,7 +127,6 @@ class GroupsController < ApplicationController
   # DELETE /groups/1
   # DELETE /groups/1.xml
   def destroy
-    @group = Group.find(params[:id])
     @group.destroy
 
     respond_to do |format|

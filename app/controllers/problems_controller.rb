@@ -5,8 +5,7 @@ class ProblemsController < ApplicationController
   # GET /problems
   # GET /problems.xml
   def index
-    @problems = Problem.accessible_by(current_ability).distinct.score_by_user(current_user.id)
-
+    @problems = @problems.distinct.score_by_user(current_user.id)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @problems }
@@ -16,7 +15,6 @@ class ProblemsController < ApplicationController
   # GET /problems/1
   # GET /problems/1.xml
   def show
-    @problem = Problem.find(params[:id])
     @submission = Submission.new # for submitting problem
     #TODO: restrict to problems that current user owns/manages
     @problem_sets = ProblemSet.all
@@ -39,7 +37,6 @@ class ProblemsController < ApplicationController
   # GET /problems/new
   # GET /problems/new.xml
   def new
-    @problem = Problem.new
     @problem.user_id = current_user.id
     respond_to do |format|
       format.html # new.html.erb
@@ -49,14 +46,12 @@ class ProblemsController < ApplicationController
 
   # GET /problems/1/edit
   def edit
-    @problem = Problem.find(params[:id])
   end
 
   # POST /problems
   # POST /problems.xml
   def create
-    @problem = Problem.new()
-    @problem.accessible =[:user_id] # free to give others a problem to own
+    @problem.accessible = [:user_id] # free to give others a problem to own
     @problem.attributes = params[:problem] # mass-assignment
     if @problem.evaluator != nil
       @problem.evaluator = IO.read(params[:problem][:evaluator].path)
@@ -76,7 +71,6 @@ class ProblemsController < ApplicationController
   # PUT /problems/1
   # PUT /problems/1.xml
   def update
-    @problem = Problem.find(params[:id])
     @problem.accessible = [:user_id] if can? :manage, @problem   
     if params[:problem][:evaluator] != nil
       params[:problem][:evaluator] = IO.read(params[:problem][:evaluator].path)
@@ -96,7 +90,6 @@ class ProblemsController < ApplicationController
   # DELETE /problems/1
   # DELETE /problems/1.xml
   def destroy
-    @problem = Problem.find(params[:id])
     @problem.destroy
 
     respond_to do |format|

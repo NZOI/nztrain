@@ -3,7 +3,7 @@ class ProblemSetsController < ApplicationController
   load_and_authorize_resource
   skip_authorization_check :only => [:add_problem, :remove_problem]
 
-  def add_problem
+  def add_problem # currently unused function
     @problem_set = ProblemSet.find(params[:problem][:problem_set_ids])
     authorize! :update, @problem_set
     problem = Problem.find(params[:problem_id])
@@ -17,7 +17,6 @@ class ProblemSetsController < ApplicationController
   end
 
   def remove_problem
-    @problem_set = ProblemSet.find(params[:id])
     authorize! :update, @problem_set
     problem = Problem.find(params[:problem_id])
     @problem_set.problems.delete(problem)
@@ -27,7 +26,7 @@ class ProblemSetsController < ApplicationController
   # GET /problem_sets
   # GET /problem_sets.xml
   def index
-    @problem_sets = ProblemSet.accessible_by(current_ability).distinct
+    @problem_sets = @problem_sets.distinct
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @problem_sets }
@@ -37,7 +36,6 @@ class ProblemSetsController < ApplicationController
   # GET /problem_sets/1
   # GET /problem_sets/1.xml
   def show
-    @problem_set = ProblemSet.find(params[:id])
     @groups = Group.all
     respond_to do |format|
       format.html # show.html.erb
@@ -48,7 +46,6 @@ class ProblemSetsController < ApplicationController
   # GET /problem_sets/new
   # GET /problem_sets/new.xml
   def new
-    @problem_set = ProblemSet.new
     @problem_set.user_id = current_user.id
     respond_to do |format|
       format.html # new.html.erb
@@ -58,13 +55,11 @@ class ProblemSetsController < ApplicationController
 
   # GET /problem_sets/1/edit
   def edit
-    @problem_set = ProblemSet.find(params[:id])
   end
 
   # POST /problem_sets
   # POST /problem_sets.xml
   def create
-    @problem_set = ProblemSet.new()
     @problem_set.accessible = [:user_id]
     @problem_set.attributes = params[:problem_set]
 
@@ -82,7 +77,6 @@ class ProblemSetsController < ApplicationController
   # PUT /problem_sets/1
   # PUT /problem_sets/1.xml
   def update
-    @problem_set = ProblemSet.find(params[:id])
     @problem_set.accessible = [:user_id] if can? :manage, @problem_set
     respond_to do |format|
       if @problem_set.update_attributes(params[:problem_set])
@@ -98,7 +92,6 @@ class ProblemSetsController < ApplicationController
   # DELETE /problem_sets/1
   # DELETE /problem_sets/1.xml
   def destroy
-    @problem_set = ProblemSet.find(params[:id])
     @problem_set.destroy
 
     respond_to do |format|

@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   skip_authorize_resource :only => [:add_role, :remove_role]
 
   def index
-    @users = User.accessible_by(current_ability).distinct.num_solved.order(:email)
+    @users = @users.distinct.num_solved.order(:email)
     respond_to do |format|
       format.html
       format.xml {render :xml => @users }
@@ -12,7 +12,6 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = User.find(params[:id])
     @solved_problems = @user.get_solved
 
     respond_to do |format|
@@ -22,11 +21,9 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @user = User.find(params[:id])
   end
 
   def update
-    @user = User.find(params[:id])
 
     @user.accessible = [:brownie_points] if can? :add_brownie, @user
 
@@ -42,7 +39,6 @@ class UsersController < ApplicationController
   end
 
   def add_role
-    @user = User.find(params[:id])
     role = Role.find(params[:user][:role_ids])
     authorize! :grant, role
     if @user.roles.exists?(role)
@@ -53,7 +49,6 @@ class UsersController < ApplicationController
     redirect_to(@user, :notice => "Role #{role.name} added.")
   end
   def remove_role
-    @user = User.find(params[:id])
     role = Role.find(params[:role_id])
     authorize! :revoke, role
     @user.roles.delete(role)
@@ -61,7 +56,6 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    @user = User.find(params[:id])
     @user.destroy
 
     respond_to do |format|
@@ -71,7 +65,6 @@ class UsersController < ApplicationController
   end
 
   def add_brownie
-    @user = User.find(params[:id])
     
     authorize! :add_brownie, @user
     logger.debug "adding brownie"

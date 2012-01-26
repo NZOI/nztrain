@@ -8,7 +8,7 @@ class SubmissionsController < ApplicationController
   # GET /submissions
   # GET /submissions.xml
   def index
-    @submissions = apply_scopes(Submission).accessible_by(current_ability).distinct.paginate(:order => "created_at DESC", :page => params[:page], :per_page => 50)
+    @submissions = apply_scopes(@submissions).distinct.paginate(:order => "created_at DESC", :page => params[:page], :per_page => 50)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -20,8 +20,6 @@ class SubmissionsController < ApplicationController
   # GET /submissions/1
   # GET /submissions/1.xml
   def show
-    @submission = Submission.find(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @submission }
@@ -31,7 +29,6 @@ class SubmissionsController < ApplicationController
   # GET /submissions/new
   # GET /submissions/new.xml
   def new
-    @submission = Submission.new
     @problem = params[:problem]
     logger.debug "going to submit, problem is #{@problem} and params are:"
     logger.debug params
@@ -44,12 +41,10 @@ class SubmissionsController < ApplicationController
 
   # GET /submissions/1/edit
   def edit
-    @submission = Submission.find(params[:id])
     @problem = @submission.problem
   end
 
   def rejudge
-    @submission = Submission.find(params[:id])
     @submission.judge_output = nil
     if @submission.save
       logger.debug "rejudging submission id #{@submission.id}"
@@ -89,7 +84,6 @@ class SubmissionsController < ApplicationController
   # PUT /submissions/1
   # PUT /submissions/1.xml
   def update
-    @submission = Submission.find(params[:id])
     @submission.source = IO.read(params[:submission][:source].path)
 
     respond_to do |format|
@@ -106,7 +100,6 @@ class SubmissionsController < ApplicationController
   # DELETE /submissions/1
   # DELETE /submissions/1.xml
   def destroy
-    @submission = Submission.find(params[:id])
     @submission.destroy
 
     respond_to do |format|

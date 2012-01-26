@@ -5,7 +5,7 @@ class RolesController < ApplicationController
   # GET /roles
   # GET /roles.xml
   def index
-    @roles = Role.accessible_by(current_ability).distinct
+    @roles = @roles.distinct
 
     respond_to do |format|
       format.html # index.html.erb
@@ -16,7 +16,6 @@ class RolesController < ApplicationController
   # GET /roles/1
   # GET /roles/1.xml
   def show
-    @role = Role.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -27,7 +26,6 @@ class RolesController < ApplicationController
   # GET /roles/new
   # GET /roles/new.xml
   def new
-    @role = Role.new
 
     respond_to do |format|
       format.html # new.html.erb
@@ -37,7 +35,6 @@ class RolesController < ApplicationController
 
   # GET /roles/1/edit
   def edit
-    @role = Role.find(params[:id])
   end
 
   # POST /roles
@@ -59,7 +56,6 @@ class RolesController < ApplicationController
   # PUT /roles/1
   # PUT /roles/1.xml
   def update
-    @role = Role.find(params[:id])
 
     respond_to do |format|
       if @role.update_attributes(params[:role])
@@ -75,7 +71,6 @@ class RolesController < ApplicationController
   # DELETE /roles/1
   # DELETE /roles/1.xml
   def destroy
-    @role = Role.find(params[:id])
     @role.destroy
 
     respond_to do |format|

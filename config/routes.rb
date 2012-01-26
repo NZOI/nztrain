@@ -1,10 +1,6 @@
 NztrainV2::Application.routes.draw do
   resources :roles
 
-  resources :problem_sets
-
-  resources :groups
-
   resources :contests do
     member do
       put 'start'
@@ -45,6 +41,8 @@ NztrainV2::Application.routes.draw do
   devise_for :users, :path => "accounts"
 
   match 'problem_problem_set/:action(:format)' => "problem_problem_set"
+
+  match 'group_problem_set/:action(:format)' => "group_problem_set"
 
   resources :groups do
     member do
