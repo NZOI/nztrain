@@ -4,6 +4,8 @@ class Submission < ActiveRecord::Base
 
   validates :score, :presence => true
 
+  attr_accessible :problem_id, :source, :language
+
   # scopes (lazy running SQL queries)
   scope :distinct, select("distinct(submissions.id), submissions.*")
 

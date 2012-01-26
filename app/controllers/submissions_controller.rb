@@ -5,17 +5,6 @@ class SubmissionsController < ApplicationController
   has_scope :by_user
   has_scope :by_problem
 
-  def check_access
-    if current_user.is_admin
-      return true
-    end
-
-    @submission = Submission.find(params[:id])
-    if @submission.user_id != current_user.id
-	    redirect("This is not your submission!")
-    end
-  end
-
   # GET /submissions
   # GET /submissions.xml
   def index
@@ -74,6 +63,8 @@ class SubmissionsController < ApplicationController
   # POST /submissions
   # POST /submissions.xml
   def create
+    # don't let users submit to problems they don't have access to (which they could do by id speculatively to try get access to problem title, # of test cases etc.) (ie. they should have read access)
+    authorize! :read, Problem.find(params[:submission][:problem_id])
     logger.debug "creating new submission , problem is #{@defaultProblem} and params are:"
     logger.debug params
     @submission = Submission.new(params[:submission])

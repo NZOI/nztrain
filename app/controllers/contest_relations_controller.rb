@@ -1,5 +1,7 @@
 class ContestRelationsController < ApplicationController
   before_filter :check_signed_in
+  load_and_authorize_resource
+
   # GET /contest_relations
   # GET /contest_relations.xml
   def index
@@ -25,6 +27,17 @@ class ContestRelationsController < ApplicationController
   # GET /contest_relations/new
   # GET /contest_relations/new.xml
   def new
+    @contest = Contest.new
+    @start_time = ""
+    @end_time = ""
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.xml  { render :xml => @contest }
+    end
+  end
+
+  def start
     @contest_relation = ContestRelation.new
     @contest = Contest.find(params[:contest])
 
@@ -34,7 +47,7 @@ class ContestRelationsController < ApplicationController
       redirect("You have already started this contest!")
       return
     end
-
+    # following check is obsolete, because of the cancan load_and_authorize resource (they will throw an exception before we get here)
     if !@contest.can_be_viewed_by(current_user)
       redirect_to(contests_url, :alert => "You do not have access to this contest!")
       return

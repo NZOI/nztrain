@@ -5,7 +5,11 @@ NztrainV2::Application.routes.draw do
 
   resources :groups
 
-  resources :contests
+  resources :contests do
+    member do
+      put 'start'
+    end
+  end
 
   resources :contest_relations
 

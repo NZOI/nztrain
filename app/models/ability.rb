@@ -10,6 +10,7 @@ class Ability
   # :inspect, [Problem, Contest] # to be implemented - intended to be a super-reader right
   #                               can see objects private info
   #                               eg. full contest scoreboard, object history
+  # :start, Contest
   def initialize(user)
     alias_action :read, :to => :inspect
     alias_action :grant, :revoke, :to => :regrant # roles, ie. move role privileges around to a different set of users
@@ -38,11 +39,15 @@ class Ability
     can :read, Group # for now, can see all groups, change later to can see public groups
     can :join, Group # can join all groups
     can :leave, Group, :users => {:id => user.id} # can leave any group user is part of
-    can :read, Contest, :groups.outer => {:users.outer => {:id => user.id}}
+    can :index, Contest, :groups.outer => {:users.outer => {:id => user.id}}
+    can :show, Contest, :groups.outer => {:users.outer => {:id => user.id}}, :end_time => DateTime.min...DateTime.now # can show contest if it has finished running
+    can :start, Contest, :groups.outer => {:users.outer => {:id => user.id}}, :start_time => DateTime.min...DateTime.now, :end_time => DateTime.now..DateTime.max # allows user to start any contest for which they can read, if it is running
+    can :show, Contest, :users.outer => {:id => user.id} # can show contest if user is a competitor
     if !Contest.user_currently_in(user.id).exists? # can do only if not in a contest
       # Objects owned by the user
       can :manage, [Problem, ProblemSet], :user_id => user.id # to add can manage Group, Contest
-      # can :manage, [TestCase], :problem.outer => {:user_id => user.id} # may add Testset between testcase and problems
+      can :manage, [TestCase], :problem.outer => {:user.outer => {:id => user.id}} # may add Testset between testcase and problems
+      can :new, TestCase
       can [:read, :create], Submission, :user_id => user.id
       # Permissions by virtue of being in a group
       can :read, Problem, :problem_sets.outer => {:groups.outer => {:users.outer => {:id => user.id}}} # ie. can read any problem in a problem set, assigned to a group that the user is part of
@@ -51,9 +56,9 @@ class Ability
       # Permissions by virtue of being in a contest
       can :create, Submission
       # can read stuff in a contest user is currently doing
-      can :read, Problem, :problem_sets.outer => {:contest.outer => {:users.outer => {:id => user.id}, :start_time => (DateTime.now-30.year)..DateTime.now, :end_time => DateTime.now..(DateTime.now+30.year)}}
-      can :read, ProblemSet, :contest.outer => {:users.outer => {:id => user.id}, :start_time => (DateTime.now-30.year)..DateTime.now, :end_time => DateTime.now..(DateTime.now+30.year)}
-      can :read, Submission, :problems.outer => {:problem_sets.outer => {:contest.outer => {:users.outer => {:id => user.id}, :start_time => (DateTime.now-30.year)..DateTime.now, :end_time => DateTime.now..(DateTime.now+30.year)}}}
+      can :read, Problem, :problem_sets.outer => {:contests.outer => {:users.outer => {:id => user.id}, :start_time => DateTime.min...DateTime.now, :end_time => DateTime.now..DateTime.max}}
+      can :read, ProblemSet, :contests.outer => {:users.outer => {:id => user.id}, :start_time => DateTime.min...DateTime.now, :end_time => DateTime.now..DateTime.max}
+      can :read, Submission, :user_id => user.id, :problem.outer => {:problem_sets.outer => {:contests.outer => {:users.outer => {:id => user.id}, :start_time => DateTime.min...DateTime.now, :end_time => DateTime.now..DateTime.max}}}
     end
     cannot :create, [Problem, ProblemSet] # must secure evaluator, after which, there is no reason not to allow
     user.roles.each do |role|

@@ -27,14 +27,18 @@
     <td><%= contest.user_id %></td>
     <td><%= contest.get_score(current_user) %></td>
     <td>
-      <% if contest.is_running? && (contest.get_relation(current_user) == nil) %>
-        <% if current_user.is_admin %>
-          <%= link_to 'Start', new_contest_relation_path(:contest => contest.id) %>
-          <%= link_to 'Show', contest %>
+      <% if contest.is_running? && (can? :start, contest) %>
+        <% if !contest.get_relation(current_user) %>
+          <%= link_to 'Start Contest', start_contest_path(contest), :method => :put %>
+          <% if can? :show, contest %>
+            <%= link_to 'Watch', contest %>
+          <% end %>
+        <% elsif contest.has_current_competitor(current_user) %>
+          <%= link_to 'Continue Contest', contest %>
         <% else %>
-          <%= link_to 'Start Contest', new_contest_relation_path(:contest => contest.id) %>
+          <%= link_to 'Watch', contest %>
         <% end %>
-      <% else %>
+      <% elsif can? :show, contest %>
         <%= link_to 'Show', contest %>
       <% end %>
     </td>

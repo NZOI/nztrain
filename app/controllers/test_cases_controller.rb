@@ -1,15 +1,17 @@
 class TestCasesController < ApplicationController
   before_filter :check_signed_in
-  before_filter :check_admin
+  #before_filter :check_admin
+  load_and_authorize_resource
+
   # GET /test_cases
   # GET /test_cases.xml
   def index
 
     if params[:problem_id]
       logger.debug "problem is " + params[:problem_id]
-      @test_cases = TestCase.where("problem_id = ?", params[:problem_id])
+      @test_cases = TestCase.accessible_by(current_ability).distinct.where("problem_id = ?", params[:problem_id])
     else
-      @test_cases = TestCase.all
+      @test_cases = TestCase.accessible_by(current_ability).distinct
     end
     
     respond_to do |format|
@@ -32,6 +34,7 @@ class TestCasesController < ApplicationController
   # GET /test_cases/new
   # GET /test_cases/new.xml
   def new
+    #authorize! :update, Problem.find(params[:problem_id])
     @test_case = TestCase.new
     @defaultProblem = params[:problem_id]
 
@@ -44,12 +47,14 @@ class TestCasesController < ApplicationController
   # GET /test_cases/1/edit
   def edit
     @test_case = TestCase.find(params[:id])
+    authorize! :update, Problem.find(@test_case[:problem_id])
     @defaultProblem = @test_case.problem.id
   end
 
   # POST /test_cases
   # POST /test_cases.xml
   def create
+    authorize! :update, Problem.find(params[:test_case][:problem_id])
     @test_case = TestCase.new(params[:test_case])
 
     respond_to do |format|
@@ -67,6 +72,8 @@ class TestCasesController < ApplicationController
   # PUT /test_cases/1.xml
   def update
     @test_case = TestCase.find(params[:id])
+    authorize! :update, Problem.find(@test_case[:problem_id])
+    authorize! :update, Problem.find(params[:test_case][:problem_id])
 
     respond_to do |format|
       if @test_case.update_attributes(params[:test_case])

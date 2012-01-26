@@ -114,6 +114,8 @@ class ContestsController < ApplicationController
   # POST /contests.xml
   def create
     @contest = Contest.new(params[:contest])
+    @contest.accessible=[:user_id]
+    @contest.attributes = params[:contest]
     @contest.start_time = params[:contest][:start_time].get_date(Time.zone)
     @contest.end_time = params[:contest][:end_time].get_date(Time.zone)
     logger.debug "time zone is " + Time.zone.to_s
@@ -137,7 +139,7 @@ class ContestsController < ApplicationController
     params[:contest][:start_time] = params[:contest][:start_time].get_date(Time.zone)
     params[:contest][:end_time] = params[:contest][:end_time].get_date(Time.zone)
     @contest = Contest.find(params[:id])
-
+    @contest.accessible = [:user_id] if can? :manage, @contest
     respond_to do |format|
       if @contest.update_attributes(params[:contest])
         format.html { redirect_to(@contest, :notice => 'Contest was successfully updated.') }
@@ -160,4 +162,40 @@ class ContestsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
+  def start
+    @contest_relation = ContestRelation.new
+    @contest = Contest.find(params[:id])
+
+    #TODO: check that no relation already exists
+    if ContestRelation.find(:first, :conditions => ["user_id = ? and contest_id = ?", current_user, @contest])
+      redirect_to(@contest, :alert => "You have already started this contest!")
+      return
+    end
+    # following check is obsolete, because of the cancan load_and_authorize resource (they will throw an exception before we get here)
+    if !@contest.can_be_viewed_by(current_user)
+      redirect_to(contests_url, :alert => "You do not have access to this contest!")
+      return
+    end
+
+    if !@contest.is_running?
+      redirect_to(contests_url, :alert => "This contest is not currently running.")
+      return
+    end
+
+    @contest_relation.user = current_user
+    @contest_relation.started_at = DateTime.now
+    @contest_relation.contest = @contest
+
+    respond_to do |format|
+      if @contest_relation.save
+        format.html { redirect_to(@contest, :notice => 'Contest started.') }
+        format.xml  { render :xml => @contest_relation, :status => :created, :location => @contest_relation }
+      else
+        format.html { render :action => "new" }
+        format.xml  { render :xml => @contest_relation.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+
 end

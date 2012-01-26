@@ -5,6 +5,8 @@ class Contest < ActiveRecord::Base
   belongs_to :user
   has_and_belongs_to_many :groups
 
+  attr_accessible :title, :start_time, :end_time, :duration, :problem_set_id
+
   # Scopes
   scope :distinct, select("distinct(contests.id), contests.*")
 
