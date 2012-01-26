@@ -37,42 +37,6 @@ class ContestRelationsController < ApplicationController
     end
   end
 
-  def start
-    @contest_relation = ContestRelation.new
-    @contest = Contest.find(params[:contest])
-
-    #TODO: check that no relation already exists
-    
-    if ContestRelation.find(:first, :conditions => ["user_id = ? and contest_id = ?", current_user, @contest])
-      redirect("You have already started this contest!")
-      return
-    end
-    # following check is obsolete, because of the cancan load_and_authorize resource (they will throw an exception before we get here)
-    if !@contest.can_be_viewed_by(current_user)
-      redirect_to(contests_url, :alert => "You do not have access to this contest!")
-      return
-    end
-
-    if !@contest.is_running?
-      redirect_to(contests_url, :alert => "This contest is not currently running.")
-      return
-    end
-
-    @contest_relation.user = current_user
-    @contest_relation.started_at = DateTime.now
-    @contest_relation.contest = @contest
-
-    respond_to do |format|
-      if @contest_relation.save
-        format.html { redirect_to(@contest, :notice => 'Contest started.') }
-        format.xml  { render :xml => @contest_relation, :status => :created, :location => @contest_relation }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @contest_relation.errors, :status => :unprocessable_entity }
-      end
-    end
-  end
-
   # GET /contest_relations/1/edit
   def edit
     @contest_relation = ContestRelation.find(params[:id])
