@@ -1,7 +1,6 @@
 class Rack::ResponseTimer
-  def initialize(app, options = {})
+  def initialize(app)
     @app = app
-    @format = options[:format] || "%f"
   end
   
   def call(env)
@@ -16,11 +15,8 @@ class Rack::ResponseTimer
   end
 
   def each(&block)
-    if @format.respond_to? :call
-      responsetime = @format.call(@stop-@start)
-    else
-      responsetime = ($1 || @format) % (@stop-@start)
-    end
+    # note, we are replacing $responsetime with %13.2f, so that the padding with spaces doesn't change the @headers["Content-Length"]
+    responsetime = "%13.2f" % (@stop-@start)
     @response.each do |msg| # replace only last occurrence of $responsetime
       block.call(msg.gsub(/(.*)\$responsetime(?:\((.+)\))?(.*)/m,'\1' + responsetime + '\3'))
     end
