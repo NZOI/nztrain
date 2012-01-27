@@ -7,7 +7,12 @@ class CreateRoles < ActiveRecord::Migration
       t.integer :role_id
       t.integer :user_id
     end
-    execute "INSERT INTO roles_users (role_id, user_id) SELECT 2, id FROM users WHERE is_admin = TRUE;"
+    case ActiveRecord::Base.connection.adapter_name
+    when 'SQLite'
+      execute "INSERT INTO roles_users (role_id, user_id) SELECT 2, id FROM users WHERE is_admin = 't';"
+    else
+      execute "INSERT INTO roles_users (role_id, user_id) SELECT 2, id FROM users WHERE is_admin = TRUE;"
+    end
     remove_column :users, :is_admin
   end
 
