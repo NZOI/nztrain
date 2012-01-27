@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   validates :name, :length => {:maximum => 100}
+  validates :username, :length => { :in => 2..32 }, :format => { :with => /\A[a-zA-Z0-9\._]+\z/, :message => "Only letters, numbers, dots or underscores allowed in username" }, :presence => true, :uniqueness => { :case_sensitive => false }
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :name, :email, :password, :password_confirmation, :remember_me
@@ -22,7 +23,11 @@ class User < ActiveRecord::Base
   # Scopes
   scope :distinct, select("distinct(users.id), users.*")
   scope :num_solved, select("(SELECT COUNT(DISTINCT submissions.problem_id) FROM submissions WHERE submissions.user_id = users.id AND submissions.score = 100) as num_solved")
-
+  
+  def self.find_for_authentication(conditions={})
+    self.where("lower(username) = lower(?)", conditions[:email]).limit(1).first ||
+    self.where("email = ?", conditions[:email]).limit(1).first
+  end
   def handle
     if !self.name
       return "<#{self.email}>"

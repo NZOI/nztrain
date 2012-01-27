@@ -119,7 +119,7 @@
      Training Site
    </div>
    <% if user_signed_in? %>
-	   <div id="uac-user"><a href="/accounts/edit"><%= current_user.email %></a></div><br />
+	   <div id="uac-user"><a href="/accounts/edit"><%= current_user.username %></a></div><br />
    <ul>
       <li><a href="<%= problem_sets_path %>">problem sets</a></li>
       <li><a href="<%= problems_path %>">problems</a></li>
@@ -140,6 +140,9 @@
 	    Congratulations to our current brownie point leader <%= @brownie_leader.email %> who has <%= @brownie_leader.brownie_points %> points!<br />
 	</div>
 	<div id="main-container">
+        <div class="message-container">
+	    You can now set your username, which will be your display name in future. It has been set automatically to your email's local name. Warning: You can only change it once (after which it will become unchangeable). However, if you do not change your username, this functionality may disappear soon.<br />
+	</div>
 	      <% if alert %>
 	        <p id="alert"><%= alert %></p>
               <% end %>

@@ -4,6 +4,7 @@
 <table class="main_table" >
   <tr>
     <th>Name</th>
+    <th>Username</th>
     <th>Email</th>
     <th>Roles</th>
     <th>Solved Problems</th>
@@ -20,6 +21,7 @@
   <% @users.each do |user| %>
     <tr>
       <td><%= user.name %></td>
+      <td><%= user.username %></td>
       <td><%= user.email %></td>
       <td><%= user.roles.map {|r| r.name}.join(', ') %></td>
       <td><%= user.num_solved %></td>

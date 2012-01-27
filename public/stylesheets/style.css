@@ -73,6 +73,20 @@ a:hover {
    color: #FAFAFA;	
 }
 
+.message-container {
+   margin: -10px;
+   margin-bottom: 20px;
+   border-radius: 3px;
+   -moz-border-radius: 3px;
+   -webkit-border-radius: 3px;
+   padding: 10px;
+   border: 1px solid #C1C1C1;
+   text-align: center;
+   background-color: #333;
+   color: #FAFAFA;	
+}
+
+
 #main-container
 {
    margin: 10px;
