@@ -34,35 +34,4 @@ class Problem < ActiveRecord::Base
     return Submission.find(:all, :conditions => ["created_at between ? and ? and user_id IN (?) and problem_id = ?", from, to, user, self], :order => "created_at DESC")
   end
 
-  def can_be_viewed_by(user)
-    if user.is_admin
-      return true
-    end
-
-    if user == self.user
-      return true
-    end
-
-    #might be painfully slow?
-    self.problem_sets.each do |problem_set|
-      if problem_set.contest && problem_set.contest.has_current_competitor(user)
-        return true
-      end
-    end
-    
-    user.contests.each do |contest|
-      if contest.is_running?
-        return false
-      end
-    end
-
-    user.groups.each do |g|
-      if (self.problem_sets & g.problem_sets).any?
-        return true
-      end
-    end
-
-    return false
-  end
-
 end

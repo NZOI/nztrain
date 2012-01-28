@@ -2,13 +2,6 @@ class ContestsController < ApplicationController
   before_filter :check_signed_in
   load_and_authorize_resource
 
-  def check_access
-    @contest = Contest.find(params[:id])
-
-    if !@contest.can_be_viewed_by(current_user)
-      redirect_to(contests_path, :alert => "You do not have access to this contest!")
-    end
-  end
   # GET /contests
   # GET /contests.xml
   def index
@@ -170,11 +163,6 @@ class ContestsController < ApplicationController
     #TODO: check that no relation already exists
     if ContestRelation.find(:first, :conditions => ["user_id = ? and contest_id = ?", current_user, @contest])
       redirect_to(@contest, :alert => "You have already started this contest!")
-      return
-    end
-    # following check is obsolete, because of the cancan load_and_authorize resource (they will throw an exception before we get here)
-    if !@contest.can_be_viewed_by(current_user)
-      redirect_to(contests_url, :alert => "You do not have access to this contest!")
       return
     end
 

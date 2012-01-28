@@ -65,20 +65,6 @@ class Contest < ActiveRecord::Base
     return DateTime.now < relation.finish_at
   end
 
-  def can_be_viewed_by(user)
-    if user.is_admin
-      return true
-    end
-
-    self.groups.each do |g|
-      if g.users.include?(user)
-        return true
-      end
-    end
-
-    return false
-  end
-
   def problem_score(user, problem)
     #can probably pass this in if the database query is too slow
     relation = self.contest_relations.where(:user_id => user)[0]
