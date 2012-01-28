@@ -20,6 +20,10 @@ unless Role.find_by_name("superadmin").users.include? (User.find_by_id_and_name(
   Role.find_by_name("superadmin").users.push(User.find_by_id_and_name(35, "Ronald Chan"))
 end
 
+["recaptcha/public_key","recaptcha/private_key"].each do |setting|
+  Setting.find_or_create_by_key(setting)
+end
+
 
 
 

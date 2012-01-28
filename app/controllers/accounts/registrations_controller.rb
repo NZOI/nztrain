@@ -31,7 +31,7 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
   end
 
   def create
-    if (!@db_settings["recaptcha/private_key"]) || verify_recaptcha(:private_key => @db_settings["recaptcha/private_key"])
+    if (!@db_settings["recaptcha/private_key"]) || (@db_settings["recaptcha/private_key"].empty?) || verify_recaptcha(:private_key => @db_settings["recaptcha/private_key"])
         super
     else
       build_resource
