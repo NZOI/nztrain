@@ -29,5 +29,16 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
       self.resource.username = params[resource_name][:username] if params[resource_name][:username]
     end
   end
+
+  def create
+    if (!@db_settings["recaptcha/private_key"]) || verify_recaptcha(:private_key => @db_settings["recaptcha/private_key"])
+        super
+    else
+      build_resource
+      clean_up_passwords(resource)
+      resource.errors.add(:base, "There was an error with the recaptcha code below. Please re-enter the code.")
+      render_with_scope :new
+    end
+  end
 end
 

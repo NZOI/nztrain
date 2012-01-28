@@ -19,6 +19,7 @@ gem 'rails_markitup'
 gem 'will_paginate'
 gem 'has_scope'
 gem 'cancan'
+gem 'recaptcha', :require => 'recaptcha/rails'
 gem 'squeel' # (NEW GEM) use lightly - only using in ability.rb, until it is more established (Jan 2012)  ---------> supersedes meta_where
 gem 'meta_where' # required to get .outer in ability.rb working
 

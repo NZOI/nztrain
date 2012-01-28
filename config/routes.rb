@@ -1,4 +1,6 @@
 NztrainV2::Application.routes.draw do
+  resources :settings
+
   resources :roles
 
   resources :contests do

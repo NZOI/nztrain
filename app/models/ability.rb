@@ -28,6 +28,7 @@ class Ability
       can :inspect, :all
       can :regrant, Role
       cannot :regrant, Role, :name => 'superadmin' # can assign all roles except superadmin
+      cannot :manage, Setting # keys and passwords here
       return
     end
 
@@ -69,6 +70,7 @@ class Ability
         can :create, [Problem, ProblemSet, Group, Contest]
         can :regrant, Role
         cannot :regrant, Role, :name => ['superadmin','admin','staff'] # can only assign roles for lower tiers
+        cannot :manage, Setting # keys and passwords here
       when 'organizer' # can create new groups, problems, problem sets, contests
         can :create, [Problem, ProblemSet, Group, Contest]
       when 'author' # can create new problems, problem sets

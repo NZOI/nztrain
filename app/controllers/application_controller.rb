@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  before_filter :read_settings
   before_filter :set_leader
   before_filter :wrong_site
   protect_from_forgery
@@ -32,5 +33,12 @@ class ApplicationController < ActionController::Base
   end
 
   def wrong_site
+  end
+
+  def read_settings
+    @db_settings = {}
+    Setting.all.each do |setting|
+      @db_settings[setting.key] = setting.value
+    end
   end
 end

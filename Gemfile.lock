@@ -94,6 +94,7 @@ GEM
     rake-compiler (0.7.9)
       rake
     rbx-require-relative (0.0.5)
+    recaptcha (0.3.4)
     redcarpet (1.17.2)
     ruby-debug (0.10.4)
       columnize (>= 0.1)
@@ -134,6 +135,7 @@ DEPENDENCIES
   pg
   rails (= 3.0.8)
   rails_markitup
+  recaptcha
   ruby-debug
   rubyzip
   sqlite3
