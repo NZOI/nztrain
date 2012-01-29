@@ -24,7 +24,7 @@ class CreateProblemSets < ActiveRecord::Migration
     execute "UPDATE contests SET problem_set_id = (SELECT problem_sets.id FROM problem_sets WHERE problem_sets.title = contests.title AND contests.created_at = problem_sets.created_at AND contests.updated_at = problem_sets.updated_at AND problem_sets.user_id = contests.user_id);"
 
     # create a problem set for every group
-    execute "INSERT INTO problem_sets (\"title\",\"user_id\",\"created_at\",\"updated_at\") SELECT name, 35 AS user_id, created_at, updated_at FROM groups;"
+    execute "INSERT INTO problem_sets (\"title\",\"user_id\",\"created_at\",\"updated_at\") SELECT name, 0 AS user_id, created_at, updated_at FROM groups;"
     # put groups_problems into problem_sets_problems
     execute "INSERT INTO problem_sets_problems (\"problem_set_id\",\"problem_id\") SELECT problem_sets.id, groups_problems.problem_id FROM groups_problems JOIN groups ON groups.id = groups_problems.group_id JOIN problem_sets ON problem_sets.title = groups.name AND problem_sets.created_at = groups.created_at AND problem_sets.updated_at = groups.updated_at;"
     # reference problem set for each group

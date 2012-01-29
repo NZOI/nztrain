@@ -6,18 +6,21 @@
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
 
+if User.count == 0
+  # no users in user table, create a user
+  #rootuser = User.new({:id => 0, :name => "Root User", :username => "root", :email => "root@nztrain.com", :encrypted_password => "Need an encrypted password here"})
+end
+
 ["superadmin","admin","staff","organizer","author"].each do |role|
   Role.find_or_create_by_name(role)
 end
 
-# If no users exist in database
-  # then create a root superadmin user
-#
-
 # give superadmin status to set everything up
-# once migrated, change this to add root superadmin user if it was created for new installations
-unless Role.find_by_name("superadmin").users.include? (User.find_by_id_and_name(35, "Ronald Chan"))
-  Role.find_by_name("superadmin").users.push(User.find_by_id_and_name(35, "Ronald Chan"))
+
+rootuser = User.find(0) # if a root user exists and is zeroth (this is for security because normally users get positive integers as id) user in users table, give superadmin status
+if rootuser && rootuser.username == "root"
+  superadmin = Role.find_by_name("superadmin")
+  superadmin.users.push(rootuser) unless superadmin.users.include?(rootuser);
 end
 
 ["recaptcha/public_key","recaptcha/private_key"].each do |setting|
