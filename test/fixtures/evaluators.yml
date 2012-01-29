@@ -3,11 +3,11 @@
 one:
   name: MyString
   description: MyText
-  code: MyText
+  source: MyText
   user_id: 1
 
 two:
   name: MyString
   description: MyText
-  code: MyText
+  source: MyText
   user_id: 1
