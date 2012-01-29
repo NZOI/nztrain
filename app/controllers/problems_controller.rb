@@ -53,9 +53,9 @@ class ProblemsController < ApplicationController
   def create
     @problem.accessible = [:user_id] # free to give others a problem to own
     @problem.attributes = params[:problem] # mass-assignment
-    if @problem.evaluator != nil
-      @problem.evaluator = IO.read(params[:problem][:evaluator].path)
-    end
+    #if @problem.evaluator
+    #  @problem.evaluator = IO.read(params[:problem][:evaluator].path)
+    #end
 
     respond_to do |format|
       if @problem.save
@@ -72,9 +72,9 @@ class ProblemsController < ApplicationController
   # PUT /problems/1.xml
   def update
     @problem.accessible = [:user_id] if can? :manage, @problem   
-    if params[:problem][:evaluator] != nil
-      params[:problem][:evaluator] = IO.read(params[:problem][:evaluator].path)
-    end
+    #if params[:problem][:evaluator] != nil
+    #  params[:problem][:evaluator] = IO.read(params[:problem][:evaluator].path)
+    #end
 
     respond_to do |format|
       if @problem.update_attributes(params[:problem])

@@ -1,0 +1,35 @@
+<h1>Listing evaluators</h1>
+
+<table class="main-table" width="100%">
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>User</th>
+    <th></th>
+    <% if can? :update, Evaluator %>
+      <th></th>
+    <% end %>
+    <% if can? :destroy, Evaluator %>
+      <th></th>
+    <% end %>
+  </tr>
+
+<% @evaluators.each do |evaluator| %>
+  <tr>
+    <td><%= evaluator.name %></td>
+    <td><%= evaluator.description %></td>
+    <td><%= evaluator.user_id %></td>
+    <td><%= link_to 'Show', evaluator %></td>
+    <% if can? :update, Evaluator %>
+      <td><%= link_to 'Edit', edit_evaluator_path(evaluator) if can? :update, evaluator %></td>
+    <% end %>
+    <% if can? :destroy, Evaluator %>
+      <td><%= link_to 'Destroy', evaluator, :confirm => 'Are you sure?', :method => :delete if can? :destroy, evaluator %></td>
+    <% end %>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Evaluator', new_evaluator_path if can? :create, Evaluator %>

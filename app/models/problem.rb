@@ -3,8 +3,9 @@ class Problem < ActiveRecord::Base
   has_many :test_cases, :dependent => :destroy
   has_many :submissions, :dependent => :destroy
   belongs_to :user
+  belongs_to :evaluator
 
-  attr_accessible :title, :statement, :input, :output, :memory_limit, :time_limit, :evaluator
+  attr_accessible :title, :statement, :input, :output, :memory_limit, :time_limit, :evaluator_id
 
   # Scopes
   scope :distinct, select("distinct(problems.id), problems.*")

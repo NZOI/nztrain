@@ -1,0 +1,28 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @evaluator.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @evaluator.description %>
+</p>
+<% if can? :inspect, @evaluator %>
+  <p>
+    <b>Source:</b>
+    <pre>
+    <%= @evaluator.source %>
+    </pre>
+  </p>
+<% end %>
+
+<p>
+  <b>User:</b>
+  <%= @evaluator.user_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_evaluator_path(@evaluator) if can? :update, @evaluator %> 
+<%= link_to 'Back', evaluators_path %>

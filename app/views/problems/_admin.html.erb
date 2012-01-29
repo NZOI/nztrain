@@ -32,9 +32,14 @@
 </p>
 <% end %>
 <p>
-<b> Evaluator </b>
-<pre>
-<%= @problem.evaluator %>
-</pre>
+<b> Evaluator: </b>
+<% if @problem.evaluator %>
+  <%= link_to @problem.evaluator.name, @problem.evaluator %>
+  <pre>
+  <%= @problem.evaluator.source %>
+  </pre>
+<% else %>
+  Default evaluator
+<% end %>
 </p>
 

@@ -1,4 +1,6 @@
 NztrainV2::Application.routes.draw do
+  resources :evaluators
+
   resources :settings
 
   resources :roles

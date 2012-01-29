@@ -12,6 +12,8 @@ class User < ActiveRecord::Base
 
   has_many :problems
   has_many :submissions
+  has_many :problem_sets
+  has_many :evaluators
   has_many :contest_relations
   has_many :contests, :through => :contest_relations
   # NOTE: difference between groups and roles

@@ -46,7 +46,7 @@ class Ability
     can :show, Contest, :users.outer => {:id => user.id} # can show contest if user is a competitor
     if !Contest.user_currently_in(user.id).exists? # can do only if not in a contest
       # Objects owned by the user
-      can :manage, [Problem, ProblemSet], :user_id => user.id # to add can manage Group, Contest
+      can :manage, [Problem, ProblemSet, Evaluator], :user_id => user.id # to add can manage Group, Contest
       can :manage, [TestCase], :problem.outer => {:user.outer => {:id => user.id}} # may add Testset between testcase and problems
       can :new, TestCase
       can [:read, :create], Submission, :user_id => user.id

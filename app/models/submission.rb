@@ -45,8 +45,8 @@ class Submission < ActiveRecord::Base
 
     File.open(source_file, 'w') { |f| f.write(source) }
 
-    if problem.evaluator
-      File.open(eval_file, 'w') { |f| f.write(problem.evaluator) }
+    if problem.evaluator_id
+      File.open(eval_file, 'w') { |f| f.write(problem.evaluator.source) }
     end
 
     self.judge_output = "Judging...\n"
@@ -123,6 +123,7 @@ class Submission < ActiveRecord::Base
             correct = system(run_string)
             self.judge_output += "running " + run_string + "\n"
             self.judge_output += "correct is " + correct.to_s + "\n"
+            
             if correct == nil
               self.judge_output += "Evaluator packed a sad, sorry :(\n"
             end
