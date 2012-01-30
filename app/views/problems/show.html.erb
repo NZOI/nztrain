@@ -1,6 +1,6 @@
 <% content_for :title, @problem.title %>
 <div id="main-page-title"><%= @problem.title %></div>
-<%= markdown_parse(@problem.statement) %>
+<%= raw Loofah.scrub_fragment(markdown_parse(@problem.statement),:escape) %>
 <br />
 
 <b>Input File: </b><%= @problem.input %><br />
