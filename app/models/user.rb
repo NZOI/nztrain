@@ -30,11 +30,16 @@ class User < ActiveRecord::Base
     self.where("lower(username) = lower(?)", conditions[:email]).limit(1).first ||
     self.where("email = ?", conditions[:email]).limit(1).first
   end
-  def handle
-    if !self.name
-      return "<#{self.email}>"
+
+  def handle(current_ability = nil)
+    if current_ability && (current_ability.can? :inspect, self)
+      if self.name && !self.name.empty?
+        return "#{self.username} \"#{self.name}\""
+      else
+        return "#{self.username} <#{self.email}>"
+      end
     else
-      return "#{self.name} <#{self.email}>"
+      return "#{self.username}"
     end
   end
 

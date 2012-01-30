@@ -3,9 +3,11 @@
 
 <table class="main_table" >
   <tr>
-    <th>Name</th>
     <th>Username</th>
-    <th>Email</th>
+    <% if can? :inspect, User %>
+      <th>Name</th>
+      <th>Email</th>
+    <% end %>
     <th>Roles</th>
     <th>Solved Problems</th>
     <th>Brownie Points</th>
@@ -20,9 +22,11 @@
 
   <% @users.each do |user| %>
     <tr>
-      <td><%= user.name %></td>
       <td><%= user.username %></td>
-      <td><%= user.email %></td>
+      <% if can? :inspect, User %>
+        <td><%= user.name if can? :inspect, user %></td>
+        <td><%= user.email if can? :inspect, user %></td>
+      <% end %>
       <td><%= user.roles.map {|r| r.name}.join(', ') %></td>
       <td><%= user.num_solved %></td>
       <td><%= user.brownie_points %></td>

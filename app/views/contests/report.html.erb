@@ -37,7 +37,7 @@
       <td>
         <% begin %>
           <% u = User.find(person[:user_id]) %>
-          <%= link_to u.handle, u %>
+          <%= link_to u.handle(current_ability), u %>
         <% rescue ActiveRecord::RecordNotFound %>
           <%= "Deleted User ID #{person[:user_id]}" %>
         <% end %>

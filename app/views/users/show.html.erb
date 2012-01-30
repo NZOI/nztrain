@@ -2,7 +2,7 @@
 <b>Username:</b>
 <%= @user.username %>
 <br />
-
+<% if can? :inspect, @user %>
 <b>Name:</b>
 <%= @user.name %>
 <br />
@@ -10,7 +10,7 @@
 <b>Email:</b>
 <%= @user.email %>
 <br />
-
+<% end %>
 <b>Admin:</b>
 <%= @user.is_admin %>
 <br />

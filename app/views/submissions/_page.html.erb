@@ -43,7 +43,7 @@
           <td><%= submission.language %></td>
         <td><%= submission.score %></td>
         <% if !params[:by_user] || params[:by_user][','] %>
-          <td><% if submission.user %><%= submission.user.handle %><% end %></td>
+          <td><% if submission.user %><%= submission.user.handle(current_ability) %><% end %></td>
         <% end %>
         <% if !params[:by_problem] || params[:by_problem][','] %>
           <td><%= submission.problem.title %></td>
