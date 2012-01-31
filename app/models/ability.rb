@@ -46,9 +46,13 @@ class Ability
     can :show, Contest, :users.outer => {:id => user.id} # can show contest if user is a competitor
     if !Contest.user_currently_in(user.id).exists? # can do only if not in a contest
       # Objects owned by the user
-      can :manage, [Problem, ProblemSet, Evaluator], :user_id => user.id # to add can manage Group, Contest
+      can :manage, [Problem, ProblemSet, Evaluator, Group, Contest], :user_id => user.id
+      cannot :create, [Problem, ProblemSet, Group, Contest, Evaluator] # though can manage, cannot create unless permission is given
+      cannot :transfer, [Problem, ProblemSet, Evaluator, Group, Contest] # cannot transfer arbitrary objects unless vetted (by having role added)
       can :manage, [TestCase], :problem.outer => {:user.outer => {:id => user.id}} # may add Testset between testcase and problems
       can :new, TestCase
+      can :create, Problem
+      can :read, Evaluator
       can [:read, :create], Submission, :user_id => user.id
       # Permissions by virtue of being in a group
       can :read, Problem, :problem_sets.outer => {:groups.outer => {:users.outer => {:id => user.id}}} # ie. can read any problem in a problem set, assigned to a group that the user is part of
@@ -61,7 +65,6 @@ class Ability
       can :read, ProblemSet, :contests.outer => {:users.outer => {:id => user.id}, :start_time => DateTime.min...DateTime.now, :end_time => DateTime.now..DateTime.max}
       can :read, Submission, :user_id => user.id, :problem.outer => {:problem_sets.outer => {:contests.outer => {:users.outer => {:id => user.id}, :start_time => DateTime.min...DateTime.now, :end_time => DateTime.now..DateTime.max}}}
     end
-    cannot :create, [Problem, ProblemSet] # must secure evaluator, after which, there is no reason not to allow
     user.roles.each do |role|
       case role.name
       when 'staff' # full read access
@@ -72,8 +75,10 @@ class Ability
         cannot :regrant, Role, :name => ['superadmin','admin','staff'] # can only assign roles for lower tiers
         cannot :manage, Setting # keys and passwords here
       when 'organizer' # can create new groups, problems, problem sets, contests
+        can :manage, [Problem, ProblemSet, Evaluator, Group, Contest], :user_id => user.id
         can :create, [Problem, ProblemSet, Group, Contest]
       when 'author' # can create new problems, problem sets
+        can :manage, [Problem, ProblemSet, Evaluator, Group, Contest], :user_id => user.id
         can :create, [Problem, ProblemSet]
       end
     end

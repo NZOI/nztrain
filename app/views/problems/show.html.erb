@@ -31,9 +31,7 @@
 </p>
 <br />
 
-<% if current_user.is_admin %>
-  <%= render 'admin' %>
-<% end %>
+<%= render 'admin' %>
 
 <%= link_to 'Edit', edit_problem_path(@problem) if can? :update, @problem %> 
 <%= link_to 'Back', problems_path %>

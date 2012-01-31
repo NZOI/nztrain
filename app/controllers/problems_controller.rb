@@ -17,7 +17,7 @@ class ProblemsController < ApplicationController
   def show
     @submission = Submission.new # for submitting problem
     #TODO: restrict to problems that current user owns/manages
-    @problem_sets = ProblemSet.all
+    @problem_sets = ProblemSet.accessible_by(current_ability,:update) # can only add problem to problem sets user can update to
     @submissions = @problem.submission_history(current_user)
 
     @all_subs = {};

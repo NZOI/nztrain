@@ -1,45 +1,43 @@
-<b>Admin</b><br />
-
-<b>Users that have submitted:</b>
-<table class="main_table">
-<tr>
-<th> User </th>
-<th> Score </th>
-</tr>
-
-<% @all_subs.each do |sub| %>
-	<% if sub.user != nil %>
-		<tr>
-      		<td> <%= link_to sub.user.handle(current_ability), sub.user %> </td>
-      	<td> <%= progress_bar(sub.score,sub) %><div style="display: inline-block; vertical-align: middle; text-align: right; width: 2.5em;">(<%= link_to @sub_count[sub.user], :controller => "submissions", :by_user => sub.user, :by_problem => @problem %>)</div> </td>
-    	</tr>
-	<% end %>
+<% if can? :inspect, @problem %>
+  <b>Users that have submitted:</b>
+  <table class="main_table">
+  <tr>
+  <th> User </th>
+  <th> Score </th>
+  </tr>
+  
+  <% @all_subs.each do |sub| %>
+  	<% if sub.user != nil %>
+  		<tr>
+        		<td> <%= link_to sub.user.handle(current_ability), sub.user %> </td>
+        	<td> <%= progress_bar(sub.score,sub) %><div style="display: inline-block; vertical-align: middle; text-align: right; width: 2.5em;">(<%= link_to @sub_count[sub.user], :controller => "submissions", :by_user => sub.user, :by_problem => @problem %>)</div> </td>
+      	</tr>
+  	<% end %>
+  <% end %>
+  </table>
+  <br />
 <% end %>
-</table>
-<br />
-<p>
-<% form_tag(:controller => "problem_problem_set", :action => "add", :method => :put, :problem_id => @problem) do %>
-  <%= collection_select :problem, :problem_set_ids, @problem_sets, :id, :title %>
-  <%= submit_tag 'Add to problem set' %>
+<% if (can? :use, @problem) && @problem_sets.size>0 %>
+  <p>
+  <% form_tag(:controller => "problem_problem_set", :action => "add", :method => :put, :problem_id => @problem) do %>
+    <%= collection_select :problem, :problem_set_ids, @problem_sets, :id, :title %>
+    <%= submit_tag 'Add to problem set' %>
+  <% end %>
+  </p>
 <% end %>
-</p>
-<% if false # COMMENTED OUT %>
-<p>
-<% form_tag( add_problem_group_path(:problem_id => @problem), :method => :put) do %>
-  <%= collection_select :problem, :group_ids, @groups, :id, :name %>
-  <%= submit_tag "Give group access" %>
+<% if can? :inspect, @problem %>
+  <p>
+  <b> Evaluator: </b>
+  <% if @problem.evaluator %>
+    <%= link_to @problem.evaluator.name, @problem.evaluator %>
+    <% if can? :inspect, @problem.evaluator # privilege required to see evaluator source %>
+      <pre>
+      <%= @problem.evaluator.source %>
+      </pre>
+    <% end %>
+  <% else %>
+    Default evaluator
+  <% end %>
+  </p>
 <% end %>
-</p>
-<% end %>
-<p>
-<b> Evaluator: </b>
-<% if @problem.evaluator %>
-  <%= link_to @problem.evaluator.name, @problem.evaluator %>
-  <pre>
-  <%= @problem.evaluator.source %>
-  </pre>
-<% else %>
-  Default evaluator
-<% end %>
-</p>
 
