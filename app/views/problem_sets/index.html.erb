@@ -21,7 +21,7 @@
   <% problems = problem_set.problems.distinct.score_by_user(current_user.id) %>
   <tr class="emphasized">
     <td onClick="toggle_height('<%= "problemset#{problem_set.id}problems" %>');"><%= problem_set.title %> <span style="font-weight: normal; font-style: italic;">(<%= problem_set.problems.length %> problem<%= problem_set.problems.length==1?"":"s" %>)</span></td>
-    <td><%= progress_bar(problems.inject(0){|sum,x| sum+(x.score.to_i||0)}/[problems.length,1].max) %></td>
+    <td><%= progress_bar(problems.inject(0){|sum,x| sum+(x.score.to_i||0)}/problems.length) if problems.length>0 %></td>
     <td><%= link_to 'Show', problem_set %></td>
     <% if can? :update, ProblemSet %>
       <td><%= link_to 'Edit', edit_problem_set_path(problem_set) if can? :update, problem_set %></td>
