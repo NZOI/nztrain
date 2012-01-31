@@ -60,7 +60,8 @@ class ProblemSetsController < ApplicationController
   # POST /problem_sets
   # POST /problem_sets.xml
   def create
-    @problem_set.accessible = [:user_id]
+    @problem_set.user_id = current_user.id
+    @problem_set.accessible = [:user_id] if can? :transfer, @problem_set
     @problem_set.attributes = params[:problem_set]
 
     respond_to do |format|
@@ -77,7 +78,7 @@ class ProblemSetsController < ApplicationController
   # PUT /problem_sets/1
   # PUT /problem_sets/1.xml
   def update
-    @problem_set.accessible = [:user_id] if can? :manage, @problem_set
+    @problem_set.accessible = [:user_id] if can? :transfer, @problem_set
     respond_to do |format|
       if @problem_set.update_attributes(params[:problem_set])
         format.html { redirect_to(@problem_set, :notice => 'Problem set was successfully updated.') }

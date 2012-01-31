@@ -84,7 +84,8 @@ class ContestsController < ApplicationController
   # GET /contests/new
   # GET /contests/new.xml
   def new
-    @contest = Contest.new
+    @contest.user_id = current_user.id
+    @problem_sets = ProblemSet.all
     @start_time = ""
     @end_time = ""
 
@@ -96,8 +97,6 @@ class ContestsController < ApplicationController
 
   # GET /contests/1/edit
   def edit
-    @contest = Contest.find(params[:id])
-    #@problems = @contest.problem_set.problems
     @problem_sets = ProblemSet.all
     @start_time = @contest.start_time.strftime("%m/%d/%Y %H:%M")
     @end_time = @contest.end_time.strftime("%m/%d/%Y %H:%M")
@@ -106,10 +105,11 @@ class ContestsController < ApplicationController
   # POST /contests
   # POST /contests.xml
   def create
-    @contest = Contest.new(params[:contest])
-    @contest.accessible=[:user_id]
+    authorize! :use, params[:contest][:problem_set_id] if params[:contest][:problem_set_id]
+    @contest.user_id = current_user.id
+    @contest.accessible=[:user_id] if can? :transfer, @contest
     @contest.attributes = params[:contest]
-    @contest.start_time = params[:contest][:start_time].get_date(Time.zone)
+    @contest.start_time = params[:contest][:start_time].get_date(Time.zone) # TODO: catch exception when string is not a valid date
     @contest.end_time = params[:contest][:end_time].get_date(Time.zone)
     logger.debug "time zone is " + Time.zone.to_s
     @contest.user_id = current_user
@@ -128,11 +128,10 @@ class ContestsController < ApplicationController
   # PUT /contests/1
   # PUT /contests/1.xml
   def update
-    authorize! :use, params[:contest][:problem_set_id] if params[:contest][:problem_set] # can only use problem sets which user has permission to use
+    authorize! :use, params[:contest][:problem_set_id] if params[:contest][:problem_set_id] && (params[:contest][:problem_set_id] != @contest.problem_set_id) # can only use problem sets which user has permission to use
     params[:contest][:start_time] = params[:contest][:start_time].get_date(Time.zone)
     params[:contest][:end_time] = params[:contest][:end_time].get_date(Time.zone)
-    @contest = Contest.find(params[:id])
-    @contest.accessible = [:user_id] if can? :manage, @contest
+    @contest.accessible = [:user_id] if can? :transfer, @contest
     respond_to do |format|
       if @contest.update_attributes(params[:contest])
         format.html { redirect_to(@contest, :notice => 'Contest was successfully updated.') }

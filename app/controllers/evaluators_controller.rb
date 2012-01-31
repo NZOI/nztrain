@@ -39,7 +39,8 @@ class EvaluatorsController < ApplicationController
   # POST /evaluators
   # POST /evaluators.xml
   def create
-    @evaluator.accessible = [:user_id] # free to give others an evaluator to own
+    @evaluator.user_id = current_user.id
+    @evaluator.accessible = [:user_id] if can? :transfer, @evaluator # free to give others an evaluator to own
     @evaluator.attributes = params[:evaluator]
 
     respond_to do |format|
@@ -56,7 +57,7 @@ class EvaluatorsController < ApplicationController
   # PUT /evaluators/1
   # PUT /evaluators/1.xml
   def update
-    @evaluator.accessible = [:user_id] if can? :manage, @evaluator
+    @evaluator.accessible = [:user_id] if can? :transfer, @evaluator
 
     respond_to do |format|
       if @evaluator.update_attributes(params[:evaluator])

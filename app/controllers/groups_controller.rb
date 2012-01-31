@@ -82,7 +82,7 @@ class GroupsController < ApplicationController
   # GET /groups/new
   # GET /groups/new.xml
   def new
-
+    @group.user_id = current_user.id
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @group }
@@ -96,7 +96,9 @@ class GroupsController < ApplicationController
   # POST /groups
   # POST /groups.xml
   def create
-    @group = Group.new(params[:group])
+    @group.user_id = current_user.id
+    @group.accessible=[:user_id] if can? :transfer, @contest
+    @group.attributes = params[:group]
 
     respond_to do |format|
       if @group.save
@@ -112,7 +114,7 @@ class GroupsController < ApplicationController
   # PUT /groups/1
   # PUT /groups/1.xml
   def update
-
+    @group.accessible = [:user_id] if can? :transfer, @group
     respond_to do |format|
       if @group.update_attributes(params[:group])
         format.html { redirect_to(@group, :notice => 'Group was successfully updated.') }
