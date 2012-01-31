@@ -17,7 +17,6 @@
       <th></th>
     <% end %>
   </tr>
-
 <% @problems.each do |problem| %>
     <tr>
     <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.title %></td>
@@ -26,7 +25,7 @@
     <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.memory_limit %></td>
     <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.time_limit %></td>
     <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.user_id %></td>
-    <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.score %></td>
+    <td onClick="location.href='<%= url_for(problem) %>'"><%= progress_bar(problem.score) if problem.score %></td>
     <td><%= link_to 'Show', problem %></td>
     <% if can? :update, Problem %>
       <td><%= link_to 'Edit', edit_problem_path(problem) if can? :update, problem %></td>

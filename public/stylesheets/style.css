@@ -18,6 +18,12 @@ a:hover {
    text-decoration: underline;
 }
 
+a.progress_link:hover {
+   text-decoration: none;
+   background-color: rgba(0,0,0,0.1);
+   color: black;
+}
+
 #side {
    position: fixed;
    width: 300px;

@@ -11,7 +11,7 @@
 	<% if sub.user != nil %>
 		<tr>
       		<td> <%= link_to sub.user.handle(current_ability), sub.user %> </td>
-      	<td style="min-width: 4em;"> <span style="text-align: right; float: left; width: 50%;"><%= link_to sub.score, sub %></span> <span style="text-align: right; float: right; width: 50%;">(<%= link_to @sub_count[sub.user], :controller => "submissions", :by_user => sub.user, :by_problem => @problem %>)</span> </td>
+      	<td> <%= progress_bar(sub.score,sub) %><div style="display: inline-block; vertical-align: middle; text-align: right; width: 2.5em;">(<%= link_to @sub_count[sub.user], :controller => "submissions", :by_user => sub.user, :by_problem => @problem %>)</div> </td>
     	</tr>
 	<% end %>
 <% end %>
