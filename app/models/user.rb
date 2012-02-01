@@ -48,7 +48,7 @@ class User < ActiveRecord::Base
     @solved_problems = Problem.select("problems.*, (SELECT MAX(score) FROM submissions WHERE problem_id = problems.id AND user_id = #{self.id}) as score")
 
     @solved_problems.each do |prob|
-      if prob.score == 100
+      if prob.score.to_i == 100
         solved << prob
       end
     end
