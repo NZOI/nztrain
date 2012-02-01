@@ -16,8 +16,12 @@ end
 end
 
 # give superadmin status to set everything up
+rootuser = nil
 
-rootuser = User.find(0) # if a root user exists and is zeroth (this is for security because normally users get positive integers as id) user in users table, give superadmin status
+if User.exists?(0)
+  rootuser = User.find(0) # if a root user exists and is zeroth (this is for security because normally users get positive integers as id) user in users table, give superadmin status
+end
+
 if rootuser && rootuser.username == "root"
   superadmin = Role.find_by_name("superadmin")
   superadmin.users.push(rootuser) unless superadmin.users.include?(rootuser);
