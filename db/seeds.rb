@@ -11,7 +11,7 @@ if User.count == 0
   #rootuser = User.new({:id => 0, :name => "Root User", :username => "root", :email => "root@nztrain.com", :encrypted_password => "Need an encrypted password here"})
 end
 
-["superadmin","admin","staff","organizer","author"].each do |role|
+["superadmin","admin","staff","organiser","author"].each do |role|
   Role.find_or_create_by_name(role)
 end
 

@@ -74,7 +74,7 @@ class Ability
         can :regrant, Role
         cannot :regrant, Role, :name => ['superadmin','admin','staff'] # can only assign roles for lower tiers
         cannot :manage, Setting # keys and passwords here
-      when 'organizer' # can create new groups, problems, problem sets, contests
+      when 'organiser' # can create new groups, problems, problem sets, contests
         can :manage, [Problem, ProblemSet, Evaluator, Group, Contest], :user_id => user.id
         can :create, [Problem, ProblemSet, Group, Contest]
       when 'author' # can create new problems, problem sets
