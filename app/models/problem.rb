@@ -5,6 +5,8 @@ class Problem < ActiveRecord::Base
   belongs_to :user
   belongs_to :evaluator
 
+  validates :title, :presence => true, :uniqueness => { :case_sensitive => false }
+
   attr_accessible :title, :statement, :input, :output, :memory_limit, :time_limit, :evaluator_id
 
   # Scopes

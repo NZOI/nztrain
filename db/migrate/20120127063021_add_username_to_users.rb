@@ -27,5 +27,6 @@ class AddUsernameToUsers < ActiveRecord::Migration
   def self.down
     remove_column :users, :username
     remove_column :users, :can_change_username
+    execute "DROP INDEX index_users_on_username"
   end
 end
