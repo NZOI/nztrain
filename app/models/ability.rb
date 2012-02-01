@@ -29,6 +29,7 @@ class Ability
       can :regrant, Role
       cannot :regrant, Role, :name => 'superadmin' # can assign all roles except superadmin
       cannot :manage, Setting # keys and passwords here
+      cannot :destroy, Group, :id => 0 # cannot remove the "Everyone" group
       return
     end
 
@@ -39,10 +40,14 @@ class Ability
     can :read, User
     can :read, Group # for now, can see all groups, change later to can see public groups
     can :join, Group # can join all groups
+    cannot :join, Group, :id => 0 # cannot join "Everyone"
     can :leave, Group, :users => {:id => user.id} # can leave any group user is part of
     can :index, Contest, :groups.outer => {:users.outer => {:id => user.id}}
+    can :index, Contest, :groups.outer => {:id => 0}
     can :show, Contest, :groups.outer => {:users.outer => {:id => user.id}}, :end_time => DateTime.min...DateTime.now # can show contest if it has finished running
+    can :show, Contest, :groups.outer => {:id => 0}, :end_time => DateTime.min...DateTime.now # can show contest if it has finished running
     can :start, Contest, :groups.outer => {:users.outer => {:id => user.id}}, :start_time => DateTime.min...DateTime.now, :end_time => DateTime.now..DateTime.max # allows user to start any contest for which they can read, if it is running
+    can :start, Contest, :groups.outer => {:id => 0}, :start_time => DateTime.min...DateTime.now, :end_time => DateTime.now..DateTime.max # allows user to start any contest for which they can read, if it is running
     can :show, Contest, :users.outer => {:id => user.id} # can show contest if user is a competitor
     if !Contest.user_currently_in(user.id).exists? # can do only if not in a contest
       # Objects owned by the user
@@ -56,7 +61,9 @@ class Ability
       can [:read, :create], Submission, :user_id => user.id
       # Permissions by virtue of being in a group
       can :read, Problem, :problem_sets.outer => {:groups.outer => {:users.outer => {:id => user.id}}} # ie. can read any problem in a problem set, assigned to a group that the user is part of
+      can :read, Problem, :problem_sets.outer => {:groups.outer => {:id => 0}} # ie. can read any problem in a problem set, assigned to Everyone
       can :read, ProblemSet, :groups.outer => {:users.outer => {:id => user.id}}
+      can :read, ProblemSet, :groups.outer => {:id => 0}
     else # in a contest (usual permissions to see problems not valid)
       # Permissions by virtue of being in a contest
       can :create, Submission

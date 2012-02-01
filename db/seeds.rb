@@ -6,7 +6,14 @@
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
 
-if User.count == 0
+if !(User.exists?(0)) # code in this block to be fixed
+  #rootuser = User.new()
+  #rootuser.id = 0
+  #rootuser.name = "System"
+  #rootuser.username = "system"
+  #rootuser.email = "system@nztrain.com"
+  #rootuser.encrypted_password = ""
+  #rootuser.save
   # no users in user table, create a user
   #rootuser = User.new({:id => 0, :name => "Root User", :username => "root", :email => "root@nztrain.com", :encrypted_password => "Need an encrypted password here"})
 end
@@ -31,6 +38,14 @@ end
   Setting.find_or_create_by_key(setting)
 end
 
+# create a special group called Everyone
+if !(Group.exists?(0))
+  everyone = Group.new()
+  everyone.id = 0;
+  everyone.name = "Everyone"
+  everyone.user_id = 0
+  everyone.save
+end
 
 
 
