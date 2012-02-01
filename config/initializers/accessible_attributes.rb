@@ -1,5 +1,5 @@
 class ActiveRecord::Base
-  attr_accessible
+  attr_accessible :session_id
 
   # allows dynamically adding accessible attributes
   attr_accessor :accessible
