@@ -21,6 +21,8 @@ bundle exec rake db:migrate | sed -e 's/^/   /g;' | cat # sed to indent output
 bash -c "echo -e '\E[34m\033[1mbundle exec rake db:seed\033[0m'"
 bundle exec rake db:seed | sed -e 's/^/   /g;' | cat # sed to indent output
 
+bash -c "echo -e '\E[34m\033[1mbundle exec whenever --update-crontab nztrain\033[0m'"
+bundle exec whenever --update-crontab nztrain
 
 # Start WEBrick/Apache server here
 

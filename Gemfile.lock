@@ -35,6 +35,7 @@ GEM
     bluecloth (2.2.0)
     builder (2.1.2)
     cancan (1.6.7)
+    chronic (0.6.7)
     columnize (0.3.6)
     devise (1.4.2)
       bcrypt-ruby (~> 2.1.2)
@@ -120,6 +121,9 @@ GEM
       nokogiri (>= 1.2.0)
       rack (>= 1.0)
       rack-test (>= 0.5.3)
+    whenever (0.7.2)
+      activesupport (>= 2.3.4)
+      chronic (~> 0.6.3)
     will_paginate (3.0.2)
 
 PLATFORMS
@@ -144,4 +148,5 @@ DEPENDENCIES
   sqlite3
   squeel
   webrat
+  whenever
   will_paginate
