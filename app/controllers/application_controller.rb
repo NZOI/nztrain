@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include ApplicationHelper
   before_filter :read_settings
   before_filter :set_leader
   before_filter :wrong_site
@@ -19,6 +20,14 @@ class ApplicationController < ActionController::Base
   def check_signed_in
     if !user_signed_in?
       redirect_to(new_user_session_path, :alert => "Welcome to nztrain. Please log in or sign up to continue.")
+    end
+    if in_su? # so that a user losing admin status cannot keep using admin privileges if they su-ed into another admin user
+      original_user = User.find(session[:su][0])
+      if Ability.new(original_user).cannot? :su, current_user # lost privileges to su into the user
+        session[:su] = nil
+        sign_in original_user # kick them back into their actual account
+        redirect_to root_url, :alert => "You lost your su authorization"
+      end
     end
   end
 
