@@ -202,6 +202,7 @@ a.progress_link:hover {
 	color: white;
 	text-decoration: none;
 	padding: 0.25em 0.75em;
+        background-color: rgba(1,1,1,0);
 }
 #nav a.daddy {
 	background: url(rightarrow2.gif) center right no-repeat;
