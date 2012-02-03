@@ -197,8 +197,8 @@ a.progress_link:hover {
 
 #nav a {
 	display: block;
-	width: 8em;
-	w\idth: 6.5em;
+	min-width: 8em;
+	min-w\idth: 6.5em;
 	color: white;
 	text-decoration: none;
 	padding: 0.25em 0.75em;
@@ -210,7 +210,7 @@ a.progress_link:hover {
 #nav li {
 	float: left;
 	padding: 0;
-	width: 8em;
+	min-width: 8em;
 }
 #nav li ul {
 	position: absolute;

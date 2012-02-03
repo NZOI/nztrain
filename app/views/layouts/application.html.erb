@@ -9,6 +9,8 @@
     <%= javascript_include_tag "jquery.fileinput.js" %>
     <%= javascript_include_tag "jquery.countdown.js" %>
     <%= javascript_include_tag "jquery.ba-bbq.min.js" %>
+    <%= javascript_include_tag "superfish.js" %>
+    <%= javascript_include_tag "jquery.event.hover-1.0.js" %>
 
     <%= stylesheet_link_tag "jquery-ui-1.8.16.custom.css" %>
     <%= stylesheet_link_tag  "fileinput.css" %>
@@ -104,6 +106,13 @@
 		$("table tr").click(function() {
 			$(this).toggleClass("main-table-highlight");
 		});
+
+                $("#nav ul").superfish({
+                  animation: {opacity:'show',height:'show'}
+                });
+                $("#nav2 ul").superfish({
+                  autoArrows: false
+                });
 	});
 //-->
 </script>
