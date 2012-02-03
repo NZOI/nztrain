@@ -187,6 +187,10 @@ a.progress_link:hover {
    padding-bottom: 30px;
 }
 
+.sf-sub-indicator { /* this is superfish's autoarrow class */
+        color: white;
+}
+
 #nav ul {
 	list-style: none;
 	background: #2D2D2D;
@@ -209,7 +213,7 @@ a.progress_link:hover {
 }
 
 #nav li {
-	float: left;
+        display: inline-block;
 	padding: 0;
 	min-width: 8em;
 }
