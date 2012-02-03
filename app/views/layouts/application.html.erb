@@ -68,23 +68,22 @@
 	var duration = 250;
 	function shrink() {
 		createCookie("expanded", "false", 31);
-		$("#side").animate({width:'100px'}, duration);
-		$('#side-minify').animate({'margin-left':'73px'}, duration).html("&#9654;");
-		$('#main-container').animate({'margin-left':'122px'}, duration);
-		$('#main-message-container').animate({'margin-left':'122px'}, duration);
-		$('#side-logo').animate({width:'95px', height: '112px'}, duration);
-		$('#side-logo').animate({'margin-left':'2px', 'margin-top':'12px'}, duration);
-		$('#uac-user').data('email', $('#uac-user').html()).html("<a href=\"/accounts/edit\">account</a>");
+		$("#side").animate({width:'50px'}, duration);
+		$('#menu').animate({'left':'60px'}, duration);
+		$('#side-minify').html("&#9654;");
+		$('#main').animate({'margin-left':'50px'}, duration);
+                $('#side-expanded').animate({'opacity':'0'},duration);
+                $('#side-contracted').animate({'opacity':'1'}, duration);
 	}
 
 	function expand() {
 		createCookie("expanded", "true", 31);
-		$("#side").animate({width:'300px'}, duration);
-		$('#side-minify').animate({'margin-left':'273px'}, duration).html("&#9664;");
-		$('#main-container').animate({'margin-left':'322px'}, duration);
-		$('#main-message-container').animate({'margin-left':'322px'}, duration);
-		$('#side-logo').animate({width:'270px', height: '320px'}, duration);
-		$('#uac-user').html($('#uac-user').data('email'));
+		$("#side").animate({width:'200px'}, duration);
+		$('#menu').animate({'left':'210px'}, duration);
+		$('#side-minify').html("&#9664;");
+		$('#main').animate({'margin-left':'200px'}, duration);
+                $('#side-expanded').animate({'opacity':'1'},duration);
+                $('#side-contracted').animate({'opacity':'0'}, duration);
 	}
 
 	$(document).ready(function() {
@@ -96,7 +95,7 @@
 		}
 		$("#main").show();
 		$('#side-minify').click(function() {
-			if($('#side').width() == 100)
+			if($('#side').width() <= 100)
 				expand();
 			else
 				shrink();
@@ -112,30 +111,75 @@
 </head>
 <body>
 <div id="side">
-	<div id="side-minify">&#9664;</div>
-   <div id="side-logo">
-   </div>
-   <div id="side-title">
-     Training Site
-   </div>
-   <% if user_signed_in? %>
-	   <div id="uac-user"><a href="/accounts/edit"><%= current_user.username %></a></div><br />
-   <ul>
-      <li><a href="<%= problem_sets_path %>">problem sets</a></li>
-      <li><a href="<%= problems_path %>">problems</a></li>
-      <li><a href="<%= contests_path %>">contests</a></li>
-      <li><a href="<%= groups_path %>">groups</a></li>
-      <li><a href="<%= submissions_path %>">submissions</a></li>
-      <li><a href="<%= users_path %>">users</a></li>
-      <li><a href="<%= evaluators_path %>">evaluators</a></li>
-      <li class="nav-uac"><%= link_to "sign out", destroy_user_session_path, :method => :delete %></li>
-   </ul>
-   <% else %>
-      <a href="<%= new_user_session_path %>">sign in</a>
-   <% end %>
-
+  <div id="side-container">
+    <div id="side-minify">&#9664;</div>
+    <div id="side-expanded">
+      <div id="side-logo">
+         <img src="/images/logo.svg" style="width: 100%;">
+      </div>
+      <div id="side-title">
+        Training Site
+      </div>
+      <div style="color: white; margin-left: 10px;">
+        High scores coming soon
+        <ul>
+          <li style="color: white;">Brownie points</li>
+          <li style="color: white;">Problems solved</li>
+        <ul>
+      </div>
+    </div>
+    <div id="side-contracted">
+      <img src="/images/sideways-banner.png" style="position: absolute; top: 50%; margin-top: -200px;">
+    </div>
+  </div>
 </div>
-
+<div id="menu">
+  <div id="controls">
+    <div id="nav2">
+      <ul>
+        <li>
+        <% if user_signed_in? %>
+          <div><a href="/accounts/edit"><%= current_user.username %></a></div>
+          <ul>
+            <li><a href="/accounts/edit">edit profile</a></li>
+            <li><%= link_to "sign out", destroy_user_session_path, :method => :delete %></li>
+          </ul>
+        <% else %>
+          <a href="<%= new_user_session_path %>">sign in</a>
+        <% end %>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div id="nav">
+    <ul>
+      <!--<li><a href="#">information</a></li>-->
+      <li><a href="<%= contests_path %>">contests</a></li>
+      <li><a>problems</a>
+        <ul>
+          <li><a href="<%= problem_sets_path %>">problem sets</a></li>
+          <li><a href="<%= problems_path %>">problems</a></li>
+          <li><a href="<%= submissions_path %>">submissions</a></li>
+          <li><a href="<%= evaluators_path %>">evaluators</a></li>
+        </ul>
+      </li>
+      <li><a>community</a>
+        <ul>
+          <li><a href="<%= users_path %>">users</a></li>
+          <li><a href="<%= groups_path %>">groups</a></li>
+        </ul>
+      </li>
+      <% if current_user.is_admin %>
+        <li><a>admin</a>
+          <ul>
+            <% if can? :index, Role %><li><a href="<%= roles_path %>">roles</a></li><% end %>
+            <% if can? :index, Setting %><li><a href="<%= settings_path %>">settings</a></li><% end %>
+          </ul>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
 <div id="main">
 	<div id="main-message-container">
 	    Congratulations to our current brownie point leader <%= @brownie_leader.email %> who has <%= @brownie_leader.brownie_points %> points!<br />

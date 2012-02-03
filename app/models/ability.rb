@@ -11,6 +11,8 @@ class Ability
   #                               can see objects private info
   #                               eg. full contest scoreboard, object history
   # :start, Contest
+  # :transfer, [Problem, ProblemSet, Contest, Group, Evaluator]
+
   def initialize(user)
     alias_action :read, :to => :inspect
     alias_action :grant, :revoke, :to => :regrant # roles, ie. move role privileges around to a different set of users
