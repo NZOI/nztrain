@@ -39,6 +39,10 @@ NztrainV2::Application.routes.draw do
     member do
       put 'add_role'
       put 'remove_role'
+      post 'su'
+    end
+    collection do
+      post 'suexit'
     end
   end
 

@@ -1,0 +1,6 @@
+<script type="text/javascript">
+function su(user) {
+  $('#password-popup form').attr("action","<%= raw su_user_path('" + user + "', :method => 'post').gsub("%22%20+%20user%20+%20%22",'" + user + "') %>");
+  $('#password-popup').css({'display':'block'});
+}
+</script>

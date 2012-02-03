@@ -1,6 +1,8 @@
 <% content_for :title, "Users" %>
 <div id="main-page-title">Listing users</div>
-
+<% if can? :su, User %>
+  <%= render 'su.js.erb' %>
+<% end %>
 <table class="main_table" >
   <tr>
     <th>Username</th>
@@ -16,6 +18,9 @@
       <th></th>
     <% end %>
     <% if can? :destroy, User %>
+      <th></th>
+    <% end %>
+    <% if can? :su, User %>
       <th></th>
     <% end %>
   </tr>
@@ -36,6 +41,9 @@
       <% end %>
       <% if can? :destroy, User %>
         <td><%= link_to 'Destroy', user, :confirm => 'Are you sure?', :method => :delete if can? :destroy, user %></td>
+      <% end %>
+      <% if can? :su, user %>
+        <td><a href="#" onClick="su(<%= user.id %>); return false;">su</a></td>
       <% end %>
     </tr>
   <% end %>

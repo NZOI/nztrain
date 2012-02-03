@@ -14,6 +14,9 @@ module ApplicationHelper
     raw "<div style=\"display: inline-block; vertical-align: middle; position: relative; height: 18px; width: 100px; border: 1px #{colour} solid;\"><div style=\"height: 100%; width: #{percent}%; background-color: #{colour}\"></div><div style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%; text-align: center; font-size: small; text-shadow: 1px 1px #FFFFFF;\">#{text}</div></div>"
   end
 
+  def in_su?
+    session[:su] && !session[:su].empty?
+  end
 
   # TODO FIXME escape_javascript override
   # https://github.com/rails/rails/pull/1558

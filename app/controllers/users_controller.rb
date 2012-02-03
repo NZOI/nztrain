@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_filter :check_signed_in
   load_and_authorize_resource
-  skip_authorize_resource :only => [:add_role, :remove_role]
+  skip_authorize_resource :only => [:add_role, :remove_role, :suexit]
 
   def index
     @users = @users.distinct.num_solved.order(:email)
@@ -62,6 +62,25 @@ class UsersController < ApplicationController
       format.html { redirect_to(users_url) }
       format.xml { head :ok }
     end
+  end
+
+  def su
+    if current_user.valid_password?(params[:password])
+      session[:su] = (session[:su]||[]).push(current_user.id)
+      sign_in @user
+      redirect_to root_url, :notice => "su #{@user.username}"
+    else
+      redirect_to request.referrer, :alert => "Password incorrect"
+    end
+  end
+
+  def suexit
+    if (!session[:su]) || session[:su].empty?
+      raise CanCan::AccessDenied.new("Not authorized!", :suexit, User)
+    end
+    old_user = current_user.username
+    sign_in User.find(session[:su].pop)
+    redirect_to request.referrer, :notice => "exit su #{old_user}"
   end
 
   def add_brownie

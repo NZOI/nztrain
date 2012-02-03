@@ -315,6 +315,16 @@ a.progress_link:hover {
 	background: #a1cca1;
 }
 
+li.masknav > a {
+	background: url(/images/mask.png) center left no-repeat;
+        margin-left: 0.5em;
+        padding-left: 3em;
+}
+
+li.masknav, li.masknav ul li {
+        background-color: #bb0000;
+}
+
 .main_table, #main-container table{	
    border-collapse: collapse;
    border: 1px solid #DDD;
