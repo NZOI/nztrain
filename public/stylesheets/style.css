@@ -284,6 +284,7 @@ a.progress_link:hover {
 	float: left;
 	padding: 0;
 	min-width: 5em;
+        position: relative;
 }
 #nav2 li ul {
 	position: absolute;
@@ -310,11 +311,12 @@ a.progress_link:hover {
 }
 
 #nav2 li:hover ul ul, #nav2 li.sfhover ul ul {
-	right: -999em;
+	left: -999em;
 }
 
 #nav2 li:hover ul, #nav2 li.sfhover ul {
-	right: 10px;
+        left: auto;
+	right: 0px;
 }
 
 #nav2 li:hover, #nav2 li.sfhover {
