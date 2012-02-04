@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'devise', '1.4.2'
-gem 'rails', '3.0.10' # if upgraded, remove monkey patch in application_helper.rb > escape_javascript()
+gem 'rails', '3.1.3' # if upgraded, remove monkey patch in application_helper.rb > escape_javascript()
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -15,7 +15,7 @@ gem 'jquery-rails', '>= 1.0.12'
 gem "bluecloth"
 gem "albino"
 gem "nokogiri"
-gem 'rails_markitup'
+gem 'markitup_rails'
 gem 'will_paginate'
 gem 'has_scope'
 gem 'cancan'
@@ -23,7 +23,6 @@ gem 'recaptcha', :require => 'recaptcha/rails'
 gem 'loofah'
 gem 'whenever', :require => false # for cron jobs
 gem 'squeel' # (NEW GEM) use lightly - only using in ability.rb, until it is more established (Jan 2012)  ---------> supersedes meta_where
-gem 'meta_where' # required to get .outer in ability.rb working
 
 gem 'pg'
 # Use unicorn as the web server
