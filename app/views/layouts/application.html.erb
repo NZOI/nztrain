@@ -220,7 +220,7 @@
     <%= form_tag(:method => 'post') do |f| %>
       <div class="field">
         <%= label_tag :password %><br />
-        <%= password_field_tag :password %>
+        <%= password_field_tag :password, '', :autocomplete => 'off' %>
       </div>
       <div class="actions">
         <input type="button" value="Cancel" style="margin-right: 20px;" onClick="this.form.reset(); $('#password-popup').css({'display':'none'});">
