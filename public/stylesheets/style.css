@@ -96,7 +96,7 @@ a.progress_link:hover {
 
 #main {
    margin-left: 200px;
-   float: right;
+   float: left;
    min-height: 100%;
    position: relative;
 }
