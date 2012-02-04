@@ -19,7 +19,7 @@
 <% end %>
 <% if (can? :use, @problem) && @problem_sets.size>0 %>
   <p>
-  <% form_tag(:controller => "problem_problem_set", :action => "add", :method => :put, :problem_id => @problem) do %>
+  <%= form_tag(:controller => "problem_problem_set", :action => "add", :method => :put, :problem_id => @problem) do %>
     <%= collection_select :problem, :problem_set_ids, @problem_sets, :id, :title %>
     <%= submit_tag 'Add to problem set' %>
   <% end %>

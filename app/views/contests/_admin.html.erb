@@ -1,6 +1,6 @@
 <b>Admin</b>
 
-<% form_tag( add_contest_group_path(:contest_id => @contest), :method => :put) do %>
+<%= form_tag( add_contest_group_path(:contest_id => @contest), :method => :put) do %>
   <%= collection_select :contest, :group_ids, @groups, :id, :name %>
   <%= submit_tag "Give group access" %>
 <% end %>

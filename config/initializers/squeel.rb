@@ -8,6 +8,6 @@ Squeel.configure do |config|
   # config.load_core_extensions :symbol
 
   # To load both hash and symbol extensions
-  # config.load_core_extensions :hash, :symbol
+  config.load_core_extensions :hash, :symbol
 end
 

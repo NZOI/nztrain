@@ -54,9 +54,9 @@ class ContestsController < ApplicationController
       @scoreboard = @scoreboard.reject{|row| (row[:rank].to_i >= @median && row[:user_id] != current_user.id)}
     end
     respond_to do |format|
-      if current_user.is_admin || !@contest.is_running?
+      if current_user.is_admin? || !@contest.is_running?
         #render contest report page
-        #@high_scorers = @contest.get_high_scorers(current_user.is_admin)
+        #@high_scorers = @contest.get_high_scorers(current_user.is_admin?)
         #logger.debug @high_scorers
 
         format.html { render "report" }

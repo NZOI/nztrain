@@ -1,9 +1,8 @@
 <b> Roles: </b>
 <% @user.roles.each_with_index do |role, i|%><%= ', ' if i > 0 %><%= role.name %> <%= raw "(#{link_to 'remove', remove_role_user_path(@user, :role_id => role.id), :method => "put", :confirm => "Remove #{role.name}. Are you sure?"})" if can? :revoke, role %><% end %>
-
 <% if can? :grant, Role %>
 <p>
-<% form_tag( add_role_user_path(@user), :method => :put) do %>
+<%= form_tag( add_role_user_path(@user), :method => :put) do %>
   <%= collection_select :user, :role_ids, Role.accessible_by(current_ability, :grant), :id, :name %>
   <%= submit_tag "Add role", :confirm => "Are you sure?" %>
 <% end %>

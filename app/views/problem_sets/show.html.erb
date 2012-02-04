@@ -27,7 +27,7 @@
 </table>
 <% if can? :update, @problem_set %>
   <p>
-  <% form_tag(:controller => "group_problem_set", :action => "add", :method => :put, :problem_set_id => @problem_set) do %>
+  <%= form_tag(:controller => "group_problem_set", :action => "add", :method => :put, :problem_set_id => @problem_set) do %>
     <%= collection_select :problem_set, :group_ids, @groups, :id, :name %>
     <%= submit_tag "Give group access" %>
   <% end %>

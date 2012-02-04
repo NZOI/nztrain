@@ -22,11 +22,11 @@ class Ability
         # can do anything, including melting down the site
         can :manage, :all
         return
-      elsif user.is_admin
+      elsif user.is_admin?
         # can do anything except for site development, infrastructural objects
         can :manage, :all
         cannot :manage, Role
-        cannot :manage, User, :is_superadmin => true
+        cannot :manage, User, :is_superadmin? => true
         can :inspect, :all
         can :regrant, Role
         cannot :regrant, Role, :name => 'superadmin' # can assign all roles except superadmin

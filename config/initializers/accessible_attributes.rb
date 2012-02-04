@@ -6,7 +6,7 @@ class ActiveRecord::Base
   private :mass_assignment_authorizer
   # https://gist.github.com/919326
   # based on Railscast 237, http://railscasts.com/episodes/237-dynamic-attr-accessible
-  def mass_assignment_authorizer
+  def mass_assignment_authorizer(role = :default)
     if accessible == :all
       # original hack, doesn't work with AR attribute type
       # self.class.protected_attributes

@@ -46,10 +46,10 @@
         <% @detail = @scoredetails[[person[:user_id],prob.id]]  %>
         <td style="min-width: 5em;">
           <span style="float: left; width: 2em; text-align: right;">
-            <%= @detail[:score]?link_to_if(person[:user_id] == current_user.id || current_user.is_admin, @detail[:score], submission_path(@detail[:sub_id])):"-" %>
+            <%= @detail[:score]?link_to_if(person[:user_id] == current_user.id || current_user.is_admin?, @detail[:score], submission_path(@detail[:sub_id])):"-" %>
           </span>
           <span style="float: left; width: 3em; text-align: right;">
-            (<%= link_to_if person[:user_id] == current_user.id || current_user.is_admin, @detail[:count]?@detail[:count]:0, :controller => "submissions", :by_user => person[:user_id], :by_problem => prob.id %>)
+            (<%= link_to_if person[:user_id] == current_user.id || current_user.is_admin?, @detail[:count]?@detail[:count]:0, :controller => "submissions", :by_user => person[:user_id], :by_problem => prob.id %>)
           </span>
         </td>
       <% end %>
@@ -78,7 +78,7 @@
   <% end %>
 </table>
 <br />
-<% if current_user.is_admin %>
+<% if current_user.is_admin? %>
   <%= render 'admin' %>
 <% end %>
 
