@@ -1,22 +1,8 @@
 <html>
 <head>
     <link rel="shortcut icon" href="/favicon.ico">
-    <%= javascript_include_tag :defaults %>
-    <%= javascript_include_tag "jquery.js" %>
-    <%= javascript_include_tag "jquery-1.6.2.min.js", "jquery-ui-1.8.16.custom.min.js" %>
-    <%= javascript_include_tag "jquery-ui-timepicker-addon.js" %>
-    <%= javascript_include_tag "jquery.fileinput.js" %>
-    <%= javascript_include_tag "jquery.countdown.js" %>
-    <%= javascript_include_tag "jquery.ba-bbq.min.js" %>
-    <%= javascript_include_tag "superfish.js" %>
-    <%= javascript_include_tag "jquery.event.hover-1.0.js" %>
-
-    <%= stylesheet_link_tag "jquery-ui-1.8.16.custom.css" %>
-    <%= stylesheet_link_tag  "fileinput.css" %>
-    <%= stylesheet_link_tag  "jquery.countdown.css" %>
-    <%= stylesheet_link_tag :all, :cache => false%>
-
-    <%= javascript_include_tag 'pagination' %>
+    <%= stylesheet_link_tag "application" %>
+    <%= javascript_include_tag "application" %>
 
     <%= csrf_meta_tag %>
 
@@ -121,7 +107,7 @@
     <div id="side-minify">&#9664;</div>
     <div id="side-expanded">
       <div id="side-logo">
-         <img src="/images/logo.svg" style="width: 100%;">
+         <%= image_tag("logo.svg") %>
       </div>
       <div id="side-title">
         Training Site
@@ -135,7 +121,7 @@
       </div>
     </div>
     <div id="side-contracted">
-      <img src="/images/sideways-banner.png" style="position: absolute; top: 50%; margin-top: -200px;">
+      <%= image_tag("sideways-banner.png") %>
     </div>
   </div>
 </div>

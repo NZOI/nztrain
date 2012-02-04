@@ -5,3 +5,5 @@ log/*.log
 tmp/
 *~
 *.swp
+.sass-cache/
+

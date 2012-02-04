@@ -1,0 +1,14 @@
+/*
+*= require_self
+*= require style
+*= require markitup/skins/markdown/style
+*= require markitup/skins/markdown/bright
+*= require markitup/skins/markdown/pygments
+*= require jquery.countdown
+*= require jquery-ui-1.8.16.custom
+*= require fileinput
+*= require all
+*= require scaffold
+*/
+
+

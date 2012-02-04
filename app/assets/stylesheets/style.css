@@ -94,6 +94,12 @@ a.progress_link:hover {
    vertical-align: middle;
 }
 
+#side-contracted img {
+   position: absolute;
+   top: 50%;
+   margin-top: -175px;
+}
+
 #main {
    margin-left: 200px;
    float: left;
@@ -182,6 +188,10 @@ a.progress_link:hover {
 {
    position: relative;
    padding: 10px;
+}
+
+#side-logo img {
+   width: 100%;
 }
 
 #side-title {
