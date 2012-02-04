@@ -1,5 +1,5 @@
 class ProblemSetsController < ApplicationController
-  before_filter :check_signed_in
+
   load_and_authorize_resource
   skip_authorization_check :only => [:add_problem, :remove_problem]
 

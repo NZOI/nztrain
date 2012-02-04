@@ -1,5 +1,4 @@
 class SettingsController < ApplicationController
- before_filter :check_signed_in
  load_and_authorize_resource
 
   # GET /settings

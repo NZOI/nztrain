@@ -1,5 +1,5 @@
 class ProblemProblemSetController < ApplicationController
-  before_filter :check_signed_in
+
 
   def add
     @problem = Problem.find(params[:problem_id])

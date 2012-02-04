@@ -1,5 +1,5 @@
 class SubmissionsController < ApplicationController
-  before_filter :check_signed_in
+
   load_and_authorize_resource
 
   has_scope :by_user

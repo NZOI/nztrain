@@ -17,25 +17,30 @@ class Ability
     alias_action :read, :to => :inspect
     alias_action :grant, :revoke, :to => :regrant # roles, ie. move role privileges around to a different set of users
     # Define abilities for the passed in user here
-    user ||= User.new # guest user (not logged in)
-    if user.is_superadmin
-      # can do anything, including melting down the site
-      can :manage, :all
-      return
-    elsif user.is_admin
-      # can do anything except for site development, infrastructural objects
-      can :manage, :all
-      cannot :manage, Role
-      cannot :manage, User, :is_superadmin => true
-      can :inspect, :all
-      can :regrant, Role
-      cannot :regrant, Role, :name => 'superadmin' # can assign all roles except superadmin
-      cannot :manage, Setting # keys and passwords here
-      cannot :destroy, Group, :id => 0 # cannot remove the "Everyone" group
-      return
+    if user
+      if user.is_superadmin
+        # can do anything, including melting down the site
+        can :manage, :all
+        return
+      elsif user.is_admin
+        # can do anything except for site development, infrastructural objects
+        can :manage, :all
+        cannot :manage, Role
+        cannot :manage, User, :is_superadmin => true
+        can :inspect, :all
+        can :regrant, Role
+        cannot :regrant, Role, :name => 'superadmin' # can assign all roles except superadmin
+        cannot :manage, Setting # keys and passwords here
+        cannot :destroy, Group, :id => 0 # cannot remove the "Everyone" group
+        return
+      end
     end
 
-    ####### Following for all users #######
+    ####### Abilities for guests
+
+    return if !user # guest user (not logged in), no further abilities
+
+    ####### Following abilities for all users #######
     # Users can do, whether or not they are in a contest
     # can [:update, :destroy], User, :user_id => user.id # Not used - account updated through the devise controller/views
     # Can browse all users

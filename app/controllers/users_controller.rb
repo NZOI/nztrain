@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :check_signed_in
+
   load_and_authorize_resource
   skip_authorize_resource :only => [:add_role, :remove_role, :suexit]
 

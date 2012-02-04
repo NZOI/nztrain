@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   include ApplicationHelper
   before_filter :read_settings
+  before_filter :check_su_loss
   before_filter :set_leader
   before_filter :wrong_site
   protect_from_forgery
@@ -17,11 +18,23 @@ class ApplicationController < ActionController::Base
       redirect_to(redir, :alert => message)
   end
 
-  def check_signed_in
-    if !user_signed_in?
+  rescue_from CanCan::AccessDenied do |exception|
+    if !user_signed_in? # not signed in, prompt to sign in
+      #if request.get?
+      #  session[:user_return_to] = request.url
+      #else
+      #  path = ActionController::Routing::Routes.recognize_path(request.url)
+      #  if path.has_key? "id"
+      #    session[:user_return_to] = url_for :controller => path[:controller], :action => 'show', :id = params[:id]
+      #end
       redirect_to(new_user_session_path, :alert => "Welcome to nztrain. Please log in or sign up to continue.")
+    else # user signed in and doesn't have permission
+      raise
     end
-    if in_su? # so that a user losing admin status cannot keep using admin privileges if they su-ed into another admin user
+  end
+
+  def check_su_loss
+    if user_signed_in? && in_su? # so that a user losing admin status cannot keep using admin privileges if they su-ed into another admin user
       original_user = User.find(session[:su][0])
       if Ability.new(original_user).cannot? :su, current_user # lost privileges to su into the user
         session[:su] = nil
