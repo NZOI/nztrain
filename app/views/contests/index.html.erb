@@ -25,7 +25,7 @@
     <td><%= contest.end_time.strftime("%b %d, %H:%M") %></td>
     <td><%= contest.duration %></td>
     <td><%= contest.user_id %></td>
-    <td><%= contest.get_score(current_user) %></td>
+    <td><%= contest.get_score(current_user.id) %></td>
     <td>
       <% if contest.is_running? && (can? :start, contest) %>
         <% if !contest.get_relation(current_user) %>

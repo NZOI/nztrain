@@ -3,7 +3,7 @@
   <h1>My submissions</h1>
 <% else %>
   <h1>Listing submissions</h1>
-  <% if current_user.is_admin && params[:by_user] && !params[:by_user][',']
+  <% if current_user.is_admin? && params[:by_user] && !params[:by_user][',']
        u = User.find(params[:by_user]) %>
     <p><b>User:</b> <%= link_to u.handle(current_ability), u %></p>
   <% end %>

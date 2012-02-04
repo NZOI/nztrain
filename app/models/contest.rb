@@ -65,23 +65,23 @@ class Contest < ActiveRecord::Base
     return DateTime.now < relation.finish_at
   end
 
-  def problem_score(user, problem)
+  def problem_score(user_id, problem)
     #can probably pass this in if the database query is too slow
-    relation = self.contest_relations.where(:user_id => user)[0]
+    relation = self.contest_relations.where(:user_id => user_id)[0]
 
     return (relation and problem.get_score(user, relation.started_at, relation.finish_at)) || 0
   end
 
-  def get_score(user)
+  def get_score(user_id)
     #should check that only one contest relation exists -- rails validation magic?
     #can probably pass this in if the database query is too slow
-    relation = self.contest_relations.where(:user_id => user)[0]
+    relation = self.contest_relations.where(:user_id => user_id)[0]
 
     if !relation
       return "not started"
     end
 
-    scores = self.problem_set.problems.map {|p| self.problem_score(user, p)}
+    scores = self.problem_set.problems.map {|p| self.problem_score(user_id, p)}
     return scores.inject(:+) || 0
   end
 

@@ -23,8 +23,15 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  # GET /resource/sign_up
+  def new
+    resource = build_resource()
+    respond_with_navigational(resource){ render_with_scope :new }
+  end
+
   def build_resource(hash=nil) # create can access username
-    super
+    hash ||= params[resource_name]
+    self.resource = resource_class.new_with_session(hash, session)
     if params[resource_name] && params[resource_name][:username]
       self.resource.username = params[resource_name][:username] if params[resource_name][:username]
     end

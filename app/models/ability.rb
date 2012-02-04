@@ -18,7 +18,7 @@ class Ability
     alias_action :grant, :revoke, :to => :regrant # roles, ie. move role privileges around to a different set of users
     # Define abilities for the passed in user here
     if user
-      if user.is_superadmin
+      if user.is_superadmin?
         # can do anything, including melting down the site
         can :manage, :all
         return

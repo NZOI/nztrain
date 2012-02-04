@@ -111,7 +111,6 @@
       </div>
       <div id="side-title">
         Training Site
-<%= "admin" if current_user.is_admin? %>
       </div>
       <div style="color: white; margin-left: 10px;">
         High scores coming soon
@@ -166,7 +165,7 @@
             <li><a href="<%= groups_path %>">groups</a></li>
           </ul>
         </li>
-        <% if current_user && current_user.is_admin %>
+        <% if current_user && current_user.is_admin? %>
           <li><a>admin</a>
             <ul>
               <% if can? :index, Role %><li><a href="<%= roles_path %>">roles</a></li><% end %>

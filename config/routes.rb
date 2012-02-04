@@ -46,7 +46,7 @@ NztrainV2::Application.routes.draw do
     end
   end
 
-  devise_for :users, :path => "accounts", :controllers => { :registrations => "accounts/registrations" }
+  devise_for :users, :path => "accounts", :controllers => { :registrations => "accounts/registrations", :sessions => "accounts/sessions" }
 
   match 'problem_problem_set/:action(:format)' => "problem_problem_set"
 

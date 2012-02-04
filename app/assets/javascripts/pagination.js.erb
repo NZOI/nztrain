@@ -10,7 +10,7 @@ $(function () {
 
     $(window).bind( 'hashchange', function(e) {
 	var img = document.createElement("IMG");
-	img.src = "/images/ajax-loader.gif";
+	img.src = "<%= asset_path "ajax-loader.gif" %>";
         $(img).css({'margin': '100px'});
         var div = document.createElement("DIV");
         $(div).append(img);
