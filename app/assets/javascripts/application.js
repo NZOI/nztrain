@@ -6,8 +6,8 @@
 //= require jquery.fileinput
 //= require jquery.countdown.js
 //= require jquery.ba-bbq.min
-//= require markitup/jquery.markitup
-//= require markitup/sets/markdown/set.js
+//= require jquery.markitup
+//= require sets/markdown/set.js
 //= require superfish
 //= require jquery.event.hover-1.0
 //= require pagination
