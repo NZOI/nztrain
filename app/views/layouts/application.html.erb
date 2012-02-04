@@ -95,7 +95,6 @@
 			shrink();
 			duration = 250;
 		}
-		$("#main").show();
 		$('#side-minify').click(function() {
 			if($('#side').width() <= 100)
 				expand();
@@ -195,25 +194,26 @@
   </div>
 </div>
 <div id="main">
-	<div id="main-message-container">
+        <div id="content-container">
+	  <div id="main-message-container">
 	    Congratulations to our current brownie point leader <%= @brownie_leader.email %> who has <%= @brownie_leader.brownie_points %> points!<br />
-	</div>
-	<div id="main-container">
-        <div class="message-container">
+	  </div>
+	  <div id="main-container">
+          <div class="message-container">
 	    You can now set your username, which will be your display name in future. It has been set automatically to your email's local name. Warning: You can only change it once (after which it will become unchangeable). However, if you do not change your username, this functionality may disappear soon.<br />
-	</div>
-	      <% if alert %>
-	        <p id="alert"><%= alert %></p>
-              <% end %>
-	      <% if flash[:notice] %>
-	        <p id="alert"><%= flash[:notice] %></p>
-	      <% end %>
-              <div>
-	      <%= yield %>
-              </div>
-              <div id="footer">/usr/bin/time -f "%e seconds" curl --silent <%= request.url %> &gt; /dev/null<br />$responsetime seconds</div>
-	</div>
-
+	  </div>
+	        <% if alert %>
+	          <p id="alert"><%= alert %></p>
+                <% end %>
+	        <% if flash[:notice] %>
+	          <p id="alert"><%= flash[:notice] %></p>
+	        <% end %>
+                <div>
+	        <%= yield %>
+                </div>
+	  </div>
+          <div id="footer">/usr/bin/time -f "%e seconds" curl --silent <%= request.url %> &gt; /dev/null<br />$responsetime seconds</div>
+        </div>
 </div>
 <div id="password-popup" style="display: none; position: fixed; background-color: rgba(1,1,1,0.5); width: 100%; height: 100%; z-index: 100;">
   <div style="position: absolute; height: 100px; width: 300px; margin-top: -50px; margin-left: -150px; top: 50%; left: 50%; border: 1px solid black; background-color: white; text-align: center; padding: 20px;">

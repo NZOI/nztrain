@@ -95,11 +95,15 @@ a.progress_link:hover {
 }
 
 #main {
-   right: 0;
    margin-left: 200px;
-   margin-top: 25px;
-   bottom: 0;
-   float: left;
+   float: right;
+   min-height: 100%;
+   position: relative;
+}
+
+#content-container {
+   padding-top: 25px;
+   padding-bottom: 5em;
 }
 
 #main-message-container {
@@ -134,12 +138,14 @@ a.progress_link:hover {
    margin: 10px;
    margin-left: 22px;
    padding: 10px;
-   height: 70%;
 }
 
 #footer {
+   margin-left: 22px;
    text-align: left;
-   margin-top: 25px;
+   position: absolute;
+   height: 5em;
+   bottom: 0;
 }
 
 #main-message-container-close {
