@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'devise', '1.5.1'
+gem 'devise', '2.0.0'
 gem 'rails', '3.1.3' # if upgraded, remove monkey patch in application_helper.rb > escape_javascript()
 
 # Bundle edge Rails instead:
