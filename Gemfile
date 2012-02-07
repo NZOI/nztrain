@@ -16,6 +16,8 @@ gem "bluecloth"
 gem "albino"
 gem "nokogiri"
 gem 'rails_markitup'
+gem 'rmagick'
+gem 'carrierwave'
 gem 'will_paginate'
 gem 'has_scope'
 gem 'cancan'
