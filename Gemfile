@@ -23,6 +23,7 @@ gem 'recaptcha', :require => 'recaptcha/rails'
 gem 'loofah'
 gem 'whenever', :require => false # for cron jobs
 gem 'squeel' # (NEW GEM) use lightly - only using in ability.rb, until it is more established (Jan 2012)  ---------> supersedes meta_where
+gem 'tilt'
 
 gem 'pg'
 # Use unicorn as the web server
@@ -56,6 +57,7 @@ group :assets do
   gem 'sass-rails', " ~> 3.1.0"
   gem 'coffee-rails', " ~> 3.1.0"
   gem 'uglifier'
+  gem 'libv8', '3.3.10.4'
   gem 'therubyracer' # required for the execjs gem (dependency)
 end
 

@@ -164,6 +164,7 @@ DEPENDENCIES
   devise (= 2.0.0)
   has_scope
   jquery-rails (>= 1.0.12)
+  libv8 (= 3.3.10.4)
   loofah
   markitup_rails
   nokogiri
@@ -176,6 +177,7 @@ DEPENDENCIES
   sqlite3
   squeel
   therubyracer
+  tilt
   uglifier
   webrat
   whenever
