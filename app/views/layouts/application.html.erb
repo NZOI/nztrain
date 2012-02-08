@@ -135,7 +135,7 @@
           <ul>
             <table style="border: none; margin: 0px; padding: 0px;">
               <tr>
-                <td><%= image_tag(current_user.avatar.small.url, :style => "background: #a1cca1;") %></td>
+                <td><img src="<%= current_user.avatar.small.url %>" style="background: #a1cca1;"></td>
                 <td style="vertical-align: top;">
                   <% if in_su? %>
                     <li style="width: 100%; right: 0; float: right;"><%= link_to "exit su", suexit_users_path, :method => 'post', :style => "width: auto; right: 0;" %></li>

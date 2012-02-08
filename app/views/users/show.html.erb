@@ -1,5 +1,5 @@
 <% content_for :title, @user.handle %>
-<%= image_tag(@user.avatar_url, :style => "float: left;") %>
+<img src="<%= @user.avatar_url %>" style="float: left;">
 <div style="height: 100px; padding: 25px; padding-left: 200px;">
   <b>Username:</b>
   <%= @user.username %>

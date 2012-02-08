@@ -16,7 +16,7 @@
 
   <p><%= f.label :avatar %><br />
   <% if @user.avatar? %>
-    <%= image_tag(@user.avatar_url) %><br />
+    <img src="<%= @user.avatar_url %>"><br />
     <label><%= f.check_box :remove_avatar %>Remove current avatar</label><br />
   <% end %>
   <%= f.file_field :avatar %>
