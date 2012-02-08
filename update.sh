@@ -1,12 +1,25 @@
 #!/bin/bash
 
+for ARG in "$@"
+do
+    case $ARG in
+    "--skip-pull")
+        gitpull=false
+        ;;
+    *)
+        ;;
+    esac
+done
+
+
 # note, we are bashing the echoes so that "sh update.sh" will still print coloured output
 
 # optional: mark website down (.htaccess url rewrite or other similar)
-
-# pull from git
-bash -c "echo -e '\E[34m\033[1mgit pull\033[0m'"
-git pull | sed -e 's/^/   /g;' | cat # sed to indent output
+if ${gitpull:=true} ; then
+    # pull from git
+    bash -c "echo -e '\E[34m\033[1mgit pull\033[0m'"
+    git pull | sed -e 's/^/   /g;' | cat # sed to indent output
+fi
 
 # install new gems required
 bash -c "echo -e '\E[34m\033[1mbundle install\033[0m'"

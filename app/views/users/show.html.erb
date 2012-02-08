@@ -1,21 +1,24 @@
 <% content_for :title, @user.handle %>
-<b>Username:</b>
-<%= @user.username %>
-<br />
-<% if can? :inspect, @user %>
-<b>Name:</b>
-<%= @user.name %>
-<br />
+<%= image_tag(@user.avatar_url, :style => "float: left;") %>
+<div style="height: 100px; padding: 25px; padding-left: 200px;">
+  <b>Username:</b>
+  <%= @user.username %>
+  <br />
+  <% if can? :inspect, @user %>
+    <b>Name:</b>
+    <%= @user.name %>
+    <br />
 
-<b>Email:</b>
-<%= @user.email %>
-<br />
-<% end %>
+    <b>Email:</b>
+    <%= @user.email %>
+    <br />
+  <% end %>
 
-<b>Brownie Points:</b>
-<%= @user.brownie_points %>
-<br />
-<br />
+  <b>Brownie Points:</b>
+  <%= @user.brownie_points %>
+  <br />
+  <br />
+</div>
 
 <b> <%= @solved_problems.size %> solved problems: </b>
 <ul>

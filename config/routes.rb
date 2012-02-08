@@ -46,7 +46,13 @@ NztrainV2::Application.routes.draw do
     end
   end
 
-  devise_for :users, :path => "accounts", :controllers => { :registrations => "accounts/registrations" }
+  devise_for :users, :path => "accounts", :controllers => { :registrations => "accounts/registrations", :settings => "accounts/settings" } do
+    namespace :accounts do
+      get 'edit/:type', :to => 'registrations#edit'
+      get 'settings/edit', :to => 'settings#edit'
+      put 'settings/update', :to => 'settings#update'
+    end
+  end
 
   match 'problem_problem_set/:action(:format)' => "problem_problem_set"
 

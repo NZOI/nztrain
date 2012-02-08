@@ -1,26 +1,25 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<h2>Edit <%= params[:type] %> <%#= resource_name.to_s.humanize %></h2>
 
 <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
   <%= devise_error_messages! %>
-<% if resource.can_change_username? %>
-  <p><%= f.label :username %><br />
-  <%= f.text_field :username %></p>
-<% else %>
-  <p><%= f.label :username %><br />
-  <%= resource.username %></p>
-<% end %>
-  <p><%= f.label :name %><br />
-  <%= f.text_field :name %></p>
+  <% if params[:type] == 'username' %>
+    <% if resource.can_change_username? %>
+      <p><%= f.label :username %><br />
+      <%= f.text_field :username %></p>
+    <% else %>
+      <p><%= f.label :username %><br />
+      <%= resource.username %></p>
+    <% end %>
+  <% elsif params[:type] == 'email' %>
+    <p><%= f.label :email %><br />
+    <%= f.email_field :email %></p>
+  <% elsif params[:type] == 'password' %>
+    <p><%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
+    <%= f.password_field :password %></p>
 
-  <p><%= f.label :email %><br />
-  <%= f.email_field :email %></p>
-
-  <p><%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
-  <%= f.password_field :password %></p>
-
-  <p><%= f.label :password_confirmation %><br />
-  <%= f.password_field :password_confirmation %></p>
-
+    <p><%= f.label :password_confirmation %><br />
+    <%= f.password_field :password_confirmation %></p>
+  <% end %>
   <p><%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
   <%= f.password_field :current_password %></p>
 
