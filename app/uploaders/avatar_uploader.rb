@@ -11,10 +11,10 @@ class AvatarUploader < CarrierWave::Uploader::Base
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
-    "public/images/#{model.class.to_s.underscore}/#{mounted_as}/#{partition_dir(model.id)}/#{model.id}"
+    "images/#{model.class.to_s.underscore}/#{mounted_as}/#{partition_dir(model.id)}/#{model.id}"
   end
   
-  ## define how to partition directory (can be changed, since full directory path stored in database)
+  ## define how to partition directory (can support 1 billion users without too many immediate children in any directory)
   def partition_dir(modelid)
     p = modelid.to_s.rjust(6,'0')
     "#{p[0,2]}/#{p[2,2]}/#{p[4,2]}"
@@ -34,7 +34,7 @@ class AvatarUploader < CarrierWave::Uploader::Base
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
   def default_url
-    "public/images/users/avatar/" + [version_name, "default.png"].compact.join('_')
+    "user/avatar/" + [version_name, "default.png"].compact.join('_')
   end
 
   # Process files as they are uploaded:
@@ -46,6 +46,9 @@ class AvatarUploader < CarrierWave::Uploader::Base
   # end
 
   # Create different versions of your uploaded files:
+  version :small do
+    process :resize_to_fill => [96, 96]
+  end
   version :tiny do
     process :resize_to_fill => [32, 32] # for displaying inline in table rows
   end

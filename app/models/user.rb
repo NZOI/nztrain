@@ -4,11 +4,13 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  validates :name, :length => {:maximum => 100}
+  mount_uploader :avatar, AvatarUploader
+
+  validates :name, :length => {:maximum => 100, :minimum => 2}
   validates :username, :length => { :in => 2..32 }, :format => { :with => /\A[a-zA-Z0-9\._]+\z/, :message => "Only letters, numbers, dots or underscores allowed in username" }, :presence => true, :uniqueness => { :case_sensitive => false }
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :name, :email, :password, :password_confirmation, :remember_me
+  attr_accessible :name, :email, :password, :password_confirmation, :remember_me, :avatar, :remove_avatar, :avatar_cache
 
   has_many :problems
   has_many :submissions

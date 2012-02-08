@@ -149,11 +149,18 @@
         <% if user_signed_in? %>
           <a href="<%= user_path(current_user) %>"><%= current_user.username %></a>
           <ul>
-            <% if in_su? %>
-              <li><%= link_to "exit su", suexit_users_path, :method => 'post' %></li>
-            <% end %>
-            <li><a href="/accounts/settings/edit">edit profile</a></li>
-            <li><%= link_to "sign out", destroy_user_session_path, :method => :delete %></li>
+            <table style="border: none; margin: 0px; padding: 0px;">
+              <tr>
+                <td><%= image_tag(current_user.avatar.small.url, :style => "background: #a1cca1;") %></td>
+                <td style="vertical-align: top;">
+                  <% if in_su? %>
+                    <li style="width: 100%; right: 0; float: right;"><%= link_to "exit su", suexit_users_path, :method => 'post', :style => "width: auto; right: 0;" %></li>
+                  <% end %>
+                  <li style="width: 100%; right: 0; float: right;"><a href="/accounts/settings/edit" style="width: auto; right: 0;">edit profile</a></li>
+                  <li style="width: 100%; right: 0; float: right;"><%= link_to "sign out", destroy_user_session_path, :method => :delete, :style => "width: auto; right: 0;" %></li>
+                </td>
+              </tr>
+            </table>
           </ul>
         <% else %>
           <a href="<%= new_user_session_path %>">sign in</a>
