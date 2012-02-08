@@ -23,6 +23,11 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def edit
+    params[:type] = 'password' unless params[:type]
+    super
+  end
+
   def build_resource(hash=nil) # create can access username
     super
     if params[resource_name] && params[resource_name][:username]
@@ -39,6 +44,11 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
       resource.errors.add(:base, "There was an error with the recaptcha code below. Please re-enter the code.")
       render_with_scope :new
     end
+  end
+
+  protected :after_update_path_for
+  def after_update_path_for(resource)
+    user_path(resource)
   end
 end
 

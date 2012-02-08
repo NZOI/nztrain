@@ -147,12 +147,12 @@
       <ul>
         <li<%= raw ' class="masknav"' if in_su? %>>
         <% if user_signed_in? %>
-          <a href="/accounts/edit"><%= current_user.username %></a>
+          <a href="<%= user_path(current_user) %>"><%= current_user.username %></a>
           <ul>
             <% if in_su? %>
               <li><%= link_to "exit su", suexit_users_path, :method => 'post' %></li>
             <% end %>
-            <li><a href="/accounts/edit">edit profile</a></li>
+            <li><a href="/accounts/settings/edit">edit profile</a></li>
             <li><%= link_to "sign out", destroy_user_session_path, :method => :delete %></li>
           </ul>
         <% else %>
