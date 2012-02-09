@@ -37,6 +37,11 @@ bundle exec rake db:seed | sed -e 's/^/   /g;' | cat # sed to indent output
 bash -c "echo -e '\E[34m\033[1mbundle exec whenever --update-crontab nztrain\033[0m'"
 bundle exec whenever --update-crontab nztrain
 
+# precompile assets
+bash -c "echo -e '\E[34m\033[1mbundle exec rake assets:precompile\033[0m'"
+bundle exec rake assets:precompile | sed -e 's/^/   /g;' | cat # sed to indent output
+
+
 # Start WEBrick/Apache server here
 
 # If using Phusion Passenger, touch tmp/restart.txt can restart Rails
