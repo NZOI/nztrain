@@ -3,3 +3,10 @@
 
 en:
   hello: "Hello world"
+
+  errors:
+    messages:
+      # file size validator
+      wrong_filesize: "is the wrong size (should be %{file_size})"
+      filesize_too_small: "is too small (should be at least %{file_size})"
+      filesize_too_big: "is too big (should be at most %{file_size})"

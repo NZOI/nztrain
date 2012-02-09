@@ -7,7 +7,9 @@ class Accounts::SettingsController < Devise::RegistrationsController
       flash[:notice] = "Account updated"
       respond_with resource, :location => after_update_path_for(resource)
     else
-      clean_up_passwords resource
+      if !resource.errors[:avatar].nil?
+        resource.remove_avatar!
+      end
       respond_with resource
     end
   end
