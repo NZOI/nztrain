@@ -6,4 +6,6 @@ tmp/
 *~
 *.swp
 .sass-cache/
+public/assets/
+public/uploads/
 
