@@ -11,7 +11,7 @@ class AvatarUploader < CarrierWave::Uploader::Base
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
-    "images/#{model.class.to_s.underscore}/#{mounted_as}/#{partition_dir(model.id)}/#{model.id}"
+    "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{partition_dir(model.id)}/#{model.id}"
   end
   
   ## define how to partition directory (can support 1 billion users without too many immediate children in any directory)
@@ -34,7 +34,7 @@ class AvatarUploader < CarrierWave::Uploader::Base
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
   def default_url
-    "/images/user/avatar/" + [version_name, "default.png"].compact.join('_')
+    "/uploads/user/avatar/" + [version_name, "default.png"].compact.join('_')
   end
 
   # Process files as they are uploaded:
