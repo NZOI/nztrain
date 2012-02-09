@@ -96,7 +96,7 @@ $(document).ready(function() {
         shrink();
     });
 
-    $("table tr").click(function() {
+    $("table.main_table tr").click(function() {
     	$(this).toggleClass("main-table-highlight");
     });
 
