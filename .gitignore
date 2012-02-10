@@ -7,5 +7,6 @@ tmp/
 *.swp
 .sass-cache/
 public/assets/
-public/uploads/
+public/uploads/tmp/
+db/data/
 
