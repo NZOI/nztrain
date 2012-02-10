@@ -65,7 +65,7 @@
       <!--<li><a href="#">information</a></li>-->
       <% if user_signed_in? %>
         <li><a href="<%= contests_path %>">contests</a></li>
-        <li><a>problems</a>
+        <li><a href="#" onClick="return false;">problems</a>
           <ul>
             <li><a href="<%= problem_sets_path %>">problem sets</a></li>
             <li><a href="<%= problems_path %>">problems</a></li>
@@ -73,14 +73,14 @@
             <li><a href="<%= evaluators_path %>">evaluators</a></li>
           </ul>
         </li>
-        <li><a>community</a>
+        <li><a href="#" onClick="return false;">community</a>
           <ul>
             <li><a href="<%= users_path %>">users</a></li>
             <li><a href="<%= groups_path %>">groups</a></li>
           </ul>
         </li>
         <% if current_user && current_user.is_admin? %>
-          <li><a>admin</a>
+          <li><a href="#" onClick="return false;">admin</a>
             <ul>
               <% if can? :index, Role %><li><a href="<%= roles_path %>">roles</a></li><% end %>
               <% if can? :index, Setting %><li><a href="<%= settings_path %>">settings</a></li><% end %>

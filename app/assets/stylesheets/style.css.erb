@@ -33,6 +33,7 @@ a.progress_link:hover {
    background: #2D2D2D;
    padding-left: 10px;
    color: white;
+   z-index: 9;
 }
 
 #side-container {
@@ -46,10 +47,16 @@ a.progress_link:hover {
    position: fixed;
    left: 210px;
    right: 0px;
+   min-width: 500px;
    height: 25px;
    background: #2D2D2D;
    color: white;
    z-index: 10;
+   white-space: nowrap;
+}
+
+#nav {
+   display: inline-block; /* so that div will shrink-wrap contents instead of having full width */
 }
 
 #controls {
@@ -241,6 +248,7 @@ a.progress_link:hover {
 	font-weight: normal;
 	border-width: 0.1em;
 	margin: 0;
+        white-space: normal;
 }
 
 #nav li ul {
@@ -283,7 +291,6 @@ a.progress_link:hover {
 
 #nav2 a {
 	display: block;
-	width: 100%;
 	color: white;
 	text-decoration: none;
 	padding: 0.25em 2em;
@@ -296,6 +303,7 @@ a.progress_link:hover {
 	min-width: 5em;
         position: relative;
 }
+
 #nav2 li ul {
 	position: absolute;
 	height: auto;

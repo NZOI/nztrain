@@ -108,4 +108,6 @@ $(document).ready(function() {
 
     $('.markdown').markItUp(myMarkdownSettings);
     $('.date-picker').datetimepicker();
+
+    $('#menu').css({'min-width':$('#nav').width()+$('#controls').width() + 'px'});
 });
