@@ -1,30 +1,44 @@
+pagination_loader_state = null; // the page we are waiting for
+
+function display_pagination_loader() {
+  if (pagination_loader_state != null) return; // if already loading, don't reshow loader
+  // setup loading look
+  var img = document.createElement("IMG");
+  img.src = "<%= asset_path "ajax-loader.gif" %>";
+  $(img).css({'margin': '100px'});
+  var div = document.createElement("DIV");
+  $(div).append(img);
+  $(div).css({'position': 'absolute', 'left': 0, 'top': 0, 'width': '100%', 'height': '100%', 'background-color': 'rgba(255,255,255,0.7)', 'text-align': 'center', 'opacity': 0.9});
+  $('#paginated_content').append(div);
+
+  // scroll to top of paginated_section if it is not visible
+  if ($('body').scrollTop() > $('#paginated_section').offset().top) {
+    $('body').scrollTop($('#paginated_section').offset().top);
+  }
+}
+
+function display_pagination_content(page,content) {
+  if (pagination_loader_state == page) {
+    pagination_loader_state = null; // not waiting for page anymore
+    $("#paginated_section").html(content);
+  }
+  // else content is stale
+}
+
 if (history && history.pushState) {
   $(document).ready(function () {
-    function display_loader() {
-      // setup loading look
-      var img = document.createElement("IMG");
-      img.src = "<%= asset_path "ajax-loader.gif" %>";
-      $(img).css({'margin': '100px'});
-      var div = document.createElement("DIV");
-      $(div).append(img);
-      $(div).css({'position': 'absolute', 'left': 0, 'top': 0, 'width': '100%', 'height': '100%', 'background-color': 'rgba(255,255,255,0.7)', 'text-align': 'center', 'opacity': 0.9});
-      $('#paginated_content').append(div);
-
-      // scroll to top of paginated_section if it is not visible
-      if ($('body').scrollTop() > $('#paginated_section').offset().top) {
-        $('body').scrollTop($('#paginated_section').offset().top);
-      }
-    }
-
     $('.pagination a').live("click", function() {
-      display_loader();
+      display_pagination_loader();
+      pagination_loader_state = $.deparam.querystring(this.href,true)['page'];
       $.ajax(this.href,{dataType:'script',cache:true});
       history.pushState(null, "", this.href);
       return false;
     });
 
     $(window).bind("popstate", function () {
-      display_loader();
+      display_pagination_loader();
+      pagination_loader_state = $.deparam.querystring(location.href,true)['page'];
+      if (pagination_loader_state == undefined) pagination_loader_state = 1; // default page is 1
       $.ajax(location.href,{dataType:'script',cache:true});
     });
   });
