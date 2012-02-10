@@ -1,6 +1,5 @@
 //= require jquery
 //= require jquery_ujs
-//= require jquery-1.6.2.min
 //= require jquery-ui-1.8.16.custom.min
 //= require jquery-ui-timepicker-addon
 //= require jquery.fileinput

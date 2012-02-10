@@ -1,5 +1,5 @@
-<%= will_paginate @submissions %>
 <div id="paginated_content">
+<%= will_paginate @submissions %>
   <% if @submissions.length == 0 %>
     <% if current_user.id == params[:by_user] %>
       You have no submissions.
@@ -63,3 +63,5 @@
     </table>
   <% end %>
 <%= will_paginate @submissions %>
+</div>
+
