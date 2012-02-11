@@ -9,8 +9,12 @@
     <th>Name</th>
     <th>Problem</th>
     <th></th>
-    <th></th>
-    <th></th>
+    <% if can? :update, TestSet %>
+      <th></th>
+    <% end %>
+    <% if can? :destroy, TestSet %>
+      <th></th>
+    <% end %>
   </tr>
 
 <% @test_cases.each do |test_case| %>
@@ -21,8 +25,12 @@
     <td><%= test_case.name %></td>
     <td><%= test_case.test_set.problem_id %></td>
     <td><%= link_to 'Show', test_case %></td>
-    <td><%= link_to 'Edit', edit_test_case_path(test_case) %></td>
-    <td><%= link_to 'Destroy', test_case, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% if can? :update, test_case %>
+      <td><%= link_to 'Edit', edit_test_case_path(test_case) %></td>
+    <% end %>
+    <% if can? :destroy, test_case %>
+      <td><%= link_to 'Destroy', test_case, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% end %>
   </tr>
 <% end %>
 </table>
