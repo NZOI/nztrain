@@ -16,9 +16,12 @@
 # every 4.days do
 #   runner "AnotherModel.prune_old_records"
 # end
+job_type :cmd,  "cd :path && :task :output" # job to be run in the rails root path
 
-every :day do
+every 1.day do
   rake "session:clean" # delete old sessions
+  cmd "find public/uploads/tmp/* -mtime +1 -exec rm {} \\;" # delete old tmp uploads
+  cmd "find public/uploads/tmp/* -type d -empty -delete" # delete empty directories in tmp directory (caused by deleting tmp uploads)
 end
 
 # Learn more: http://github.com/javan/whenever
