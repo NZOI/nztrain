@@ -1,8 +1,10 @@
 class TestSetsController < ApplicationController
+  load_and_authorize_resource
+
   # GET /test_sets
   # GET /test_sets.json
   def index
-    @test_sets = TestSet.all
+    @test_sets = @test_sets.where(:problem_id => params[:problem_id]) if params[:problem_id]
 
     respond_to do |format|
       format.html # index.html.erb
@@ -13,7 +15,6 @@ class TestSetsController < ApplicationController
   # GET /test_sets/1
   # GET /test_sets/1.json
   def show
-    @test_set = TestSet.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -24,7 +25,6 @@ class TestSetsController < ApplicationController
   # GET /test_sets/new
   # GET /test_sets/new.json
   def new
-    @test_set = TestSet.new
 
     respond_to do |format|
       format.html # new.html.erb
@@ -34,13 +34,12 @@ class TestSetsController < ApplicationController
 
   # GET /test_sets/1/edit
   def edit
-    @test_set = TestSet.find(params[:id])
   end
 
   # POST /test_sets
   # POST /test_sets.json
   def create
-    @test_set = TestSet.new(params[:test_set])
+    @test_set.attributes = params[:test_set]
 
     respond_to do |format|
       if @test_set.save
@@ -56,7 +55,6 @@ class TestSetsController < ApplicationController
   # PUT /test_sets/1
   # PUT /test_sets/1.json
   def update
-    @test_set = TestSet.find(params[:id])
 
     respond_to do |format|
       if @test_set.update_attributes(params[:test_set])
@@ -72,7 +70,6 @@ class TestSetsController < ApplicationController
   # DELETE /test_sets/1
   # DELETE /test_sets/1.json
   def destroy
-    @test_set = TestSet.find(params[:id])
     @test_set.destroy
 
     respond_to do |format|

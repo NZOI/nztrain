@@ -9,7 +9,7 @@ class TestCasesController < ApplicationController
 
     if params[:problem_id]
       logger.debug "problem is " + params[:problem_id]
-      @test_cases = @test_cases.distinct.where("problem_id = ?", params[:problem_id])
+      @test_cases = Problem.find(params[:problem_id]).test_cases.accessible_by(current_ability).distinct
     else
       @test_cases = @test_cases.distinct
     end

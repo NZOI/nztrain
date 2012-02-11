@@ -1,27 +1,51 @@
 <h1>Listing test_sets</h1>
-
-<table>
+<% @colspan = 4 %>
+<table class="main_table">
   <tr>
     <th>Problem</th>
+    <th width="100%">Name</th>
     <th>Points</th>
-    <th>Name</th>
     <th></th>
-    <th></th>
-    <th></th>
+    <% if can? :update, TestSet %>
+      <% @colspan += 1 %>
+      <th></th>
+    <% end %>
+    <% if can? :destroy, TestSet %>
+      <% @colspan += 1 %>
+      <th></th>
+    <% end %>
   </tr>
 
 <% @test_sets.each do |test_set| %>
   <tr>
     <td><%= test_set.problem_id %></td>
-    <td><%= test_set.points %></td>
     <td><%= test_set.name %></td>
+    <td><%= test_set.points %></td>
     <td><%= link_to 'Show', test_set %></td>
-    <td><%= link_to 'Edit', edit_test_set_path(test_set) %></td>
-    <td><%= link_to 'Destroy', test_set, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% if can? :update, test_set %>
+      <td><%= link_to 'Edit', edit_test_set_path(test_set) %></td>
+    <% end %>
+    <% if can? :destroy, test_set %>
+      <td><%= link_to 'Destroy', test_set, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% end %>
+  </tr>
+  <tr>
+    <td colspan="<%= @colspan %>">
+      <table width="100%">
+        <% test_set.test_cases.each do |test_case| %>
+          <tr>
+            <td width="40%"><%= test_case.name %></td>
+            <td width="30%"><div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 200px;"><b>Input: </b><%= test_case.input.gsub("\n","\\n") %></div></td>
+            <td width="30%"><div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 200px;"><b>Output: </b><%= test_case.output.gsub("\n","\\n") %></div></td>
+            <td><%= link_to 'Show', test_case %></td>
+          </tr>
+        <% end %>
+      </table>
+    </td>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New Test set', new_test_set_path %>
+<%= link_to 'New Test set', new_test_set_path if can? :create, TestSet %>
