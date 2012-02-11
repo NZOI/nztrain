@@ -69,7 +69,7 @@ class Contest < ActiveRecord::Base
     #can probably pass this in if the database query is too slow
     relation = self.contest_relations.where(:user_id => user_id)[0]
 
-    return (relation and problem.get_score(user, relation.started_at, relation.finish_at)) || 0
+    return (relation and problem.get_score(user_id, relation.started_at, relation.finish_at)) || 0
   end
 
   def get_score(user_id)
