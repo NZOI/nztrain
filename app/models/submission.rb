@@ -46,7 +46,7 @@ class Submission < ActiveRecord::Base
     File.open(source_file, 'w') { |f| f.write(source) }
 
     if problem.evaluator_id
-      File.open(eval_file, 'w') { |f| f.write(problem.evaluator.source) }
+      File.open(eval_file, 'w') { |f| f.write(problem.evaluator.source.gsub /\r\n?/, "\n") } # gsub added to normalize line endings (otherwise script might not run properly)
     end
 
     self.judge_output = "Judging...\n"
@@ -74,80 +74,86 @@ class Submission < ActiveRecord::Base
       mem_limit = problem.memory_limit * 1024
       stack_limit = 1024 * 4
       time_limit = problem.time_limit
-      number = 0
 
-      problem.test_cases.each do |test_case|
-        number += 1
-        self.judge_output += "Test Case #{number} (#{test_case.points} points):\n"
-        total_points += test_case.points
+      problem.test_sets.each_with_index do |test_set,number|
+        self.judge_output += "Test Set #{1+number} (#{test_set.points} points):\n"
+        total_points += test_set.points
+        anyincorrect = false
+        test_set.test_cases.each_with_index do |test_case,case_number|
+          self.judge_output += "Test Case #{1+case_number}:\n"
+          File.open(input_file, 'w') { |f| f.write(test_case.input) }
 
-        File.open(input_file, 'w') { |f| f.write(test_case.input) }
+          system("#{box_path} -a2 -M#{judge_file} -m#{mem_limit} -k#{stack_limit} " +
+                 " -t#{time_limit} -o/dev/null -r/dev/null -- #{exe_file}" )
 
-        system("#{box_path} -a2 -M#{judge_file} -m#{mem_limit} -k#{stack_limit} " +
-               " -t#{time_limit} -o/dev/null -r/dev/null -- #{exe_file}" )
+          judge_msg = IO.read(judge_file)
 
-        judge_msg = IO.read(judge_file)
-
-        self.judge_output += judge_msg
-        correct = false
+          self.judge_output += judge_msg
+          correct = false
         
-        if FileTest.exist?(output_file) == false
-          self.judge_output += "No output, probably crashed\n"
-        elsif judge_msg.include?("status")
-          self.judge_output += "Terminated by judge\n"
-        else
-          expected = test_case.output.split('\n').each{|s| s.strip!}.join('\n').chomp.gsub(/\r/, "")
+          if FileTest.exist?(output_file) == false
+            self.judge_output += "No output, probably crashed\n"
+          elsif judge_msg.include?("status")
+            self.judge_output += "Terminated by judge\n"
+          else
+            expected = test_case.output.split('\n').each{|s| s.strip!}.join('\n').chomp.gsub(/\r/, "")
 
-          #logger.info("writing expected");
-          File.open(expected_file, 'w') { |f| f.write(expected) }
-          #logger.info("finished writing expected");
+            #logger.info("writing expected");
+            File.open(expected_file, 'w') { |f| f.write(expected) }
+            #logger.info("finished writing expected");
 
-          if !problem.evaluator
-            if FileTest.exists?(output_file)
-               their_output = IO.read(output_file)
+            if !problem.evaluator
+              if FileTest.exists?(output_file)
+                 their_output = IO.read(output_file)
+              else
+                 their_output = nil
+              end
+
+              actual = their_output.split('\n').each{|s|s.strip!}.join('\n').chomp.gsub(/\r/, "")
+
+              logger.debug "actual output was #{actual}, expected #{expected}"
+
+              if actual == expected
+                correct = true
+              end
             else
-               their_output = nil
-            end
-
-            actual = their_output.split('\n').each{|s|s.strip!}.join('\n').chomp.gsub(/\r/, "")
-
-            logger.debug "actual output was #{actual}, expected #{expected}"
-
-            if actual == expected
-              correct = true
-            end
-          else
-            File.chmod(0700, eval_file)
-            run_string = "./#{eval_file} #{input_file} #{output_file} #{expected_file}"
-            logger.info "running " + run_string
-            correct = system(run_string)
-            self.judge_output += "running " + run_string + "\n"
-            self.judge_output += "correct is " + correct.to_s + "\n"
+              File.chmod(0700, eval_file)
+              run_string = "./#{eval_file} #{input_file} #{output_file} #{expected_file}"
+              logger.info "running " + run_string
+              correct = system(run_string)
             
-            if correct == nil
-              self.judge_output += "Evaluator packed a sad, sorry :(\n"
+              if correct == nil
+                self.judge_output += "Evaluator packed a sad, sorry :(\n"
+              end
             end
-          end
 
-          if correct
-            logger.info "test case with id " + test_case.id.to_s + " was correct"
-            self.score += test_case.points 
-            self.judge_output += "Correct!\n"
-          else
-            logger.info "test case with id " + test_case.id.to_s + " was incorrect"
-            self.judge_output += "Incorrect :(\n"
-          end
+            if correct
+              logger.info "test case with id " + test_case.id.to_s + " was correct"
+              #self.score += test_case.points 
+              self.judge_output += "Correct!\n"
+            else
+              anyincorrect = true
+              logger.info "test case with id " + test_case.id.to_s + " was incorrect"
+              self.judge_output += "Incorrect :(\n"
+            end
 
-          File.delete(output_file) if FileTest.exists?(output_file)
-          File.delete(expected_file) if FileTest.exists?(expected_file)
+            File.delete(output_file) if FileTest.exists?(output_file)
+            File.delete(expected_file) if FileTest.exists?(expected_file)
+          end
+          if FileTest.exists?(input_file)
+            File.delete(input_file)
+          end
+          # TODO: error checking necessary here?
+          # or ruby exceptions takes care of it?
+
         end
-
+        if anyincorrect
+          self.judge_output += "Test Set #{1+number} result: Incorrect (+0 points)\n"
+        else
+          self.judge_output += "Test Set #{1+number} result: Correct (+#{test_set.points} points)\n"
+          self.score += test_set.points
+        end
         self.judge_output += "\n<br />\n"
-        # TODO: error checking necessary here?
-        # or ruby exceptions takes care of it?
-        if FileTest.exists?(input_file)
-          File.delete(input_file)
-        end
       end
 
       self.judge_output += "Submission scored #{self.score} points out of #{total_points}\n"

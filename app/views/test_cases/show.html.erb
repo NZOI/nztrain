@@ -12,18 +12,18 @@
 </p>
 
 <p>
-  <b>Points:</b>
-  <%= @test_case.points %>
+  <b>Test Set:</b>
+  <%= link_to @test_case.test_set_id, @test_case.test_set %>
 </p>
 
 <p>
-  <b>Description:</b>
-  <%= @test_case.description %>
+  <b>Name:</b>
+  <%= @test_case.name %>
 </p>
 
 <p>
   <b>Problem:</b>
-  <%= @test_case.problem_id %>
+  <%= @test_case.test_set.problem_id %>
 </p>
 
 

@@ -1,9 +1,19 @@
 require 'zip/zip'
+require 'csv'
 
 class ZippedTestCasesController < ApplicationController
   # POST /test_cases/bulk_upload
   def upload
     @problem = Problem.find(params[:problem_id])
+    authorize! :update, @problem
+    if params[:test_cases_zip].nil?
+      redirect_to(edit_problem_path(@problem), :alert => 'No zip file uploaded')
+      return
+    end
+
+    if params[:upload] && params[:upload] == 'replace'
+      @problem.test_sets.clear
+    end
 
     valid_zip = false
 
@@ -19,45 +29,135 @@ class ZippedTestCasesController < ApplicationController
       end
     end
 
-    [[".in", ".out"], [".in", ".ans"], [".i", ".o"]].each do |replacement|
-      file_counts = Hash.new(0)
-      files_in_zip.each_key do |filename|
-        other_filename = filename.gsub replacement[0], replacement[1]
-        if filename != other_filename
-          file_counts[filename] += 1
-          file_counts[other_filename] += 1
+    # file spec file (the one which is nearest to root, ties broken by lexicographical order
+    specdepth = -1
+    specfile = nil
+    rootdir = nil
+    filecountatdepth = []
+    rootcandidate = []
+    files_in_zip.each_key do |filename|
+      depth = filename.count("/") - filename[-1..-1].count("/")
+      filecountatdepth[depth] = 1 + (filecountatdepth[depth] || 0) # keeps count of objects at certain depth
+      rootcandidate[depth] = filename
+      if filename.match(/\A.*spec(ification)?(\.txt|\.nfo|\.csv)?\z/)
+        if specdepth>depth || specdepth == -1
+          specfile = filename
+          specdepth = depth
+          rootdir = filename.match(/\A.*\//).to_s # greedily get directory part
         end
       end
-      worked = true
-      files_in_zip.each_key do |filename|
-        worked = false if file_counts[filename] != 1
-      end
-      if worked
-        valid_zip = true
-        files_in_zip.each do |filename, contents|
-          other_filename = filename.gsub replacement[0], replacement[1]
-          logger.debug "input: #{contents} output: #{files_in_zip[other_filename]}"
-          if filename != other_filename
-            new_test_cases.push(TestCase.create(:input => contents,
-                                                :output => files_in_zip[other_filename],
-                                                :problem => @problem,
-                                                :points => 1))
-          end
+    end
+    if rootdir.nil? # find root directory - whichever directory first splits into 2
+      filecountatdepth.each_with_index do |count,index| # figure out the depth of the root
+        if count > 1
+          specdepth = index
+          rootdir = [""].concat(rootcandidate)[index]
+          break
         end
       end
     end
 
+    testsets = {}
+    if specfile # get hash of points for test sets by name
+      CSV.parse(files_in_zip[specfile]) do |row|
+        if row.size >= 2
+          next if testsets[row[0]] # already have test set by that name
+          testset = TestSet.new()
+          testset.name = row[0]
+          testset.problem = @problem
+          testset.points = row[1].to_i
+          testset.save
+          testsets[row[0]] = testset
+        end
+      end
+    end
+    # now for each file in rootdir, make test sets
+    files_in_zip.each_key do |filename|
+      match = filename.match(/\A#{rootdir}([^\/]*)(\.in|\.i|\/)\z/) # any (input file)/dir which is an immediate child of the root directory
+      if match # we have a test set
+        testsetname = match[1]
+        next if testsets[testsetname] # already have test set by that name
+        testset = TestSet.new()
+        testset.name = testsetname
+        testset.points = 0
+        testset.problem = @problem
+        testset.save
+        testsets[testsetname] = testset
+      end
+    end
+    # now make test cases
+    testcases = []
+    files_in_zip.each_key do |filename|
+      match = filename.match(/\A#{rootdir}(([^\/]*)\/(.*\/)?)?([^\/]*)(\.in|\.i)\z/) # any (input file)/dir which is an immediate child of the root directory
+      if match
+        testsetname = match[2]
+        testcasename = match[4]
+        testsetname = testcasename if testsetname.nil? || testsetname.empty?
+        testcase = TestCase.new()
+        testcase.name = testcasename
+        testcase.input = files_in_zip[filename]
+        testcase.output = ""
+        testcaseoutputroot = filename.gsub(/(\.in|\.i)\z/,"")
+        ['.out','.o','.ans'].each do |suffix|
+          if files_in_zip[testcaseoutputroot + suffix]
+            testcase.output = files_in_zip[testcaseoutputroot + suffix]
+            break
+          end
+        end
+        testcase.test_set_id = testsets[testsetname].id
+        if testsets[testsetname].points <= 0
+          testsets[testsetname].points = 1
+          testsets[testsetname].save
+        end
+        testcase.save
+        testcases.push(testcase)
+      end
+    end
     respond_to do |format|
-      if valid_zip
-        format.html { redirect_to(edit_problem_path(@problem), :notice => 'Successfully uploaded ' + new_test_cases.size.to_s + ' test cases') }
+      if testcases.size + testsets.size > 0
+        format.html { redirect_to(edit_problem_path(@problem), :notice => 'Successfully uploaded ' + testcases.size.to_s + ' test cases in ' + testsets.size.to_s + ' test sets') }
         # what would we want to return if we were looking for an xml response?
         # thinking command line interfacing utilities in the future :)
         #format.xml  { render :xml => @submission, :status => :created, :location => @submission }
       else
-        format.html { redirect_to(edit_problem_path(@problem), :alert => 'Unable to process bulk upload.') }
+        format.html { redirect_to(edit_problem_path(@problem), :alert => 'No test cases or test sets detected.') }
         #format.xml  { render :xml => @submission.errors, :status => :unprocessable_entity }
       end
     end
+  end
+  def download
+    @problem = Problem.find(params[:problem_id])
+    authorize! :inspect, @problem
+    name = @problem.title.gsub(/[\W]/,"")
+    name = "testcases" if name.empty?
+    filename = name + ".zip"
+    t = Tempfile.new("zip-testcases-#{@problem.id}-#{current_user.id}-#{Time.now}")
+    spec = ""
+    Zip::ZipOutputStream.open(t.path) do |z|
+      @problem.test_sets.each_with_index do |test_set,index|
+        spec += CSV.generate_line([test_set.name,test_set.points]) + "\n"
+
+        setname = test_set.name
+        setname = index.to_i if setname.empty?
+        z.put_next_entry(name + '/' + setname + '/')
+        test_set.test_cases.each_with_index do |test_case,index|
+          casename = test_case.name
+          casename = index.to_i if casename.empty?
+          z.put_next_entry(name + '/' + setname + '/' + casename + '.in')
+          z.print test_case.input
+          z.print "\n" if test_case.input[-2..-1] != "\n\n" # ensures empty line at end of file
+          z.put_next_entry(name + '/' + setname + '/' + casename + '.out')
+          z.print test_case.output
+          z.print "\n" if test_case.input[-2..-1] != "\n\n" # ensures empty line at end of file
+        end
+      end
+      z.put_next_entry(name + '/' + 'spec.txt')
+      z.print spec + "\n"
+    end
+    send_file t.path, :type => 'application/zip',
+                             :disposition => 'attachment',
+                             :filename => filename
+    t.close
   end
 end
 

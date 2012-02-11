@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  problem_id: 
+  points: 1
+  name: MyString
+
+two:
+  problem_id: 
+  points: 1
+  name: MyString

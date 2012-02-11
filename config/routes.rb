@@ -1,4 +1,6 @@
 NztrainV2::Application.routes.draw do
+  resources :test_sets
+
   resources :evaluators
 
   resources :settings
@@ -74,6 +76,7 @@ NztrainV2::Application.routes.draw do
   resources :zipped_test_cases do
     member do
       post 'upload'
+      get 'download'
     end
   end
 
