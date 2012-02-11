@@ -46,7 +46,7 @@ class Submission < ActiveRecord::Base
     File.open(source_file, 'w') { |f| f.write(source) }
 
     if problem.evaluator_id
-      File.open(eval_file, 'w') { |f| f.write(problem.evaluator.source) }
+      File.open(eval_file, 'w') { |f| f.write(problem.evaluator.source.gsub /\r\n?/, "\n") } # gsub added to normalize line endings (otherwise script might not run properly)
     end
 
     self.judge_output = "Judging...\n"
@@ -79,8 +79,8 @@ class Submission < ActiveRecord::Base
         self.judge_output += "Test Set #{1+number} (#{test_set.points} points):\n"
         total_points += test_set.points
         anyincorrect = false
-        test_set.test_cases.each_with_index do |test_case,number|
-          self.judge_output += "Test Case #{1+number}:\n"
+        test_set.test_cases.each_with_index do |test_case,case_number|
+          self.judge_output += "Test Case #{1+case_number}:\n"
           File.open(input_file, 'w') { |f| f.write(test_case.input) }
 
           system("#{box_path} -a2 -M#{judge_file} -m#{mem_limit} -k#{stack_limit} " +
@@ -121,8 +121,6 @@ class Submission < ActiveRecord::Base
               run_string = "./#{eval_file} #{input_file} #{output_file} #{expected_file}"
               logger.info "running " + run_string
               correct = system(run_string)
-              #self.judge_output += "running " + run_string + "\n"
-              #self.judge_output += "correct is " + correct.to_s + "\n"
             
               if correct == nil
                 self.judge_output += "Evaluator packed a sad, sorry :(\n"
