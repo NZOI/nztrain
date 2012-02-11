@@ -44,8 +44,7 @@ class TestCasesController < ApplicationController
 
   # GET /test_cases/1/edit
   def edit
-    authorize! :update, Problem.find(@test_case[:problem_id])
-    @defaultProblem = @test_case.problem.id
+    authorize! :update, Problem.find(@test_case.test_set.problem_id)
   end
 
   # POST /test_cases
@@ -68,8 +67,8 @@ class TestCasesController < ApplicationController
   # PUT /test_cases/1
   # PUT /test_cases/1.xml
   def update
-    authorize! :update, Problem.find(@test_case[:problem_id])
-    authorize! :update, Problem.find(params[:test_case][:problem_id])
+    authorize! :update, Problem.find(@test_case.test_set.problem_id)
+    authorize! :update, TestSet.find(params[:test_case][:test_set_id]).problem
 
     respond_to do |format|
       if @test_case.update_attributes(params[:test_case])

@@ -12,6 +12,10 @@
   <% end %>
 
   <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
     <%= f.label :input %><br />
     <%= f.text_area :input %>
   </div>
@@ -20,16 +24,8 @@
     <%= f.text_area :output %>
   </div>
   <div class="field">
-    <%= f.label :points %><br />
-    <%= f.text_field :points %>
-  </div>
-  <div class="field">
-    <%= f.label :description %><br />
-    <%= f.text_field :description %>
-  </div>
-  <div class="field">
-    <%= f.label :problem_id %><br />
-    <%= f.text_field :problem_id, :value => @defaultProblem %>
+    <%= f.label :test_set_id %><br />
+    <%= f.text_field :test_set_id %>
   </div>
   <div class="actions">
     <%= f.submit %>
