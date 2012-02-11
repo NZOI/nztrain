@@ -35,8 +35,8 @@
         <% test_set.test_cases.each do |test_case| %>
           <tr>
             <td width="40%"><%= test_case.name %></td>
-            <td width="30%"><div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 200px;"><b>Input: </b><%= test_case.input[1..200].gsub("\n","\\n") %></div></td>
-            <td width="30%"><div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 200px;"><b>Output: </b><%= test_case.output[1..200].gsub("\n","\\n") %></div></td>
+            <td width="30%"><div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 200px;"><b>Input: </b><%= test_case.input[0..200].gsub("\n","\\n") %></div></td>
+            <td width="30%"><div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 200px;"><b>Output: </b><%= test_case.output[0..200].gsub("\n","\\n") %></div></td>
             <td><%= link_to 'Show', test_case %></td>
           </tr>
         <% end %>
