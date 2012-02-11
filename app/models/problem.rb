@@ -1,6 +1,7 @@
 class Problem < ActiveRecord::Base
   has_and_belongs_to_many :problem_sets
-  has_many :test_cases, :dependent => :destroy
+  has_many :test_sets, :dependent => :destroy
+  has_many :test_cases, :through => :test_sets
   has_many :submissions, :dependent => :destroy
   belongs_to :user
   belongs_to :evaluator

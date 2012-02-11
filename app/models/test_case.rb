@@ -1,9 +1,9 @@
 class TestCase < ActiveRecord::Base
-  belongs_to :problem
+  belongs_to :test_set
   validates :input, :presence => true
   validates :output, :presence => true
 
-  attr_accessible :input, :output, :points, :description, :problem_id
+  attr_accessible :input, :output, :name
 
   scope :distinct, select("distinct(test_cases.id), test_cases.*")
 

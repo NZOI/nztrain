@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Problem:</b>
+  <%= @test_set.problem_id %>
+</p>
+
+<p>
+  <b>Points:</b>
+  <%= @test_set.points %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @test_set.name %>
+</p>
+
+
+<%= link_to 'Edit', edit_test_set_path(@test_set) %> |
+<%= link_to 'Back', test_sets_path %>

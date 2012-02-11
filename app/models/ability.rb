@@ -61,7 +61,7 @@ class Ability
       can :manage, [Problem, ProblemSet, Evaluator, Group, Contest], :user_id => user.id
       cannot :create, [Problem, ProblemSet, Group, Contest, Evaluator] # though can manage, cannot create unless permission is given
       cannot :transfer, [Problem, ProblemSet, Evaluator, Group, Contest] # cannot transfer arbitrary objects unless vetted (by having role added)
-      can :manage, [TestCase], :problem.outer => {:user.outer => {:id => user.id}} # may add Testset between testcase and problems
+      can :manage, [TestCase], :test_set.outer => {:problem.outer => {:user.outer => {:id => user.id}}}
       can :new, TestCase
       can :create, Problem
       can :read, Evaluator

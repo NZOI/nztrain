@@ -1,0 +1,27 @@
+<h1>Listing test_sets</h1>
+
+<table>
+  <tr>
+    <th>Problem</th>
+    <th>Points</th>
+    <th>Name</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @test_sets.each do |test_set| %>
+  <tr>
+    <td><%= test_set.problem_id %></td>
+    <td><%= test_set.points %></td>
+    <td><%= test_set.name %></td>
+    <td><%= link_to 'Show', test_set %></td>
+    <td><%= link_to 'Edit', edit_test_set_path(test_set) %></td>
+    <td><%= link_to 'Destroy', test_set, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Test set', new_test_set_path %>
