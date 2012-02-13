@@ -78,7 +78,7 @@ class Submission < ActiveRecord::Base
       problem.test_sets.each_with_index do |test_set,number|
         self.judge_output += "Test Set #{1+number} (#{test_set.points} points):\n"
         total_points += test_set.points
-        anyincorrect = false
+        numcorrect = 0
         test_set.test_cases.each_with_index do |test_case,case_number|
           self.judge_output += "Test Case #{1+case_number}:\n"
           File.open(input_file, 'w') { |f| f.write(test_case.input) }
@@ -128,11 +128,11 @@ class Submission < ActiveRecord::Base
             end
 
             if correct
+              numcorrect += 1
               logger.info "test case with id " + test_case.id.to_s + " was correct"
               #self.score += test_case.points 
               self.judge_output += "Correct!\n"
             else
-              anyincorrect = true
               logger.info "test case with id " + test_case.id.to_s + " was incorrect"
               self.judge_output += "Incorrect :(\n"
             end
@@ -147,11 +147,11 @@ class Submission < ActiveRecord::Base
           # or ruby exceptions takes care of it?
 
         end
-        if anyincorrect
-          self.judge_output += "Test Set #{1+number} result: Incorrect (+0 points)\n"
-        else
+        if numcorrect == test_set.test_cases.size
           self.judge_output += "Test Set #{1+number} result: Correct (+#{test_set.points} points)\n"
           self.score += test_set.points
+        else
+          self.judge_output += "Test Set #{1+number} result: Incorrect (+0 points)\n"
         end
         self.judge_output += "\n<br />\n"
       end
