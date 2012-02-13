@@ -6,6 +6,7 @@
 //= require jquery.countdown.js
 //= require jquery.ba-bbq.min
 //= require jquery.markitup
+//= require jquery.url.js
 //= require sets/markdown/set.js
 //= require superfish
 //= require jquery.event.hover-1.0

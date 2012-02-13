@@ -1,4 +1,4 @@
-<%= will_paginate @submissions %>
+<%= will_paginate @submissions, :params => { :format => nil } %>
 <div id="paginated_content">
   <% if @submissions.length == 0 %>
     <% if current_user.id == params[:by_user] %>
@@ -63,5 +63,5 @@
     </table>
   <% end %>
 </div>
-<%= will_paginate @submissions %>
+<%= will_paginate @submissions, :params => { :format => nil } %>
 

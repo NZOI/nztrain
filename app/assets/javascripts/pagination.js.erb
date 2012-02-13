@@ -1,4 +1,5 @@
 pagination_loader_state = null; // the page we are waiting for
+pagination_content_state = $.deparam.querystring()['page'];
 
 function display_pagination_loader() {
   if (pagination_loader_state != null) return; // if already loading, don't reshow loader
@@ -19,6 +20,7 @@ function display_pagination_loader() {
 
 function display_pagination_content(page,content) {
   if (pagination_loader_state == page) {
+    pagination_content_state = pagination_loader_state;
     pagination_loader_state = null; // not waiting for page anymore
     $("#paginated_section").html(content);
   }
@@ -27,19 +29,25 @@ function display_pagination_content(page,content) {
 
 if (history && history.pushState) {
   $(document).ready(function () {
+    function url2js(url) { // convert url to .js file extension
+      var urlparts = $.url(url,true); // parse url in strict mode
+      return urlparts.attr('path').replace(/(\.\w*)?\/?$/,"")+'.js'+(urlparts.attr('query')!=""?("?"+urlparts.attr('query')):"");
+    }
+
     $('.pagination a').live("click", function() {
       display_pagination_loader();
       pagination_loader_state = $.deparam.querystring(this.href,true)['page'];
-      $.ajax(this.href,{dataType:'script',cache:true});
+      $.ajax(url2js(this.href),{dataType:'script',cache:true});
       history.pushState(null, "", this.href);
       return false;
     });
 
     $(window).bind("popstate", function () {
+      if (pagination_loader_state == null && $.deparam.querystring(location.href,true)['page'] == pagination_content_state) return; // Chrome browsers popstate on initial page load
       display_pagination_loader();
       pagination_loader_state = $.deparam.querystring(location.href,true)['page'];
       if (pagination_loader_state == undefined) pagination_loader_state = 1; // default page is 1
-      $.ajax(location.href,{dataType:'script',cache:true});
+      $.ajax(url2js(location.href),{dataType:'script',cache:true});
     });
   });
 }
