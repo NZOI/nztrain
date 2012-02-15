@@ -12,6 +12,7 @@ do
 done
 
 # change pwd to RAILS ROOT (the directory this script resides in)
+cd `dirname $0`
 
 # note, we are bashing the echoes so that "sh update.sh" will still print coloured output
 
@@ -43,9 +44,10 @@ bundle exec rake db:seed | sed -e 's/^/   /g;' | cat # sed to indent output
 
 # can restart server here
 
-# update cron jobs
-bash -c "echo -e '\E[34m\033[1mbundle exec whenever --update-crontab nztrain\033[0m'"
-bundle exec whenever --update-crontab nztrain
+# update cron jobs (whenever cronjobs tagged with the rails directory name)
+cmd="bundle exec whenever --update-crontab `basename \`pwd\``"
+bash -c "echo -e '\E[34m\033[1m$cmd\033[0m'"
+$cmd
 
 # precompile assets (if in production mode)
 bash -c "echo -e '\E[34m\033[1mbundle exec rake assets:precompile\033[0m'"
