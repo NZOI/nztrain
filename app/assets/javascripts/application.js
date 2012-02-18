@@ -4,7 +4,7 @@
 //= require jquery-ui-timepicker-addon
 //= require jquery.fileinput
 //= require jquery.countdown.js
-//= require jquery.ba-bbq.min
+//= require jquery.ba-bbq
 //= require jquery.markitup
 //= require jquery.url.js
 //= require sets/markdown/set.js
