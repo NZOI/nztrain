@@ -12,8 +12,18 @@ class SubmissionsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.js # index.js.erb (for AJAX pagination)
       format.xml  { render :xml => @submissions }
+      ajax_paginate(format)
+    end
+  end
+
+  def ajax_paginate(format,options = {})
+    if params[:pagination] == (options[:pagination] || 'page')
+      partial = options[:partial] || params[:pagination]
+      format.js { render :inline => "ajaxPagination.display_pagination_content(\"#{params[:pagination]}\",\"#{request.url}\",\"<%= raw escape_javascript(render(\"#{partial}\")) %>\");" }
+      return true
+    else
+      return false
     end
   end
 

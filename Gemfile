@@ -11,6 +11,7 @@ gem 'sqlite3'
 gem 'rubyzip', :require => 'zip/zip'
 
 gem 'jquery-rails', '>= 1.0.12'
+gem 'jquery-historyjs'
 
 gem "bluecloth"
 gem "albino"

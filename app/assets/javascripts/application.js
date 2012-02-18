@@ -10,6 +10,7 @@
 //= require sets/markdown/set.js
 //= require superfish
 //= require jquery.event.hover-1.0
+//= require history
 //= require pagination
 //= require_self
 

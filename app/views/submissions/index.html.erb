@@ -13,6 +13,6 @@
   <p><b>Problem:</b> <%= link_to p.title, p %></p>
 <% end %>
 
-<div id="paginated_section">
-  <%= render 'page' %>
-</div>
+<%= ajax_pagination %>
+<% # :reload => '[{"urlregex":"page=([0-9]+)","regexindex":1},{"query":"page"}]' # :reload => [{:urlregex => "page=([0-9]+)", :regexindex => 1},{:query => "page"}] %>
+
