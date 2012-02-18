@@ -13,11 +13,11 @@ class SubmissionsController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @submissions }
-      ajax_paginate(format)
+      ajax_pagination(format)
     end
   end
 
-  def ajax_paginate(format,options = {})
+  def ajax_pagination(format,options = {})
     if params[:pagination] == (options[:pagination] || 'page')
       partial = options[:partial] || params[:pagination]
       format.js { render :inline => "ajaxPagination.display_pagination_content(\"#{params[:pagination]}\",\"#{request.url}\",\"<%= raw escape_javascript(render(\"#{partial}\")) %>\");" }
