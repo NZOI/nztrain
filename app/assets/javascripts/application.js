@@ -11,7 +11,7 @@
 //= require superfish
 //= require jquery.event.hover-1.0
 //= require history
-//= require pagination
+//= require ajax_pagination
 //= require_self
 
 

@@ -17,16 +17,6 @@ class SubmissionsController < ApplicationController
     end
   end
 
-  def ajax_pagination(format,options = {})
-    if params[:pagination] == (options[:pagination] || 'page')
-      partial = options[:partial] || params[:pagination]
-      format.js { render :inline => "ajaxPagination.display_pagination_content(\"#{params[:pagination]}\",\"#{request.url}\",\"<%= raw escape_javascript(render(\"#{partial}\")) %>\");" }
-      return true
-    else
-      return false
-    end
-  end
-
   # GET /submissions/1
   # GET /submissions/1.xml
   def show
