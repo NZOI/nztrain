@@ -9,4 +9,4 @@ tmp/
 public/assets/
 public/uploads/tmp/
 db/data/
-
+config/database.yml

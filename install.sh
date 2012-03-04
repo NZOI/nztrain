@@ -2,6 +2,8 @@
 
 # note, we are bashing the echoes so that "sh update.sh" will still print coloured output
 
+cd `dirname $0`
+
 # TODO: create db if it doesn't exist (and prompt for db details to create, or option to change details)
 
 
@@ -9,6 +11,14 @@
 cmd="sudo apt-get install libmagickwand-dev libjpeg62-dev libpng12-dev libglib2.0-dev libfontconfig1 zlib1g libwmf-dev libfreetype6 libtiff4-dev libxml2 imagemagick"
 bash -c "echo -e '\E[34m\033[1m$cmd\033[0m'"
 $cmd
+
+# check if database.yml exists, if not, copy from database.yml.default
+if [ ! -f config/database.yml ];
+then
+  cmd="cp config/database.yml.default config/database.yml"
+  bash -c "echo -e '\E[34m\033[1m$cmd\033[0m'"
+  $cmd
+fi
 
 
 # update as normal
