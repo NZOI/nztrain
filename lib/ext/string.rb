@@ -8,8 +8,8 @@ class String
   end
 
   def get_date(zone)
-    date = DateTime.strptime(self, "%m/%d/%Y %H:%M").in_time_zone("UTC")
-    date.zone = zone
-    return date
+    chunks = self.split("/");
+    chunks[0], chunks[1] = chunks[1], chunks[0]
+    return Time.parse(chunks.join("/"))
   end
 end
