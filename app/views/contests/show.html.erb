@@ -50,7 +50,5 @@ Contest: <%= @contest.title %>
   <%= render 'admin' %>
 <% end %>
 
-<div id="footer">
-  <%= link_to 'Edit', edit_contest_path(@contest) if can? :update, @contest %>
-  <%= link_to 'Back', contests_path %>
-</div>
+<%= link_to 'Edit', edit_contest_path(@contest) if can? :update, @contest %>
+<%= link_to 'Back', contests_path %>
