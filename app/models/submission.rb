@@ -33,17 +33,6 @@ class Submission < ActiveRecord::Base
     eval_file = "eval.sh"
     expected_file = "expect.out"
 
-    # TODO: store compiler info in config file
-    compiler = '/usr/bin/gcc'
-    if language == 'C++'
-      compiler = '/usr/bin/g++'
-    end
-    if language == 'Haskell'
-      source_file = 'program.hs'
-      compiler = '/usr/bin/ghc --make'
-    end
-
-    File.open(source_file, 'w') { |f| f.write(source) }
 
     if problem.evaluator_id
       File.open(eval_file, 'w') { |f| f.write(problem.evaluator.source.gsub /\r\n?/, "\n") } # gsub added to normalize line endings (otherwise script might not run properly)
@@ -51,16 +40,33 @@ class Submission < ActiveRecord::Base
 
     self.judge_output = "Judging...\n"
 
-    comp_sandbox_opts='-m262144 -w60 -e -i/dev/null'
-    comp_output = `#{box_path} #{comp_sandbox_opts} -- #{compiler} #{source_file} -O2 -lm -o #{exe_file} 2>&1`
+    # TODO: store compiler info in config file
+    if language != 'Python'
+      File.open(source_file, 'w') { |f| f.write(source) }
+      compiler = '/usr/bin/gcc'
+      if language == 'C++'
+        compiler = '/usr/bin/g++'
+      end
+      if language == 'Haskell'
+        source_file = 'program.hs'
+        compiler = '/usr/bin/ghc --make'
+      end
 
-    if comp_output == ""
-      comp_output = "nothing"
+
+      comp_sandbox_opts='-m262144 -w60 -e -i/dev/null'
+      comp_output = `#{box_path} #{comp_sandbox_opts} -- #{compiler} #{source_file} -O2 -lm -o #{exe_file} 2>&1`
+
+      if comp_output == ""
+        comp_output = "nothing"
+      end
+
+      self.judge_output += 'compiling with ' +  "#{box_path} #{comp_sandbox_opts} -- #{compiler} #{source_file} -O2 -lm -o #{exe_file}\n"
+
+      self.judge_output += "compiler output:\n" + comp_output + "\n"
+    else
+      self.judge_output += "interpreted language, not compiling\n"
+      File.open(exe_file, 'w') { |f| f.write(source) }
     end
-
-    self.judge_output += 'compiling with ' +  "#{box_path} #{comp_sandbox_opts} -- #{compiler} #{source_file} -O2 -lm -o #{exe_file}\n"
-
-    self.judge_output += "compiler output:\n" + comp_output + "\n"
 
     self.score = 0
     total_points = 0
@@ -68,6 +74,10 @@ class Submission < ActiveRecord::Base
 
     # TODO: check compiler output here (compile errors, warnings, etc)
     if FileTest.exist? exe_file
+      exec_string = exe_file
+      if language == 'Python'
+        exec_string = '/usr/bin/python ' + exe_file
+      end
       input_file = problem.input
       output_file = problem.output
 
@@ -84,7 +94,7 @@ class Submission < ActiveRecord::Base
           File.open(input_file, 'w') { |f| f.write(test_case.input) }
 
           system("#{box_path} -a2 -M#{judge_file} -m#{mem_limit} -k#{stack_limit} " +
-                 " -t#{time_limit} -o/dev/null -r/dev/null -- #{exe_file}" )
+                 " -t#{time_limit} -o/dev/null -r/dev/null -- #{exec_string}" )
 
           judge_msg = IO.read(judge_file)
 
