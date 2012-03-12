@@ -8,8 +8,8 @@ class String
   end
 
   def get_date(zone)
-    chunks = self.split("/");
-    chunks[0], chunks[1] = chunks[1], chunks[0]
-    return Time.parse(chunks.join("/"))
+    #chunks = self.split("/");
+    #chunks[0], chunks[1] = chunks[1], chunks[0]
+    return Time.parse(self)
   end
 end
