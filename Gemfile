@@ -58,6 +58,7 @@ end
 # Gems used only for assets and not required  
 # in production environments by default.  
 group :assets do  
+  gem 'sass', " 3.1.4" # current version (3.1.19) appears to cause stack level too deep
   gem 'sass-rails', " 3.1.4" # current version (3.1.19) appears to cause stack level too deep
   gem 'coffee-rails', " ~> 3.1.0"
   gem 'uglifier'
