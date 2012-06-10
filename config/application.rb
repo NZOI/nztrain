@@ -1,5 +1,5 @@
 require File.expand_path('../boot', __FILE__)
-
+require 'rubygems'
 require 'rails/all'
 require './lib/rack/response_timer.rb'
 
