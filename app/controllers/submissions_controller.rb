@@ -13,7 +13,7 @@ class SubmissionsController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @submissions }
-      ajax_pagination(format)
+      ajax_respond format, :section_id => "page"
     end
   end
 

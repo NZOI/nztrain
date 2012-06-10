@@ -29,7 +29,7 @@ GEM
       activesupport (= 3.1.3)
     activesupport (3.1.3)
       multi_json (~> 1.0)
-    ajax_pagination (0.5.1)
+    ajax_pagination (0.6.3)
       jquery-historyjs
       jquery-rails (>= 1.0.17)
       rails (>= 3.0)

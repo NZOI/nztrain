@@ -1,5 +1,7 @@
-<%= will_paginate @submissions, :params => { :pagination => nil } %>
-<%= ajax_pagination_loadzone do %>
+<%= ajax_links :section_id => "page" do %>
+  <%= will_paginate @submissions %>
+<% end %>
+<%= ajax_loadzone do %>
   <% if @submissions.length == 0 %>
     <% if current_user.id == params[:by_user] %>
       You have no submissions.
@@ -63,5 +65,7 @@
     </table>
   <% end %>
 <% end %>
-<%= will_paginate @submissions, :params => { :pagination => nil } %>
+<%= ajax_links :section_id => "page" do %>
+  <%= will_paginate @submissions %>
+<% end %>
 
