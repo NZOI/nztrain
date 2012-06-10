@@ -40,6 +40,7 @@ class Submission < ActiveRecord::Base
 
     self.judge_output = "Judging...\n"
 
+    self.debug_output = "Judging...\n"
     # TODO: store compiler info in config file
     if language != 'Python'
       File.open(source_file, 'w') { |f| f.write(source) }
@@ -121,7 +122,7 @@ class Submission < ActiveRecord::Base
 
               actual = their_output.split('\n').each{|s|s.strip!}.join('\n').chomp.gsub(/\r/, "")
 
-              logger.debug "actual output was #{actual}, expected #{expected}"
+              self.debug_output +=  "actual output was #{actual}, expected #{expected}\n"
 
               if actual == expected
                 correct = true

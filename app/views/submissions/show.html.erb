@@ -28,6 +28,10 @@
 <%= simple_format(@submission.judge_output) %>
 </p>
 
+<% if current_user.is_admin? %>
+<%= simple_format(@submission.debug_output) %>
+<% end %>
+
 <p>
 <b>Source:</b>
 <pre><%= @submission.source %></pre>
