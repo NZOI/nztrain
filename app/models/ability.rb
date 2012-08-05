@@ -17,7 +17,7 @@ class Ability
     alias_action :read, :to => :inspect
     alias_action :grant, :revoke, :to => :regrant # roles, ie. move role privileges around to a different set of users
     # Define abilities for the passed in user here
-    if user
+    if user && user.confirmed?
       if user.is_superadmin?
         # can do anything, including melting down the site
         can :manage, :all
@@ -39,6 +39,10 @@ class Ability
     ####### Abilities for guests
 
     return if !user # guest user (not logged in), no further abilities
+
+    ####### Unconfirmed user
+    #can :read, User, :id => user.id
+    return unless user.confirmed?
 
     ####### Following abilities for all users #######
     # Users can do, whether or not they are in a contest

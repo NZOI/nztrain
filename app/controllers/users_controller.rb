@@ -89,7 +89,15 @@ class UsersController < ApplicationController
     logger.debug "adding brownie"
     @user.brownie_points += 1
     @user.save
-    redirect_to @user, :notice => "Brownie point added."
+    redirect_to user_path(@user), :notice => "Brownie point added."
   end
 
+  def admin_email
+    authorize! :email, @user
+  end
+  def send_admin_email
+    authorize! :email, @user
+    AdminMailer.custom_email(current_user,@user,params[:subject],params[:body]).deliver
+    redirect_to user_path(@user), :notice => "Email sent."
+  end
 end

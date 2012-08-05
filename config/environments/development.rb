@@ -30,3 +30,5 @@ NztrainV2::Application.configure do
 
 end
 
+ActionMailer::Base.register_interceptor(DevelopmentMailInterceptor) if Rails.env.development?
+

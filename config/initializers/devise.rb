@@ -3,7 +3,7 @@
 Devise.setup do |config|
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in DeviseMailer.
-  config.mailer_sender = "please-change-me-at-config-initializers-devise@example.com"
+  config.mailer_sender = "nztrain@gmail.com"
 
   # Configure the class responsible to send e-mails.
   # config.mailer = "Devise::Mailer"
@@ -66,24 +66,34 @@ Devise.setup do |config|
   # Setup a pepper to generate the encrypted password.
   # config.pepper = "5bb1ea226f9eda33900717b3f16bd7752e576a32d8d7f37a7bb8e653cd54008825bc817f11b7884cf4bb8f54890bba5facdc9cc906dc4b2bc2f9e9d8a6570d4f"
 
-  # ==> Configuration for :confirmable
-  # The time you want to give your user to confirm his account. During this time
-  # he will be able to access your application without confirming. Default is 0.days
-  # When confirm_within is zero, the user won't be able to sign in without confirming.
-  # You can use this to let your user access some features of your application
-  # without confirming the account, but blocking it after a certain period
-  # (ie 2 days).
-  # config.confirm_within = 2.days
+ # ==> Configuration for :confirmable
+  # A period that the user is allowed to access the website even without
+  # confirming his account. For instance, if set to 2.days, the user will be
+  # able to access the website for two days without confirming his account,
+  # access will be blocked just in the third day. Default is 0.days, meaning
+  # the user cannot access the website without confirming his account.
+  config.allow_unconfirmed_access_for = 2.years
+
+  # A period that the user is allowed to confirm their account before their
+  # token becomes invalid. For example, if set to 3.days, the user can confirm
+  # their account within 3 days after the mail was sent, but on the fourth day
+  # their account can't be confirmed with the token any more.
+  # Default is nil, meaning there is no restriction on how long a user can take
+  # before confirming their account.
+  # config.confirm_within = 3.days
+
+  # If true, requires any email changes to be confirmed (exactly the same way as
+  # initial account confirmation) to be applied. Requires additional unconfirmed_email
+  # db field (see migrations). Until confirmed new email is stored in
+  # unconfirmed email column, and copied to email column on successful confirmation.
+  config.reconfirmable = true
 
   # Defines which key will be used when confirming an account
-  # config.confirmation_keys = [ :email ]
+  config.confirmation_keys = [ :email ]
 
   # ==> Configuration for :rememberable
   # The time the user will be remembered without asking for credentials again.
   # config.remember_for = 2.weeks
-
-  # If true, a valid remember token can be re-used between multiple browsers.
-  # config.remember_across_browsers = true
 
   # If true, extends the user's remember period when remembered via cookie.
   # config.extend_remember_period = false
@@ -152,10 +162,6 @@ Devise.setup do |config|
   # ==> Configuration for :token_authenticatable
   # Defines name of the authentication token params key
   # config.token_authentication_key = :auth_token
-
-  # If true, authentication through token does not store user in session and needs
-  # to be supplied on each request. Useful if you are using the token as API token.
-  # config.stateless_token = false
 
   # ==> Scopes configuration
   # Turn scoped views on. Before rendering "sessions/new", it will first check for
