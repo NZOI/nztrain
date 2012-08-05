@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <p>Dear <%= @user.name %>,</p>
+    <%= raw Loofah.fragment(simple_format(@msgbody)).scrub!(:escape).scrub!(Loofah::Scrubbers::NoForm.new) %>
+    <p>
+      <%= @admin.name %><br />
+      Admin of nztrain.com
+    </p>
+  </body>
+</html>

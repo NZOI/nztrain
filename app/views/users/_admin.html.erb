@@ -12,3 +12,6 @@
 <p>
 <%= link_to "Add brownie point", add_brownie_user_path(@user), :method => "post" if can? :add_brownie, @user %>
 </p>
+<p>
+<%= link_to "Email as admin", admin_email_user_path(@user) if can? :email, @user %>
+</p>

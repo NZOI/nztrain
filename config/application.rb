@@ -18,6 +18,7 @@ module NztrainV2
 
     # Custom directories with classes and modules you want to be autoloadable.
     #config.autoload_paths += %W(#{config.root}/extras)
+    config.autoload_paths += %W(#{Rails.root}/lib)
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -63,7 +64,7 @@ module NztrainV2
       :port => 587,
       :authentication => :plain,
       :domain => 'nztrain.com',
-      :user_name => 'nztrain',
+      :user_name => 'nztrain@gmail.com', # username and password set with higher priority in settings table
       :password => 'training site',
       :enable_starttls_auto => true
     }

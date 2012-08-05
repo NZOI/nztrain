@@ -7,6 +7,7 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
       resource.accessible = [:username, :can_change_username]
       params[resource_name][:can_change_username] = false
     end
+    throw CanCan::AccessDenied if (!current_user.confirmed?) && (!params[resource_name].slice!(:email, :current_password).empty?) # can only update email if unconfirmed
     if resource.update_with_password(params[resource_name])
       if is_navigational_format?
         if resource.respond_to?(:pending_reconfirmation?) && resource.pending_reconfirmation?
@@ -19,12 +20,14 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
     else
       resource.can_change_username = @can_change_username
       clean_up_passwords resource
+      params[:type] = params[resource_name].slice!(:current_password).keys.first
       respond_with resource
     end
   end
 
   def edit
     params[:type] = 'password' unless params[:type]
+    params[:type] = 'email' if !current_user.confirmed?
     super
   end
 
@@ -41,13 +44,24 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
     else
       build_resource
       clean_up_passwords(resource)
-      resource.errors.add(:base, "There was an error with the recaptcha code below. Please re-enter the code.")
-      render_with_scope :new
+      flash.now[:alert] = "There was an error with the recaptcha code below. Please re-enter the code."      
+      flash.delete :recaptcha_error
+      render :new
     end
   end
 
   protected :after_update_path_for
   def after_update_path_for(resource)
+    if !current_user.confirmed?
+      if params[resource_name][:email] != self.resource.email
+        flash[:notice] = "Email pending confirmation - confirmation instructions have been sent to #{params[resource_name][:email]}. The email will be changed as soon as it has been confirmed."
+      else
+        flash[:notice] = "Email has not been changed."
+        self.resource.unconfirmed_email = self.resource.email
+        resource.save
+      end
+      return edit_user_registration_path + '/email'
+    end
     user_path(resource)
   end
 end

@@ -42,13 +42,16 @@ NztrainV2::Application.routes.draw do
       put 'add_role'
       put 'remove_role'
       post 'su'
+      get 'admin_email'
+      post 'admin_email', :action => :send_admin_email
+      post 'add_brownie'
     end
     collection do
       post 'suexit'
     end
   end
 
-  devise_for :users, :path => "accounts", :controllers => { :registrations => "accounts/registrations", :settings => "accounts/settings" } do
+  devise_for :users, :path => "accounts", :controllers => { :registrations => "accounts/registrations", :settings => "accounts/settings", :confirmations => "accounts/confirmations" } do
     namespace :accounts do
       get 'edit/:type', :to => 'registrations#edit'
       get 'settings/edit', :to => 'settings#edit'
@@ -77,12 +80,6 @@ NztrainV2::Application.routes.draw do
     member do
       post 'upload'
       get 'download'
-    end
-  end
-
-  resources :users do
-    member do
-      post 'add_brownie'
     end
   end
 

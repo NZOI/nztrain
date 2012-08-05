@@ -28,6 +28,8 @@ class ApplicationController < ActionController::Base
       #    session[:user_return_to] = url_for :controller => path[:controller], :action => 'show', :id = params[:id]
       #end
       redirect_to(new_user_session_path, :alert => "Welcome to nztrain. Please log in or sign up to continue.")
+    elsif !current_user.confirmed? # user is unconfirmed
+      redirect_to edit_user_registration_path + '/email', :notice => "You must confirm your email before using this site. Change your email and/or resend confirmation instructions."
     else # user signed in and doesn't have permission
       raise
     end

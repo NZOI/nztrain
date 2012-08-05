@@ -1,0 +1,24 @@
+<% content_for :title, "Email " + @user.handle %>
+
+<%= form_tag do |f| %>
+  <h1>Email <%= @user.handle %> as admin</h1>
+
+  <p>From: <%= ActionMailer::Base.smtp_settings[:user_name] %></p>
+  <p>To: <%= @user.email %></p>
+  <div class="field">
+    <%= label_tag :subject %>: <%= text_field_tag :subject %>
+  </div>
+
+  <p>Dear <%= @user.name %>,</p>
+  <div class="field">
+    <%= text_area_tag :body, nil, :class => 'markdown' %>
+  </div>
+  <p>
+    <%= current_user.name %><br />
+    Admin of nztrain.com
+  </p>
+
+  <div class="actions">
+    <%= submit_tag "Send" %>
+  </div>
+<% end %>
