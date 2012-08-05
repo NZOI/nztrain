@@ -3,7 +3,7 @@ class MakeExistingEmailsUnconfirmedInUsers < ActiveRecord::Migration
     User.find_each do |user|
       if user[:unconfirmed_email].nil?
         user[:unconfirmed_email] = user[:email]
-        user[:name] = user[:username]
+        user[:name] = user[:username] if user[:name].empty?
         user.save
       end
     end
