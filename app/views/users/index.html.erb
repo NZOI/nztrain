@@ -30,7 +30,11 @@
       <td><%= user.username %></td>
       <% if can? :inspect, User %>
         <td><%= user.name if can? :inspect, user %></td>
-        <td><%= user.email if can? :inspect, user %></td>
+        <td>
+          <% if can? :inspect, user %>
+            <%= user.email %> <span style="color:red;"><%= "(unconfirmed)" if !user.confirmed? %></span>
+          <% end %>
+        </td>
       <% end %>
       <td><%= user.roles.map {|r| r.name}.join(', ') %></td>
       <td><%= user.num_solved %></td>
