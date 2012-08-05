@@ -1,6 +1,5 @@
 <p>Welcome <%= @resource.name %>!</p>
 
-<p>To access nztrain.com, emails must now be confirmed.</p>
-<p>You can confirm your account through the link below:</p>
+<p>You can confirm your account with a username of <%= @resource.username %> at nztrain.com through the link below:</p>
 
 <p><%= link_to 'Confirm my account', confirmation_url(@resource, :confirmation_token => @resource.confirmation_token) %></p>
