@@ -64,7 +64,7 @@ module NztrainV2
       :port => 587,
       :authentication => :plain,
       :domain => 'nztrain.com',
-      :user_name => 'nztrain@gmail.com',
+      :user_name => 'nztrain@gmail.com', # username and password set with higher priority in settings table
       :password => 'training site',
       :enable_starttls_auto => true
     }
