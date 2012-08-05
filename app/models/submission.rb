@@ -93,9 +93,10 @@ class Submission < ActiveRecord::Base
         test_set.test_cases.each_with_index do |test_case,case_number|
           self.judge_output += "Test Case #{1+case_number}:\n"
           File.open(input_file, 'w') { |f| f.write(test_case.input) }
+          system_string = "#{box_path} -a2 -M#{judge_file} -m#{mem_limit} -k#{stack_limit} -- #{exec_string}"
+          self.debug_output += system_string + "\n"
 
-          system("#{box_path} -a2 -M#{judge_file} -m#{mem_limit} -k#{stack_limit} " +
-                 " -t#{time_limit} -o/dev/null -r/dev/null -- #{exec_string}" )
+          system(system_string)
 
           judge_msg = IO.read(judge_file)
 
