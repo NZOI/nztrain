@@ -30,7 +30,7 @@ class User < ActiveRecord::Base
 
   # Scopes
   scope :distinct, select("distinct(users.id), users.*")
-  scope :num_solved, select("(SELECT COUNT(DISTINCT submissions.problem_id) FROM submissions JOIN problems ON problems.id = submissions.problem_id WHERE submissions.user_id = users.id AND submissions.score = 100 AND problems.user_id != users.id) as num_solved")
+  scope :num_solved, select("(SELECT COUNT(DISTINCT submissions.problem_id) FROM submissions JOIN problems ON problems.id = submissions.problem_id WHERE submissions.user_id = users.id AND submissions.score = 100 AND problems.owner_id != users.id) as num_solved")
   
   def self.find_for_authentication(conditions={})
     self.where("lower(username) = lower(?)", conditions[:email]).limit(1).first ||

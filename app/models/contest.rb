@@ -2,7 +2,7 @@ class Contest < ActiveRecord::Base
   belongs_to :problem_set
   has_many :contest_relations, :dependent => :destroy
   has_many :users, :through => :contest_relations
-  belongs_to :user
+  belongs_to :owner, :class_name => :user
   has_and_belongs_to_many :groups
 
   attr_accessible :title, :start_time, :end_time, :duration, :problem_set_id
