@@ -1,5 +1,17 @@
 #!/bin/bash
 
+for ARG in "$@"
+do
+    case $ARG in
+    "--skip-update")
+        update=false
+        ;;
+    *)
+        ;;
+    esac
+done
+
+
 # note, we are bashing the echoes so that "sh update.sh" will still print coloured output
 
 cd `dirname $0`
@@ -8,7 +20,7 @@ cd `dirname $0`
 
 
 # install imagemagick
-cmd="sudo apt-get install libmagickwand-dev libjpeg62-dev libpng12-dev libglib2.0-dev libfontconfig1 zlib1g libwmf-dev libfreetype6 libtiff4-dev libxml2 imagemagick"
+cmd="sudo apt-get install imagemagick"
 bash -c "echo -e '\E[34m\033[1m$cmd\033[0m'"
 $cmd
 
@@ -20,10 +32,15 @@ then
   $cmd
 fi
 
+# make directories for storage
+cmd="mkdir db/data/uploads/user/avatar/ -p"
+bash -c "echo -e '\E[34m\033[1m$cmd\033[0m'"
+$cmd
 
 # update as normal
-bash update.sh --skip-pull
-
+if ${update:=true} ; then
+  bash update.sh --skip-pull
+fi
 
 
 

@@ -24,11 +24,6 @@ if ${gitpull:=true} ; then
     git pull | sed -e 's/^/   /g;' | cat # sed to indent output
 fi
 
-# make directories for storage
-cmd="mkdir db/data/uploads/user/avatar/ -p"
-bash -c "echo -e '\E[34m\033[1m$cmd\033[0m'"
-$cmd
-
 # install new gems required
 bash -c "echo -e '\E[34m\033[1mbundle install\033[0m'"
 bundle install | sed -e 's/^/   /g;/Using/{:a;N;$!ba;s/Using [0-9a-z_ -]\+\(([0-9.]\+) \)\?\n//g}' | cat # sed indents, remove output of un-upgraded gems
