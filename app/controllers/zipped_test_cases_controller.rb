@@ -138,11 +138,11 @@ class ZippedTestCasesController < ApplicationController
         spec += CSV.generate_line([test_set.name,test_set.points]) + "\n"
 
         setname = test_set.name
-        setname = index.to_i if setname.empty?
+        setname = index.to_s if setname.empty?
         z.put_next_entry(name + '/' + setname + '/')
         test_set.test_cases.each_with_index do |test_case,index|
           casename = test_case.name
-          casename = index.to_i if casename.empty?
+          casename = index.to_s if casename.empty?
           z.put_next_entry(name + '/' + setname + '/' + casename + '.in')
           z.print test_case.input
           z.print "\n" if test_case.input[-2..-1] != "\n\n" # ensures empty line at end of file
