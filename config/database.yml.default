@@ -16,7 +16,7 @@ test:
   encoding: unicode
   database: nztraintest
   pool: 5
-  username: 
+  username: postgres
   password:
 
 production:

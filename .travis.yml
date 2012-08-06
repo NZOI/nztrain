@@ -11,6 +11,7 @@ rvm:
 before_script:
   - psql -c 'create database nztraintest;' -U postgres
   - ./install.sh --skip-update
+  - rake db:migrate
   - rake db:test:prepare
 script: rake test
 
