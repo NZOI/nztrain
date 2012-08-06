@@ -1,9 +1,10 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
-  key: MyString
-  value: MyString
+  key: sessions/secret_token
+  value: ABCABCABCABCABCABCABCABCABCABC
 
 two:
   key: MyString2
   value: MyString
+

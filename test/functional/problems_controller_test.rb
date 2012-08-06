@@ -1,8 +1,11 @@
 require 'test_helper'
 
 class ProblemsControllerTest < ActionController::TestCase
+  include Devise::TestHelpers
+
   setup do
-    @problem = problems(:one)
+    sign_in users(:adminuser)
+    @fakeproblem = problems(:fake)
   end
 
   test "should get index" do
@@ -18,32 +21,33 @@ class ProblemsControllerTest < ActionController::TestCase
 
   test "should create problem" do
     assert_difference('Problem.count') do
-      post :create, :problem => @problem.attributes
+      post :create, :problem => {:title => "New title", :statement => "Statement"}
     end
 
     assert_redirected_to problem_path(assigns(:problem))
   end
 
   test "should show problem" do
-    get :show, :id => @problem.to_param
+    get :show, :id => @fakeproblem.to_param
     assert_response :success
   end
 
   test "should get edit" do
-    get :edit, :id => @problem.to_param
+    get :edit, :id => @fakeproblem.to_param
     assert_response :success
   end
 
   test "should update problem" do
-    put :update, :id => @problem.to_param, :problem => @problem.attributes
+    put :update, :id => @fakeproblem.to_param, :problem => @fakeproblem.attributes
     assert_redirected_to problem_path(assigns(:problem))
   end
 
   test "should destroy problem" do
     assert_difference('Problem.count', -1) do
-      delete :destroy, :id => @problem.to_param
+      delete :destroy, :id => @fakeproblem.to_param
     end
 
     assert_redirected_to problems_path
   end
 end
+

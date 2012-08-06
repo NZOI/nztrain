@@ -1,8 +1,11 @@
 require 'test_helper'
 
 class ProblemSetsControllerTest < ActionController::TestCase
+  include Devise::TestHelpers
+
   setup do
-    @problem_set = problem_sets(:one)
+    sign_in users(:adminuser)
+    @problem_set = problem_sets(:development_set)
   end
 
   test "should get index" do
@@ -18,7 +21,7 @@ class ProblemSetsControllerTest < ActionController::TestCase
 
   test "should create problem_set" do
     assert_difference('ProblemSet.count') do
-      post :create, :problem_set => @problem_set.attributes
+      post :create, :problem_set => @problem_set.attributes.merge(:name => "Extra problem set")
     end
 
     assert_redirected_to problem_set_path(assigns(:problem_set))

@@ -1,8 +1,11 @@
 require 'test_helper'
 
 class GroupsControllerTest < ActionController::TestCase
+  include Devise::TestHelpers
+
   setup do
-    @group = groups(:one)
+    sign_in users(:adminuser)
+    @group = groups(:group)
   end
 
   test "should get index" do
@@ -18,7 +21,7 @@ class GroupsControllerTest < ActionController::TestCase
 
   test "should create group" do
     assert_difference('Group.count') do
-      post :create, :group => @group.attributes
+      post :create, :group => {:name => "My new unique group"}
     end
 
     assert_redirected_to group_path(assigns(:group))

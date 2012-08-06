@@ -1,15 +1,18 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-one:
-  title: MyString
+oldcontest:
+  title: Old Contest
   start_time: 2011-09-04 15:37:42
-  end_time: 2011-09-04 15:37:42
-  duration: 9.99
-  user_id: 1
+  end_time: 2011-09-04 20:37:42
+  duration: 1.0
+  problem_set: public_set
+  user: admin
 
-two:
-  title: MyString
+badcontest:
+  title: Bad Contest
   start_time: 2011-09-04 15:37:42
-  end_time: 2011-09-04 15:37:42
-  duration: 9.99
-  user_id: 1
+  end_time: 2011-09-04 20:37:42
+  duration: 1.0
+  problem_set: public_set
+  user: admin
+

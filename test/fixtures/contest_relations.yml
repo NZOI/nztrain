@@ -1,11 +1,7 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
-  user_id: 2
-  contest_id: 1
-  started_at: 2011-09-04 15:35:19
+  user: admin
+  contest: oldcontest
+  started_at: 2011-09-04 17:35:19
 
-two:
-  user_id: 1
-  contest_id: 1
-  started_at: 2011-09-04 15:35:19

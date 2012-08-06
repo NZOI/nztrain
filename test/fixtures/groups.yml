@@ -1,7 +1,22 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-one:
-  name: MyString
+everyone:
+  id: 0
+  name: Everyone
+  user_id: 0
+  problem_sets: public_set
 
-two:
-  name: MyString
+training_group:
+  name: Training Group
+  user: admin
+  problem_sets: training_set
+
+elite_group:
+  name: The Elite
+  user: admin
+  problem_sets: elite_set
+
+group:
+  name: A Group
+  user: admin
+

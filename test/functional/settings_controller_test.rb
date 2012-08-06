@@ -1,8 +1,11 @@
 require 'test_helper'
 
 class SettingsControllerTest < ActionController::TestCase
+  include Devise::TestHelpers
+
   setup do
-    @setting = settings(:one)
+    sign_in users(:superadminuser)
+    @setting = settings(:two)
   end
 
   test "should get index" do
@@ -18,7 +21,7 @@ class SettingsControllerTest < ActionController::TestCase
 
   test "should create setting" do
     assert_difference('Setting.count') do
-      post :create, :setting => @setting.attributes
+      post :create, :setting => {:key => "uniquekey", :value => "value"}
     end
 
     assert_redirected_to setting_path(assigns(:setting))

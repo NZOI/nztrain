@@ -1,15 +1,21 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-one:
-  source: MyText
-  language: MyString
-  score: 1
-  user_id: 1
-  problem_id: 1
+sub1: # submission for rejudging (score is wrong)
+  source: |
+    #include <iostream>
+    #include <cstdio>
+    using namespace std;
 
-two:
-  source: MyText
-  language: MyString
+    int main(){
+        freopen("add.in","r",stdin);
+        freopen("add.out","w",stdout);
+        int a,b;
+        scanf("%d %d", &a, &b);
+        printf("%d\n",a+b);
+        return 0;
+    }
+  language: C++
   score: 1
-  user_id: 1
-  problem_id: 1
+  user: admin
+  problem: adding
+

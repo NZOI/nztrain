@@ -1,7 +1,17 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-one:
-  name: MyString
+superadmin:
+  name: superadmin
 
-two:
-  name: MyString
+admin:
+  name: admin
+
+staff:
+  name: staff
+
+author:
+  name: author
+
+organiser:
+  name: organiser
+

@@ -1,8 +1,11 @@
 require 'test_helper'
 
 class EvaluatorsControllerTest < ActionController::TestCase
+  include Devise::TestHelpers
+
   setup do
-    @evaluator = evaluators(:one)
+    sign_in users(:adminuser)
+    @evaluator = evaluators(:float_eval)
   end
 
   test "should get index" do
@@ -18,7 +21,7 @@ class EvaluatorsControllerTest < ActionController::TestCase
 
   test "should create evaluator" do
     assert_difference('Evaluator.count') do
-      post :create, :evaluator => @evaluator.attributes
+      post :create, :evaluator => @evaluator.attributes.merge(:name => "Unique evaluator")
     end
 
     assert_redirected_to evaluator_path(assigns(:evaluator))

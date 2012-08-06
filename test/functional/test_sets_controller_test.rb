@@ -1,8 +1,11 @@
 require 'test_helper'
 
 class TestSetsControllerTest < ActionController::TestCase
+  include Devise::TestHelpers
+
   setup do
-    @test_set = test_sets(:one)
+    sign_in users(:adminuser)
+    @test_set = test_sets(:irregularcakes_setone)
   end
 
   test "should get index" do
@@ -18,7 +21,7 @@ class TestSetsControllerTest < ActionController::TestCase
 
   test "should create test_set" do
     assert_difference('TestSet.count') do
-      post :create, :test_set => @test_set.attributes
+      post :create, :test_set => @test_set.attributes.merge(:name => "Extra test set")
     end
 
     assert_redirected_to test_set_path(assigns(:test_set))

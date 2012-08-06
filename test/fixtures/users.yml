@@ -4,14 +4,56 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one:
-    name: Name
-    username: _123asdfADSF
+superadminuser:
+    name: Superadmin
+    username: superadmin
+    email: superadmin@nztrain.com
+    encrypted_password: $2a$10$iMeaCgf6z0IZmLLBg3KMXOspCco0yI6tPV7jLdK/m5wnx.gSblWhq # asdfasdf
+    sign_in_count: 2
+    current_sign_in_at: 2012-08-05 10:44:56.658043
+    last_sign_in_at: 2012-08-05 07:00:18.396618
+    confirmed_at: 2012-08-05 07:00:38.285779
+    confirmation_sent_at: 2012-08-05 07:00:15.772942
+    roles: superadmin
+
+adminuser:
+    name: Admin User
+    username: admin
+    email: admin@test.com
+    encrypted_password: $2a$10$iMeaCgf6z0IZmLLBg3KMXOspCco0yI6tPV7jLdK/m5wnx.gSblWhq # asdfasdf
+    sign_in_count: 2
+    current_sign_in_at: 2012-08-05 10:44:56.658043
+    last_sign_in_at: 2012-08-05 07:00:18.396618
+    confirmed_at: 2012-08-05 07:00:38.285779
+    confirmation_sent_at: 2012-08-05 07:00:15.772942
+    roles: admin
+
+normaluser: 
+    name: Normal User
+    username: _123a
     email: test@lol.com
-# column: value
-#
-two: 
-    name: Name2
-    username: posdf.wer
-    email: test2@lol.com
-#  column: value
+    encrypted_password: $2a$10$iMeaCgf6z0IZmLLBg3KMXOspCco0yI6tPV7jLdK/m5wnx.gSblWhq # asdfasdf
+    sign_in_count: 2
+    current_sign_in_at: 2012-08-05 10:44:56.658043
+    last_sign_in_at: 2012-08-05 07:00:18.396618
+    confirmed_at: 2012-08-05 07:00:38.285779
+    confirmation_sent_at: 2012-08-05 07:00:15.772942
+    groups: training_group # but not elite_group
+
+newbie:
+    name: Newbie
+    username: newbie
+    email: newbie@kids.com
+    encrypted_password: $2a$10$iMeaCgf6z0IZmLLBg3KMXOspCco0yI6tPV7jLdK/m5wnx.gSblWhq # asdfasdf
+    sign_in_count: 2
+    current_sign_in_at: 2012-08-05 10:44:56.658043
+    last_sign_in_at: 2012-08-05 07:00:18.396618
+    confirmed_at: 2012-08-05 07:00:38.285779
+    confirmation_sent_at: 2012-08-05 07:00:15.772942
+
+unconfirmeduser:
+    name: UnconfirmedUser
+    username: confirm.me
+    email: unconfirmed@registrants.com
+    encrypted_password: $2a$10$iMeaCgf6z0IZmLLBg3KMXOspCco0yI6tPV7jLdK/m5wnx.gSblWhq # asdfasdf
+

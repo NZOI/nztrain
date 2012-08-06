@@ -1,11 +1,12 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
-one:
-  problem_id: 
+irregularcakes_setone:
+  problem: irregularcakes
   points: 1
-  name: MyString
+  name: Sample
 
-two:
-  problem_id: 
+irregularcakes_settwo:
+  problem: irregularcakes
   points: 1
-  name: MyString
+  name: Actual
+

@@ -1,8 +1,11 @@
 require 'test_helper'
 
 class RolesControllerTest < ActionController::TestCase
+  include Devise::TestHelpers
+
   setup do
-    @role = roles(:one)
+    sign_in users(:superadminuser)
+    @role = roles(:staff)
   end
 
   test "should get index" do
@@ -18,7 +21,7 @@ class RolesControllerTest < ActionController::TestCase
 
   test "should create role" do
     assert_difference('Role.count') do
-      post :create, :role => @role.attributes
+      post :create, :role => @role.attributes.merge(:name => "New Role")
     end
 
     assert_redirected_to role_path(assigns(:role))
