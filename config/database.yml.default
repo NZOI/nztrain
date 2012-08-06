@@ -17,7 +17,6 @@ test:
   database: nztraintest
   pool: 5
   username: postgres
-  password:
 
 production:
   adapter: postgresql
