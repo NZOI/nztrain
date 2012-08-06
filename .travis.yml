@@ -12,6 +12,6 @@ before_script:
   - psql -c 'create database nztraintest;' -U postgres
   - ./install.sh --skip-update
 #  - rake db:migrate
-  - rake db:test:prepare --trace --verbose
+  - bundle exec rake db:test:prepare --trace --verbose
 script: rake test
 
