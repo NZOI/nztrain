@@ -11,6 +11,6 @@ rvm:
 before_script:
   - psql -c 'create database nztraintest;' -U postgres
   - ./install.sh --skip-update
-  - rake db:test:load
+  - rake db:test:load --trace
 script: rake test
 
