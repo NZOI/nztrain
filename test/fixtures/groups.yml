@@ -3,7 +3,7 @@
 everyone:
   id: 0
   name: Everyone
-  user_id: 0
+  owner_id: 0
   problem_sets: public_set
 
 training_group:

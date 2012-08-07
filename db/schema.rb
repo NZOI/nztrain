@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120806025011) do
+ActiveRecord::Schema.define(:version => 20120806212034) do
 
   create_table "contest_relations", :force => true do |t|
     t.integer  "user_id"
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(:version => 20120806025011) do
     t.datetime "start_time"
     t.datetime "end_time"
     t.decimal  "duration"
-    t.integer  "user_id"
+    t.integer  "owner_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "problem_set_id"
@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(:version => 20120806025011) do
     t.string   "name",                        :null => false
     t.text     "description", :default => "", :null => false
     t.text     "source",      :default => "", :null => false
-    t.integer  "user_id",                     :null => false
+    t.integer  "owner_id",                    :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(:version => 20120806025011) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "user_id"
+    t.integer  "owner_id"
   end
 
   create_table "groups_problem_sets", :id => false, :force => true do |t|
@@ -70,7 +70,7 @@ ActiveRecord::Schema.define(:version => 20120806025011) do
 
   create_table "problem_sets", :force => true do |t|
     t.string   "title"
-    t.integer  "user_id"
+    t.integer  "owner_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -87,7 +87,7 @@ ActiveRecord::Schema.define(:version => 20120806025011) do
     t.string   "output"
     t.integer  "memory_limit"
     t.decimal  "time_limit"
-    t.integer  "user_id"
+    t.integer  "owner_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "evaluator_id"
