@@ -6,7 +6,7 @@ oldcontest:
   end_time: 2011-09-04 20:37:42
   duration: 1.0
   problem_set: public_set
-  user: admin
+  owner: admin
 
 badcontest:
   title: Bad Contest
@@ -14,5 +14,5 @@ badcontest:
   end_time: 2011-09-04 20:37:42
   duration: 1.0
   problem_set: public_set
-  user: admin
+  owner: admin
 

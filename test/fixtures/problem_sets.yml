@@ -2,27 +2,27 @@
 
 training_set:
   title: Training Problem Set
-  user: admin
+  owner: admin
   created_at: 2012-08-05 07:00:15.772942
   updated_at: 2012-08-05 07:00:38.285779
   problems: adding
 
 elite_set:
   title: Elite Problem Set
-  user: admin
+  owner: admin
   created_at: 2012-08-05 07:00:15.772942
   updated_at: 2012-08-05 07:00:38.285779
 
 public_set:
   title: Public Access
-  user: admin
+  owner: admin
   created_at: 2012-08-05 07:00:15.772942
   updated_at: 2012-08-05 07:00:38.285779
   problems: irregularcakes
 
 development_set:
   title: Development - Private
-  user: admin
+  owner: admin
   created_at: 2012-08-05 07:00:15.772942
   updated_at: 2012-08-05 07:00:38.285779
 

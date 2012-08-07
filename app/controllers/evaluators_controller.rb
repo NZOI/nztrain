@@ -25,7 +25,7 @@ class EvaluatorsController < ApplicationController
   # GET /evaluators/new
   # GET /evaluators/new.xml
   def new
-    @evaluator.user_id = current_user.id
+    @evaluator.owner_id = current_user.id
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @evaluator }
@@ -39,8 +39,8 @@ class EvaluatorsController < ApplicationController
   # POST /evaluators
   # POST /evaluators.xml
   def create
-    @evaluator.user_id = current_user.id
-    @evaluator.accessible = [:user_id] if can? :transfer, @evaluator # free to give others an evaluator to own
+    @evaluator.owner_id = current_user.id
+    @evaluator.accessible = [:owner_id] if can? :transfer, @evaluator # free to give others an evaluator to own
     @evaluator.attributes = params[:evaluator]
 
     respond_to do |format|
@@ -57,7 +57,7 @@ class EvaluatorsController < ApplicationController
   # PUT /evaluators/1
   # PUT /evaluators/1.xml
   def update
-    @evaluator.accessible = [:user_id] if can? :transfer, @evaluator
+    @evaluator.accessible = [:owner_id] if can? :transfer, @evaluator
 
     respond_to do |format|
       if @evaluator.update_attributes(params[:evaluator])

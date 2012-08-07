@@ -7,7 +7,7 @@ faky:
   output: fake.out
   memory_limit: 1
   time_limit: 1
-  user: admin
+  owner: admin
 
 fake:
   title: Fake problem
@@ -16,7 +16,7 @@ fake:
   output: fake.out
   memory_limit: 1
   time_limit: 1
-  user: admin
+  owner: admin
 
 adding:
   title: Adding Numbers
@@ -25,7 +25,7 @@ adding:
   output: add.out
   memory_limit: 1
   time_limit: 1
-  user: admin
+  owner: admin
 
 irregularcakes:
   title: Irregular Cakes
@@ -52,4 +52,4 @@ irregularcakes:
   memory_limit: 100
   time_limit: 0.1
   evaluator: float_eval
-  user: admin
+  owner: admin

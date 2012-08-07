@@ -46,7 +46,7 @@ class Ability
 
     ####### Following abilities for all users #######
     # Users can do, whether or not they are in a contest
-    # can [:update, :destroy], User, :user_id => user.id # Not used - account updated through the devise controller/views
+    # can [:update, :destroy], User, :id => user.id # Not used - account updated through the devise controller/views
     # Can browse all users
     can :read, User
     can :read, Group # for now, can see all groups, change later to can see public groups
@@ -62,11 +62,11 @@ class Ability
     can :show, Contest, :users.outer => {:id => user.id} # can show contest if user is a competitor
     if !Contest.user_currently_in(user.id).exists? # can do only if not in a contest
       # Objects owned by the user
-      can :manage, [Problem, ProblemSet, Evaluator, Group, Contest], :user_id => user.id
+      can :manage, [Problem, ProblemSet, Evaluator, Group, Contest], :owner_id => user.id
       cannot :create, [Problem, ProblemSet, Group, Contest, Evaluator] # though can manage, cannot create unless permission is given
       cannot :transfer, [Problem, ProblemSet, Evaluator, Group, Contest] # cannot transfer arbitrary objects unless vetted (by having role added)
-      can :inspect, [TestCase], :test_set.outer => {:problem.outer => {:user.outer => {:id => user.id}}}
-      can :inspect, [TestSet], :problem.outer => {:user.outer => {:id => user.id}}
+      can :inspect, [TestCase], :test_set.outer => {:problem.outer => {:owner.outer => {:id => user.id}}}
+      can :inspect, [TestSet], :problem.outer => {:owner.outer => {:id => user.id}}
       can :create, Problem
       can :read, Evaluator
       can [:read, :create], Submission, :user_id => user.id
@@ -93,10 +93,10 @@ class Ability
         cannot :regrant, Role, :name => ['superadmin','admin','staff'] # can only assign roles for lower tiers
         cannot :manage, Setting # keys and passwords here
       when 'organiser' # can create new groups, problems, problem sets, contests
-        can :manage, [Problem, ProblemSet, Evaluator, Group, Contest], :user_id => user.id
+        can :manage, [Problem, ProblemSet, Evaluator, Group, Contest], :owner_id => user.id
         can :create, [Problem, ProblemSet, Group, Contest]
       when 'author' # can create new problems, problem sets
-        can :manage, [Problem, ProblemSet, Evaluator, Group, Contest], :user_id => user.id
+        can :manage, [Problem, ProblemSet, Evaluator, Group, Contest], :owner_id => user.id
         can :create, [Problem, ProblemSet]
       end
     end

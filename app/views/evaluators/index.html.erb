@@ -18,7 +18,7 @@
   <tr>
     <td><%= evaluator.name %></td>
     <td><%= evaluator.description %></td>
-    <td><%= evaluator.user_id %></td>
+    <td><%= evaluator.owner_id %></td>
     <td><%= link_to 'Show', evaluator %></td>
     <% if can? :update, Evaluator %>
       <td><%= link_to 'Edit', edit_evaluator_path(evaluator) if can? :update, evaluator %></td>

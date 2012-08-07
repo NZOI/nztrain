@@ -16,9 +16,9 @@
     <%= f.text_field :name %>
   </div>
   <div class="field">
-    <%= f.label :user_id %><br />
+    <%= f.label :owner_id %><br />
     <% if can? :transfer, @group %>
-      <%= f.text_field :user_id %>
+      <%= f.text_field :owner_id %>
     <% else %>
       <%= @group.user.handle %>
     <% end %>

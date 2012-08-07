@@ -37,7 +37,7 @@ class ProblemsController < ApplicationController
   # GET /problems/new
   # GET /problems/new.xml
   def new
-    @problem.user_id = current_user.id
+    @problem.owner_id = current_user.id
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @problem }
@@ -51,8 +51,8 @@ class ProblemsController < ApplicationController
   # POST /problems
   # POST /problems.xml
   def create
-    @problem.user_id = current_user.id;
-    @problem.accessible = [:user_id] if can? :transfer, @problem # free to give others a problem to own
+    @problem.owner_id = current_user.id;
+    @problem.accessible = [:owner_id] if can? :transfer, @problem # free to give others a problem to own
     @problem.attributes = params[:problem] # mass-assignment
     #if @problem.evaluator
     #  @problem.evaluator = IO.read(params[:problem][:evaluator].path)
@@ -72,7 +72,7 @@ class ProblemsController < ApplicationController
   # PUT /problems/1
   # PUT /problems/1.xml
   def update
-    @problem.accessible = [:user_id] if can? :transfer, @problem   
+    @problem.accessible = [:owner_id] if can? :transfer, @problem   
     #if params[:problem][:evaluator] != nil
     #  params[:problem][:evaluator] = IO.read(params[:problem][:evaluator].path)
     #end
