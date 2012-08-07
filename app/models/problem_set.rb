@@ -2,7 +2,7 @@ class ProblemSet < ActiveRecord::Base
   has_and_belongs_to_many :problems
   has_many :contests
   has_and_belongs_to_many :groups
-  belongs_to :owner, :class_name => :user
+  belongs_to :owner, :class_name => :User
 
   attr_accessible :title
 

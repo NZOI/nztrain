@@ -33,7 +33,7 @@
           <% if can? :show, contest %>
             <%= link_to 'Watch', contest %>
           <% end %>
-        <% elsif contest.has_current_competitor(current_user) %>
+        <% elsif contest.has_current_competitor?(current_user) %>
           <%= link_to 'Continue Contest', contest %>
         <% else %>
           <%= link_to 'Watch', contest %>

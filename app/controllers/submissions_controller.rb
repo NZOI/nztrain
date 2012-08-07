@@ -65,7 +65,7 @@ class SubmissionsController < ApplicationController
     @submission = Submission.new(params[:submission])
     @submission.source = IO.read(params[:submission][:source].path)
     @submission.user = current_user
-    @submission.score = 0
+    @submission.score = nil # unjudged score
 
     respond_to do |format|
       if @submission.save

@@ -3,7 +3,7 @@ class Problem < ActiveRecord::Base
   has_many :test_sets, :dependent => :destroy
   has_many :test_cases, :through => :test_sets
   has_many :submissions, :dependent => :destroy
-  belongs_to :owner, :class_name => :user
+  belongs_to :owner, :class_name => :User
   belongs_to :evaluator
 
   validates :title, :presence => true, :uniqueness => { :case_sensitive => false }

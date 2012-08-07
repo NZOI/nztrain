@@ -10,6 +10,8 @@ NztrainV2::Application.routes.draw do
   resources :contests do
     member do
       put 'start'
+      put 'finalize'
+      put 'unfinalize'
     end
   end
 

@@ -22,46 +22,13 @@ class ContestsController < ApplicationController
     @contest_message = nil
     
     @realtimejudging = true # if false, scores only revealed at the end
-    if @realtimejudging
-      @scoreboard = Submission.find_by_sql("SELECT * FROM contests_max_score_scoreboard WHERE contest_id = #{params[:id]}")
-      @scores = Submission.find_by_sql("SELECT * FROM contests_max_score_submissions WHERE contest_id = #{params[:id]}")
-    else
-      @scoreboard = Submission.find_by_sql("SELECT * FROM contests_latest_scoreboard WHERE contest_id = #{params[:id]}")
-      @scores = Submission.find_by_sql("SELECT * FROM contests_latest_submissions WHERE contest_id = #{params[:id]}")
-    end
-    @sub_count = Submission.find_by_sql("SELECT * FROM contests_count_submissions WHERE contest_id = #{params[:id]}")
-    @scoredetails = Hash.new({})
-    @scores.each do |s|
-      @scoredetails[[s[:user_id],s[:problem_id]]] = {:score => s[:score], :sub_id => s[:id], :count => 0}
-    end
-    @sub_count.each do |s|
-      @scoredetails[[s[:user_id],s[:problem_id]]][:count] = s[:count]
-    end
-    if @scoreboard.length>0 && !@scoreboard[0][:rank] # SQLite3 doesn't have Rank() Windowing function
-      @scoreboard.each_with_index do |row, i|
-        @scoreboard[i][:time_taken] = Time.at(12*3600+row[:time_taken].to_i).strftime('%H:%M:%S')
-      end
-      @current_rank = 0
-      @scoreboard.each_with_index do |row, i|
-        if i==0 || (row[:total_score].to_i < @scoreboard[i-1][:total_score].to_i) || (row[:total_score].to_i  == @scoreboard[i-1][:total_score].to_i  && row[:time_taken]  > @scoreboard[i-1][:time_taken] )
-          @current_rank = i+1;
-        end
-        @scoreboard[i][:rank] = @current_rank
-      end
-    end
-    if cannot? :inspect, @contest
-      @median = @scoreboard[@scoreboard.length/2][:rank].to_i
-      @scoreboard = @scoreboard.reject{|row| (row[:rank].to_i >= @median && row[:user_id] != current_user.id)}
-    end
+    @scoreboard = @contest.scoreboard
+
     respond_to do |format|
       if current_user.is_admin? || !@contest.is_running?
-        #render contest report page
-        #@high_scorers = @contest.get_high_scorers(current_user.is_admin?)
-        #logger.debug @high_scorers
-
         format.html { render "report" }
         format.xml  { render :xml => @contest }
-      elsif @contest.has_current_competitor(current_user)
+      elsif @contest.has_current_competitor?(current_user)
         @contest_relation = @contest.get_relation(current_user)
         #render proper contest page
         format.html
@@ -183,6 +150,18 @@ class ContestsController < ApplicationController
         format.xml  { render :xml => @contest_relation.errors, :status => :unprocessable_entity }
       end
     end
+  end
+
+  def finalize
+    @contest.results_final = true
+    @contest.save
+    redirect_to contest_path(@contest), :notice => "Contest results finalized"
+  end
+
+  def unfinalize
+    @contest.results_final = false
+    @contest.save
+    redirect_to contest_path(@contest), :notice => "Contest results unfinalized"
   end
 
 end

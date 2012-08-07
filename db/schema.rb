@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120807033035) do
+ActiveRecord::Schema.define(:version => 20120810041325) do
 
   create_table "contest_relations", :force => true do |t|
     t.integer  "user_id"
@@ -19,10 +19,25 @@ ActiveRecord::Schema.define(:version => 20120807033035) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "finish_at"
+    t.integer  "score",      :default => 0,   :null => false
+    t.float    "time_taken", :default => 0.0, :null => false
   end
 
+  add_index "contest_relations", ["contest_id", "score", "time_taken"], :name => "index_contest_relations_on_contest_id_and_score_and_time_taken", :order => {"score"=>:desc}
   add_index "contest_relations", ["contest_id", "user_id"], :name => "index_contest_relations_on_contest_id_and_user_id", :unique => true
   add_index "contest_relations", ["user_id", "started_at"], :name => "index_contest_relations_on_user_id_and_started_at"
+
+  create_table "contest_scores", :force => true do |t|
+    t.integer  "contest_relation_id", :null => false
+    t.integer  "problem_id",          :null => false
+    t.integer  "score"
+    t.integer  "attempts"
+    t.integer  "attempt"
+    t.integer  "submission_id"
+    t.datetime "updated_at"
+  end
+
+  add_index "contest_scores", ["contest_relation_id", "problem_id"], :name => "index_contest_scores_on_contest_relation_id_and_problem_id"
 
   create_table "contests", :force => true do |t|
     t.string   "title"
@@ -33,6 +48,7 @@ ActiveRecord::Schema.define(:version => 20120807033035) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "problem_set_id"
+    t.boolean  "results_final",  :default => false
   end
 
   create_table "contests_groups", :id => false, :force => true do |t|
