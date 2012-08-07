@@ -51,7 +51,9 @@ NztrainV2::Application.routes.draw do
     end
   end
 
-  devise_for :users, :path => "accounts", :controllers => { :registrations => "accounts/registrations", :settings => "accounts/settings", :confirmations => "accounts/confirmations" } do
+  devise_for :users, :path => "accounts", :controllers => { :registrations => "accounts/registrations", :settings => "accounts/settings", :confirmations => "accounts/confirmations" }
+
+  devise_scope :user do
     namespace :accounts do
       get 'edit/:type', :to => 'registrations#edit'
       get 'settings/edit', :to => 'settings#edit'
