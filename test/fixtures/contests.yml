@@ -16,3 +16,11 @@ badcontest:
   problem_set: public_set
   owner: admin
 
+freestart:
+  title: Contest to test finish_at contest relation callbacks
+  start_time: 2011-05-01 0:00:00
+  end_time: 2011-05-02 0:00:00
+  duration: 5.0
+  problem_set: public_set
+  owner: admin
+
