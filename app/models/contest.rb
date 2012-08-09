@@ -7,6 +7,13 @@ class Contest < ActiveRecord::Base
 
   attr_accessible :title, :start_time, :end_time, :duration, :problem_set_id
 
+  before_save do # update the end time that was cached
+    contest_relations.find_each do |relation|
+      relation.finish_at = [end_time,relation.started_at.advance(:hours => duration)].min
+      relation.save
+    end if duration_changed? || end_time_changed?
+  end
+
   # Scopes
   scope :distinct, select("distinct(contests.id), contests.*")
 
