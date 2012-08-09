@@ -55,7 +55,7 @@
           <td><%= link_to 'Edit', edit_submission_path(submission) %></td>
         <% end %>
         <% if can? :destroy, submission %>
-          <td><%= link_to 'Destroy', submission, :confirm => 'Are you sure?', :method => :delete %></td>
+          <td><%= link_to 'Destroy', submission, :data => { :confirm => 'Are you sure?' }, :method => :delete %></td>
         <% end %>
       </tr>
         <tr>

@@ -15,7 +15,7 @@
     <td><div style="overflow: hidden; text-overflow: ellipsis;"><nobr><%= setting.value %></nobr></div></td>
     <td><%= link_to 'Show', setting %></td>
     <td><%= link_to 'Edit', edit_setting_path(setting) %></td>
-    <td><%= link_to 'Destroy', setting, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to 'Destroy', setting, :data => { :confirm => 'Are you sure?' }, :method => :delete %></td>
   </tr>
 <% end %>
 </table>

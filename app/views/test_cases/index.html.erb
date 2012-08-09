@@ -29,7 +29,7 @@
       <td><%= link_to 'Edit', edit_test_case_path(test_case) %></td>
     <% end %>
     <% if can? :destroy, test_case %>
-      <td><%= link_to 'Destroy', test_case, :confirm => 'Are you sure?', :method => :delete %></td>
+      <td><%= link_to 'Destroy', test_case, :data => { :confirm => 'Are you sure?' }, :method => :delete %></td>
     <% end %>
   </tr>
 <% end %>

@@ -6,7 +6,7 @@
   </p>
 <% end %>
 <p>
-<%= link_to "Rejudge", rejudge_submission_path(@submission), :confirm => "Are you sure?", :method => "post" if can? :rejudge, @submission %>
+<%= link_to "Rejudge", rejudge_submission_path(@submission), :data => { :confirm => 'Are you sure?' }, :method => "post" if can? :rejudge, @submission %>
 </p>
 <p>
 <b>Problem:</b>

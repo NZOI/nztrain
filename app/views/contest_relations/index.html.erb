@@ -18,7 +18,7 @@
       <td><%= contest_relation.started_at %></td>
       <td><%= link_to 'Show', contest_relation %></td>
       <td><%= link_to 'Edit', edit_contest_relation_path(contest_relation) %></td>
-      <td><%= link_to 'Destroy', contest_relation, :confirm => 'Are you sure?', :method => :delete %></td>
+      <td><%= link_to 'Destroy', contest_relation, :data => { :confirm => 'Are you sure?' }, :method => :delete %></td>
     </tr>
   <% end %>
 <% end %>

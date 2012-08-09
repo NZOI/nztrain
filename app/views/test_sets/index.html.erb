@@ -26,7 +26,7 @@
       <td><%= link_to 'Edit', edit_test_set_path(test_set) %></td>
     <% end %>
     <% if can? :destroy, test_set %>
-      <td><%= link_to 'Destroy', test_set, :confirm => 'Are you sure?', :method => :delete %></td>
+      <td><%= link_to 'Destroy', test_set, :data => { :confirm => 'Are you sure?' }, :method => :delete %></td>
     <% end %>
   </tr>
   <tr>

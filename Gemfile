@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'devise', '2.0.0'
-gem 'rails', '3.1.3'
+gem 'rails', '~> 3.2.0'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -58,10 +58,10 @@ end
 # Gems used only for assets and not required  
 # in production environments by default.  
 group :assets do  
-  gem 'sass', " 3.1.4" # current version (3.1.19) appears to cause stack level too deep
-  gem 'sass-rails', " 3.1.4" # current version (3.1.19) appears to cause stack level too deep
-  gem 'coffee-rails', " ~> 3.1.0"
-  gem 'uglifier'
+  gem 'sass'
+  gem 'sass-rails', "  ~> 3.2.3"
+  gem 'coffee-rails', "~> 3.2.1"
+  gem 'uglifier', '>=1.0.3'
   gem 'libv8', '3.3.10.4'
   gem 'therubyracer' # required for the execjs gem (dependency)
 end

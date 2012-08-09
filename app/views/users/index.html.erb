@@ -44,7 +44,7 @@
         <td><%= link_to 'Edit', edit_user_path(user) if can? :update, user%></td>
       <% end %>
       <% if can? :destroy, User %>
-        <td><%= link_to 'Destroy', user, :confirm => 'Are you sure?', :method => :delete if can? :destroy, user %></td>
+        <td><%= link_to 'Destroy', user, :data => { :confirm => 'Are you sure?' }, :method => :delete if can? :destroy, user %></td>
       <% end %>
       <% if can? :su, user %>
         <td><a href="#" onClick="su(<%= user.id %>); return false;">su</a></td>

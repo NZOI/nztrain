@@ -24,7 +24,7 @@
       <td><%= link_to 'Edit', edit_evaluator_path(evaluator) if can? :update, evaluator %></td>
     <% end %>
     <% if can? :destroy, Evaluator %>
-      <td><%= link_to 'Destroy', evaluator, :confirm => 'Are you sure?', :method => :delete if can? :destroy, evaluator %></td>
+      <td><%= link_to 'Destroy', evaluator, :data => { :confirm => 'Are you sure?' }, :method => :delete if can? :destroy, evaluator %></td>
     <% end %>
   </tr>
 <% end %>

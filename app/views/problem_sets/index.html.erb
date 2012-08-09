@@ -27,7 +27,7 @@
       <td><%= link_to 'Edit', edit_problem_set_path(problem_set) if can? :update, problem_set %></td>
     <% end %>
     <% if can? :destroy, ProblemSet %>
-      <td><%= link_to 'Destroy', problem_set, :confirm => 'Are you sure?', :method => :delete if can? :destroy, problem_set %></td>
+      <td><%= link_to 'Destroy', problem_set, :data => { :confirm => 'Are you sure?' }, :method => :delete if can? :destroy, problem_set %></td>
     <% end %>
   </tr>
   <tr>
@@ -43,7 +43,7 @@
                 <td><%= link_to 'Edit', edit_problem_path(problem) if can? :update, problem %></td>
               <% end %>
               <% if can? :destroy, Problem %>
-                <td><%= link_to 'Destroy', problem, :confirm => 'Are you sure?', :method => :delete if can? :destroy, problem %></td>
+                <td><%= link_to 'Destroy', problem, :data => { :confirm => 'Are you sure?' }, :method => :delete if can? :destroy, problem %></td>
               <% end %>
             </tr>
           <% end %>

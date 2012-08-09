@@ -46,7 +46,7 @@
       <td><%= link_to 'Edit', edit_contest_path(contest) if can? :update, contest %></td>
     <% end %>
     <% if can? :destroy, Contest %>
-      <td><%= link_to 'Destroy', contest, :confirm => 'Are you sure?', :method => :delete if can? :destroy, contest %></td>
+      <td><%= link_to 'Destroy', contest, :data => { :confirm => 'Are you sure?' }, :method => :delete if can? :destroy, contest %></td>
     <% end %>
   </tr>
 <% end %>

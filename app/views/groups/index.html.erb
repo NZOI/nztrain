@@ -21,7 +21,7 @@
       <td><%= link_to 'Edit', edit_group_path(group) if can? :update, group %></td>
     <% end %>
     <% if can? :destroy, Group %>
-      <td><%= link_to 'Destroy', group, :confirm => 'Are you sure?', :method => :delete if can? :destroy, group %></td>
+      <td><%= link_to 'Destroy', group, :data => { :confirm => 'Are you sure?' }, :method => :delete if can? :destroy, group %></td>
     <% end %>
   </tr>
 <% end %>

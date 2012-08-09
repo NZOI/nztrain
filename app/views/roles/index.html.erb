@@ -20,7 +20,7 @@
       <td><%= link_to 'Edit', edit_role_path(role) if can? :update, role %></td>
     <% end %>
     <% if can? :destroy, Role %>
-      <td><%= link_to 'Destroy', role, :confirm => 'Are you sure?', :method => :delete if can? :destroy, role %></td>
+      <td><%= link_to 'Destroy', role, :data => { :confirm => 'Are you sure?' }, :method => :delete if can? :destroy, role %></td>
     <% end %>
   </tr>
 <% end %>
