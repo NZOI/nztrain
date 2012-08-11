@@ -1,11 +1,11 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-oldcontest:
-  title: Old Contest
-  start_time: 2011-09-04 15:37:42
-  end_time: 2011-09-04 20:37:42
-  duration: 1.0
-  problem_set: public_set
+contestscore: # for unit testing contest scores
+  title: Contest Scores
+  start_time: 2011-09-04 15:00:00
+  end_time: 2011-09-04 20:00:00
+  duration: 3.0
+  problem_set: training_set
   owner: admin
 
 badcontest:

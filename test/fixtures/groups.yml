@@ -10,6 +10,7 @@ training_group:
   name: Training Group
   owner: admin
   problem_sets: training_set
+  contests: contestscore
 
 elite_group:
   name: The Elite

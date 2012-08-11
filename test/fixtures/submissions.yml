@@ -2,20 +2,44 @@
 
 sub1: # submission for rejudging (score is wrong)
   source: |
-    #include <iostream>
     #include <cstdio>
     using namespace std;
-
     int main(){
-        freopen("add.in","r",stdin);
-        freopen("add.out","w",stdout);
+        freopen("add.in","r",stdin); freopen("add.out","w",stdout);
         int a,b;
-        scanf("%d %d", &a, &b);
-        printf("%d\n",a+b);
-        return 0;
-    }
+        scanf("%d %d", &a, &b); printf("%d\n",a+b);
+        return 0; }
   language: C++
   score: 1
   user: admin
   problem: adding
 
+sub2beforecontest:
+  source: |
+    #include <cstdio>
+    using namespace std;
+    int main(){
+        freopen("add.in","r",stdin); freopen("add.out","w",stdout);
+        int a,b;
+        scanf("%d %d", &a, &b); printf("%d\n",a+b);
+        return 0; }
+  language: C++
+  score: 100
+  user: normaluser
+  problem: adding
+  created_at: 2011-09-04 17:30:00
+
+sub2duringcontest:
+  source: |
+    #include <cstdio>
+    using namespace std;
+    int main(){
+        freopen("add.in","r",stdin); freopen("add.out","w",stdout);
+        int a,b;
+        scanf("%d %d", &a, &b); if (a+b<100) printf("%d\n",a+b); else printf("%d\n",a-b);
+        return 0; }
+  language: C++
+  score: 90
+  user: normaluser
+  problem: adding
+  created_at: 2011-09-04 19:00:00
