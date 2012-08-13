@@ -43,7 +43,7 @@ if !(Group.exists?(0))
   everyone = Group.new()
   everyone.id = 0;
   everyone.name = "Everyone"
-  everyone.user_id = 0
+  everyone.owner_id = 0
   everyone.save
 end
 

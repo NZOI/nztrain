@@ -29,7 +29,7 @@ class Contest < ActiveRecord::Base
   scope :distinct, select("distinct(contests.id), contests.*")
 
   def self.user_currently_in(user_id)
-    joins(:contest_relations).where(:user_id => user_id).where("contest_relations.started_at <= :time AND contest_relations.finish_at > :time",{:time => DateTime.now})
+    joins(:contest_relations).where(:contest_relations => { :user_id => user_id }).where("contest_relations.started_at <= :time AND contest_relations.finish_at > :time",{:time => DateTime.now})
   end
 
   def get_relation(user)

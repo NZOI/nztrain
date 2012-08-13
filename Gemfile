@@ -47,9 +47,10 @@ gem 'pg'
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
 group :development, :test do
+  gem 'rspec-rails', '~> 2.0'
   gem 'webrat'
 
-  gem 'factory_girl_rails', '~> 2.0'
+  gem 'factory_girl_rails'
   gem 'factory_girl', '~> 2.0'
 
   # To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)

@@ -14,10 +14,11 @@ class ContestRelation < ActiveRecord::Base
     self[:contest_id]=(contest_id)
     update_finish_at
   end
-  def contest=(contest)
-    self[:contest_id]=(contest.id) # note this will not work if id=nil
+  def contest_with_update=(contest)
+    self.contest_without_update=(contest)
     update_finish_at
   end
+  alias_method_chain :contest=, :update
   def update_finish_at
     self.finish_at = [contest.end_time,started_at.advance(:hours => contest.duration)].min unless contest.nil? or started_at.nil?
   end
