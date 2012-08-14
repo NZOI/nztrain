@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(:version => 20120810041325) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "problem_set_id"
-    t.boolean  "results_final",  :default => false
+    t.datetime "finalized_at"
   end
 
   create_table "contests_groups", :id => false, :force => true do |t|

@@ -2,7 +2,18 @@ class Submission < ActiveRecord::Base
   belongs_to :user
   belongs_to :problem
 
-  attr_accessible :problem_id, :source, :language
+  attr_accessible :problem_id, :source, :language, :score, :created_at
+
+  after_save do
+    if self.score_changed? # only update if score changed
+      contests.select("contest_relations.id, contests.finalized_at").find_each do |record|
+        # only update contest score if contest not yet sealed
+        if record.finalized_at.nil? # are results finalized?
+          ContestScore.find_or_initialize_by_contest_relation_id_and_problem_id(record.id,self.problem_id).recalculate_and_save
+        end
+      end
+    end
+  end
 
   # scopes (lazy running SQL queries)
   scope :distinct, select("distinct(submissions.id), submissions.*")
@@ -186,21 +197,13 @@ class Submission < ActiveRecord::Base
 
     self.save
 
-    contests.select("contest_relations.id").find_each do |record|
-      # only update contest score if contest not yet sealed
-      if ! record.results_final # are results finalized?
-        ContestScore.find_or_initialize_by_contest_relation_id_and_problem_id(record.id,self.problem_id).recalculate_and_save
-      end
-    end
-
     File.delete(source_file) if FileTest.exist? source_file
     File.delete(judge_file) if FileTest.exist? judge_file
     Dir.chdir('/')
     FileUtils.rm_rf(working_directory)
   end
-
   def contests
     # check if this submission's problem belongs to a contest that the user is competing in
-    @_mycontests ||= Contest.joins(:contest_relations => {:user_id => current_user.id}, :problem_set => {:problem_id => self.problem_id}).where("contest_relations.started_at <= ? AND contest_relations.finish_at > ?", self.created_at)
+    @_mycontests ||= Contest.joins(:contest_relations, :problems).where(:contest_relations => {:user_id => user_id}, :problems => {:id => self.problem_id}).where("contest_relations.started_at <= ? AND contest_relations.finish_at > ?", self.created_at, self.created_at)
   end
 end

@@ -20,10 +20,10 @@
    <b>Duration:</b>    <%= @contest.duration %><br />
 </p>
 <br />
-<% if (!@contest.results_final) and can? :update, @contest %>
+<% if @contest.finalized_at.nil? and can? :update, @contest %>
   <%= link_to "Finalize results", finalize_contest_path(@contest), :data => { :confirm => 'Are you sure?' }, :method => :put %>
   <%#= "Re-judge all" %><br />
-<% elsif @contest.results_final and current_user.is_admin? %>
+<% elsif @contest.finalized_at and current_user.is_admin? %>
   <%= link_to "Un-finalize", unfinalize_contest_path(@contest), :data => { :confirm => 'Are you sure?' }, :method => :put %><br />
   <%#= "Re-judge all" %><br />
 <% end %>

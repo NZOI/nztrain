@@ -153,13 +153,13 @@ class ContestsController < ApplicationController
   end
 
   def finalize
-    @contest.results_final = true
+    @contest.finalized_at = Time.now
     @contest.save
     redirect_to contest_path(@contest), :notice => "Contest results finalized"
   end
 
   def unfinalize
-    @contest.results_final = false
+    @contest.finalized_at = nil
     @contest.save
     redirect_to contest_path(@contest), :notice => "Contest results unfinalized"
   end

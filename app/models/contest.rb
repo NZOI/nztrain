@@ -1,5 +1,6 @@
 class Contest < ActiveRecord::Base
   belongs_to :problem_set
+  has_many :problems, :through => :problem_set
   has_many :contest_relations, :dependent => :destroy
   has_many :users, :through => :contest_relations
   belongs_to :owner, :class_name => :User
@@ -13,7 +14,7 @@ class Contest < ActiveRecord::Base
       relation.save
     end if duration_changed? || end_time_changed?
 
-    update_contest_scores if results_final_was && !results_final
+    update_contest_scores if finalized_at_was && finalized_at.nil?
   end
 
   def update_contest_scores # calculate contest scores again from scratch
