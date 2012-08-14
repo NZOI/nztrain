@@ -4,7 +4,7 @@ describe ContestRelation do
   before(:all) do
     @problem_set = Factory.build(:problem_set)
     @contest = Factory.build(:contest, :duration => 5.0, :start_time => "01/01/2012 9:00:00", :end_time => "01/01/2012 18:00:00", :problem_set => @problem_set, :finalized_at => nil)
-    @user = Factory.create(:user)
+    @user = Factory.create(:user, :username => "contest_score_spec.model.user")
     @relation = Factory.create(:contest_relation, :contest => @contest, :user => @user, :started_at => @contest.start_time.advance(:hours => 2))
     @problem_stub = Factory.create(:problem, :problem_sets => [@problem_set])
     @submission_stub = Factory.create(:submission, :user => @user, :problem => @problem_stub, :score => 14, :created_at => @relation.started_at.advance(:hours => 1))

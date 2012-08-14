@@ -1,4 +1,4 @@
-require 'lib/file_size_validator'
+require 'file_size_validator'
 
 class User < ActiveRecord::Base
   # Include default devise modules. Others available are:

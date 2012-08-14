@@ -54,8 +54,12 @@ group :development, :test do
   gem 'factory_girl', '~> 2.0'
 
   # To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
-  gem 'ruby-debug'
-  # gem 'ruby-debug19', :require => 'ruby-debug'
+  if RUBY_VERSION.split('.')[0..1]==["1","8"]
+    gem 'ruby-debug'
+  else
+    gem 'debugger'
+    # gem 'ruby-debug19', :require => 'ruby-debug'
+  end
 end
 
 
