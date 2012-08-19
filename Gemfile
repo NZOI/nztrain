@@ -22,7 +22,7 @@ gem 'carrierwave'
 gem 'will_paginate'
 gem 'ajax_pagination'
 gem 'has_scope'
-gem 'cancan'
+gem 'cancan', '1.6.8'
 gem 'recaptcha', :require => 'recaptcha/rails'
 gem 'loofah'
 gem 'whenever', :require => false # for cron jobs
