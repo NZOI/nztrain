@@ -47,5 +47,18 @@ if !(Group.exists?(0))
   everyone.save
 end
 
+if !(User.exists?(0))
+  everyone = Group.find(0);
+  user = User.new()
+  user.id = 0;
+  user.username = "System"
+  user.name = "System"
+  user.email = "nztrain@gmail.com"
+  user.password = "somepassword" # ensure validation succeeds
+  user.encrypted_password = "$2a$10$KpSeaHGXoXEwdrERTFVCPo428a2s2r4ZazR999X9abc22368nneen" # set password hash so no known password matches the hash
+  user.groups.push(everyone)
+  user.save
+end
+
 
 
