@@ -1,6 +1,13 @@
 class EvaluatorsController < ApplicationController
+  load_and_authorize_resource :except => [:create]
 
-  load_and_authorize_resource
+  def permitted_params
+    @_permitted_params ||= begin
+      permitted_attributes = [:name, :description, :source]
+      permitted_attributes << :owner_id if can? :transfer, @owner
+      params.require(:evaluator).permit(*permitted_attributes)
+    end
+  end
 
   # GET /evaluators
   # GET /evaluators.xml
@@ -39,12 +46,11 @@ class EvaluatorsController < ApplicationController
   # POST /evaluators
   # POST /evaluators.xml
   def create
-    @evaluator.owner_id = current_user.id
-    @evaluator.accessible = [:owner_id] if can? :transfer, @evaluator # free to give others an evaluator to own
-    @evaluator.attributes = params[:evaluator]
+    @evaluator = Evaluator.new(:owner_id => current_user.id)
+    authorize! :create, @evaluator
 
     respond_to do |format|
-      if @evaluator.save
+      if @evaluator.update_attributes(permitted_params)
         format.html { redirect_to(@evaluator, :notice => 'Evaluator was successfully created.') }
         format.xml  { render :xml => @evaluator, :status => :created, :location => @evaluator }
       else
@@ -57,10 +63,8 @@ class EvaluatorsController < ApplicationController
   # PUT /evaluators/1
   # PUT /evaluators/1.xml
   def update
-    @evaluator.accessible = [:owner_id] if can? :transfer, @evaluator
-
     respond_to do |format|
-      if @evaluator.update_attributes(params[:evaluator])
+      if @evaluator.update_attributes(permitted_params)
         format.html { redirect_to(@evaluator, :notice => 'Evaluator was successfully updated.') }
         format.xml  { head :ok }
       else

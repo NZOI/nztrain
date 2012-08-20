@@ -1,6 +1,12 @@
 class ContestRelationsController < ApplicationController
+  load_and_authorize_resource :except => [:create]
 
-  load_and_authorize_resource
+  def permitted_params
+    @_permitted_params ||= begin
+      permitted_attributes = [:user_id, :contest_id, :started_at]
+      params.require(:contest_relation).permit(*permitted_attributes)
+    end
+  end
 
   # GET /contest_relations
   # GET /contest_relations.xml
@@ -45,7 +51,8 @@ class ContestRelationsController < ApplicationController
   # POST /contest_relations
   # POST /contest_relations.xml
   def create
-    @contest_relation = ContestRelation.new(params[:contest_relation])
+    @contest_relation = ContestRelation.new(permitted_params)
+    authorize! :create, @contest_relation
 
     respond_to do |format|
       if @contest_relation.save
@@ -61,10 +68,8 @@ class ContestRelationsController < ApplicationController
   # PUT /contest_relations/1
   # PUT /contest_relations/1.xml
   def update
-    @contest_relation = ContestRelation.find(params[:id])
-
     respond_to do |format|
-      if @contest_relation.update_attributes(params[:contest_relation])
+      if @contest_relation.update_attributes(permitted_params)
         format.html { redirect_to(@contest_relation, :notice => 'Contest relation was successfully updated.') }
         format.xml  { head :ok }
       else

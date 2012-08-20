@@ -1,41 +1,28 @@
 class Accounts::RegistrationsController < Devise::RegistrationsController
 
-  def update # try update the username with password if username can be changed
-    self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
-    @can_change_username = resource.can_change_username
-    if @can_change_username && params[resource_name][:username] && params[resource_name][:username] != resource.username
-      resource.accessible = [:username, :can_change_username]
-      params[resource_name][:can_change_username] = false
-    end
-    throw CanCan::AccessDenied if (!current_user.confirmed?) && (!params[resource_name].slice!(:email, :current_password).empty?) # can only update email if unconfirmed
-    if resource.update_with_password(params[resource_name])
-      if is_navigational_format?
-        if resource.respond_to?(:pending_reconfirmation?) && resource.pending_reconfirmation?
-          flash_key = :update_needs_confirmation
+  def resource_params
+    @_permitted_attributes ||= begin
+      permitted_attributes = []
+      if action_name == "update"
+        permitted_attributes = [:current_password]
+        permitted_attributes << :email if params[:type] == "email"
+        if current_user.confirmed?
+          permitted_attributes << :username if current_user.can_change_username && params[:type] == "username"
+          permitted_attributes << :password << :password_confirmation if params[:type] == "password"
         end
-        set_flash_message :notice, flash_key || :updated
+      elsif action_name == "create"
+          permitted_attributes = [:username, :name, :email, :password, :password_confirmation]
       end
-      sign_in resource_name, resource, :bypass => true
-      respond_with resource, :location => after_update_path_for(resource)
-    else
-      resource.can_change_username = @can_change_username
-      clean_up_passwords resource
-      params[:type] = params[resource_name].slice!(:current_password).keys.first
-      respond_with resource
+      permitted_attributes
     end
+    params.require(:user).permit(*@_permitted_attributes)
   end
+  private :resource_params
 
   def edit
-    params[:type] = 'password' unless params[:type]
     params[:type] = 'email' if !current_user.confirmed?
+    params[:type] = 'password' if !params.has_key?(:type)
     super
-  end
-
-  def build_resource(hash=nil) # create can access username
-    super
-    if params[resource_name] && params[resource_name][:username]
-      self.resource.username = params[resource_name][:username] if params[resource_name][:username]
-    end
   end
 
   def create

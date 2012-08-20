@@ -1,7 +1,14 @@
 class UsersController < ApplicationController
-
   load_and_authorize_resource
-  skip_authorize_resource :only => [:add_role, :remove_role, :suexit]
+  skip_authorize_resource :only => [:add_role, :remove_role, :suexit, :admin_email, :send_admin_email]
+
+  def permitted_params
+    @_permitted_attributes ||= begin
+      permitted_attributes = [:name, :avatar, :remove_avatar, :avatar_cache]
+      permitted_attributes << :brownie_points if can? :add_brownie, @user
+    end
+    params.require(:user).permit(*@_permitted_attributes)
+  end
 
   def index
     @users = @users.distinct.num_solved.order(:email)
@@ -24,11 +31,8 @@ class UsersController < ApplicationController
   end
 
   def update
-
-    @user.accessible = [:brownie_points] if can? :add_brownie, @user
-
     respond_to do |format|
-      if @user.update_attributes(params[:user])
+      if @user.update_attributes(permitted_params)
         format.html { redirect_to(@user, :notice => 'User was successfully updated.') }
         format.xml { head :ok }
       else
@@ -84,7 +88,6 @@ class UsersController < ApplicationController
   end
 
   def add_brownie
-    
     authorize! :add_brownie, @user
     logger.debug "adding brownie"
     @user.brownie_points += 1

@@ -1,5 +1,12 @@
 class TestSetsController < ApplicationController
-  load_and_authorize_resource
+  load_and_authorize_resource :except => [:create]
+
+  def permitted_params
+    @_permitted_params ||= begin
+      permitted_attributes = [:name, :problem_id, :points]
+      params.require(:test_set).permit(*permitted_attributes)
+    end
+  end
 
   # GET /test_sets
   # GET /test_sets.json
@@ -15,7 +22,6 @@ class TestSetsController < ApplicationController
   # GET /test_sets/1
   # GET /test_sets/1.json
   def show
-
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @test_set }
@@ -25,7 +31,6 @@ class TestSetsController < ApplicationController
   # GET /test_sets/new
   # GET /test_sets/new.json
   def new
-
     respond_to do |format|
       format.html # new.html.erb
       format.json { render :json => @test_set }
@@ -39,7 +44,8 @@ class TestSetsController < ApplicationController
   # POST /test_sets
   # POST /test_sets.json
   def create
-    @test_set.attributes = params[:test_set]
+    @test_set = TestSet.new(permitted_params)
+    authorize! :create, @test_set
 
     respond_to do |format|
       if @test_set.save
@@ -55,9 +61,8 @@ class TestSetsController < ApplicationController
   # PUT /test_sets/1
   # PUT /test_sets/1.json
   def update
-
     respond_to do |format|
-      if @test_set.update_attributes(params[:test_set])
+      if @test_set.update_attributes(permitted_params)
         format.html { redirect_to @test_set, :notice => 'Test set was successfully updated.' }
         format.json { head :ok }
       else

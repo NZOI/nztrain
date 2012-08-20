@@ -53,11 +53,12 @@ NztrainV2::Application.routes.draw do
     end
   end
 
-  devise_for :users, :path => "accounts", :controllers => { :registrations => "accounts/registrations", :settings => "accounts/settings", :confirmations => "accounts/confirmations" }
+  devise_for :users, :path => "accounts", :controllers => { :registrations => "accounts/registrations", :settings => "accounts/settings", :confirmations => "accounts/confirmations", :passwords => "accounts/passwords" }
 
   devise_scope :user do
     namespace :accounts do
       get 'edit/:type', :to => 'registrations#edit'
+      put 'update/:type', :to => 'registrations#update'
       get 'settings/edit', :to => 'settings#edit'
       put 'settings/update', :to => 'settings#update'
     end

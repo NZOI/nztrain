@@ -1,8 +1,10 @@
 require 'file_size_validator'
 
 class User < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
+  include ActiveModel::ForbiddenAttributesProtection
+
+  # Include devise modules. Others available are:
+  # :token_authenticatable, :encryptable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable # unconfirmed users can only log in to change email
@@ -13,8 +15,10 @@ class User < ActiveRecord::Base
   validates :username, :length => { :in => 2..32 }, :format => { :with => /\A[a-zA-Z0-9\._]+\z/, :message => "Only letters, numbers, dots or underscores allowed in username" }, :presence => true, :uniqueness => { :case_sensitive => false }
   validates :avatar, :file_size => { :maximum => 40.kilobytes.to_i }
 
-  # Setup accessible (or protected) attributes for your model
-  attr_accessible :name, :email, :password, :password_confirmation, :remember_me, :avatar, :remove_avatar, :avatar_cache
+  before_save do
+    self.can_change_username = false if self.username_changed? # can only change username once
+    return true
+  end
 
   has_many :problems
   has_many :submissions

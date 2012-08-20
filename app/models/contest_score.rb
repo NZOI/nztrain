@@ -1,4 +1,6 @@
 class ContestScore < ActiveRecord::Base
+  include ActiveModel::ForbiddenAttributesProtection # all model attributes automatically generated
+
   # remembers the score a user scored for a problem in a contest when it was last updated
   # this allows judging data to be changed, and for submissions to be rejudged **without affecting the score of past contests**
   belongs_to :contest_relation

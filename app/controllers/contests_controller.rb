@@ -1,6 +1,13 @@
 class ContestsController < ApplicationController
+  load_and_authorize_resource :except => [:create]
 
-  load_and_authorize_resource
+  def permitted_params
+    @_permitted_params ||= begin
+      permitted_attributes = [:title, :start_time, :end_time, :duration, :problem_set_id]
+      permitted_attributes << :owner_id if can? :transfer, @contest
+      params.require(:contest).permit(*permitted_attributes)
+    end
+  end
 
   # GET /contests
   # GET /contests.xml
@@ -72,17 +79,17 @@ class ContestsController < ApplicationController
   # POST /contests
   # POST /contests.xml
   def create
+    @contest = Contest.new(:owner_id => current_user.id)
+    authorize! :create, @contest
     authorize! :use, params[:contest][:problem_set_id] if params[:contest][:problem_set_id]
-    @contest.owner_id = current_user.id
-    @contest.accessible=[:owner_id] if can? :transfer, @contest
-    @contest.attributes = params[:contest]
-    @contest.start_time = params[:contest][:start_time].get_date(Time.zone) # TODO: catch exception when string is not a valid date
-    @contest.end_time = params[:contest][:end_time].get_date(Time.zone)
+
+    params[:contest][:start_time] = params[:contest][:start_time].get_date(Time.zone)
+    params[:contest][:end_time] = params[:contest][:end_time].get_date(Time.zone)
+
     logger.debug "time zone is " + Time.zone.to_s
-    @contest.owner_id = current_user
 
     respond_to do |format|
-      if @contest.save
+      if @contest.update_attributes(permitted_params)
         format.html { redirect_to(@contest, :notice => 'Contest was successfully created.') }
         format.xml  { render :xml => @contest, :status => :created, :location => @contest }
       else
@@ -96,11 +103,12 @@ class ContestsController < ApplicationController
   # PUT /contests/1.xml
   def update
     authorize! :use, params[:contest][:problem_set_id] if params[:contest][:problem_set_id] && (params[:contest][:problem_set_id] != @contest.problem_set_id) # can only use problem sets which user has permission to use
+
     params[:contest][:start_time] = params[:contest][:start_time].get_date(Time.zone)
     params[:contest][:end_time] = params[:contest][:end_time].get_date(Time.zone)
-    @contest.accessible = [:owner_id] if can? :transfer, @contest
+
     respond_to do |format|
-      if @contest.update_attributes(params[:contest])
+      if @contest.update_attributes(permitted_params)
         format.html { redirect_to(@contest, :notice => 'Contest was successfully updated.') }
         format.xml  { head :ok }
       else

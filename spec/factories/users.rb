@@ -5,7 +5,7 @@ FactoryGirl.define do
     name "Name of User"
     sequence(:username) {|n| "user#{n}" }
     email { "#{username}@test.emails.com" }
-    password "asdfasdf"
+    password "default password"
     confirmed_at "2012-08-05 07:00:38.285779"
     confirmation_sent_at "2012-08-05 07:00:15.772942"
 

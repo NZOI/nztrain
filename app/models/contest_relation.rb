@@ -1,10 +1,10 @@
 class ContestRelation < ActiveRecord::Base
+  include ActiveModel::ForbiddenAttributesProtection
+
   belongs_to :user
   belongs_to :contest
   has_many :contest_scores
 
-  attr_accessible :user_id, :contest_id, :started_at
-  
   # override setters to update finish_at when necessary
   def started_at=(started_at)
     self[:started_at]=(started_at)

@@ -1,9 +1,14 @@
 class Accounts::SettingsController < Devise::RegistrationsController
+  def permitted_params
+    @_permitted_attributes ||= begin
+      permitted_attributes = [:name, :avatar, :remove_avatar, :avatar_cache]
+    end
+    params.require(:user).permit(*@_permitted_attributes)
+  end
 
-  def update # try update the username with password if username can be changed
+  def update
     self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
-    if resource.update_without_password(params[resource_name])
-      sign_in resource_name, resource, :bypass => true
+    if resource.update_without_password(permitted_params)
       flash[:notice] = "Account updated"
       respond_with resource, :location => after_update_path_for(resource)
     else

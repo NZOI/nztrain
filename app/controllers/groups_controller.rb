@@ -1,7 +1,14 @@
 class GroupsController < ApplicationController
-
-  load_and_authorize_resource
+  load_and_authorize_resource :except => [:create]
   skip_load_and_authorize_resource :only => [:add_contest]
+
+  def permitted_params
+    @_permitted_attributes ||= begin
+      permitted_attributes = [:name]
+      permitted_attributes << :owner_id if can? :transfer, @group
+    end
+    params.require(:group).permit(*@_permitted_attributes)
+  end
 
   def join
     authorize! :join, @group
@@ -96,12 +103,11 @@ class GroupsController < ApplicationController
   # POST /groups
   # POST /groups.xml
   def create
-    @group.owner_id = current_user.id
-    @group.accessible=[:owner_id] if can? :transfer, @contest
-    @group.attributes = params[:group]
+    @group = Group.new(:owner_id => current_user.id)
+    authorize! :create, @group
 
     respond_to do |format|
-      if @group.save
+      if @group.update_attributes(permitted_params)
         format.html { redirect_to(@group, :notice => 'Group was successfully created.') }
         format.xml  { render :xml => @group, :status => :created, :location => @group }
       else
@@ -114,9 +120,8 @@ class GroupsController < ApplicationController
   # PUT /groups/1
   # PUT /groups/1.xml
   def update
-    @group.accessible = [:owner_id] if can? :transfer, @group
     respond_to do |format|
-      if @group.update_attributes(params[:group])
+      if @group.update_attributes(permitted_params)
         format.html { redirect_to(@group, :notice => 'Group was successfully updated.') }
         format.xml  { head :ok }
       else

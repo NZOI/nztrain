@@ -1,7 +1,14 @@
 class ProblemSetsController < ApplicationController
+  load_and_authorize_resource :except => :create
+  skip_authorize_resource :only => [:add_problem, :remove_problem]
 
-  load_and_authorize_resource
-  skip_authorization_check :only => [:add_problem, :remove_problem]
+  def permitted_params
+    @_permitted_params ||= begin
+      permitted_attributes = [:title]
+      permitted_attributes << :owner_id if can? :transfer, @problem_set
+      params.require(:problem_set).permit(*permitted_attributes)
+    end
+  end
 
   def add_problem # currently unused function
     @problem_set = ProblemSet.find(params[:problem][:problem_set_ids])
@@ -60,12 +67,11 @@ class ProblemSetsController < ApplicationController
   # POST /problem_sets
   # POST /problem_sets.xml
   def create
-    @problem_set.owner_id = current_user.id
-    @problem_set.accessible = [:owner_id] if can? :transfer, @problem_set
-    @problem_set.attributes = params[:problem_set]
+    @problem_set = ProblemSet.new(:owner_id => current_user.id)
+    authorize! :create, @problem_set
 
     respond_to do |format|
-      if @problem_set.save
+      if @problem_set.update_attributes(permitted_params)
         format.html { redirect_to(@problem_set, :notice => 'Problem set was successfully created.') }
         format.xml  { render :xml => @problem_set, :status => :created, :location => @problem_set }
       else
@@ -78,9 +84,8 @@ class ProblemSetsController < ApplicationController
   # PUT /problem_sets/1
   # PUT /problem_sets/1.xml
   def update
-    @problem_set.accessible = [:owner_id] if can? :transfer, @problem_set
     respond_to do |format|
-      if @problem_set.update_attributes(params[:problem_set])
+      if @problem_set.update_attributes(permitted_params)
         format.html { redirect_to(@problem_set, :notice => 'Problem set was successfully updated.') }
         format.xml  { head :ok }
       else
@@ -100,4 +105,5 @@ class ProblemSetsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
 end

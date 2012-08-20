@@ -1,10 +1,16 @@
 class SettingsController < ApplicationController
- load_and_authorize_resource
+ load_and_authorize_resource :except => :create
+
+  def permitted_params
+    @_permitted_params ||= begin
+      permitted_attributes = [:key,:value]
+      params.require(:setting).permit(*permitted_attributes)
+    end
+  end
 
   # GET /settings
   # GET /settings.xml
   def index
-
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @settings }
@@ -14,7 +20,6 @@ class SettingsController < ApplicationController
   # GET /settings/1
   # GET /settings/1.xml
   def show
-
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @setting }
@@ -38,7 +43,8 @@ class SettingsController < ApplicationController
   # POST /settings
   # POST /settings.xml
   def create
-    @setting = Setting.new(params[:setting])
+    @setting = Setting.new(permitted_params)
+    authorize! :create, @setting
 
     respond_to do |format|
       if @setting.save
@@ -54,9 +60,8 @@ class SettingsController < ApplicationController
   # PUT /settings/1
   # PUT /settings/1.xml
   def update
-
     respond_to do |format|
-      if @setting.update_attributes(params[:setting])
+      if @setting.update_attributes(permitted_params)
         format.html { redirect_to(@setting, :notice => 'Setting was successfully updated.') }
         format.xml  { head :ok }
       else

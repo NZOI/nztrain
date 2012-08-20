@@ -1,6 +1,12 @@
 class SubmissionsController < ApplicationController
+  load_and_authorize_resource :except => [:create]
 
-  load_and_authorize_resource
+  def permitted_params
+    @_permitted_params ||= begin
+      permitted_attributes = [:problem_id, :source, :language]
+      params.require(:submission).permit(*permitted_attributes)
+    end
+  end
 
   has_scope :by_user
   has_scope :by_problem
@@ -59,13 +65,11 @@ class SubmissionsController < ApplicationController
   # POST /submissions.xml
   def create
     # don't let users submit to problems they don't have access to (which they could do by id speculatively to try get access to problem title, # of test cases etc.) (ie. they should have read access)
-    authorize! :read, Problem.find(params[:submission][:problem_id])
+    authorize! :read, @submission.problem
     logger.debug "creating new submission , problem is #{@defaultProblem} and params are:"
     logger.debug params
-    @submission = Submission.new(params[:submission])
-    @submission.source = IO.read(params[:submission][:source].path)
-    @submission.user = current_user
-    @submission.score = nil # unjudged score
+    params[:submission][:source] = IO.read(params[:submission][:source].path)
+    @submission = Submission.new(permitted_params.merge(:score => nil, :user_id => current_user.id))
 
     respond_to do |format|
       if @submission.save
@@ -84,10 +88,10 @@ class SubmissionsController < ApplicationController
   # PUT /submissions/1
   # PUT /submissions/1.xml
   def update
-    @submission.source = IO.read(params[:submission][:source].path)
+    params[:submission][:source] = IO.read(params[:submission][:source].path)
 
     respond_to do |format|
-      if @submission.update_attributes(params[:submission])
+      if @submission.update_attributes(permitted_params)
         format.html { redirect_to(@submission, :notice => 'Submission was successfully updated.') }
         format.xml  { head :ok }
       else

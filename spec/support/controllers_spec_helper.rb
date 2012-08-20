@@ -1,6 +1,9 @@
 module ControllersSpecHelper
   def self.included(base)
     base.extend(ClassMethods)
+    base.send :before, :each do
+      @request.env["devise.mapping"] = Devise.mappings[:user]
+    end
   end
   module ClassMethods
     def _process_options options

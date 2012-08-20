@@ -77,7 +77,7 @@ class Ability
       can :read, ProblemSet, :groups.outer => {:id => 0}
     else # in a contest (usual permissions to see problems not valid)
       # Permissions by virtue of being in a contest
-      can :create, Submission
+      can :create, Submission, :user_id => user.id
       # can read stuff in a contest user is currently doing
       can :read, Problem, :problem_sets.outer => {:contests.outer => {:users.outer => {:id => user.id}, :start_time => DateTime.min...DateTime.now, :end_time => DateTime.now..DateTime.max}}
       can :read, ProblemSet, :contests.outer => {:users.outer => {:id => user.id}, :start_time => DateTime.min...DateTime.now, :end_time => DateTime.now..DateTime.max}

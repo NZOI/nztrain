@@ -1,8 +1,8 @@
 class Submission < ActiveRecord::Base
+  include ActiveModel::ForbiddenAttributesProtection
+
   belongs_to :user
   belongs_to :problem
-
-  attr_accessible :problem_id, :source, :language, :score, :created_at
 
   after_save do
     if self.score_changed? # only update if score changed

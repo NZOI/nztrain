@@ -1,12 +1,12 @@
 class Contest < ActiveRecord::Base
+  include ActiveModel::ForbiddenAttributesProtection
+
   belongs_to :problem_set
   has_many :problems, :through => :problem_set
   has_many :contest_relations, :dependent => :destroy
   has_many :users, :through => :contest_relations
   belongs_to :owner, :class_name => :User
   has_and_belongs_to_many :groups
-
-  attr_accessible :title, :start_time, :end_time, :duration, :problem_set_id
 
   before_save do # update the end time that was cached
     contest_relations.find_each do |relation|
@@ -15,6 +15,7 @@ class Contest < ActiveRecord::Base
     end if duration_changed? || end_time_changed?
 
     update_contest_scores if finalized_at_was && finalized_at.nil?
+    true
   end
 
   def update_contest_scores # calculate contest scores again from scratch

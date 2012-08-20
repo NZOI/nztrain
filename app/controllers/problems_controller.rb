@@ -1,6 +1,13 @@
 class ProblemsController < ApplicationController
+  load_and_authorize_resource :except => [:create]
 
-  load_and_authorize_resource
+  def permitted_params
+    @_permitted_params ||= begin
+      permitted_attributes = [:title, :statement, :input, :output, :memory_limit, :time_limit, :evaluator_id]
+      permitted_attributes << :owner_id if can? :transfer, @problem
+      params.require(:problem).permit(*permitted_attributes)
+    end
+  end
 
   # GET /problems
   # GET /problems.xml
@@ -51,15 +58,11 @@ class ProblemsController < ApplicationController
   # POST /problems
   # POST /problems.xml
   def create
-    @problem.owner_id = current_user.id;
-    @problem.accessible = [:owner_id] if can? :transfer, @problem # free to give others a problem to own
-    @problem.attributes = params[:problem] # mass-assignment
-    #if @problem.evaluator
-    #  @problem.evaluator = IO.read(params[:problem][:evaluator].path)
-    #end
+    @problem = Problem.new(:owner_id => current_user.id)
+    authorize! :create, @problem
 
     respond_to do |format|
-      if @problem.save
+      if @problem.update_attributes(permitted_params)
         format.html { redirect_to(@problem, :notice => 'Problem was successfully created.') }
         format.xml  { render :xml => @problem, :status => :created, :location => @problem }
       else
@@ -72,13 +75,8 @@ class ProblemsController < ApplicationController
   # PUT /problems/1
   # PUT /problems/1.xml
   def update
-    @problem.accessible = [:owner_id] if can? :transfer, @problem   
-    #if params[:problem][:evaluator] != nil
-    #  params[:problem][:evaluator] = IO.read(params[:problem][:evaluator].path)
-    #end
-
     respond_to do |format|
-      if @problem.update_attributes(params[:problem])
+      if @problem.update_attributes(permitted_params)
         format.html { redirect_to(@problem, :notice => 'Problem was successfully updated.') }
         format.xml  { head :ok }
       else

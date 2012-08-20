@@ -1,6 +1,12 @@
 class RolesController < ApplicationController
+  load_and_authorize_resource :except => [:create]
 
-  load_and_authorize_resource
+  def permitted_params
+    @_permitted_params ||= begin
+      permitted_attributes = [:name]
+      params.require(:role).permit(*permitted_attributes)
+    end
+  end
 
   # GET /roles
   # GET /roles.xml
@@ -40,7 +46,8 @@ class RolesController < ApplicationController
   # POST /roles
   # POST /roles.xml
   def create
-    @role = Role.new(params[:role])
+    @role = Role.new(permitted_params)
+    authorize! :create, @role
 
     respond_to do |format|
       if @role.save
@@ -56,9 +63,8 @@ class RolesController < ApplicationController
   # PUT /roles/1
   # PUT /roles/1.xml
   def update
-
     respond_to do |format|
-      if @role.update_attributes(params[:role])
+      if @role.update_attributes(permitted_params)
         format.html { redirect_to(@role, :notice => 'Role was successfully updated.') }
         format.xml  { head :ok }
       else

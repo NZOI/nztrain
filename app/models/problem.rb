@@ -1,4 +1,6 @@
 class Problem < ActiveRecord::Base
+  include ActiveModel::ForbiddenAttributesProtection
+
   has_and_belongs_to_many :problem_sets
   has_many :test_sets, :dependent => :destroy
   has_many :test_cases, :through => :test_sets
@@ -8,12 +10,9 @@ class Problem < ActiveRecord::Base
 
   validates :title, :presence => true, :uniqueness => { :case_sensitive => false }
 
-  attr_accessible :title, :statement, :input, :output, :memory_limit, :time_limit, :evaluator_id
-
   # Scopes
   scope :distinct, select("distinct(problems.id), problems.*")
 
-  #scope :visible, lambda { joins(:problem_sets => :groups => :users).where( :users => { :id => current_user.id } ).select("distinct(problems.id), problems.*") }
   def self.score_by_user(user_id)
     select("(SELECT MAX(submissions.score) FROM submissions WHERE submissions.problem_id = problems.id AND user_id = #{user_id.to_i}) AS score")
   end
