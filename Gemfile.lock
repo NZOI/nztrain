@@ -197,7 +197,7 @@ DEPENDENCIES
   ajax_pagination
   albino
   bluecloth
-  cancan
+  cancan (= 1.6.8)
   carrierwave
   coffee-rails (~> 3.2.1)
   debugger
