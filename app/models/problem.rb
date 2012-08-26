@@ -8,10 +8,25 @@ class Problem < ActiveRecord::Base
   belongs_to :owner, :class_name => :User
   belongs_to :evaluator
 
+  has_many :contests, :through => :problem_sets
+  has_many :contest_relations, :through => :contests
+  has_many :groups, :through => :problem_sets, :uniq => :true
+  has_many :group_members, :through => :groups, :source => :users, :uniq => true
+
   validates :title, :presence => true, :uniqueness => { :case_sensitive => false }
 
   # Scopes
   scope :distinct, select("distinct(problems.id), problems.*")
+
+  sifter :for_contestant do |u_id|
+    id >> Problem.joins(:contest_relations).where{ contest_relations.sift(:is_active) & (contest_relations.user_id == u_id) }
+  end
+  sifter :for_group_user do |u_id|
+    id >> Problem.select(:id).joins(:group_members).where(:users => {:id => u_id})
+  end
+  sifter :for_everyone do
+    id >> Problem.joins(:groups).where(:groups => {:id => 0})
+  end
 
   def self.score_by_user(user_id)
     select("(SELECT MAX(submissions.score) FROM submissions WHERE submissions.problem_id = problems.id AND user_id = #{user_id.to_i}) AS score")

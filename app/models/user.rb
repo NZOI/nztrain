@@ -64,13 +64,21 @@ class User < ActiveRecord::Base
     end
     return solved
   end
-  def has_role(role)
-    roles.include?(Role.find_by_name(role.to_s))
+  def has_role?(role)
+    self.roles.map(&:name).include?(role.to_s)
   end
-  def is_superadmin?
-    self.has_role(:superadmin)
+  %w{superadmin staff organiser author}.each do |role|
+    define_method "is_#{role}?" do
+      self.roles.map(&:name).include? role
+    end
   end
   def is_admin?
-    self.has_role(:admin) || self.has_role(:superadmin)
+    self.is_any? [:admin, :superadmin]
+  end
+  def is_any?(roles)
+    (self.roles.map(&:name) & roles.map(&:to_s)).any?
+  end
+  def competing?
+    ContestRelation.active.user(self.id).any?
   end
 end

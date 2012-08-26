@@ -27,7 +27,7 @@ module ControllersSpecHelper
     end
     def can_index resource, options ={}
       options = process_plural_options resource, options
-      it "can index #{options[:resources_name]}" do
+      it "can index #{resource}" do
         get :index
         response.should be_success
         assigns(options[:resources_name]).class.should == ActiveRecord::Relation
@@ -40,7 +40,7 @@ module ControllersSpecHelper
     end
     def can_show resource, options = {}
       options = process_options resource, options
-      it "can show #{options[:resource_name]}" do
+      it "can show #{resource}" do
         object = instance_variable_get "@#{resource}"
         get :show, :id => object.to_param
         response.should be_success
@@ -48,13 +48,13 @@ module ControllersSpecHelper
     end
     def can_update resource, options = {}
       options = process_options resource, options
-      it "can edit #{options[:resource_name]}" do
+      it "can edit #{resource}" do
         object = instance_variable_get "@#{resource}"
         get :edit, :id => object.to_param
         response.should be_success
         assigns(options[:resource_name]).class == object.class
       end
-      it "can update #{options[:resource_name]}" do
+      it "can update #{resource}" do
         object = instance_variable_get "@#{resource}"
         put :update, :id => object.to_param, options[:resource_name] => object.attributes.symbolize_keys.merge(options[:attributes])
         response.should redirect_to send "#{options[:resource_name]}_path", assigns(options[:resource_name])
@@ -63,11 +63,11 @@ module ControllersSpecHelper
     end
     def can_create resource, options = {}
       options = process_options resource, options
-      it "can get new #{options[:resource_name]}" do
+      it "can get new #{resource}" do
         get :new
         response.should be_success
       end
-      it "can create #{options[:resource_name]}" do
+      it "can create #{resource}" do
         expect do 
           post :create, options[:resource_name] => options[:attributes]
         end.to change{(Kernel.const_get options[:class_name]).count}.by(1)

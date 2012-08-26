@@ -3,6 +3,10 @@ class Submission < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :problem
+  
+  sifter :for_contestant do |u_id|
+    (user_id == u_id) & (problem_id >> Problem.select(:id).joins(:contest_relations).where{ contest_relations.sift(:is_active) & (contest_relations.user_id == u_id) })
+  end
 
   after_save do
     if self.score_changed? # only update if score changed
