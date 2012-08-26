@@ -22,7 +22,7 @@ class Contest < ActiveRecord::Base
 
   before_save do # update the end time that was cached
     contest_relations.find_each do |relation|
-      relation.finish_at = [end_time,relation.started_at.advance(:hours => duration)].min
+      relation.finish_at = [end_time,relation.started_at.advance(:hours => duration.to_f)].min
       relation.save
     end if duration_changed? || end_time_changed?
 

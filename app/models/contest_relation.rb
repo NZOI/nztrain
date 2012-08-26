@@ -31,7 +31,7 @@ class ContestRelation < ActiveRecord::Base
   end
   alias_method_chain :contest=, :update
   def update_finish_at
-    self.finish_at = [contest.end_time,started_at.advance(:hours => contest.duration)].min unless contest.nil? or started_at.nil?
+    self.finish_at = [contest.end_time,started_at.advance(:hours => contest.duration.to_f)].min unless contest.nil? or started_at.nil?
   end
 
   def update_score_and_save

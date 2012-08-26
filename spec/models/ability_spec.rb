@@ -69,7 +69,7 @@ describe Ability do
     end
     context 'user in contest' do
       before(:all) do
-        @relation = Factory.create(:contest_relation, :user => users(:user), :contest => @contest, :started_at => DateTime.now.advance(:hours => -1))
+        @relation = Factory.create(:contest_relation, :user_id => users(:user).id, :contest_id => @contest.id, :started_at => DateTime.now.advance(:hours => -1))
         @contest_user = Ability.new(users(:user))
       end
       after(:all) do
@@ -110,7 +110,7 @@ describe Ability do
     end
     context 'user in contest' do
       before(:all) do
-        @relation = Factory.create(:contest_relation, :user => users(:user), :contest => @contest, :started_at => DateTime.now.advance(:hours => -1))
+        @relation = Factory.create(:contest_relation, :user_id => users(:user).id, :contest_id => @contest.id, :started_at => DateTime.now.advance(:hours => -1))
         @contest_user = Ability.new(users(:user))
       end
       after(:all) do

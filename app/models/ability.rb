@@ -128,7 +128,7 @@ class Ability
     can [:inspect, :add_brownie], User if user.is_staff?
   end
   def initialize_contest_abilities(user)
-    can :index, Contest, Contest.where{ (owner_id == user.id) | sift(:for_group_user, user.id) | sift(:for_everyone) | sift(:for_contestant) } do |c|
+    can :index, Contest, Contest.where{ (owner_id == user.id) | sift(:for_group_user, user.id) | sift(:for_everyone) | sift(:for_contestant, user.id) } do |c|
       next true if c.owner_id == user.id
       if c.persisted?
         c.group_members.where(:id => user.id).any? || c.groups.where(:id => 0).any? || c.contest_relations.where(:user_id => user.id).any?
@@ -137,7 +137,7 @@ class Ability
       end
     end
     # can show if you own the contest, it is placed in your group or Everyone or you are already a contestant
-    can :show, Contest, Contest.where{ (owner_id == user.id) | (sift(:for_contestant) | (sift(:for_group_user, user.id) | sift(:for_everyone)) & (start_time <= DateTime.now)) } do |c|
+    can :show, Contest, Contest.where{ (owner_id == user.id) | (sift(:for_contestant, user.id) | (sift(:for_group_user, user.id) | sift(:for_everyone)) & (start_time <= DateTime.now)) } do |c|
       next true if c.owner_id == user.id
       next false if c.start_time > DateTime.now
       if c.persisted?
@@ -151,7 +151,7 @@ class Ability
     #can :show, Contest, :groups => {:id => 0}, :start_time => DateTime.min..DateTime.now
     #can :show, Contest, :groups => {:users => {:id => user.id}}, :start_time => DateTime.min..DateTime.now
     # can start if it is placed in your group or Everyone
-    can :start, Contest, Contest.where{ ((-sift(:for_contestant)) & sift(:for_group_user, user.id) | sift(:for_everyone)) & (start_time <= DateTime.now) & (end_time > DateTime.now) } do |c|
+    can :start, Contest, Contest.where{ ((-sift(:for_contestant, user.id)) & sift(:for_group_user, user.id) | sift(:for_everyone)) & (start_time <= DateTime.now) & (end_time > DateTime.now) } do |c|
       next true if c.owner_id == user.id
       next false if (c.start_time > DateTime.now) || (c.end_time <= DateTime.now)
       if c.persisted?
