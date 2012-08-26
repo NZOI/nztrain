@@ -65,8 +65,8 @@ class SubmissionsController < ApplicationController
   # POST /submissions.xml
   def create
     # don't let users submit to problems they don't have access to (which they could do by id speculatively to try get access to problem title, # of test cases etc.) (ie. they should have read access)
-    authorize! :read, @submission.problem
-    logger.debug "creating new submission , problem is #{@defaultProblem} and params are:"
+    authorize! :read, Problem.find(params[:submission][:problem_id])
+    logger.debug "creating new submission , problem is #{params[:submission][:problem_id]} and params are:"
     logger.debug params
     params[:submission][:source] = IO.read(params[:submission][:source].path)
     @submission = Submission.new(permitted_params.merge(:score => nil, :user_id => current_user.id))
