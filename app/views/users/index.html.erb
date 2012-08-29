@@ -1,7 +1,7 @@
 <% content_for :title, "Users" %>
 <div id="main-page-title">Listing users</div>
 <% if can? :su, User %>
-  <%= render 'su.js.erb' %>
+  <%= render :partial => 'su', :formats => [:js] %>
 <% end %>
 <table class="main_table" >
   <tr>

@@ -4,7 +4,7 @@
 <p>
 <%= form_tag( add_role_user_path(@user), :method => :put) do %>
   <%= collection_select :user, :role_ids, Role.accessible_by(current_ability, :grant), :id, :name %>
-  <%= submit_tag "Add role", :confirm => "Are you sure?" %>
+  <%= submit_tag "Add role", :data => { :confirm => "Are you sure?" } %>
 <% end %>
 </p>
 <% end %>

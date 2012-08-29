@@ -27,13 +27,12 @@ class Ability
         # can do anything except for site development, infrastructural objects
         can :manage, :all
         cannot :manage, Role
-        cannot :manage, User, :is_superadmin? => true
+        cannot [:update, :destroy, :su], User, :is_superadmin? => true
         can [:read, :inspect], :all
         can :regrant, Role
         cannot :regrant, Role, :name => 'superadmin' # can assign all roles except superadmin
         cannot :manage, Setting # keys and passwords here
-        cannot :manage, [Group, User], :id => 0 # cannot manage the Everyone group, System user
-        can [:read, :inspect], [Group, User], :id => 0
+        cannot [:update, :destroy, :su], [Group, User], :id => 0 # cannot manage the Everyone group, System user
         return
       end
     end

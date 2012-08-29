@@ -35,18 +35,19 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = true
 
   config.before(:suite) do
-    FixturesSpecHelper.users = { :user => Factory.create(:user), :admin => Factory.create(:admin), :superadmin => Factory.create(:superadmin) }
+    FixturesSpecHelper.initialize
   end
   config.after(:suite) do
-    FixturesSpecHelper.users.each { |k,v| v.destroy }
+    FixturesSpecHelper.destroy
   end
 
   config.include Devise::TestHelpers, :type => :controller
-  config.include FixturesSpecHelper, :type => :controller
-  config.include ControllersSpecHelper, :type => :controller
+  config.include FixturesSpecHelper, :type => :controller # supply fixtures variables
+  config.include ControllersSpecHelper, :type => :controller # some macros for testing controllers
+  config.render_views # don't stub views when testing controllers
 
-  config.include FixturesSpecHelper, :type => :request
-  config.include RequestsSpecHelper, :type => :request
+  config.include FixturesSpecHelper, :type => :request # supply fixture variables
+  config.include RequestsSpecHelper, :type => :request # use warden to shortcut login
 
 end
 
