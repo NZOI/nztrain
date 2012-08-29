@@ -24,7 +24,7 @@ describe Accounts::RegistrationsController do
 
   context 'when signed in' do
     before(:all) do
-      @user = Factory.create(:user, :password => "registration password")
+      @user = FactoryGirl.create(:user, :password => "registration password")
     end
     after(:all) do
       @user.destroy
@@ -46,7 +46,7 @@ describe Accounts::RegistrationsController do
 
   context 'when signed in' do
     before(:each) do
-      @user = Factory.create(:user, :password => "registration password")
+      @user = FactoryGirl.create(:user, :password => "registration password")
       sign_in @user
     end
     after(:each) do

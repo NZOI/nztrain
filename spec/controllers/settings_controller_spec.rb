@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe SettingsController do
   before(:all) do
-    @setting = Factory.create(:setting)
+    @setting = FactoryGirl.create(:setting)
   end
   after(:all) do
     @setting.destroy

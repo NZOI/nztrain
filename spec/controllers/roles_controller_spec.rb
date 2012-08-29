@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe RolesController do
   before(:all) do
-    @role = Factory.create(:role)
+    @role = FactoryGirl.create(:role)
   end
   after(:all) do
     @role.destroy

@@ -8,22 +8,22 @@ describe Ability do
     @admin = Ability.new(users(:admin))
     @user = Ability.new(users(:user))
     # various objects to test ability on
-    @group = Factory.create(:group, :users => [users(:user), users(:admin), users(:superadmin)])
-    @private_problem = Factory.create(:problem)
-    @group_set = Factory.create(:problem_set, :groups => [@group])
-    @everyone_set = Factory.create(:problem_set, :group_ids => [0])
-    @group_problem = Factory.create(:problem, :problem_sets => [@group_set])
-    @user_problem = Factory.create(:problem, :owner => users(:user))
-    @admin_problem = Factory.create(:problem, :owner => users(:admin))
-    @everyone_problem = Factory.create(:problem, :problem_sets => [@everyone_set])
-    @contest_set = Factory.create(:problem_set)
-    @contest = Factory.create(:contest, :groups => [@group], :problem_set => @contest_set, :duration => 100, :start_time => DateTime.now.advance(:hours => -100), :end_time => DateTime.now.advance(:hours => 100))
-    @contest_problem = Factory.create(:problem, :problem_sets => [@contest_set])
-    @private_set = Factory.create(:problem_set)
-    @private_contest = Factory.create(:contest, :problem_set => @contest_set)
-    @past_contest = Factory.create(:contest, :groups => [@group], :problem_set => @contest_set, :start_time => DateTime.now.advance(:hours => -100), :end_time => DateTime.now.advance(:hours => -50))
-    @future_contest = Factory.create(:contest, :groups => [@group], :problem_set => @contest_set, :start_time => DateTime.now.advance(:hours => 100), :end_time => DateTime.now.advance(:hours => 200))
-    @everyone_contest = Factory.create(:contest, :group_ids => [0], :problem_set => @contest_set, :start_time => DateTime.now.advance(:hours => -100), :end_time => DateTime.now.advance(:hours => 100))
+    @group = FactoryGirl.create(:group, :users => [users(:user), users(:admin), users(:superadmin)])
+    @private_problem = FactoryGirl.create(:problem)
+    @group_set = FactoryGirl.create(:problem_set, :groups => [@group])
+    @everyone_set = FactoryGirl.create(:problem_set, :group_ids => [0])
+    @group_problem = FactoryGirl.create(:problem, :problem_sets => [@group_set])
+    @user_problem = FactoryGirl.create(:problem, :owner => users(:user))
+    @admin_problem = FactoryGirl.create(:problem, :owner => users(:admin))
+    @everyone_problem = FactoryGirl.create(:problem, :problem_sets => [@everyone_set])
+    @contest_set = FactoryGirl.create(:problem_set)
+    @contest = FactoryGirl.create(:contest, :groups => [@group], :problem_set => @contest_set, :duration => 100, :start_time => DateTime.now.advance(:hours => -100), :end_time => DateTime.now.advance(:hours => 100))
+    @contest_problem = FactoryGirl.create(:problem, :problem_sets => [@contest_set])
+    @private_set = FactoryGirl.create(:problem_set)
+    @private_contest = FactoryGirl.create(:contest, :problem_set => @contest_set)
+    @past_contest = FactoryGirl.create(:contest, :groups => [@group], :problem_set => @contest_set, :start_time => DateTime.now.advance(:hours => -100), :end_time => DateTime.now.advance(:hours => -50))
+    @future_contest = FactoryGirl.create(:contest, :groups => [@group], :problem_set => @contest_set, :start_time => DateTime.now.advance(:hours => 100), :end_time => DateTime.now.advance(:hours => 200))
+    @everyone_contest = FactoryGirl.create(:contest, :group_ids => [0], :problem_set => @contest_set, :start_time => DateTime.now.advance(:hours => -100), :end_time => DateTime.now.advance(:hours => 100))
   end
   after(:all) do
     [@group, @private_problem, @group_set ,@everyone_set, @group_problem, @user_problem, @admin_problem, @everyone_problem, @contest_set, @contest, @contest_problem, @private_set, @private_contest, @past_contest, @future_contest, @everyone_contest].each { |obj| obj.destroy }
@@ -69,7 +69,7 @@ describe Ability do
     end
     context 'user in contest' do
       before(:all) do
-        @relation = Factory.create(:contest_relation, :user_id => users(:user).id, :contest_id => @contest.id, :started_at => DateTime.now.advance(:hours => -1))
+        @relation = FactoryGirl.create(:contest_relation, :user_id => users(:user).id, :contest_id => @contest.id, :started_at => DateTime.now.advance(:hours => -1))
         @contest_user = Ability.new(users(:user))
       end
       after(:all) do
@@ -110,7 +110,7 @@ describe Ability do
     end
     context 'user in contest' do
       before(:all) do
-        @relation = Factory.create(:contest_relation, :user_id => users(:user).id, :contest_id => @contest.id, :started_at => DateTime.now.advance(:hours => -1))
+        @relation = FactoryGirl.create(:contest_relation, :user_id => users(:user).id, :contest_id => @contest.id, :started_at => DateTime.now.advance(:hours => -1))
         @contest_user = Ability.new(users(:user))
       end
       after(:all) do

@@ -55,13 +55,14 @@ group :development, :test do
   #gem 'webrat'
 
   gem 'factory_girl_rails'
-  gem 'factory_girl', '~> 2.0'
 
   # To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
   if RUBY_VERSION.split('.')[0..1]==["1","8"]
     gem 'ruby-debug'
-  else
+    gem 'factory_girl', '~> 2.0'
+  else # ruby 1.9+
     gem 'debugger'
+    gem 'factory_girl'#, '~> 4.0'
     # gem 'ruby-debug19', :require => 'ruby-debug'
   end
 end

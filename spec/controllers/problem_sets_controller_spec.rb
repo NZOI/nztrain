@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe ProblemSetsController do
   before(:all) do
-    @problem_set = Factory.create(:problem_set)
+    @problem_set = FactoryGirl.create(:problem_set)
   end
   after(:all) do
     @problem_set.destroy

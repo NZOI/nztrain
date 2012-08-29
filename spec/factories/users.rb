@@ -10,10 +10,10 @@ FactoryGirl.define do
     confirmation_sent_at "2012-08-05 07:00:15.772942"
 
     factory :admin do
-      after_create { |u| u.roles << Role.find_by_name("admin") }
+      roles { [Role.find_by_name("admin")] }
     end
     factory :superadmin do
-      after_create { |u| u.roles << Role.find_by_name("superadmin") }
+      roles { [Role.find_by_name("superadmin")] }
     end
   end
 end

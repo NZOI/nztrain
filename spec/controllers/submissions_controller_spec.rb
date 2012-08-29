@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe SubmissionsController do
   before(:all) do
-    @submission = Factory.create(:submission, :problem => problems(:problem), :user => users(:superadmin))
+    @submission = FactoryGirl.create(:submission, :problem => problems(:problem), :user => users(:superadmin))
   end
   after(:all) do
     @submission.destroy

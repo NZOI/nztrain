@@ -4,11 +4,11 @@ describe Submission do
   #pending "add some examples to (or delete) #{__FILE__}"
   context 'on "adding" problem' do
     before(:all) do
-      @user = Factory.create(:user)
-      @problem = Factory.create(:adding_problem)
-      @submission = Factory.create(:adding_submission, :problem => @problem, :user => @user)
-      @char_submission = Factory.create(:adding_char_submission, :problem => @problem, :user => @user)
-      @unsigned_submission = Factory.create(:adding_unsigned_submission, :problem => @problem, :user => @user)
+      @user = FactoryGirl.create(:user)
+      @problem = FactoryGirl.create(:adding_problem)
+      @submission = FactoryGirl.create(:adding_submission, :problem => @problem, :user => @user)
+      @char_submission = FactoryGirl.create(:adding_char_submission, :problem => @problem, :user => @user)
+      @unsigned_submission = FactoryGirl.create(:adding_unsigned_submission, :problem => @problem, :user => @user)
     end
     after(:all) do
       [@user, @problem, @submission, @char_submission, @unsigned_submission].each { |object| object.destroy }

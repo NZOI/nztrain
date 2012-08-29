@@ -21,7 +21,7 @@ describe Accounts::PasswordsController do
   end
   context "using password reset token" do
     before(:all) do
-      @resetuser = Factory.create(:user)
+      @resetuser = FactoryGirl.create(:user)
     end
     after(:all) do
       @resetuser.destroy
