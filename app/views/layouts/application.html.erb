@@ -31,7 +31,7 @@
       <ul>
         <li<%= raw ' class="masknav"' if in_su? %>>
         <% if user_signed_in? %>
-          <a href="<%= user_path(current_user) %>"><%= current_user.username %></a>
+          <span id="current_user_username"><a href="<%= user_path(current_user) %>"><%= current_user.username %></a></span>
           <ul>
             <table style="border: none; margin: 0px; padding: 0px;">
               <tr>
@@ -41,13 +41,13 @@
                     <li><%= link_to "exit su", suexit_users_path, :method => 'post' %></li>
                   <% end %>
                   <li><a href="/accounts/settings/edit">edit profile</a></li>
-                  <li><%= link_to "sign out", destroy_user_session_path, :method => :delete %></li>
+                  <li><%= link_to "sign out", destroy_user_session_path, :method => :delete, :id => 'sign_out' %></li>
                 </td>
               </tr>
             </table>
           </ul>
         <% else %>
-          <a href="<%= new_user_session_path %>">sign in</a>
+          <%= link_to "sign in", new_user_session_path, :id => 'sign_in' %>
         <% end %>
         </li>
       </ul>
@@ -100,7 +100,7 @@
 	          <p id="alert"><%= flash[:notice] %></p>
 	        <% end %>
                 <div>
-	        <%= yield %>
+	        <%= yield(:content).empty? ? yield : yield(:content) %>
                 </div>
 	  </div>
         </div>

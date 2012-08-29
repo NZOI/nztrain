@@ -3,6 +3,7 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
+require 'capybara/rspec'
 
 # include seeds
 require "#{Rails.root}/db/seeds.rb"
@@ -33,16 +34,19 @@ RSpec.configure do |config|
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = true
 
-  # allow signin
-  config.include Devise::TestHelpers, :type => :controller
-
   config.before(:suite) do
     FixturesSpecHelper.users = { :user => Factory.create(:user), :admin => Factory.create(:admin), :superadmin => Factory.create(:superadmin) }
   end
-  config.include FixturesSpecHelper, :type => :controller
-  config.include ControllersSpecHelper, :type => :controller
   config.after(:suite) do
     FixturesSpecHelper.users.each { |k,v| v.destroy }
   end
+
+  config.include Devise::TestHelpers, :type => :controller
+  config.include FixturesSpecHelper, :type => :controller
+  config.include ControllersSpecHelper, :type => :controller
+
+  config.include FixturesSpecHelper, :type => :request
+  config.include RequestsSpecHelper, :type => :request
+
 end
 

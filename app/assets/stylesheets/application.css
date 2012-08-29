@@ -1,6 +1,7 @@
 /*
-*= require_self
 *= require style
+*= require nav-superfish
+*= require tab_box
 *= require skins/markitup/style
 *= require sets/markdown/style
 *= require jquery.countdown

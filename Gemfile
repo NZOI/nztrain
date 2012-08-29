@@ -30,6 +30,7 @@ gem 'loofah'
 gem 'whenever', :require => false # for cron jobs
 gem 'squeel' # (NEW GEM) use lightly - only using in ability.rb, until it is more established (Jan 2012)  ---------> supersedes meta_where
 gem 'tilt'
+gem 'simple-navigation', :git => 'git://github.com/ronalchn/simple-navigation.git', :branch => 'render_navigation.takes.block'
 
 gem 'pg'
 # Use unicorn as the web server
@@ -50,7 +51,8 @@ gem 'pg'
 # and rake tasks are available in development mode:
 group :development, :test do
   gem 'rspec-rails', '~> 2.0'
-  gem 'webrat'
+  gem 'capybara'
+  #gem 'webrat'
 
   gem 'factory_girl_rails'
   gem 'factory_girl', '~> 2.0'

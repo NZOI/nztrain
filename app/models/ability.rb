@@ -173,12 +173,13 @@ class Ability
     can [:create, :update, :destroy], Group, :owner_id => user.id if (user.is_any? [:staff, :organiser])
   end
   def initialize_problem_abilities(user) # abilities on problems, problem sets and submissions
-    can :create, Submission # restrict further later - refactor to can :submit, Problem, ...
+    # can :create, Submission # restrict further later - refactor to can :submit, Problem, ...
     if user.is_staff?
       can [:read, :inspect], [Problem,ProblemSet,Submission]
+      can :submit, Problem
       can [:create, :transfer, :update, :destroy], [Problem,ProblemSet], :owner_id => user.id
     elsif user.competing?
-      can :read, Problem, Problem.where{ sift(:for_contestant, user.id) } do |p|
+      can [:read, :submit], Problem, Problem.where{ sift(:for_contestant, user.id) } do |p|
         p.persisted? ? p.contest_relations.active.user(user.id).any? : p.contest_relations.any? do |relation|
           relation.active? && relation.user_id == user.id
         end
@@ -202,7 +203,7 @@ class Ability
       can :inspect, [Problem,ProblemSet], :owner_id => user.id
 
       can :read, Submission, :user_id => user.id
-      can :read, Problem, Problem.where{ (owner_id == user.id) | sift(:for_group_user, user.id) | sift(:for_everyone) } do |p|
+      can [:read, :submit], Problem, Problem.where{ (owner_id == user.id) | sift(:for_group_user, user.id) | sift(:for_everyone) } do |p|
         next true if p.owner_id == user.id
         if p.persisted?
           p.group_members.where(:id => user.id).any? || p.groups.where(:id => 0).any?

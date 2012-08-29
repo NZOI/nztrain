@@ -1,0 +1,47 @@
+
+ul.tab_menu {
+  list-style: none;
+  font-weight: bold;
+  padding: 0;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+ul.tab_menu li {
+  margin: 0;
+  display: inline-block;
+  padding: 0;
+  min-width: 8em;
+}
+
+ul.tab_menu li a {
+  margin: 2px;
+  border: 0px;
+  background: #D0E5D0;
+  display: block;
+  height: 18px;
+  text-align: center;
+  text-decoration: none;
+  padding: 3px 10px 3px 10px;
+  color: black;
+  border-radius: 4px 4px 0px 0px;
+}
+
+ul.tab_menu li a.selected {
+  margin-bottom: -1px;
+  height: 21px;
+  background: #A1CCA1;
+  border: solid black;
+  border-width: 1px 1px 0px 1px;
+}
+
+ul.tab_menu li a:hover {
+  background: #91BC91;
+}
+
+.tab_box {
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 5px;
+}
+

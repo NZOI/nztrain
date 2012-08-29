@@ -1,34 +1,5 @@
-<% content_for :title, @problem.title %>
-<div id="main-page-title"><%= @problem.title %></div>
+
 <%= raw Loofah.fragment(markdown_parse(@problem.statement)).scrub!(:escape).scrub!(Loofah::Scrubbers::NoForm.new) %>
-<br />
-
-<b>Input File: </b><%= @problem.input %><br />
-<b>Output File: </b><%= @problem.output %><br />
-<b>Memory limit: </b><%= @problem.memory_limit %> megabytes<br />
-<b>Time limit: </b><%= @problem.time_limit %> seconds<br />
-
-<br />
-<b>Your submissions</b>
-<table class="main_table">
-  <tr>
-    <th>Date</th>
-    <th>Score</th>
-  </tr>
-
-  <% @submissions.each do |sub| %>
-    <tr>
-      <td> <%= link_to sub.created_at.strftime("%b %d %Y, %H:%M"), sub %> </td>
-      <td> <%= sub.score %> </td>
-    </tr>
-  <% end %>
-</table>
-<br /><br />
-
-<p>
-<b> New submission: </b>
-<%= render 'submissions/form' %>
-</p>
 <br />
 
 <%= render 'admin' %>

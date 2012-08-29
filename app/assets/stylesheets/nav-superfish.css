@@ -1,0 +1,143 @@
+
+#nav {
+  display: inline-block; /* so that div will shrink-wrap contents instead of having full width */
+}
+
+.sf-sub-indicator { /* this is superfish's autoarrow class */
+      color: white;
+}
+
+#nav ul {
+  list-style: none;
+  background: #2D2D2D;
+  font-weight: bold;
+  padding: 0;
+  border: solid #a1cca1 0px;
+}
+
+#nav a {
+  display: block;
+  min-width: 8em;
+  min-w\idth: 6.5em;
+  color: white;
+  text-decoration: none;
+  padding: 0.25em 0.75em;
+      background-color: rgba(1,1,1,0);
+}
+#nav a.daddy {
+  background: url(rightarrow2.gif) center right no-repeat;
+}
+
+#nav li {
+  display: inline-block;
+  padding: 0;
+  min-width: 8em;
+}
+#nav li ul {
+  position: absolute;
+  height: auto;
+  width: 14.4em;
+  w\idth: 14.0em;
+  font-weight: normal;
+  border-width: 0.1em;
+  margin: 0;
+      white-space: normal;
+}
+
+#nav li ul {
+  left: -999em;
+}
+
+#nav li li {
+  padding-right: 1em;
+  width: 13em
+}
+
+#nav li ul a {
+  width: 13em;
+  w\idth: 11.5em;
+}
+
+#nav li ul ul {
+  margin: -1.75em 0 0 14em;
+}
+
+#nav li:hover ul ul, #nav li:hover ul ul ul, #nav li.sfhover ul ul, #nav li.sfhover ul ul ul {
+  left: -999em;
+}
+
+#nav li:hover ul, #nav li li:hover ul, #nav li li li:hover ul, #nav li.sfhover ul, #nav li li.sfhover ul, #nav li li li.sfhover ul {
+  left: auto;
+}
+
+#nav li:hover, #nav li.sfhover {
+  background: #a1cca1;
+}
+
+#nav2 ul {
+  list-style: none;
+  background: #2D2D2D;
+  font-weight: bold;
+  padding: 0;
+  border: solid #a1cca1 0px;
+}
+
+#nav2 a {
+  display: block;
+  color: white;
+  text-decoration: none;
+  padding: 0.25em 2em;
+      background-color: rgba(1,1,1,0);
+}
+
+#nav2 li {
+  float: left;
+  padding: 0;
+  min-width: 5em;
+      position: relative;
+}
+
+#nav2 li ul {
+  position: absolute;
+  height: auto;
+  width: 20.4em;
+  w\idth: 20.0em;
+  font-weight: normal;
+  border-width: 0.1em;
+  margin: 0;
+}
+
+#nav2 li ul {
+  right: -999em;
+}
+
+#nav2 li li {
+      width: 100%;
+}
+
+#nav2 li ul a {
+}
+
+#nav2 li:hover ul ul, #nav2 li.sfhover ul ul {
+  left: -999em;
+}
+
+#nav2 li:hover ul, #nav2 li.sfhover ul {
+      left: auto;
+  right: 0px;
+}
+
+#nav2 li:hover, #nav2 li.sfhover {
+  background: #a1cca1;
+}
+
+li.masknav > a {
+  background: url(<%= asset_path "mask.png" %>) center left no-repeat;
+      margin-left: 0.5em;
+      padding-left: 3em;
+}
+
+li.masknav, li.masknav ul li {
+      background-color: #bb0000;
+}
+

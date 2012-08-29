@@ -10,7 +10,7 @@ class Submission < ActiveRecord::Base
 
   after_save do
     if self.score_changed? # only update if score changed
-      contests.select("contest_relations.id, contests.finalized_at").find_each do |record|
+      self.contests.select("contest_relations.id, contests.finalized_at").find_each do |record|
         # only update contest score if contest not yet sealed
         if record.finalized_at.nil? # are results finalized?
           ContestScore.find_or_initialize_by_contest_relation_id_and_problem_id(record.id,self.problem_id).recalculate_and_save
@@ -19,19 +19,29 @@ class Submission < ActiveRecord::Base
     end
   end
 
+  def contests
+    # check if this submission's problem belongs to a contest that the user is competing in
+    @_mycontests ||= Contest.joins(:contest_relations, :problems).where(:contest_relations => {:user_id => user_id}, :problems => {:id => self.problem_id}).where("contest_relations.started_at <= ? AND contest_relations.finish_at > ?", self.created_at, self.created_at)
+  end
+
   # scopes (lazy running SQL queries)
   scope :distinct, select("distinct(submissions.id), submissions.*")
 
   def self.by_user(user_id)
     where("submissions.user_id IN (?)", user_id.to_s.split(','))
   end
+
   def self.by_problem(problem_id)
     where("submissions.problem_id IN (?)", problem_id.to_s.split(','))
   end
 
+  def source_file=(file)
+    self.source = IO.read(file.path)
+  end
+
   def judge
     box_path = File.expand_path(Rails.root)+"/bin/box"
-    if Config::CONFIG["host_cpu"] == "x86_64"
+    if RbConfig::CONFIG["host_cpu"] == "x86_64"
       box_path += "64"
     end
     working_directory = '/tmp/submission_' + id.to_s + '/'
@@ -106,10 +116,10 @@ class Submission < ActiveRecord::Base
         test_set.test_cases.each_with_index do |test_case,case_number|
           self.judge_output += "Test Case #{1+case_number}:\n"
           File.open(input_file, 'w') { |f| f.write(test_case.input) }
-          system_string = "#{box_path} -a2 -M#{judge_file} -m#{mem_limit} -k#{stack_limit} -- #{exec_string}"
+          system_string = "#{box_path} -a2 -M#{judge_file} -m#{mem_limit} -k#{stack_limit} -- #{exec_string} 2> /dev/null"
           self.debug_output += system_string + "\n"
 
-          system(system_string)
+          program_output = system(system_string)
 
           judge_msg = IO.read(judge_file)
 
@@ -123,9 +133,9 @@ class Submission < ActiveRecord::Base
           else
             expected = test_case.output.split('\n').each{|s| s.strip!}.join('\n').chomp.gsub(/\r/, "")
 
-            #logger.info("writing expected");
+            #logger.debug("writing expected");
             File.open(expected_file, 'w') { |f| f.write(expected) }
-            #logger.info("finished writing expected");
+            #logger.debug("finished writing expected");
 
             if !problem.evaluator
               if FileTest.exists?(output_file)
@@ -144,7 +154,7 @@ class Submission < ActiveRecord::Base
             else
               File.chmod(0700, eval_file)
               run_string = "./#{eval_file} #{input_file} #{output_file} #{expected_file}"
-              logger.info "running " + run_string
+              logger.debug "running " + run_string
               correct = system(run_string)
             
               if correct == nil
@@ -154,11 +164,11 @@ class Submission < ActiveRecord::Base
 
             if correct
               numcorrect += 1
-              logger.info "test case with id " + test_case.id.to_s + " was correct"
+              logger.debug "test case with id " + test_case.id.to_s + " was correct"
               #self.score += test_case.points 
               self.judge_output += "Correct!\n"
             else
-              logger.info "test case with id " + test_case.id.to_s + " was incorrect"
+              logger.debug "test case with id " + test_case.id.to_s + " was incorrect"
               self.judge_output += "Incorrect :(\n"
             end
 
@@ -205,9 +215,5 @@ class Submission < ActiveRecord::Base
     File.delete(judge_file) if FileTest.exist? judge_file
     Dir.chdir('/')
     FileUtils.rm_rf(working_directory)
-  end
-  def contests
-    # check if this submission's problem belongs to a contest that the user is competing in
-    @_mycontests ||= Contest.joins(:contest_relations, :problems).where(:contest_relations => {:user_id => user_id}, :problems => {:id => self.problem_id}).where("contest_relations.started_at <= ? AND contest_relations.finish_at > ?", self.created_at, self.created_at)
   end
 end

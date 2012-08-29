@@ -7,6 +7,14 @@ GIT
       activemodel (>= 3.2.0)
       railties (>= 3.2.0)
 
+GIT
+  remote: git://github.com/ronalchn/simple-navigation.git
+  revision: a15f4ff17266492bf20a1ef3068203d01249a2fb
+  branch: render_navigation.takes.block
+  specs:
+    simple-navigation (3.8.0)
+      activesupport (>= 2.3.2)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -49,9 +57,18 @@ GEM
     bluecloth (2.2.0)
     builder (3.0.0)
     cancan (1.6.8)
+    capybara (1.1.2)
+      mime-types (>= 1.16)
+      nokogiri (>= 1.3.3)
+      rack (>= 1.0.0)
+      rack-test (>= 0.5.4)
+      selenium-webdriver (~> 2.0)
+      xpath (~> 0.1.4)
     carrierwave (0.6.2)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
+    childprocess (0.3.1)
+      ffi (~> 1.0.6)
     chronic (0.6.7)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
@@ -82,6 +99,7 @@ GEM
     factory_girl_rails (1.7.0)
       factory_girl (~> 2.6.0)
       railties (>= 3.0.0)
+    ffi (1.0.11)
     has_scope (0.5.1)
     hike (1.2.1)
     i18n (0.6.0)
@@ -159,6 +177,11 @@ GEM
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
+    selenium-webdriver (2.20.0)
+      childprocess (>= 0.2.5)
+      ffi (~> 1.0)
+      multi_json (~> 1.0)
+      rubyzip
     sprockets (2.1.3)
       hike (~> 1.2)
       rack (~> 1.0)
@@ -181,14 +204,12 @@ GEM
       multi_json (~> 1.3)
     warden (1.2.1)
       rack (>= 1.0)
-    webrat (0.7.3)
-      nokogiri (>= 1.2.0)
-      rack (>= 1.0)
-      rack-test (>= 0.5.3)
     whenever (0.7.3)
       activesupport (>= 2.3.4)
       chronic (~> 0.6.3)
     will_paginate (3.0.3)
+    xpath (0.1.4)
+      nokogiri (~> 1.3)
 
 PLATFORMS
   ruby
@@ -198,6 +219,7 @@ DEPENDENCIES
   albino
   bluecloth
   cancan (= 1.6.8)
+  capybara
   carrierwave
   coffee-rails (~> 3.2.1)
   debugger
@@ -219,12 +241,12 @@ DEPENDENCIES
   rubyzip
   sass
   sass-rails (~> 3.2.3)
+  simple-navigation!
   sqlite3
   squeel
   strong_parameters!
   therubyracer
   tilt
   uglifier (>= 1.0.3)
-  webrat
   whenever
   will_paginate

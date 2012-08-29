@@ -1,12 +1,22 @@
 class ProblemsController < ApplicationController
-  load_and_authorize_resource :except => [:create]
+  load_and_authorize_resource :except => [:create, :submit, :submissions]
 
   def permitted_params
-    @_permitted_params ||= begin
+    @_permitted_attributes ||= begin
       permitted_attributes = [:title, :statement, :input, :output, :memory_limit, :time_limit, :evaluator_id]
       permitted_attributes << :owner_id if can? :transfer, @problem
-      params.require(:problem).permit(*permitted_attributes)
+      permitted_attributes
     end
+    params.require(:problem).permit(*@_permitted_attributes)
+  end
+
+  def submit_params # attributes allowed to be included in submissions
+    @_submit_attributes ||= begin
+      submit_attributes = [:language, :source_file]
+      submit_attributes << [:source] if can? :submit_source, @problem
+      submit_attributes
+    end
+    params.require(:submission).permit(*@_submit_attributes).merge(:user_id => current_user.id, :problem_id => params[:id])
   end
 
   # GET /problems
@@ -22,7 +32,6 @@ class ProblemsController < ApplicationController
   # GET /problems/1
   # GET /problems/1.xml
   def show
-    @submission = Submission.new # for submitting problem
     #TODO: restrict to problems that current user owns/manages
     @problem_sets = ProblemSet.accessible_by(current_ability,:update) # can only add problem to problem sets user can update to
     @submissions = @problem.submission_history(current_user)
@@ -36,7 +45,42 @@ class ProblemsController < ApplicationController
     @all_subs = @all_subs.map {|s| s[1]}
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html { render :layout => "problem" }
+      format.xml  { render :xml => @problem }
+    end
+  end
+
+  def submit
+    if request.post? # post request
+      authorize! :submit, Problem.find(params[:id]) # make sure user can submit to this problem
+      @submission = Submission.new(submit_params) # create submission
+      respond_to do |format|
+        if @submission.save
+          Rails.env == 'test' ? @submission.judge : spawn { @submission.judge }
+          format.html { redirect_to(@submission, :notice => 'Submission was successfully created.') }
+          format.xml  { render :xml => @submission, :status => :created, :location => @submission }
+        else
+          format.html { render :action => "show", :alert => 'Submission failed.' }
+          format.xml  { render :xml => @submission.errors, :status => :unprocessable_entity }
+        end
+      end
+    else # get request
+      @problem = Problem.find(params[:id])
+      authorize! :submit, @problem
+      @submission = Submission.new
+      respond_to do |format|
+        format.html { render :layout => "problem" }
+        format.xml  { render :xml => @problem }
+      end
+    end
+  end
+
+  def submissions
+    @problem = Problem.find(params[:id])
+    authorize! :submit, @problem
+    @submissions = @problem.submission_history(current_user)
+    respond_to do |format|
+      format.html { render :layout => "problem" }
       format.xml  { render :xml => @problem }
     end
   end

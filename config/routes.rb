@@ -28,7 +28,13 @@ NztrainV2::Application.routes.draw do
     end
   end
 
-  resources :problems
+  resources :problems do
+    member do
+      post 'submit'
+      get 'submit'
+      get 'submissions'
+    end
+  end
 
   resources :problem_sets do
     member do

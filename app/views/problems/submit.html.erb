@@ -1,0 +1,25 @@
+<%= form_for @submission, :html => {:multipart => true}, :url => submit_problem_path(@problem) do |f| %>
+  <% if @submission.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@submission.errors.count, "error") %> prohibited this submission from being saved:</h2>
+      <ul>
+      <% @submission.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="field">
+    Language: 
+    <%= f.select :language, ['C++', 'C', 'Haskell', 'Python']%>
+  </div>
+  <div class="field">
+    Source file: 
+    <%= f.file_field :source_file %>
+  </div>
+  <div class="actions">
+    <%= f.submit 'Submit' %>
+  </div>
+<% end %>
+
+

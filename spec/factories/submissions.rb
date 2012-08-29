@@ -20,9 +20,9 @@ FactoryGirl.define do
           FILE* in = fopen("add.in", "r");
           FILE* out = fopen("add.out", "w");
           int a,b;
-          fscanf(in, "%d %d", &a, &b);
+          if (!fscanf(in, "%d %d", &a, &b)) return 1;
           int c = a+b;
-          fprintf(out, "%d\n",c);
+          fprintf(out, "%d\\n",c);
           return 0;
         }
 sourcecode
@@ -36,9 +36,9 @@ sourcecode
           FILE* in = fopen("add.in", "r");
           FILE* out = fopen("add.out", "w");
           int a,b;
-          fscanf(in, "%d %d", &a, &b);
+          if (!fscanf(in, "%d %d", &a, &b)) return 1;
           signed char c = a+b;
-          fprintf(out, "%d\n",(int)c);
+          fprintf(out, "%d\\n",(int)c);
           return 0;
         }
 sourcecode
@@ -52,9 +52,9 @@ sourcecode
           FILE* in = fopen("add.in", "r");
           FILE* out = fopen("add.out", "w");
           int a,b;
-          fscanf(in, "%d %d", &a, &b);
+          if (!fscanf(in, "%d %d", &a, &b)) return 1;
           unsigned int c = a+b;
-          fprintf(out, "%d\n",(int)c);
+          fprintf(out, "%u\\n",(int)c);
           return 0;
         }
 sourcecode

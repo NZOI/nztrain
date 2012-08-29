@@ -1,0 +1,31 @@
+require 'spec_helper'
+
+describe Submission do
+  #pending "add some examples to (or delete) #{__FILE__}"
+  context 'on "adding" problem' do
+    before(:all) do
+      @user = Factory.create(:user)
+      @problem = Factory.create(:adding_problem)
+      @submission = Factory.create(:adding_submission, :problem => @problem, :user => @user)
+      @char_submission = Factory.create(:adding_char_submission, :problem => @problem, :user => @user)
+      @unsigned_submission = Factory.create(:adding_unsigned_submission, :problem => @problem, :user => @user)
+    end
+    after(:all) do
+      [@user, @problem, @submission, @char_submission, @unsigned_submission].each { |object| object.destroy }
+    end
+    it 'judges submission' do
+      @submission.score.should be_nil
+      @submission.judge
+      @submission.score.should == 100
+    end
+    it 'judges partially correct submissions correctly' do
+      @char_submission.score.should be_nil
+      @char_submission.judge
+      @char_submission.score.should == 50
+
+      @unsigned_submission.score.should be_nil
+      @unsigned_submission.judge
+      @unsigned_submission.score.should == 75
+    end
+  end
+end
