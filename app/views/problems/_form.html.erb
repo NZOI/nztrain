@@ -44,7 +44,7 @@
     <% if can? :transfer, @problem %>
       <%= f.text_field :owner_id %>
     <% else %>
-      <%= @problem.user.handle %>
+      <%= @problem.owner.handle %>
     <% end %>
   </div>
   <div class="actions">
