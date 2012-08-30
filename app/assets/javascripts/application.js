@@ -2,16 +2,18 @@
 //= require jquery_ujs
 //= require jquery-ui.min
 //= require jquery-ui-timepicker-addon
+//= require jquery.event.hover-1.0
 //= require jquery.fileinput
-//= require jquery.countdown.js
+//= require jquery.countdown
 //= require jquery.ba-bbq
 //= require jquery.markitup
-//= require jquery.url.js
-//= require sets/markdown/set.js
+//= require jquery.url
+//= require sets/markdown/set
 //= require superfish
-//= require jquery.event.hover-1.0
 //= require history
 //= require ajax_pagination
+//= require jquery.facebox
+//= require jquery.facebox.adapter
 //= require_self
 
 

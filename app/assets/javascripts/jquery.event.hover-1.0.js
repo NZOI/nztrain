@@ -44,7 +44,7 @@ function hoverHandler( event ){
 	var data = event.data || event;
 	switch ( event.type ){
 		case 'mouseenter': // mouseover
-			data.dist2 = 0; // init mouse distance²
+			data.dist2 = 0; // init mouse distance^2
 			data.event = event; // store the event
 			event.type = "hoverstart"; // hijack event
 			if ( $.event.handle.call( this, event ) !== false ){ // handle "hoverstart"
@@ -53,7 +53,7 @@ function hoverHandler( event ){
 				data.timer = setTimeout( compare, data.delay ); // start async compare
 				}
 			break;
-		case 'mousemove': // track the event, mouse distance² = x² + y²
+		case 'mousemove': // track the event, mouse distance^2 = x^2 + y^2
 			data.dist2 += Math.pow( event.pageX-data.event.pageX, 2 ) 
 				+ Math.pow( event.pageY-data.event.pageY, 2 ); 
 			data.event = event; // store current event
@@ -67,7 +67,7 @@ function hoverHandler( event ){
 				}
 			else $.event.remove( data.elem, "mousemove", hoverHandler ); // untrack
 			break;
-		default: // timeout compare // distance² = x² + y²  = ( speed * time )²
+		default: // timeout compare // distance^2 = x^2 + y^2  = ( speed * time )^2
 			if ( data.dist2 <= Math.pow( data.speed*( data.delay/1e3 ), 2 ) ){ // speed acceptable
 				$.event.remove( data.elem, "mousemove", hoverHandler ); // untrack
 				data.event.type = "hover"; // hijack event
@@ -75,7 +75,7 @@ function hoverHandler( event ){
 					data.hovered++; // flag for "hoverend"
 				}
 			else data.timer = setTimeout( compare, data.delay ); // async recurse
-			data.dist2 = 0; // reset distance² for next compare
+			data.dist2 = 0; // reset distance^2 for next compare
 			break;
 		}
 	function compare(){ hoverHandler( data ); }; // timeout/recursive function

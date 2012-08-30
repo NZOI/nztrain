@@ -50,6 +50,7 @@ NztrainV2::Application.routes.draw do
       put 'add_role'
       put 'remove_role'
       post 'su'
+      get 'su'
       get 'admin_email'
       post 'admin_email', :action => :send_admin_email
       post 'add_brownie'

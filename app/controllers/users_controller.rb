@@ -69,12 +69,19 @@ class UsersController < ApplicationController
   end
 
   def su
-    if current_user.valid_password?(params[:password])
-      session[:su] = (session[:su]||[]).push(current_user.id)
-      sign_in @user
-      redirect_to root_url, :notice => "su #{@user.username}"
+    if request.post?
+      if current_user.valid_password?(params[:password])
+        session[:su] = (session[:su]||[]).push(current_user.id)
+        sign_in @user
+        redirect_to root_url, :notice => "su #{@user.username}"
+      else
+        redirect_to request.referrer, :alert => "Password incorrect"
+      end
     else
-      redirect_to request.referrer, :alert => "Password incorrect"
+      respond_to do |format|
+        format.html
+        ajax_respond format, :section_id => "lightbox", :render => { :template => "users/su" }
+      end
     end
   end
 

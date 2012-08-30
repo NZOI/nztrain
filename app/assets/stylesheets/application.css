@@ -1,7 +1,4 @@
 /*
-*= require style
-*= require nav-superfish
-*= require tab_box
 *= require skins/markitup/style
 *= require sets/markdown/style
 *= require jquery.countdown
@@ -9,6 +6,10 @@
 *= require fileinput
 *= require scaffold
 *= require ajax_pagination
+*= require jquery.facebox
+*= require style
+*= require nav-superfish
+*= require tab_box
 */
 
 
