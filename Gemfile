@@ -6,7 +6,7 @@ gem 'rails', '~> 3.2.0'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'strong_parameters', :git => 'git://github.com/rails/strong_parameters.git' # delete when upgrading to rails 4.x
+gem 'strong_parameters'#, :git => 'git://github.com/rails/strong_parameters.git' # delete when upgrading to rails 4.x
 
 gem 'sqlite3'
 
