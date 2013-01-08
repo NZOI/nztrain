@@ -1,0 +1,30 @@
+<% content_for :title, @ai_contest.title %>
+<% content_for :content do %>
+  <div id="main-page-title"><%= @ai_contest.title %></div>
+
+<p>
+  <b>Start time:</b>
+  <%= @ai_contest.start_time %>
+</p>
+
+<p>
+  <b>End time:</b>
+  <%= @ai_contest.end_time %>
+</p>
+
+  <%=
+#  SimpleNavigation::ItemContainer.new do |menu|
+  render_navigation do |menu|
+    menu.dom_class = :tab_menu
+    menu.item :statement, "overview", ai_contest_path(@ai_contest)
+    menu.item :sample_ai, "sample AI", sample_ai_contest_path(@ai_contest)
+    menu.item :submit, "submit", submit_ai_contest_path(@ai_contest) if can? :submit, @ai_contest
+    menu.item :submissions, "submissions", submissions_ai_contest_path(@ai_contest)
+#  end.render
+  end
+  %>
+  <%= content_tag :div, :class => :tab_box do %>
+    <%= yield %>
+  <% end %>
+<% end %>
+<%= render :template => 'layouts/application' %>

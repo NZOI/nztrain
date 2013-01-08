@@ -1,4 +1,13 @@
 NztrainV2::Application.routes.draw do
+  resources :ai_contests do
+    member do
+      get 'sample'
+      get 'submit'
+      post 'submit'
+      get 'submissions'
+    end
+  end
+
   resources :test_sets
 
   resources :evaluators

@@ -1,0 +1,4 @@
+<%= raw Loofah.fragment(markdown_parse(@ai_contest.statement)).scrub!(:escape).scrub!(Loofah::Scrubbers::NoForm.new) %>
+
+<%= link_to 'Edit', edit_ai_contest_path(@ai_contest) %> |
+<%= link_to 'Back', ai_contests_path %>

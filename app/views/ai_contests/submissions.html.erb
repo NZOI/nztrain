@@ -1,0 +1,16 @@
+<b>Your submissions</b>
+<table class="main_table">
+  <tr>
+    <th>Date</th>
+    <th>Name</th>
+    <th></th>
+  </tr>
+
+  <% @ai_submissions.each do |sub| %>
+    <tr>
+      <td> <%= sub.created_at.strftime("%b %d %Y, %H:%M") %> </td>
+      <td> <%= sub.name %> </td>
+      <td> <%= sub.active ? 'Active' : 'Inactive' %> </td>
+    </tr>
+  <% end %>
+</table>
