@@ -3,6 +3,7 @@
 
 <table>
   <tr>
+    <th>Game id</th>
     <th>Board number</th>
     <th></th>
     <th>Player 1</th>
@@ -15,6 +16,7 @@
   <% @ai_contest_games.each do |game| %>
     <% next if game.ai_submission_1.nil? || (!game.ai_submission_1.active) or game.ai_submission_2.nil? || (!game.ai_submission_2.active) %>
     <tr>
+      <td><%= game.id %></td>
       <td><%= game.iteration %></td>
       <td><%= "#{game.ai_submission_1.id}" %></td>
       <td><%= "#{game.ai_submission_1.name} (#{game.ai_submission_1.user.username})" %></td>
