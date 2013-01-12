@@ -141,6 +141,11 @@ class AiContestsController < ApplicationController
     @ai_contest.rejudge
     redirect_to @ai_contest, :notice => "All contest games will be rejudged."
   end
+
+  def judge
+    @ai_contest.judge
+    redirect_to @ai_contest, :notice => "Judging has been prodded."
+  end
   private
 
     def permitted_params

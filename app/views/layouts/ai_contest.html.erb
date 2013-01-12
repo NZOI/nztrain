@@ -1,10 +1,16 @@
 <% content_for :title, @ai_contest.title %>
 <% content_for :content do %>
   <div id="main-page-title"><%= @ai_contest.title %></div>
-
-<% if can? :rejudge, @ai_contest %>
-  <%= link_to "Rejudge", rejudge_ai_contest_path(@ai_contest), :method => "post" %>
-<% end %>
+<p>
+  <% if can? :rejudge, @ai_contest %>
+    <%= link_to "Rejudge", rejudge_ai_contest_path(@ai_contest), :method => "post" %>
+  <% end %>
+</p>
+<p>
+  <% if can? :judge, @ai_contest %>
+    <%= link_to "Judge", judge_ai_contest_path(@ai_contest), :method => "post" %> (Prods the judging to be maybe a bit faster)
+  <% end %>
+</p>
 
 <p>
   <b>Start time:</b>

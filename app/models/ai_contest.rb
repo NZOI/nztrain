@@ -12,4 +12,14 @@ class AiContest < ActiveRecord::Base
     end
   end
   
+  def judge
+    submissions.each_slice(submissions.length/4).to_a.each do |subs|
+      spawn do
+        subs.each do |sub|
+            sub.judge
+        end
+      end
+    end
+  end
+  
 end
