@@ -57,7 +57,12 @@
     <ul>
       <!--<li><a href="#">information</a></li>-->
       <% if user_signed_in? %>
-        <li><a href="<%= contests_path %>">contests</a></li>
+        <li><a href="<%= contests_path %>">contests</a>
+          <ul>
+            <li><a href="<%= contests_path %>">contests</a></li>
+            <li><a href="<%= ai_contests_path %>">AI contests</a></li>
+          </ul>
+        </li>
         <li><a href="#" onClick="return false;">problems</a>
           <ul>
             <li><a href="<%= problem_sets_path %>">problem sets</a></li>

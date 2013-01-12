@@ -64,6 +64,16 @@ class AiContestsController < ApplicationController
     end
   end
 
+  def scoreboard
+    @ai_contest = AiContest.find(params[:id])
+    @submissions = @ai_contest.submissions.active
+
+    respond_to do |format|
+      format.html { render :layout => "ai_contest" }
+      #format.json { render json: @ai_contest }
+    end
+  end
+
   # GET /ai_contests/new
   # GET /ai_contests/new.json
   def new

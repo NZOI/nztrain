@@ -5,6 +5,14 @@ NztrainV2::Application.routes.draw do
       get 'submit'
       post 'submit'
       get 'submissions'
+      get 'scoreboard'
+    end
+  end
+
+  resources :ai_submissions, :only => [:show] do
+    member do
+      put 'deactivate'
+      put 'activate'
     end
   end
 

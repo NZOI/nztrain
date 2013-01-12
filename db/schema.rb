@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130108013617) do
+ActiveRecord::Schema.define(:version => 20130111003321) do
 
   create_table "ai_contest_games", :force => true do |t|
     t.integer  "ai_contest_id"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(:version => 20130108013617) do
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
     t.integer  "iteration"
+    t.text     "judge_output"
   end
 
   create_table "ai_contests", :force => true do |t|
@@ -33,7 +34,7 @@ ActiveRecord::Schema.define(:version => 20130108013617) do
     t.datetime "finalized_at"
     t.text     "sample_ai"
     t.text     "statement"
-    t.string   "judge"
+    t.text     "judge"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
     t.integer  "iterations"

@@ -11,6 +11,7 @@
       <td> <%= sub.created_at.strftime("%b %d %Y, %H:%M") %> </td>
       <td> <%= sub.name %> </td>
       <td> <%= sub.active ? 'Active' : 'Inactive' %> </td>
+      <td> <%= sub.active ? (can?(:deactivate, sub) ? (link_to 'Deactivate', deactivate_ai_submission_path(sub), :method => 'put') : "") : (link_to 'Activate', activate_ai_submission_path(sub), :method => 'put') %> </td>
     </tr>
   <% end %>
 </table>

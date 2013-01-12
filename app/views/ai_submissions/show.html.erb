@@ -1,0 +1,19 @@
+<table>
+  <tr>
+    <th>Player 1</th>
+    <th>Score</th>
+    <th>Player 2</th>
+    <th>Score</th>
+    <th></th>
+  </tr>
+  <% @ai_contest_games.each do |game| %>
+    <tr>
+      <td><%= "#{game.ai_submission_1.name} (#{game.ai_submission_1.user.username})" %></td>
+      <td><%= game.score_1 %></td>
+      <td><%= "#{game.ai_submission_2.name} (#{game.ai_submission_2.user.username})" %></td>
+      <td><%= game.score_2 %></td>
+      <td><form action="http://heythatsmyfish.com/" method="post"><textarea name="log" style="display: none"><%= game.record %></textarea><input type="submit" value="Playback" /></form></td>
+    </tr>
+  <% end %>
+
+</table>

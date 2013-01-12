@@ -20,6 +20,7 @@
     menu.item :sample_ai, "sample AI", sample_ai_contest_path(@ai_contest)
     menu.item :submit, "submit", submit_ai_contest_path(@ai_contest) if can? :submit, @ai_contest
     menu.item :submissions, "submissions", submissions_ai_contest_path(@ai_contest)
+    menu.item :scoreboard, "scoreboard", scoreboard_ai_contest_path(@ai_contest)
 #  end.render
   end
   %>

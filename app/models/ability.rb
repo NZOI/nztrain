@@ -49,6 +49,7 @@ class Ability
     initialize_contest_abilities(user)
     initialize_group_abilities(user)
     initialize_problem_abilities(user) # permissions for problem sets
+    initialize_ai_contest_abilities(user)
 
     # other special permissions by role
     user.roles.each do |role|
@@ -152,6 +153,17 @@ class Ability
         end
       end
     end
+  end
+  def initialize_ai_contest_abilities(user)
+    can [:read, :scoreboard, :submissions, :sample], AiContest
+    can :submit, AiContest, AiContest.where{ (start_time <= DateTime.now) & (end_time > DateTime.now) } do |c|
+      next c.start_time <= DateTime.now && c.end_time > DateTime.now
+    end
+    can :activate, AiSubmission, AiSubmission.where{(user_id == user.id) & (contest.end_time > DateTime.now)} do |s|
+      next s.user_id == user.id && s.ai_contest.end_time > DateTime.now
+    end
+    can :read, AiSubmission
+    can :source, AiSubmission, :user_id => user.id
   end
 end
 
