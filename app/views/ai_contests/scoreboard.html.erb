@@ -6,7 +6,7 @@
     <% @submissions.each do |sub1| %>
       <td height="150px">
         <p align="center" style="vertical-align: middle; -webkit-transform: rotate(90deg); -moz-transform: rotate(90deg); -ms-transform: rotate(90deg); -o-transform: rotate(90deg); transform: rotate(90deg);">
-        <%= "#{sub1.name} (#{sub1.user.username})" %>
+        <%= link_to "#{sub1.name} (#{sub1.user.username})", sub1 %>
         </p>
       </td>
     <% end %>

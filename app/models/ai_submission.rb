@@ -59,8 +59,11 @@ class AiSubmission < ActiveRecord::Base
   end
 
   def rejudge
-    AiContestGame.update_all({:record => nil, :score_1 => nil, :score_2 => nil}, :ai_submission_1_id => id)
-    AiContestGame.update_all({:record => nil, :score_1 => nil, :score_2 => nil}, :ai_submission_2_id => id)
+    #AiContestGame.update_all({:record => nil, :score_1 => nil, :score_2 => nil}, :ai_submission_1_id => id)
+    #AiContestGame.update_all({:record => nil, :score_1 => nil, :score_2 => nil}, :ai_submission_2_id => id)
+    AiContestGame.delete_all(:ai_submission_1_id => id)
+    AiContestGame.delete_all(:ai_submission_2_id => id)
+    
     judge if self.active
   end
 end
