@@ -56,7 +56,7 @@ class AiSubmission < ActiveRecord::Base
     if user_id != ai_contest.owner_id
       AiSubmission.update_all({:active => false}, ["user_id = ? AND ai_contest_id = ? AND id != ?", user, ai_contest_id, id])
     end
-    Rails.env == 'test' ? self.judge : spawn { self.judge }
+    Rails.env == 'test' ? self.judge : spawn(:nice => 10) { self.judge }
     true
   end
 

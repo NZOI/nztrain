@@ -5,7 +5,7 @@ class AiContest < ActiveRecord::Base
   has_many :submissions, :class_name => :AiSubmission
 
   def rejudge
-    spawn do
+    spawn(:nice => 10) do
       submissions.each do |sub|
         sub.rejudge
       end
@@ -13,13 +13,13 @@ class AiContest < ActiveRecord::Base
   end
   
   def judge
-    submissions.each_slice(submissions.length/4).to_a.each do |subs|
-      spawn do
-        subs.each do |sub|
-            sub.judge
-        end
+    #submissions.each_slice(submissions.length/4).to_a.each do |subs|
+    spawn(:nice => 12) do
+      submissions.each do |sub|
+          sub.judge
       end
     end
+    #end
   end
   
 end
