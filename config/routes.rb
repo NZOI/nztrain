@@ -14,6 +14,7 @@ NztrainV2::Application.routes.draw do
     member do
       put 'deactivate'
       put 'activate'
+      post 'rejudge'
     end
   end
 

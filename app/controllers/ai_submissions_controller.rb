@@ -14,6 +14,12 @@ class AiSubmissionsController < ApplicationController
     end
   end
 
+  def rejudge
+    game_id = request.GET[:game_id]
+    Rails.env == 'test' ? AiContest.find(game_id).judge : spawn { AiContest.find(game_id).judge }
+    redirect_to ai_submission_path(@ai_submission), :notice => "Submission will be rejudged"
+  end
+
   def deactivate
     @ai_submission.deactivate
     redirect_to submissions_ai_contest_path(@ai_submission.ai_contest_id), :notice => "Submission deactivated"

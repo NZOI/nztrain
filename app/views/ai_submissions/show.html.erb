@@ -12,6 +12,7 @@
     <th>Player 2</th>
     <th>Score</th>
     <th></th>
+    <th></th>
   </tr>
   <% @ai_contest_games.each do |game| %>
     <% next if game.ai_submission_1.nil? || (!game.ai_submission_1.active) or game.ai_submission_2.nil? || (!game.ai_submission_2.active) %>
@@ -24,6 +25,7 @@
       <td><%= "#{game.ai_submission_2.id}" %></td>
       <td><%= "#{game.ai_submission_2.name} (#{game.ai_submission_2.user.username})" %></td>
       <td><%= game.score_2 %></td>
+      <td><%= link_to "Rejudge", rejudge_ai_submission_path(@ai_submission, :game_id => game.id), :method => 'post' if can? :rejudge, game %></td>
       <td><form action="http://heythatsmyfish.com/" method="post"><textarea name="log" style="display: none"><%= game.record %></textarea><input type="submit" value="Playback" /></form></td>
     </tr>
   <% end %>
