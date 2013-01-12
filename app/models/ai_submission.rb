@@ -25,7 +25,7 @@ class AiSubmission < ActiveRecord::Base
           game.judge
           game.save
         end
-        game = AiContestGame.find_or_create_by_ai_contest_id_and_ai_submission_1_id_and_ai_submission_2_id_and_iteration(ai_contest.id, self.id, submission.id, iteration)
+        game = AiContestGame.find_or_create_by_ai_contest_id_and_ai_submission_1_id_and_ai_submission_2_id_and_iteration(ai_contest.id, submission.id, self.id, iteration)
         #game = AiContestGame.where(:ai_contest_id => ai_contest.id, :ai_submission_1_id => submission.id, :ai_submission_2_id => self.id, :iteration => iteration)
         #if game.length==0
         #  game = AiContestGame.create(:ai_contest => ai_contest, :ai_submission_1 => self, :ai_submission_2 => submission, :iteration => iteration)
