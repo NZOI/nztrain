@@ -14,22 +14,24 @@ class AiSubmission < ActiveRecord::Base
     ai_contest.submissions.active.each do |submission|
       next if submission.id == self.id
       (0...ai_contest.iterations).each do |iteration|
-        game = AiContestGame.where(:ai_contest_id => ai_contest.id, :ai_submission_1_id => self.id, :ai_submission_2_id => submission.id, :iteration => iteration)
-        if game.length==0
-          game = AiContestGame.create(:ai_contest => ai_contest, :ai_submission_1 => self, :ai_submission_2 => submission, :iteration => iteration)
-        else
-          game = game.first
-        end
+        game = AiContestGame.find_or_create_by_ai_contest_id_and_ai_submission_1_id_and_ai_submission_2_id_and_iteration(ai_contest.id, self.id, submission.id, iteration)
+        #game = AiContestGame.where(:ai_contest_id => ai_contest.id, :ai_submission_1_id => self.id, :ai_submission_2_id => submission.id, :iteration => iteration)
+        #if game.length==0
+        #  game = AiContestGame.create(:ai_contest => ai_contest, :ai_submission_1 => self, :ai_submission_2 => submission, :iteration => iteration)
+        #else
+        #  game = game.first
+        #end
         if game.record == nil
           game.judge
           game.save
         end
-        game = AiContestGame.where(:ai_contest_id => ai_contest.id, :ai_submission_1_id => submission.id, :ai_submission_2_id => self.id, :iteration => iteration)
-        if game.length==0
-          game = AiContestGame.create(:ai_contest => ai_contest, :ai_submission_1 => self, :ai_submission_2 => submission, :iteration => iteration)
-        else
-          game = game.first
-        end
+        game = AiContestGame.find_or_create_by_ai_contest_id_and_ai_submission_1_id_and_ai_submission_2_id_and_iteration(ai_contest.id, self.id, submission.id, iteration)
+        #game = AiContestGame.where(:ai_contest_id => ai_contest.id, :ai_submission_1_id => submission.id, :ai_submission_2_id => self.id, :iteration => iteration)
+        #if game.length==0
+        #  game = AiContestGame.create(:ai_contest => ai_contest, :ai_submission_1 => self, :ai_submission_2 => submission, :iteration => iteration)
+        #else
+        #  game = game.first
+        #end
         if game.record == nil
           game = AiContestGame.create(:ai_contest => ai_contest, :ai_submission_1 => submission, :ai_submission_2 => self, :iteration => iteration)
           game.judge

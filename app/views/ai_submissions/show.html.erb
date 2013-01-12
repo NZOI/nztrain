@@ -1,15 +1,23 @@
+Submissions for <%= "#{@ai_submission.name} (#{@ai_submission.user.username})" %>
+
 <table>
   <tr>
+    <th>Board number</th>
+    <th></th>
     <th>Player 1</th>
     <th>Score</th>
+    <th></th>
     <th>Player 2</th>
     <th>Score</th>
     <th></th>
   </tr>
   <% @ai_contest_games.each do |game| %>
     <tr>
+      <td><%= game.iteration %></td>
+      <td><%= "#{game.ai_submission_1.id}" %></td>
       <td><%= "#{game.ai_submission_1.name} (#{game.ai_submission_1.user.username})" %></td>
       <td><%= game.score_1 %></td>
+      <td><%= "#{game.ai_submission_2.id}" %></td>
       <td><%= "#{game.ai_submission_2.name} (#{game.ai_submission_2.user.username})" %></td>
       <td><%= game.score_2 %></td>
       <td><form action="http://heythatsmyfish.com/" method="post"><textarea name="log" style="display: none"><%= game.record %></textarea><input type="submit" value="Playback" /></form></td>
