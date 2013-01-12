@@ -1,4 +1,5 @@
-Submissions for <%= "#{@ai_submission.name} (#{@ai_submission.user.username})" %>
+<p>AI Contest: <%= link_to @ai_submission.ai_contest.title, @ai_submission.ai_contest %></p>
+<p>Submissions for <%= "#{@ai_submission.name} (#{@ai_submission.user.username})" %></p>
 
 <table>
   <tr>
@@ -12,6 +13,7 @@ Submissions for <%= "#{@ai_submission.name} (#{@ai_submission.user.username})" %
     <th></th>
   </tr>
   <% @ai_contest_games.each do |game| %>
+    <% next if game.ai_submission_1.nil? || (!game.ai_submission_1.active) or game.ai_submission_2.nil? || (!game.ai_submission_2.active) %>
     <tr>
       <td><%= game.iteration %></td>
       <td><%= "#{game.ai_submission_1.id}" %></td>
