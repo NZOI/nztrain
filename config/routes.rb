@@ -6,6 +6,7 @@ NztrainV2::Application.routes.draw do
       post 'submit'
       get 'submissions'
       get 'scoreboard'
+      post 'rejudge'
     end
   end
 

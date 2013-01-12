@@ -2,6 +2,10 @@
 <% content_for :content do %>
   <div id="main-page-title"><%= @ai_contest.title %></div>
 
+<% if can? :rejudge, @ai_contest %>
+  <%= link_to "Rejudge", rejudge_ai_contest_path(@ai_contest), :method => "post" %>
+<% end %>
+
 <p>
   <b>Start time:</b>
   <%= @ai_contest.start_time %>

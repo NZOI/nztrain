@@ -137,6 +137,10 @@ class AiContestsController < ApplicationController
     end
   end
 
+  def rejudge
+    @ai_contest.rejudge
+    redirect_to @ai_contest, :notice => "All contest games will be rejudged."
+  end
   private
 
     def permitted_params
@@ -163,5 +167,4 @@ class AiContestsController < ApplicationController
       params.require(:ai_submission).permit(*@_submit_attributes).merge(:user_id => current_user.id, :ai_contest_id => params[:id],
         :name => params[:ai_submission][:source_file].original_filename.split('.')[0].humanize )
     end
-
 end
