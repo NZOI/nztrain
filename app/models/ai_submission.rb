@@ -37,7 +37,6 @@ class AiSubmission < ActiveRecord::Base
           #  game = game.first
           #end
           if game.record == nil
-            game = AiContestGame.create(:ai_contest => ai_contest, :ai_submission_1 => submission, :ai_submission_2 => self, :iteration => iteration)
             game.judge
             game.save
           end
