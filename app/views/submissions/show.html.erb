@@ -4,9 +4,17 @@
   <b> This submission has not finished judging. Refresh this page in a minute or two to see the submission's score.
   </b>
   </p>
-<% end %>
 <p>
 <%= link_to "Rejudge", rejudge_submission_path(@submission), :data => { :confirm => 'Are you sure?' }, :method => "post" if can? :rejudge, @submission %>
+<% else %>
+
+<% if @submission.score >= 100 %>
+    <div id="submission_judged" class="green" />100% - All done. Nice.</div>
+<% elsif @submission.score < 100 and @submission.score > 0 %>
+    <div id="submission_judged" class="orange" /><%= @submission.score %>% - Close, but not quite.</div>
+<% else %>
+    <div id="submission_judged" class="red" />0% - Er...</div>
+<% end %>
 </p>
 <p>
 <b>Problem:</b>
@@ -24,19 +32,22 @@
 </p>
 
 <p>
-<b>Detailed Output:</b>
+<b><a id="submission_details">Detailed Output:</a></b>
+<div id="submission_details_hider">
 <%= simple_format(@submission.judge_output) %>
+</div>
 </p>
+
 
 <% if current_user.is_admin? %>
 <%= simple_format(@submission.debug_output) %>
 <% end %>
 
+<% end %>
 <p>
 <b>Source:</b>
 <pre><%= @submission.source %></pre>
 </p>
-
 
 <%= link_to 'Edit', edit_submission_path(@submission) if can? :edit, @submission %> 
 <%= link_to 'Back', @submission.problem %>
