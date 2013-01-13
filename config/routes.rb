@@ -1,4 +1,24 @@
 NztrainV2::Application.routes.draw do
+  resources :ai_contests do
+    member do
+      get 'sample'
+      get 'submit'
+      post 'submit'
+      get 'submissions'
+      get 'scoreboard'
+      post 'rejudge'
+      post 'judge'
+    end
+  end
+
+  resources :ai_submissions, :only => [:show] do
+    member do
+      put 'deactivate'
+      put 'activate'
+      post 'rejudge'
+    end
+  end
+
   resources :test_sets
 
   resources :evaluators

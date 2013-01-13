@@ -1,0 +1,53 @@
+<%= form_for(@ai_contest) do |f| %>
+  <% if @ai_contest.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@ai_contest.errors.count, "error") %> prohibited this ai_contest from being saved:</h2>
+
+      <ul>
+      <% @ai_contest.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </div>
+  <div class="field">
+    <%= f.label :start_time %><br />
+    <%= f.datetime_select :start_time %>
+  </div>
+  <div class="field">
+    <%= f.label :end_time %><br />
+    <%= f.datetime_select :end_time %>
+  </div>
+  <div class="field">
+    <%= f.label :owner_id %><br />
+    <%= f.text_field :owner_id %>
+  </div>
+  <div class="field">
+    <%= f.label :sample_ai %><br />
+    <%= f.text_area :sample_ai %>
+  </div>
+  <div class="field">
+    <%= f.label :statement %><br />
+    <%= f.text_area :statement %>
+  </div>
+  <div class="field">
+    <%= f.label :judge %><br />
+    <%= f.text_area :judge %>
+  </div>
+  <div class="field">
+    <%= f.label :iterations %><br />
+    <%= f.text_field :iterations %>
+  </div>
+  <div class="field">
+    <%= f.label :iterations_preview %> (visible games before contest ends)<br />
+    <%= f.text_field :iterations_preview %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
