@@ -21,5 +21,8 @@ class AiContest < ActiveRecord::Base
     end
     #end
   end
-  
+
+  def unjudged_games
+    AiContestGame.joins(:ai_submission_1).joins(:ai_submission_2).where(:record => nil, :ai_submission_1=> {:active => true}, :ai_submission_2 => {:active => true}).where(:ai_contest_id => self.id)
+  end
 end
