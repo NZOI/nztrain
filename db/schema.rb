@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130111003321) do
+ActiveRecord::Schema.define(:version => 20130113010505) do
 
   create_table "ai_contest_games", :force => true do |t|
     t.integer  "ai_contest_id"
@@ -25,6 +25,8 @@ ActiveRecord::Schema.define(:version => 20130111003321) do
     t.integer  "iteration"
     t.text     "judge_output"
   end
+
+  add_index "ai_contest_games", ["iteration", "ai_submission_1_id", "ai_submission_2_id"], :name => "each_game", :unique => true
 
   create_table "ai_contests", :force => true do |t|
     t.string   "title"
