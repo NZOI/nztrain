@@ -114,4 +114,9 @@ $(document).ready(function() {
     $('.date-picker').datetimepicker();
 
     $('#menu').css({'min-width':$('#nav').width()+$('#controls').width() + 'px'});
+
+    $("#submission_details").click(function() {
+        console.log("abc");
+        $("#submission_details_hider").slideDown();
+    });
 });

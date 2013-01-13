@@ -326,3 +326,28 @@ input[type="file"] {
   margin-right: 50px;
   font-family: monospace;
 }
+
+#submission_judged {
+    padding: 20px;
+    font-size: 18pt;
+    margin-bottom: 20px;
+}
+
+#submission_judged.green {
+    background-color: #6FBF4D;
+}
+
+#submission_judged.orange {
+    background-color: #FA6900;
+}
+
+#submission_details {
+}
+#submission_details_hider {
+    display: none;
+}
+
+#submission_judged.red {
+    background-color: #A91313;
+    color: white;
+}
