@@ -101,7 +101,7 @@ class AiContestGame < ActiveRecord::Base
         Dir.chdir('/')
         FileUtils.rm_rf(working_directory)
       end
-    rescue Exception => e
+    rescue StandardError => e
       self.judge_output = "Exception raised!\n" + e.message
     end
   end
