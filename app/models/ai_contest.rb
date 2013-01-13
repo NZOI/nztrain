@@ -12,7 +12,7 @@ class AiContest < ActiveRecord::Base
     end
   end
   
-  def judge
+  def prod_judge
     #submissions.each_slice(submissions.length/4).to_a.each do |subs|
     spawn(:nice => 12) do
       submissions.each do |sub|

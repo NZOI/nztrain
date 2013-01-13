@@ -143,7 +143,7 @@ class AiContestsController < ApplicationController
   end
 
   def judge
-    @ai_contest.judge
+    @ai_contest.prod_judge
     redirect_to @ai_contest, :notice => "Judging has been prodded."
   end
   private
