@@ -354,13 +354,24 @@ input[type="file"] {
     background-color: #FA6900;
 }
 
-#submission_details {
+.submission_details {
+  border: 1px solid black;
+  padding: 3px;
+  background-color: rgb(45, 45, 45);
+  color: white;
 }
-#submission_details_hider {
-    display: none;
+.submission_details b {
+  color: white;
 }
-
+.submission_details_hider {
+  padding: 3px;
+  background-color: rgb(238, 238, 238);
+}
+.submission_details_prompt {
+  background-color: rgb(238, 238, 238);
+  height: 3px;
+}
 #submission_judged.red {
-    background-color: #A91313;
-    color: white;
+  background-color: #A91313;
+  color: white;
 }

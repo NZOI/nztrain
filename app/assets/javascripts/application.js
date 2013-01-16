@@ -115,8 +115,9 @@ $(document).ready(function() {
 
     $('#menu').css({'min-width':$('#nav').width()+$('#controls').width() + 'px'});
 
-    $("#submission_details").click(function() {
+    $(".submission_details").click(function() {
         console.log("abc");
-        $("#submission_details_hider").slideDown();
+        $(this).find(".submission_details_hider").slideDown();
     });
+    $(".submission_details_hider").hide();
 });

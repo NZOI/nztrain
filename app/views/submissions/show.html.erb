@@ -32,9 +32,12 @@
   </p>
 
   <p>
-  <b><a id="submission_details">Detailed Output:</a></b>
-  <div id="submission_details_hider">
-  <%= simple_format(@submission.judge_output) %>
+  <div class="submission_details">
+    <b>Detailed Output:</b>
+    <div class="submission_details_hider">
+      <%= simple_format(@submission.judge_output) %>
+    </div>
+    <div class="submission_details_prompt"></div>
   </div>
   </p>
 
