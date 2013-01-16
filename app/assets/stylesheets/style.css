@@ -5,9 +5,13 @@
   color: #2D2D2D;
 }
 
-ul {
+ul, ol {
   margin-left: 30px;
   margin-bottom: 10px;
+}
+
+ul.tab_menu {
+  margin: 0px;
 }
 
 p {
