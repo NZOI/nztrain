@@ -6,7 +6,7 @@ class AiContest < ActiveRecord::Base
 
   def rejudge
     spawn(:nice => 10) do
-      submissions.each do |sub|
+      submissions.active.each do |sub|
         sub.rejudge
       end
     end
@@ -15,7 +15,7 @@ class AiContest < ActiveRecord::Base
   def prod_judge
     #submissions.each_slice(submissions.length/4).to_a.each do |subs|
     spawn(:nice => 12) do
-      submissions.each do |sub|
+      submissions.active.each do |sub|
           sub.judge
       end
     end
