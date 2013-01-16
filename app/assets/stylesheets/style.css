@@ -5,6 +5,14 @@
   color: #2D2D2D;
 }
 
+ul {
+  margin-left: 30px;
+}
+
+p {
+  margin-bottom: 10px;
+}
+
 html, body {
   height: 100%;
 }
