@@ -110,8 +110,18 @@ class Submission < ActiveRecord::Base
       if language == 'Python'
         exec_string = '/usr/bin/python ' + exe_file
       end
-      input_file = problem.input
-      output_file = problem.output
+      input_file = self.input
+      output_file = self.output
+      input_stream = "/dev/null"
+      output_stream = "/dev/null"
+      if input_file.nil?
+        input_file = "data.in"
+        input_stream = "#{input_file}"
+      end
+      if output_file.nil?
+        output_file = "data.out"
+        output_stream = "#{output_file}"
+      end
 
       mem_limit = problem.memory_limit * 1024
       stack_limit = 1024 * 4
@@ -125,7 +135,7 @@ class Submission < ActiveRecord::Base
           self.judge_output += "Test Case #{1+case_number}:\n"
           File.open(input_file, 'w') { |f| f.write(test_case.input) }
           system_string = "#{box_path} -a2 -M#{judge_file} -m#{mem_limit} -k#{stack_limit} " +
-                 " -t#{time_limit} -w#{[time_limit*2,30].max} -o/dev/null -r/dev/null -- #{exec_string}"
+                 " -t#{time_limit} -w#{[time_limit*2,30].max} -o#{output_stream} -r/dev/null -- #{exec_string} < #{input_stream}"
           system(system_string)
           self.debug_output += system_string + "\n"
 

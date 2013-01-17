@@ -15,6 +15,11 @@ class Problem < ActiveRecord::Base
 
   validates :title, :presence => true, :uniqueness => { :case_sensitive => false }
 
+  before_save do
+    self.input = nil if self.input == ""
+    self.output = nil if self.output == ""
+  end
+
   # Scopes
   scope :distinct, select("distinct(problems.id), problems.*")
 

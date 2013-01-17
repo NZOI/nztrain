@@ -2,8 +2,16 @@
 <% content_for :content do %>
   <div id="main-page-title"><%= @problem.title %></div>
 
+<% if @problem.input.nil? %>
+  <b>Input: </b>Standard Input (stdin)<br />
+<% else %>
   <b>Input File: </b><%= @problem.input %><br />
+<% end %>
+<% if @problem.output.nil? %>
+  <b>Output: </b>Standard Output (stdout)<br />
+<% else %>
   <b>Output File: </b><%= @problem.output %><br />
+<% end %>
   <b>Memory limit: </b><%= @problem.memory_limit %> megabytes<br />
   <b>Time limit: </b><%= @problem.time_limit %> seconds<br />
   <%=
