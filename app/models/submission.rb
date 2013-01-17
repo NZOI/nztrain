@@ -39,6 +39,14 @@ class Submission < ActiveRecord::Base
     self.source = IO.read(file.path)
   end
 
+  before_save do
+    if source_was.nil?
+      problem = Problem.find(self.problem_id)
+      self.input = problem.input
+      self.output = problem.output
+    end
+  end
+
   def judge
     box_path = File.expand_path(Rails.root)+"/bin/box"
     if RbConfig::CONFIG["host_cpu"] == "x86_64"
