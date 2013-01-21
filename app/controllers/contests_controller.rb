@@ -72,8 +72,8 @@ class ContestsController < ApplicationController
   # GET /contests/1/edit
   def edit
     @problem_sets = ProblemSet.all
-    @start_time = @contest.start_time.strftime("%m/%d/%Y %H:%M")
-    @end_time = @contest.end_time.strftime("%m/%d/%Y %H:%M")
+    @start_time = @contest.start_time.strftime("%d/%m/%Y %H:%M")
+    @end_time = @contest.end_time.strftime("%d/%m/%Y %H:%M")
   end
 
   # POST /contests
