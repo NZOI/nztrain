@@ -111,7 +111,7 @@ $(document).ready(function() {
     });
 
     $('.markdown').markItUp(myMarkdownSettings);
-    $('.date-picker').datetimepicker();
+    $('.date-picker').datetimepicker({ dateFormat: 'dd/mm/yy' });
 
     $('#menu').css({'min-width':$('#nav').width()+$('#controls').width() + 'px'});
 
