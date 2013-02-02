@@ -18,6 +18,13 @@ describe Submission do
       @submission.judge
       @submission.score.should == 100
     end
+    it 'judges submission on stdio problem' do
+      problem = FactoryGirl.create(:adding_problem_stdio)
+      submission = FactoryGirl.create(:adding_submission_stdio, :problem => problem, :user => @user)
+      submission.score.should be_nil
+      submission.judge
+      submission.score.should == 100
+    end
     it 'judges partially correct submissions correctly' do
       @char_submission.score.should be_nil
       @char_submission.judge

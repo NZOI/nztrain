@@ -27,6 +27,20 @@ FactoryGirl.define do
         }
 sourcecode
     end
+    factory :adding_submission_stdio do
+      language "C++"
+      source <<sourcecode
+        #include <cstdio>
+        using namespace std;
+        int main() {
+          int a,b;
+          if (!scanf("%d %d", &a, &b)) return 1;
+          int c = a+b;
+          printf("%d\\n",c);
+          return 0;
+        }
+sourcecode
+    end
     factory :adding_char_submission do
       language "C++"
       source <<sourcecode

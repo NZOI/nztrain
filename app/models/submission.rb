@@ -45,6 +45,7 @@ class Submission < ActiveRecord::Base
       self.input = problem.input
       self.output = problem.output
     end
+    true
   end
 
   def judge
@@ -147,7 +148,9 @@ class Submission < ActiveRecord::Base
           correct = false
         
           if FileTest.exist?(output_file) == false
-            self.judge_output += "No output, probably crashed\n"
+            self.judge_output += "No output file - ensure output was to the correct file\n"
+          elsif IO.read(output_file) == ""
+            self.judge_output += "Empty output\n"
           elsif judge_msg.include?("status")
             self.judge_output += "Terminated by judge\n"
           else
