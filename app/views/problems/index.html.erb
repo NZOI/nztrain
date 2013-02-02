@@ -20,8 +20,8 @@
 <% @problems.each do |problem| %>
     <tr>
     <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.title %></td>
-    <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.input %></td>
-    <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.output %></td>
+    <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.input || "stdin" %></td>
+    <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.output || "stdout" %></td>
     <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.memory_limit %></td>
     <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.time_limit %></td>
     <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.owner_id %></td>
