@@ -3,8 +3,10 @@ class ProblemsController < ApplicationController
 
   def permitted_params
     @_permitted_attributes ||= begin
-      permitted_attributes = [:title, :statement, :input, :output, :memory_limit, :time_limit, :evaluator_id]
+      permitted_attributes = [:title, :statement, :input_type, :output_type, :memory_limit, :time_limit, :evaluator_id]
       permitted_attributes << :owner_id if can? :transfer, @problem
+      permitted_attributes << :input if params.require(:problem)[:input_type] == 'file'
+      permitted_attributes << :output if params.require(:problem)[:output_type] == 'file'
       permitted_attributes
     end
     params.require(:problem).permit(*@_permitted_attributes)

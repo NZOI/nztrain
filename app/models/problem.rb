@@ -16,8 +16,8 @@ class Problem < ActiveRecord::Base
   validates :title, :presence => true, :uniqueness => { :case_sensitive => false }
 
   before_save do
-    self.input = nil if self.input == ""
-    self.output = nil if self.output == ""
+    self.input = 'data.in' if self.input == ''
+    self.output = 'data.out' if self.output == ''
   end
 
   # Scopes
@@ -55,6 +55,30 @@ class Problem < ActiveRecord::Base
 
   def submission_history(user, from = DateTime.new(1), to = DateTime.now)
     return Submission.find(:all, :conditions => ["created_at between ? and ? and user_id IN (?) and problem_id = ?", from, to, user, self], :order => "created_at DESC")
+  end
+
+  def input_type=(type)
+    if type == 'stdin'
+      self.input = nil
+    elsif type == 'file' && self.input == nil
+      self.input = ''
+    end
+  end
+
+  def input_type
+    input.nil? ? 'stdin' : 'file'
+  end
+
+  def output_type=(type)
+    if type == 'stdout'
+      self.output = nil
+    elsif type == 'file' && self.output == nil
+      self.output = ''
+    end
+  end
+
+  def output_type
+    output.nil? ? 'stdout' : 'file'
   end
 
 end

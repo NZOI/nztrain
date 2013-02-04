@@ -21,11 +21,13 @@
   </div>
   <div class="field">
     <%= f.label :input %><br />
-    <%= f.text_field :input %>
+    <%= f.radio_button(:input_type, "stdin") %><%= f.label(:input_type_stdin, "stdin") %><br />
+    <%= f.radio_button(:input_type, "file", "data-radio-enable" => :problem_input) %><%= f.label(:input_type_file, "file") %> <%= f.text_field :input %>
   </div>
   <div class="field">
     <%= f.label :output %><br />
-    <%= f.text_field :output %>
+    <%= f.radio_button(:output_type, "stdout") %><%= f.label(:output_type_stdout, "stdout") %><br />
+    <%= f.radio_button(:output_type, "file", "data-radio-enable" => :problem_output) %><%= f.label(:output_type_file, "file") %> <%= f.text_field :output %>
   </div>
   <div class="field">
     <%= f.label :memory_limit %><br />
