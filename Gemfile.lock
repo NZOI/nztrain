@@ -38,6 +38,10 @@ GEM
     arel (3.0.2)
     bb-ruby (0.9.5)
     bcrypt-ruby (3.0.1)
+    better_errors (0.5.0)
+      coderay (>= 1.0.0)
+      erubis (>= 2.6.6)
+    binding_of_caller (0.6.8)
     bluecloth (2.2.0)
     builder (3.0.0)
     cancan (1.6.8)
@@ -54,6 +58,7 @@ GEM
     childprocess (0.3.5)
       ffi (~> 1.0, >= 1.0.6)
     chronic (0.6.7)
+    coderay (1.0.8)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)
@@ -215,6 +220,8 @@ PLATFORMS
 DEPENDENCIES
   ajax_pagination
   albino
+  better_errors
+  binding_of_caller
   bluecloth
   cancan (= 1.6.8)
   capybara

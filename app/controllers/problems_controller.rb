@@ -41,8 +41,8 @@ class ProblemsController < ApplicationController
     @all_subs = {};
     @sub_count = {};
     @problem.submissions.each do |sub|
-    	@all_subs[sub.user] = [(@all_subs[sub.user] or sub), sub].max_by {|m| m.score}
-        @sub_count[sub.user] = (@sub_count[sub.user] or 0) + 1
+    	  @all_subs[sub.user] = [(@all_subs[sub.user] or sub), sub].max_by {|m| m.score or 0 }
+          @sub_count[sub.user] = (@sub_count[sub.user] or 0) + 1
     end
     @all_subs = @all_subs.map {|s| s[1]}
 
