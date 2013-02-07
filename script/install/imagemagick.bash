@@ -2,7 +2,7 @@
 
 convert -version >/dev/null 2>&1 && { # already installed
   min_version=6
-  version=`convert -version | gawk 'match($0, /ImageMagick ([0-9.-]+)/, ary) {print ary[1]}'`
+  version=`convert -version | head -1 | sed 's/[^0-9.-]*\([0-9.-]*\).*/\1/'`
 
   larger=`echo -e "$version\n$min_version" | sort -V | tail -1`
 
