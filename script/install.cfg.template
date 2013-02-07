@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# Configuration file for script/install and script/update
+# These settings are stored so that the scripts can be called without prompting for settings everytime the scripts are executed.
+
+# the following variables can be altered manually, or a new install.cfg can be generated using script/install/config.bash
+
+
+# Rails environment that will be used to run this installation
+RAILS_ENV=${RAILS_ENV} # development or production
+
+

@@ -2,8 +2,11 @@
 
 == NZTrain
 
-Run install.sh to install some dependencies.
+=== Installation
+Run `script/install.bash` to install dependencies.
 
-update.sh will pull changes from origin and recompile various things. This includes assets - assuming that it is for production purposes.
+`script/update.bash` will pull changes from origin and recompile various things. This includes assets - assuming that it is for production purposes.
+
+Both scripts depends on `script/install.cfg`, which is built using `script/install/config.bash` automatically.
 
 

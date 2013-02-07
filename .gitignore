@@ -9,3 +9,5 @@ public/assets/
 public/uploads/tmp/
 db/data/
 config/database.yml
+script/install.cfg
+
