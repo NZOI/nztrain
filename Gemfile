@@ -8,8 +8,6 @@ gem 'rails', '~> 3.2.0'
 
 gem 'strong_parameters'#, :git => 'git://github.com/rails/strong_parameters.git' # delete when upgrading to rails 4.x
 
-gem 'sqlite3'
-
 gem 'rubyzip', :require => 'zip/zip'
 
 gem 'jquery-rails', '>= 1.0.12'

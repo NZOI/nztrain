@@ -1,13 +1,21 @@
 #!/usr/bin/env bash
 
 min_version=1.9.2
-ruby -v >/dev/null 2>&1 || { echo >&2 "Ruby is not installed, Ruby $min_version+ required!"; exit 1; }
-
-version=`ruby -e 'puts RUBY_VERSION'`
-larger=`echo -e "$version\n$min_version" | sort -V | tail -1`
-
-if [[ $version != $larger ]] ; then
+ruby -e 'puts RUBY_VERSION' 2>/dev/null | bash script/check_version.bash $min_version || {
   echo "Ruby $min_version+ required!"
-  exit 1
-fi
+  echo Select an install option for Ruby 1.9.3
+  select INSTALL_OPTION in "Don't install" "System MRI Ruby from source" "RVM";
+  do
+    case $REPLY in
+      1)
+        exit 1
+        break;;
+      2)
+        bash script/install/sysruby.bash || exit 1
+        break;;
+      3)
+        break;;
+    esac
+  done
+}
 

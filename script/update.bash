@@ -4,7 +4,9 @@ cd `dirname $0`/..
 
 if [ ! -f script/install.cfg ] ; then 
   echo To continue, you need to set some configuration settings...
-  bash script/install/config.bash
+  bash script/install/config.bash || exit 1
+else
+  bash script/install/config.bash --amend # in case there are new settings
 fi
 source script/install.cfg
 

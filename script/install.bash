@@ -4,7 +4,9 @@ cd `dirname $0`/..
 
 if [ ! -f script/install.cfg ] ; then 
   echo To continue, you need to set some configuration settings...
-  bash script/install/config.bash
+  bash script/install/config.bash || exit 1
+else
+  bash script/install/config.bash --amend # in case there are new settings
 fi
 source script/install.cfg
 
@@ -22,18 +24,22 @@ done
 
 bash script/install/ruby.bash || exit 1 # check ruby version
 
-# TODO: create db if it doesn't exist (and prompt for db details to create, or option to change details)
+bash script/install/postgresql.bash || exit 1 # create user & db if it doesn't exist
 
-bash script/install/imagemagick.bash # install imagemagick
+bash script/install/imagemagick.bash || exit 1 # install imagemagick
 
-bash script/install/nztrain.bash # fix files & directory structure
+bash script/install/nztrain.bash || exit 1 # fix files & directory structure
+
+bash script/install/bundler.bash || exit 1
+
+bash script/install/nokogiri.bash || exit 1 # nokogiri dependencies
 
 if ${update:=true} ; then
   # stuff that update needs to do as well
-  bash script/install/bundle.bash # bundle install gems
+  bash script/install/bundle.bash || exit 1 # bundle install gems
 
-  bash script/install/migrate.bash # migrate database
-  bash script/install/whenever.bash # setup cronjobs
+  bash script/install/migrate.bash || exit 1 # migrate database
+  bash script/install/whenever.bash || exit 1 # setup cronjobs
 
   # if in production mode
   if [[ $RAILS_ENV = production ]] ; then

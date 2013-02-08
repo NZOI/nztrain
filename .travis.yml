@@ -9,8 +9,8 @@ rvm:
 #  - "sh -e /etc/init.d/xvfb start"
 
 before_script:
-  - psql -c 'create database nztraintest;' -U postgres
-  - script/install.bash --skip-update
+  - RAILS_ENV=development DATABASE_USERNAME=postgres DATABASE= TEST_DATABASE=nztraintest bash script/install/config.bash
+  - AUTOCONFIRM=true script/install.bash --skip-update
   - rake db:test:load
 script: rspec
 

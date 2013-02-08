@@ -1,29 +1,16 @@
 #!/usr/bin/env bash
 
-convert -version >/dev/null 2>&1 && { # already installed
-  min_version=6
-  version=`convert -version | head -1 | sed 's/[^0-9.-]*\([0-9.-]*\).*/\1/'`
-
-  larger=`echo -e "$version\n$min_version" | sort -V | tail -1`
-
-  if [[ $version != $larger ]] ; then
-    echo "ImageMagick $min_version+ required!"
-  else
-    exit 0
-  fi
+min_version=6
+convert -version 2>/dev/null | bash script/extract_version.bash | bash script/check_version.bash $min_version || { # already installed
+  echo ImageMagick $min_version+ required!
+  bash script/confirm.bash "Install ImageMagick" && {
+    cmd="sudo apt-get install imagemagick"
+    echo "$ $cmd"
+    $cmd
+  } || exit 1
 }
 
-while [ -z "$confirm" ] ; do
-  read -p 'Install ImageMagick? (Y/y/N/n) ' confirm
-  case $confirm in
-    [nN] ) exit 1 ;;
-    [yY] ) ;;
-    "" ) confirm=true ;;
-    * ) unset confirm
-  esac
-done
-
-cmd="sudo apt-get install imagemagick"
+cmd="sudo apt-get install libmagickwand-dev" # required by the RMagick gem
 echo "$ $cmd"
-$cmd
+$cmd || exit 1
 

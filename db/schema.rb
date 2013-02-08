@@ -58,8 +58,8 @@ ActiveRecord::Schema.define(:version => 20130116092216) do
     t.integer  "user_id"
     t.integer  "contest_id"
     t.datetime "started_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
     t.datetime "finish_at"
     t.integer  "score",      :default => 0,   :null => false
     t.float    "time_taken", :default => 0.0, :null => false
@@ -87,8 +87,8 @@ ActiveRecord::Schema.define(:version => 20130116092216) do
     t.datetime "end_time"
     t.decimal  "duration"
     t.integer  "owner_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
     t.integer  "problem_set_id"
     t.datetime "finalized_at"
   end
@@ -103,14 +103,14 @@ ActiveRecord::Schema.define(:version => 20130116092216) do
     t.text     "description", :default => "", :null => false
     t.text     "source",      :default => "", :null => false
     t.integer  "owner_id",                    :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
   end
 
   create_table "groups", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
     t.integer  "owner_id"
   end
 
@@ -130,8 +130,8 @@ ActiveRecord::Schema.define(:version => 20130116092216) do
   create_table "problem_sets", :force => true do |t|
     t.string   "title"
     t.integer  "owner_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "problem_sets_problems", :id => false, :force => true do |t|
@@ -147,8 +147,8 @@ ActiveRecord::Schema.define(:version => 20130116092216) do
     t.integer  "memory_limit"
     t.decimal  "time_limit"
     t.integer  "owner_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.integer  "evaluator_id"
   end
 
@@ -164,8 +164,8 @@ ActiveRecord::Schema.define(:version => 20130116092216) do
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
     t.text     "data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "sessions", ["created_at"], :name => "index_sessions_on_created_at"
@@ -185,8 +185,8 @@ ActiveRecord::Schema.define(:version => 20130116092216) do
     t.integer  "score"
     t.integer  "user_id"
     t.integer  "problem_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.text     "judge_output"
     t.text     "debug_output"
     t.string   "input"
@@ -200,8 +200,8 @@ ActiveRecord::Schema.define(:version => 20130116092216) do
     t.text     "input"
     t.text     "output"
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.integer  "test_set_id"
   end
 
@@ -209,27 +209,27 @@ ActiveRecord::Schema.define(:version => 20130116092216) do
     t.integer  "problem_id"
     t.integer  "points"
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                 :default => "",    :null => false
-    t.string   "encrypted_password",     :limit => 128, :default => "",    :null => false
+    t.string   "email",                  :default => "",    :null => false
+    t.string   "encrypted_password",     :default => "",    :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                         :default => 0
+    t.integer  "sign_in_count",          :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "brownie_points",                        :default => 0
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+    t.integer  "brownie_points",         :default => 0
     t.string   "name"
-    t.string   "username",                                                 :null => false
-    t.boolean  "can_change_username",                   :default => false, :null => false
+    t.string   "username",                                  :null => false
+    t.boolean  "can_change_username",    :default => false, :null => false
     t.string   "avatar"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
