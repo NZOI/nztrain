@@ -8,7 +8,7 @@ feature 'registration' do
       fill_in 'Username', :with => 'registration_username'
       fill_in 'Name', :with => 'Registration Name'
       fill_in 'Email', :with => 'registration@integration.spec'
-      fill_in 'Password', :with => 'registration password'
+      fill_in 'user_password', :with => 'registration password'
       fill_in 'Password confirmation', :with => 'registration password'
       click_on 'Sign up'
     end

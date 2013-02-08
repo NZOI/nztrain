@@ -40,6 +40,7 @@ $cmd && $cmd2 && $cmd3 && $cmd4 && $cmd5 && {
   echo "$ $cmd" ; $cmd
   cmd="sudo update-alternatives --install /usr/bin/gem gem /opt/ruby/$version/bin/gem 400"
   echo "$ $cmd" ; $cmd
+
   bash script/confirm.bash "update-alternatives of ruby/gem commands to $version" && {
     cmd="sudo update-alternatives --set ruby /opt/ruby/$version/bin/ruby"
     echo "$ $cmd" ; $cmd
