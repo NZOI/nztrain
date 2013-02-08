@@ -31,26 +31,21 @@ echo "$ $cmd5"
 # install
 $cmd && $cmd2 && $cmd3 && $cmd4 && $cmd5 && {
   cd $pdir
-  cmd="sudo update-alternatives --install /usr/bin/ruby ruby /opt/ruby/$version/bin/ruby 400 \
-        --slave   /usr/bin/ri ri /opt/ruby/$version/bin/ri \
-        --slave   /usr/bin/irb irb /opt/ruby/$version/bin/irb \
-        --slave   /usr/bin/erb erb /opt/ruby/$version/bin/erb \
-        --slave   /usr/bin/rake rake /opt/ruby/$version/bin/rake \
-        --slave   /usr/bin/rdoc rdoc /opt/ruby/$version/bin/rdoc"
+  cmd="sudo update-alternatives --remove-all gem"
   echo "$ $cmd" ; $cmd
-  cmd="sudo update-alternatives --install /usr/bin/gem gem /opt/ruby/$version/bin/gem 400"
+  cmd="sudo update-alternatives --install /usr/bin/ruby ruby /opt/ruby/$version/bin/ruby 400 \
+        --slave   /usr/bin/gem gem /opt/ruby/$version/bin/gem \
+        --slave   /usr/bin/gems_bin gems_bin /opt/ruby/$version/bin/"
   echo "$ $cmd" ; $cmd
 
   bash script/confirm.bash "update-alternatives of ruby/gem commands to $version" && {
     cmd="sudo update-alternatives --set ruby /opt/ruby/$version/bin/ruby"
     echo "$ $cmd" ; $cmd
-    cmd="sudo update-alternatives --set gem /opt/ruby/$version/bin/gem"
-    echo "$ $cmd" ; $cmd
   }
-  bash script/confirm.bash "Add /opt/ruby/$version/bin to \$PATH in ~/.profile" && {
-    cmd="echo PATH=\\\"\\\$PATH:/opt/ruby/$version/bin\\\" | tee -a ~/.profile"
+  bash script/confirm.bash "Add /usr/bin/gems_bin to \$PATH in ~/.profile" && {
+    cmd="echo PATH=\\\"\\\$PATH:/usr/bin/gems_bin\\\" | tee -a ~/.profile"
     echo "$ $cmd"
-    echo PATH=\"\$PATH:/opt/ruby/$version/bin\" | tee -a ~/.profile
+    echo PATH=\"\$PATH:/usr/bin/gems_bin\" | tee -a ~/.profile
   }
 } || exit 1
 cd $pdir
