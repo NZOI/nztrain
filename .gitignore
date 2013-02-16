@@ -1,13 +1,15 @@
 .bundle
-db/*.sqlite3
-log/*.log
-tmp/
+/db/*.sqlite3
+/log/*.log
+/tmp/
 *~
 *.swp
 .sass-cache/
-public/assets/
-public/uploads/tmp/
-db/data/
-config/database.yml
-script/install.cfg
+/public/assets/
+/public/uploads/tmp/
+/db/data/
+/config/database.yml
+/script/install.cfg
+/db/backup/
+/db/backups/
 

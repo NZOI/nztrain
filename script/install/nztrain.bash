@@ -10,8 +10,8 @@ if [ ! -f config/database.yml ] ; then
 fi
 
 # make directories for storage
-cmd="mkdir db/data/uploads/user/avatar/ -p"
-echo "$ $cmd"
-$cmd
+cmd="mkdir db/data/uploads/user/avatar/ -p"; echo "$ $cmd"; $cmd
+cmd="mkdir db/backup/log -p"; echo "$ $cmd"; $cmd
+cmd="mkdir db/backups/ -p"; echo "$ $cmd"; $cmd
 
 

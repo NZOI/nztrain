@@ -33,6 +33,8 @@ gem 'simple_form'
 gem 'facebox-rails'
 
 gem 'pg'
+gem 'backup'
+
 # Use unicorn as the web server
 # gem 'unicorn'
 
