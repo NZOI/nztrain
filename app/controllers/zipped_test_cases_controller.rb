@@ -34,11 +34,19 @@ class ZippedTestCasesController < ApplicationController
     specfile = nil
     rootdir = nil
     filecountatdepth = []
-    rootcandidate = []
+    rootcandidate = nil
     files_in_zip.each_key do |filename|
+      if rootcandidate.nil?
+        rootcandidate = filename.split('/')[0...-1]
+      else
+        filename.split('/').zip(rootcandidate).each_with_index do |part,index|
+          if part[0].nil? || part[0]!=part[1]
+            rootcandidate = rootcandidate.take(index)
+            break
+          end
+        end
+      end
       depth = filename.count("/") - filename[-1..-1].count("/")
-      filecountatdepth[depth] = 1 + (filecountatdepth[depth] || 0) # keeps count of objects at certain depth
-      rootcandidate[depth] = filename
       if filename.match(/\A.*spec(ification)?(\.txt|\.nfo|\.csv)?\z/)
         if specdepth>depth || specdepth == -1
           specfile = filename
@@ -47,14 +55,11 @@ class ZippedTestCasesController < ApplicationController
         end
       end
     end
+
     if rootdir.nil? # find root directory - whichever directory first splits into 2
-      filecountatdepth.each_with_index do |count,index| # figure out the depth of the root
-        if count > 1
-          specdepth = index
-          rootdir = [""].concat(rootcandidate)[index]
-          break
-        end
-      end
+      specdepth = rootcandidate.length
+      rootdir = rootcandidate.join('/')
+      rootdir += '/' if !rootdir.empty?
     end
 
     testsets = {}
@@ -71,44 +76,32 @@ class ZippedTestCasesController < ApplicationController
         end
       end
     end
-    # now for each file in rootdir, make test sets
-    files_in_zip.each_key do |filename|
-      match = filename.match(/\A#{rootdir}([^\/]*)(\.in|\.i|\/)\z/) # any (input file)/dir which is an immediate child of the root directory
-      if match # we have a test set
-        testsetname = match[1]
-        next if testsets[testsetname] # already have test set by that name
-        testset = TestSet.new()
-        testset.name = testsetname
-        testset.points = 0
-        testset.problem = @problem
-        testset.save
-        testsets[testsetname] = testset
-      end
-    end
     # now make test cases
     testcases = []
     files_in_zip.each_key do |filename|
-      match = filename.match(/\A#{rootdir}(([^\/]*)\/(.*\/)?)?([^\/]*)(\.in|\.i)\z/) # any (input file)/dir which is an immediate child of the root directory
+      match = filename.match(/\A(#{rootdir}(([^\/]*)\/(.*\/)?)?([^\/]*))(\.in|\.i)(\.([0-9]*)[^\/]*)?\z/) # any (input file)/dir which is an immediate child of the root directory
       if match
-        testsetname = match[2]
-        testcasename = match[4]
-        testsetname = testcasename if testsetname.nil? || testsetname.empty?
+        testsetname = match[3] || ""
+        testcasename = "#{match[5]}#{match[7]}"
+        testsetname = "#{match[5]}#{match[8].nil? || "#{match[5]}".match(/(\.dummy)/) ? "" : ".#{match[8]}"}" if testsetname.nil? || testsetname.empty?
+        if testsets[testsetname].nil? # if we don't have a test set of required name
+          dummy = testsetname.match(/(\.dummy)/) # test set without points
+          testsets[testsetname] = TestSet.new( :name => testsetname, :points => !dummy, :problem => @problem )
+          testsets[testsetname].save
+        end
         testcase = TestCase.new()
         testcase.name = testcasename
         testcase.input = files_in_zip[filename]
         testcase.output = ""
         testcaseoutputroot = filename.gsub(/(\.in|\.i)\z/,"")
         ['.out','.o','.ans'].each do |suffix|
-          if files_in_zip[testcaseoutputroot + suffix]
-            testcase.output = files_in_zip[testcaseoutputroot + suffix]
+          outputcandidate = "#{match[1]}#{suffix}#{match[7]}"
+          if !files_in_zip[outputcandidate].nil?
+            testcase.output = files_in_zip[outputcandidate]
             break
           end
         end
-        testcase.test_set_id = testsets[testsetname].id
-        if testsets[testsetname].points <= 0
-          testsets[testsetname].points = 1
-          testsets[testsetname].save
-        end
+        testcase.test_set = testsets[testsetname]
         testcase.save
         testcases.push(testcase)
       end
