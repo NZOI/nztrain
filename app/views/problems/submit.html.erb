@@ -1,14 +1,14 @@
+<% if @submission.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(@submission.errors.count, "error") %> prohibited this submission from being saved:</h2>
+    <ul>
+    <% @submission.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
 <%= form_for @submission, :html => {:multipart => true}, :url => submit_problem_path(@problem) do |f| %>
-  <% if @submission.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@submission.errors.count, "error") %> prohibited this submission from being saved:</h2>
-      <ul>
-      <% @submission.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
   <div class="field">
     Language: 
     <%= f.select :language, ['C++', 'C', 'Haskell', 'Python']%>
@@ -21,5 +21,20 @@
     <%= f.submit 'Submit' %>
   </div>
 <% end %>
-
+<% if can? :submit_source, @problem %>
+  <center><b>or submit source directly:</b></center>
+  <%= form_for @submission, :url => submit_problem_path(@problem) do |f| %>
+    <div class="field">
+      Language: 
+      <%= f.select :language, ['C++', 'C', 'Haskell', 'Python']%>
+    </div>
+    <div class="field">
+      <%= f.label :source %><br />
+      <%= f.text_area :source, :style => "width: 100%", :cols => 60 %>
+    </div>
+    <div class="actions">
+      <%= f.submit 'Submit' %>
+    </div>
+  <% end %>
+<% end %>
 

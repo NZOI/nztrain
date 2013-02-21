@@ -15,7 +15,7 @@ class ProblemsController < ApplicationController
   def submit_params # attributes allowed to be included in submissions
     @_submit_attributes ||= begin
       submit_attributes = [:language, :source_file]
-      submit_attributes << [:source] if can? :submit_source, @problem
+      submit_attributes << :source if can? :submit_source, @problem
       submit_attributes
     end
     params.require(:submission).permit(*@_submit_attributes).merge(:user_id => current_user.id, :problem_id => params[:id])
@@ -54,7 +54,8 @@ class ProblemsController < ApplicationController
 
   def submit
     if request.post? # post request
-      authorize! :submit, Problem.find(params[:id]) # make sure user can submit to this problem
+      @problem = Problem.find(params[:id])
+      authorize! :submit, @problem # make sure user can submit to this problem
       @submission = Submission.new(submit_params) # create submission
       respond_to do |format|
         if @submission.save
@@ -62,7 +63,7 @@ class ProblemsController < ApplicationController
           format.html { redirect_to(@submission, :notice => 'Submission was successfully created.') }
           format.xml  { render :xml => @submission, :status => :created, :location => @submission }
         else
-          format.html { render :action => "show", :alert => 'Submission failed.' }
+          format.html { render :action => "submit", :layout => "problem", :alert => 'Submission failed.' }
           format.xml  { render :xml => @submission.errors, :status => :unprocessable_entity }
         end
       end

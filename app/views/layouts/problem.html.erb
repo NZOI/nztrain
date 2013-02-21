@@ -19,7 +19,7 @@
   render_navigation do |menu|
     menu.dom_class = :tab_menu
     menu.item :statement, "problem statement", problem_path(@problem)
-    menu.item :submit, "submit", submit_problem_path(@problem) if can? :submit, @problem
+    menu.item :submit, "submit", submit_problem_path(@problem), :highlights_on => :subpath if can? :submit, @problem
     menu.item :submissions, "submissions", submissions_problem_path(@problem)
 #  end.render
   end
