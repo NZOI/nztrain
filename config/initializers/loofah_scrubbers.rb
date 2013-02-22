@@ -27,12 +27,18 @@ module Loofah
             # make math/tex script for latex
             script = Nokogiri::XML::Element.new "script", node.document
             script.set_attribute 'type', 'math/tex'
-            script.add_child Nokogiri::XML::Text.new(match[0][1...-1], node.document) # add latex to script tag
+            latex = match[0][1...-1]
+            script.add_child Nokogiri::XML::Text.new(latex, node.document) # add latex to script tag
             node.add_previous_sibling script # insert script tag above
-            
-            script.add_previous_sibling Nokogiri::XML::Text.new(content[pos...match.begin(0)], node.document) # insert relevant text above script
+            # add <noscript> alternative to view javascript
+            #lateximage = Nokogiri::XML::Element.new("img", node.document)
+            #lateximage.set_attribute('src','/cgi-bin/mathtex.cgi?'+latex) # TODO: mathtex.cgi to be installed
+            noscript = Nokogiri::XML::Element.new("noscript", node.document)
+            #noscript.add_child(lateximage)
+            noscript.add_child Nokogiri::XML::Text.new(match[0], node.document)
+            script.add_next_sibling noscript
 
-            # TODO: add <noscript> alternative
+            script.add_previous_sibling Nokogiri::XML::Text.new(content[pos...match.begin(0)], node.document) # insert relevant text above script
 
             pos = match.end(0)
           end
