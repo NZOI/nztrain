@@ -1,5 +1,5 @@
 
-<%= raw Loofah.fragment(markdown_parse(@problem.statement)).scrub!(:escape).scrub!(Loofah::Scrubbers::NoForm.new) %>
+<%= raw Loofah.fragment(markdown_parse(@problem.statement)).scrub!(:escape).scrub!(Loofah::Scrubbers::NoForm.new).scrub!(Loofah::Scrubbers::MathJax.new) %>
 <br />
 
 <%= render 'admin' %>
