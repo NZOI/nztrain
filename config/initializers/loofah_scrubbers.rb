@@ -25,37 +25,27 @@ module Loofah
           # matching any non-dollar string (except for escaped dollars - \$), surrounded by dollars, subject to:
           # - neither outside dollars are escaped
           # - ending (single) dollar does not precede numerical character
-          re = /(?<re>(?<!\\){([^{}]|\\({|})|\g<re>)*(?<!\\)})/ # matches balanced unescaped braces in tex
-          tex_content = /([^${}]|(\\(\$|{|}))|#{re})+/ # matches any valid tex content, but avoiding unescaped $ delimiter (which ends the tex expression)
-          tex = /(?<!\\)(?<d>\$?)\$#{tex_content}(?<!\\)\$(?![0-9])\g<d>/ # matches tex - including $ and $$ delimiters
-          while match = content.match(tex, pos)
+          regex = {}
+          regex[:re] = /(?<re>(?<!\\){([^{}]|\\({|})|\g<re>)*(?<!\\)})/ # matches balanced unescaped braces in tex
+          regex[:tex] = /([^${}]|(\\(\$|{|}))|#{regex[:re]})+/ # matches any valid tex content, but avoiding unescaped $ delimiter (which ends the tex expression)
+          regex[:jax] = /(?<!\\)(?<d>\$?)\$#{regex[:tex]}(?<!\\)\$(?![0-9])\g<d>/ # matches tex - including $ and $$ delimiters
+          while match = content.match(regex[:jax], pos)
             dollars = 1 + match[:d].length
-            # make math/tex script for latex
-            script = Nokogiri::XML::Element.new "script", node.document
-            script.set_attribute 'type', 'math/tex'+(dollars==2?'; mode=display':'')
-            latex = match[0][dollars...-dollars]
-            script.add_child Nokogiri::XML::Text.new(latex, node.document) # add latex to script tag
-            node.add_previous_sibling script # insert script tag above
-            # add <noscript> alternative to view javascript
-            #lateximage = Nokogiri::XML::Element.new('img', node.document)
-            #lateximage.set_attribute('src','/cgi-bin/mathtex.cgi?'+latex) # TODO: mathtex.cgi to be installed
-            noscript = Nokogiri::XML::Element.new('noscript', node.document)
-            noscript.set_attribute('style','display: block; text-align: center;') if dollars==2
-            #noscript.add_child(lateximage)
-            noscript.add_child Nokogiri::XML::Text.new(match[0], node.document)
-            script.add_next_sibling noscript
+            tex = match[0][dollars...-dollars]
 
-            script.add_previous_sibling Nokogiri::XML::Text.new(escape(content[pos...match.begin(0)]), node.document) # insert relevant text above script
+            fragment = Nokogiri::HTML::DocumentFragment.new node.document
+            Nokogiri::HTML::Builder.with(fragment) do |html|
+              html.text escape content[pos...match.begin(0)] # text before Jax
+              html.span(:class => 'MathJax_Preview', :style => dollars==2?'display: block; text-align: center;':'' ) { # preview before Jax typeset
+                html.span(:class => 'js_only') { html.text tex } # preview if javascript exists
+                html.noscript {
+                  html.text tex # placeholder if javascript doesn't exist, TODO: use mathtex cgi
+                }
+              }
+              html.script(:type => 'math/tex'+(dollars==2?'; mode=display':'')) { html.text tex } # MathJax script
+            end
 
-            # insert preview before script
-            js_preview = Nokogiri::XML::Element.new('script', node.document)
-            js_preview.set_attribute 'type', 'text/javascript'
-            js_preview.add_child Nokogiri::XML::Text.new("document.write('#{j latex}');", node.document)
-            preview = Nokogiri::XML::Element.new('span', node.document)
-            preview.set_attribute('class','MathJax_Preview')
-            preview.set_attribute('style','display: block; text-align: center;') if dollars==2
-            preview.add_child js_preview
-            script.add_previous_sibling preview
+            node.add_previous_sibling fragment
 
             pos = match.end(0)
           end

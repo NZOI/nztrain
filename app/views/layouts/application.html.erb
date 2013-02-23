@@ -5,7 +5,13 @@
     <%= javascript_include_tag "application" %>
     <%#= javascript_include_tag "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML" %>
     <%= javascript_include_tag "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full" %>
-    </script>
+    <noscript>
+      <style type="text/css">
+        .js_only {
+          display: none;
+        }
+      </style>
+    </noscript>
     <%= csrf_meta_tag %>
 
     <!-- Google Analytics -->
