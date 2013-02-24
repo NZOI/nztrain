@@ -10,7 +10,7 @@ gem 'strong_parameters'#, :git => 'git://github.com/rails/strong_parameters.git'
 
 gem 'rubyzip', :require => 'zip/zip'
 
-gem 'jquery-rails', '>= 1.0.12'
+gem 'jquery-rails', '~> 2.1.1'
 gem 'jquery-historyjs'
 
 gem "bluecloth"
