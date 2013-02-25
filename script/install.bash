@@ -34,6 +34,8 @@ bash script/install/bundler.bash || exit 1
 
 bash script/install/nokogiri.bash || exit 1 # nokogiri dependencies
 
+bash script/install/jdk.bash || exit 1 # required by yui-compressor
+
 if ${update:=true} ; then
   # stuff that update needs to do as well
   bash script/install/bundle.bash || exit 1 # bundle install gems
