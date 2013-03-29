@@ -21,7 +21,7 @@ cmd="sudo apt-get install libpq-dev"
 echo "$ $cmd"
 $cmd || exit 1
 
-if [[ $DATABASE_USERNAME = $USER ]] # if user is correct - supposing postgresql is using ident authentication
+if [[ $DATABASE_USERNAME = $USER ]] ; then # if user is correct - supposing postgresql is using ident authentication
 
   # setup user if required
   psql -U$DATABASE_USERNAME postgres -c '' &> /dev/null || {
