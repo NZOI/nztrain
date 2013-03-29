@@ -30,6 +30,8 @@ fi
 
 bash script/install/bundle.bash # bundle install gems
 
+bash script/install/nztrain.bash # fix files & directory structure
+
 # Stop WEBrick/Apache server here (only if database needs migration?)
 bash script/install/migrate.bash # migrate database
 bash script/install/whenever.bash # setup cronjobs

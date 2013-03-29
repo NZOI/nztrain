@@ -9,6 +9,7 @@
 /public/uploads/tmp/
 /db/data/
 /config/database.yml
+/config/unicorn.yml
 /script/install.cfg
 /db/backup/
 /db/backups/
