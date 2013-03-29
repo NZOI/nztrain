@@ -21,7 +21,7 @@ CONFIGURE_OPTIONS="--prefix=$INSTALL_DIR-$VER
                    --with-http_mp4_module"
 
 # add passenger as a module if it is installed on the system
-if [ `which passenger-config`] ; then
+if [ `which passenger-config` ] ; then
   CONFIGURE_OPTIONS="$CONFIGURE_OPTIONS --add-module=`passenger-config --root`/ext/nginx"
 fi
 
