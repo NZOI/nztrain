@@ -21,37 +21,34 @@ cmd="sudo apt-get install libpq-dev"
 echo "$ $cmd"
 $cmd || exit 1
 
-if [[ $DATABASE_USERNAME = $USER ]] ; then # if user is correct - supposing postgresql is using ident authentication
+# setup user if required
+psql -U$DATABASE_USERNAME postgres -c '' &> /dev/null || {
+  bash script/confirm.bash "Create new PostgreSQL user $DATABASE_USERNAME" && {
+    cmd="sudo -u postgres createuser --superuser $DATABASE_USERNAME"
+    echo "$ $cmd"
+    $cmd
+  }
+}
 
-  # setup user if required
-  psql -U$DATABASE_USERNAME postgres -c '' &> /dev/null || {
-    bash script/confirm.bash "Create new PostgreSQL user $DATABASE_USERNAME" && {
-      cmd="sudo -u postgres createuser --superuser $DATABASE_USERNAME"
+# setup database if required
+if [[ $DATABASE ]] ; then
+  psql -U$DATABASE_USERNAME $DATABASE -c '' &> /dev/null || {
+    bash script/confirm.bash "Create new PostgreSQL database $DATABASE" && {
+      cmd="sudo -u postgres createdb $DATABASE"
       echo "$ $cmd"
       $cmd
-    } || exit 1
+    }
   }
+fi
 
-  # setup database if required
-  if [[ $DATABASE ]] ; then
-    psql -U$DATABASE_USERNAME $DATABASE -c '' &> /dev/null || {
-      bash script/confirm.bash "Create new PostgreSQL database $DATABASE" && {
-        cmd="sudo -u postgres createdb $DATABASE"
-        echo "$ $cmd"
-        $cmd
-      }
+# setup database if required
+if [[ $TEST_DATABASE ]] ; then
+  psql -U$DATABASE_USERNAME $TEST_DATABASE -c '' &> /dev/null || {
+    bash script/confirm.bash "Create new PostgreSQL database $TEST_DATABASE" && {
+      cmd="sudo -u postgres createdb $TEST_DATABASE"
+      echo "$ $cmd"
+      $cmd
     }
-  fi
-
-  # setup database if required
-  if [[ $TEST_DATABASE ]] ; then
-    psql -U$DATABASE_USERNAME $TEST_DATABASE -c '' &> /dev/null || {
-      bash script/confirm.bash "Create new PostgreSQL database $TEST_DATABASE" && {
-        cmd="sudo -u postgres createdb $TEST_DATABASE"
-        echo "$ $cmd"
-        $cmd
-      }
-    }
-  fi
+  }
 fi
 
