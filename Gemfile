@@ -6,7 +6,8 @@ gem 'rails', '~> 3.2.0'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'strong_parameters'#, :git => 'git://github.com/rails/strong_parameters.git' # delete when upgrading to rails 4.x
+# delete when upgrading to rails 4.x, commit to allow Rack::Test::UploadedFile
+gem 'strong_parameters', :git => 'git://github.com/rails/strong_parameters.git', :ref => 'b88ca5be23004de6efeebaf956dd4f8ddb0a23b0'
 
 gem 'rubyzip', :require => 'zip/zip'
 
