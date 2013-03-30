@@ -3,15 +3,16 @@
 <head>
     <link rel="shortcut icon" href="/favicon.ico">
     <%= stylesheet_link_tag "application" %>
-    <%= javascript_include_tag "application" %>
-    <%= javascript_include_tag "http://cdn.mathjax.org/mathjax/2.1-latest/MathJax.js?config=TeX-AMS_HTML-full" %>
-    <noscript>
-      <style type="text/css">
-        .js_only {
-          display: none;
-        }
-      </style>
-    </noscript>
+    <%= javascript_include_tag "application", :defer => true %>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX","output/HTML-CSS","output/NativeMML"],
+  extensions: ["tex2jax.js","MathMenu.js","MathZoom.js"],
+  TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"] }
+});
+</script>
+    <%= javascript_include_tag "http://cdn.mathjax.org/mathjax/2.1-latest/MathJax.js", :async => true %>
+    <noscript><style type="text/css">.js_only { display: none; }</style></noscript>
     <%= csrf_meta_tag %>
 
     <!-- Google Analytics -->
