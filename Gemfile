@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'devise', '~> 2.1.2'
+gem 'devise', '~> 2.2.3'
 gem 'rails', '~> 3.2.0'
 
 # Bundle edge Rails instead:
@@ -51,6 +51,8 @@ gem 'unicorn'
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
+
+  gem 'foreman'
 end
 
 # Bundle gems for the local environment. Make sure to
