@@ -5,4 +5,4 @@ require File.expand_path('../config/application', __FILE__)
 require 'rake/dsl_definition'
 require 'rake'
 
-NztrainV2::Application.load_tasks
+NZTrain::Application.load_tasks
