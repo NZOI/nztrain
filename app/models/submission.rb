@@ -133,8 +133,8 @@ class Submission < ActiveRecord::Base
       problem.test_sets.each_with_index do |test_set,number|
         self.judge_output += "Test Set #{1+number} (#{test_set.points} points):\n"
         # print table headers
-        self.judge_output += "<table border = \"1\"><tr> <th>Test Case</th> <th colspan=\"1\">Message</th> <th>Memory/kb</th> "
-        self.judge_output += "<th>Time/s</th> <th>Result</th> </tr>"
+        self.judge_output += "<table border = \"1\"><tr> <th style=\"width:6%\">Test Case</th> <th style=\"width:44%\">Message</th> <th style=\"width:10%\">Memory/kb</th> "
+        self.judge_output += "<th style=\"width:15%\">Time/s</th> <th style=\"width:25%\">Result</th> </tr>"
 
         total_points += test_set.points
         numcorrect = 0
