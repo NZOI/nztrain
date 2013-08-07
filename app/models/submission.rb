@@ -1,6 +1,6 @@
 class Submission < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
-
+  
   belongs_to :user
   belongs_to :problem
   
@@ -95,11 +95,11 @@ class Submission < ActiveRecord::Base
         comp_output = "nothing"
       end
 
-      self.judge_output += 'compiling with ' +  "#{box_path} #{comp_sandbox_opts} -- #{compiler} #{source_file} -O2 -lm -o #{exe_file}\n"
+      self.judge_output += '<i>compiling with ' +  "#{box_path} #{comp_sandbox_opts} -- #{compiler} #{source_file} -O2 -lm -o #{exe_file}</i>\n"
 
-      self.judge_output += "compiler output:\n" + comp_output + "\n"
+      self.judge_output += "<i><b><FONT COLOR=\"000000\">compiler output:</FONT></b></i>\n<pre>" + comp_output.gsub("\n", "<br />") + "</pre>\n"
     else
-      self.judge_output += "interpreted language, not compiling\n"
+      self.judge_output += "<i>interpreted language, not compiling</i>\n"
       File.open(exe_file, 'w') { |f| f.write(source) }
     end
 
@@ -132,10 +132,14 @@ class Submission < ActiveRecord::Base
 
       problem.test_sets.each_with_index do |test_set,number|
         self.judge_output += "Test Set #{1+number} (#{test_set.points} points):\n"
+        self.judge_output += "<table border = \"1\"><tr><th>Test Case</th><th>Result</th><th colspan=\"10\">Judge Message</th></tr>"
+        
         total_points += test_set.points
         numcorrect = 0
         test_set.test_cases.each_with_index do |test_case,case_number|
-          self.judge_output += "Test Case #{1+case_number}:\n"
+          #self.judge_output += "Test Case #{1+case_number}:\n"
+          self.judge_output += "<tr><td>#{1+case_number}</td>"
+
           File.open(input_file, 'w') { |f| f.write(test_case.input) }
           system_string = "#{box_path} -a2 -M#{judge_file} -m#{mem_limit} -k#{stack_limit} " +
                  " -t#{time_limit} -w#{[time_limit*2,30].max} -o#{output_stream} -r/dev/null -- #{exec_string} < #{input_stream}"
@@ -145,8 +149,8 @@ class Submission < ActiveRecord::Base
           program_output = system(system_string)
 
           judge_msg = IO.read(judge_file)
-
-          self.judge_output += judge_msg
+          
+          self.judge_output += "<td>"
           correct = false
         
           if FileTest.exist?(output_file) == false
@@ -200,6 +204,12 @@ class Submission < ActiveRecord::Base
             File.delete(output_file) if FileTest.exists?(output_file)
             File.delete(expected_file) if FileTest.exists?(expected_file)
           end
+
+          self.judge_output += "</td>"
+
+          self.judge_output += "<td>" + judge_msg.gsub("\n", "</td><td>").chop.chop.chop.chop
+          self.judge_output += "</tr>"
+
           if FileTest.exists?(input_file)
             File.delete(input_file)
           end
@@ -207,6 +217,8 @@ class Submission < ActiveRecord::Base
           # or ruby exceptions takes care of it?
 
         end
+
+        self.judge_output += "</table>"
         if numcorrect == test_set.test_cases.size
           self.judge_output += "Test Set #{1+number} result: Correct (+#{test_set.points} points)\n"
           self.score += test_set.points
