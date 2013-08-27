@@ -54,7 +54,7 @@ class Problem < ActiveRecord::Base
   end
 
   def submission_history(user, from = DateTime.new(1), to = DateTime.now)
-    return Submission.find(:all, :conditions => ["created_at between ? and ? and user_id IN (?) and problem_id = ?", from, to, user, self], :order => "created_at DESC")
+    return Submission.find(:all, :conditions => ["created_at between ? and ? and user_id IN (?) and problem_id = ?", from, to, user, self], :order => "created_at ASC")
   end
 
   def input_type=(type)

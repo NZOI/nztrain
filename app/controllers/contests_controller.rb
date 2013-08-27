@@ -12,8 +12,8 @@ class ContestsController < ApplicationController
   # GET /contests
   # GET /contests.xml
   def index
-    @contests = Contest.accessible_by(current_ability).distinct
-
+    @contests = Contest.accessible_by(current_ability).order("end_time DESC").distinct
+    
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @contests }

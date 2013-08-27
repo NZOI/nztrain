@@ -1,6 +1,6 @@
 class Submission < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
-
+  
   belongs_to :user
   belongs_to :problem
   
@@ -95,11 +95,11 @@ class Submission < ActiveRecord::Base
         comp_output = "nothing"
       end
 
-      self.judge_output += 'compiling with ' +  "#{box_path} #{comp_sandbox_opts} -- #{compiler} #{source_file} -O2 -lm -o #{exe_file}\n"
+      self.judge_output += '<i>compiling with ' +  "#{box_path} #{comp_sandbox_opts} -- #{compiler} #{source_file} -O2 -lm -o #{exe_file}</i>\n"
 
-      self.judge_output += "compiler output:\n" + comp_output + "\n"
+      self.judge_output += "<i><b style=\"color:black\">compiler output:</b></i>\n<pre>" + comp_output.gsub("\n", "<br />") + "</pre>\n"
     else
-      self.judge_output += "interpreted language, not compiling\n"
+      self.judge_output += "<i>interpreted language, not compiling</i>\n"
       File.open(exe_file, 'w') { |f| f.write(source) }
     end
 
@@ -132,10 +132,16 @@ class Submission < ActiveRecord::Base
 
       problem.test_sets.each_with_index do |test_set,number|
         self.judge_output += "Test Set #{1+number} (#{test_set.points} points):\n"
+        # print table headers
+        self.judge_output += "<table border = \"1\"><tr> <th style=\"width:6%\">Test Case</th> <th style=\"width:44%\">Message</th> <th style=\"width:10%\">Memory/kb</th> "
+        self.judge_output += "<th style=\"width:15%\">Time/s</th> <th style=\"width:25%\">Result</th> </tr>"
+
         total_points += test_set.points
         numcorrect = 0
         test_set.test_cases.each_with_index do |test_case,case_number|
-          self.judge_output += "Test Case #{1+case_number}:\n"
+          #self.judge_output += "Test Case #{1+case_number}:\n"
+          self.judge_output += "<tr style=\"text-align:center\"><td>#{1+case_number}</td>"
+
           File.open(input_file, 'w') { |f| f.write(test_case.input) }
           system_string = "#{box_path} -a2 -M#{judge_file} -m#{mem_limit} -k#{stack_limit} " +
                  " -t#{time_limit} -w#{[time_limit*2,30].max} -o#{output_stream} -r/dev/null -- #{exec_string} < #{input_stream}"
@@ -144,9 +150,17 @@ class Submission < ActiveRecord::Base
 
           program_output = system(system_string)
 
-          judge_msg = IO.read(judge_file)
-
-          self.judge_output += judge_msg
+          judge_msg = IO.read(judge_file) # judge message received here, after running the submission
+          
+          # ==judge message output in cells== #
+          judge_msg_hash = Hash[judge_msg.each_line.map { |line| line.chomp.split(":", 2) }]
+          # table cells [Test Case] ([Message][Memory Used][Time Taken]) [Result]
+          self.judge_output += "<td>" + ((judge_msg_hash["message"]==nil) ? ("") : (judge_msg_hash["message"])) + "</td>"
+          self.judge_output += "<td>" + judge_msg_hash["mem"] + "</td>"
+          self.judge_output += "<td>" + judge_msg_hash["time-wall"] + "</td>"
+          # ==end of judge message processing== #
+          
+          self.judge_output += "<td style=\"color:FireBrick\">" # start of cell in Results column
           correct = false
         
           if FileTest.exist?(output_file) == false
@@ -191,7 +205,7 @@ class Submission < ActiveRecord::Base
               numcorrect += 1
               logger.debug "test case with id " + test_case.id.to_s + " was correct"
               #self.score += test_case.points 
-              self.judge_output += "Correct!\n"
+              self.judge_output += "<b><green style=\"color:Green\">" + "Correct!\n" + "</green></b>"
             else
               logger.debug "test case with id " + test_case.id.to_s + " was incorrect"
               self.judge_output += "Incorrect :(\n"
@@ -200,6 +214,9 @@ class Submission < ActiveRecord::Base
             File.delete(output_file) if FileTest.exists?(output_file)
             File.delete(expected_file) if FileTest.exists?(expected_file)
           end
+
+          self.judge_output += "</td></tr>" # end of table row
+
           if FileTest.exists?(input_file)
             File.delete(input_file)
           end
@@ -207,6 +224,8 @@ class Submission < ActiveRecord::Base
           # or ruby exceptions takes care of it?
 
         end
+
+        self.judge_output += "</table>"
         if numcorrect == test_set.test_cases.size
           self.judge_output += "Test Set #{1+number} result: Correct (+#{test_set.points} points)\n"
           self.score += test_set.points
