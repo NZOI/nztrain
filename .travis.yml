@@ -12,5 +12,5 @@ before_script:
   - RAILS_ENV=development DATABASE_USERNAME=postgres DATABASE= TEST_DATABASE=nztraintest bash script/install/config.bash
   - AUTOCONFIRM=true script/install.bash --skip-update
   - rake db:test:load
-script: rspec
+script: bundle exec rspec
 
