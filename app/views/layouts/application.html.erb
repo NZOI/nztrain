@@ -3,29 +3,20 @@
 <head>
     <link rel="shortcut icon" href="/favicon.ico">
     <%= stylesheet_link_tag "application" %>
-    <%= javascript_include_tag "application" %>
-    <%#= javascript_include_tag "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML" %>
-    <%= javascript_include_tag "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full" %>
-    <noscript>
-      <style type="text/css">
-        .js_only {
-          display: none;
-        }
-      </style>
-    </noscript>
+    <%= javascript_include_tag "application", :async => true %>
+    <%= javascript_include_tag "http://cdn.mathjax.org/mathjax/2.1-latest/MathJax.js?config=TeX-AMS_HTML", :async => true %>
+    <noscript><style type="text/css">.js_only { display: none; }</style></noscript>
     <%= csrf_meta_tag %>
-
     <!-- Google Analytics -->
-    <script type="text/javascript">
+    <script defer="defer" async type="text/javascript">
       var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-37616650-1']);
-          _gaq.push(['_trackPageview']);
+      _gaq.push(['_setAccount', 'UA-37616650-1'],['_setDomainName', 'none'],['_trackPageview']);
 
-            (function() {
-                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
     </script>
 
 <title><%= yield :title %><%= "#{((yield :title).length>0?" - ":"")}NZOI Training" %></title>

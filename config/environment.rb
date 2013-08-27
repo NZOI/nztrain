@@ -13,4 +13,4 @@ HIGH_SCORE_LIMIT = 0.5
 #ActiveRecord::Base.pluralize_table_names = false
 
 #Initialize the rails application
-NztrainV2::Application.initialize!
+NZTrain::Application.initialize!

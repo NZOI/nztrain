@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+### BEGIN INIT INFO
+# Provides:          ${APP_NAME}
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start ${APP_NAME} service at boot time
+# Description:       Start ${APP_NAME} service at boot time - various services for ${APP_NAME} rails application
+### END INIT INFO
+
+set -e
+
+# Feel free to change any of the following variables for your app:
+TIMEOUT=60
+APP_ROOT=${RAILS_ROOT}
+APP_USER=${APP_USER}
+UNICORN_PID=$APP_ROOT/tmp/pids/unicorn.pid
+ENV=${RAILS_ENV}
+UNICORN_CMD="bundle exec unicorn -E $ENV -D -c $APP_ROOT/config/unicorn.rb"
+action="$1"
+service="$2"
+set -u
+
+UNICORN_OLD_PID="$UNICORN_PID.oldbin"
+
+cd $APP_ROOT || exit 1
+
+sig () {
+        test -s "$2" && kill -$1 `cat $2`
+}
+
+unicorn () {
+  local PID=$UNICORN_PID
+  local OLD_PID=$UNICORN_OLD_PID
+  local CMD=$UNICORN_CMD
+  case $1 in
+  start)
+          sig 0 $PID && echo >&2 "Already running" && return 0
+          echo >&2 "Starting unicorn server..."
+          su --login $APP_USER -c "cd $APP_ROOT && $CMD"
+          sig 0 $PID && echo >&2 "Unicorn server started." || echo >&2 "Unicorn server failed to start."
+          ;;
+  stop)
+          echo >&2 "Stopping unicorn server..."
+          sig QUIT $PID && {
+            echo >&2 "Unicorn server stopped."
+            return 0
+          }
+          echo >&2 "Not running"
+          ;;
+  force-stop)
+          echo >&2 "Stopping unicorn server..."
+          sig TERM $PID && {
+            echo >&2 "Unicorn server stopped."
+            return 0
+          }
+          echo >&2 "Not running"
+          ;;
+  restart|reload)
+          echo >&2 "Reloading unicorn server..."
+          sig HUP $PID && echo >&2 "reloaded OK" && return 0
+          echo >&2 "Couldn't reload, starting '$CMD' instead"
+          su --login $APP_USER -c "$CMD"
+          ;;
+  upgrade)
+          echo >&2 "Upgrading unicorn server..."
+          if sig USR2 $PID && sleep 2 && sig 0 $PID && sig QUIT $OLD_PID
+          then
+                  n=$TIMEOUT
+                  while test -s $OLD_PID && test $n -ge 0
+                  do
+                          printf '.' && sleep 1 && n=$(( $n - 1 ))
+                  done
+                  echo
+
+                  if test $n -lt 0 && test -s $OLD_PID
+                  then
+                          echo >&2 "$OLD_PID still exists after $TIMEOUT seconds"
+                          return 1
+                  fi
+                  echo >&2 "Unicorn server upgraded."
+                  return 0
+          fi
+          echo >&2 "Couldn't upgrade, starting '$CMD' instead"
+          su --login $APP_USER -c "$CMD"
+          ;;
+  reopen-logs)
+          sig USR1 $PID
+          ;;
+  *)
+          echo >&2 "Usage: $0 (start|stop|force-stop|restart|upgrade|reopen-logs) unicorn"
+          return 1
+          ;;
+  esac
+}
+
+case $service in
+  unicorn)
+    unicorn "$action"
+    exit $?
+    ;;
+  '')
+    unicorn "$action"
+    exit $?
+    ;;
+  *)
+    echo >&2 "Usage: $0 (start|stop|restart) [unicorn]"
+    exit 1
+    ;;
+esac
+

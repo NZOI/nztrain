@@ -1,12 +1,13 @@
 source 'http://rubygems.org'
 
-gem 'devise', '~> 2.1.2'
+gem 'devise', '~> 2.2.3'
 gem 'rails', '~> 3.2.0'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'strong_parameters'#, :git => 'git://github.com/rails/strong_parameters.git' # delete when upgrading to rails 4.x
+# delete when upgrading to rails 4.x, commit to allow Rack::Test::UploadedFile
+gem 'strong_parameters', :git => 'git://github.com/rails/strong_parameters.git', :ref => 'b88ca5be23004de6efeebaf956dd4f8ddb0a23b0'
 
 gem 'rubyzip', :require => 'zip/zip'
 
@@ -36,7 +37,7 @@ gem 'pg'
 gem 'backup'
 
 # Use unicorn as the web server
-# gem 'unicorn'
+gem 'unicorn'
 
 # Deploy with Capistrano
 # gem 'capistrano'
@@ -51,6 +52,8 @@ gem 'backup'
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
+
+  gem 'foreman'
 end
 
 # Bundle gems for the local environment. Make sure to
@@ -83,7 +86,8 @@ group :assets do
   gem 'coffee-rails', "~> 3.2.1"
   gem 'uglifier', '>=1.0.3'
   gem 'libv8', '~> 3.3'
-  gem 'therubyracer', '~> 0.10.2' # required for the execjs gem (dependency)
+  gem 'therubyracer', '~> 0.11.4' # required for the execjs gem (dependency)
+  gem 'yui-compressor'
 end
 
 

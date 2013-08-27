@@ -1,4 +1,4 @@
-NztrainV2::Application.routes.draw do
+NZTrain::Application.routes.draw do
   resources :ai_contests do
     member do
       get 'sample'
