@@ -72,6 +72,9 @@ class User < ActiveRecord::Base
       self.roles.map(&:name).include? role
     end
   end
+  def role_symbols
+    rolelist = (roles || []).map {|r| r.name.to_sym} << :user << (self.openbook? ? :openbook : :closedbook)
+  end
   def is_admin?
     self.is_any? [:admin, :superadmin]
   end
@@ -80,5 +83,8 @@ class User < ActiveRecord::Base
   end
   def competing?
     ContestRelation.active.user(self.id).any?
+  end
+  def openbook?
+    !self.competing?
   end
 end

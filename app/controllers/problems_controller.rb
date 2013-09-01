@@ -1,5 +1,6 @@
 class ProblemsController < ApplicationController
-  load_and_authorize_resource :except => [:create, :submit, :submissions]
+  #load_and_authorize_resource :except => [:create, :submit, :submissions]
+  filter_resource_access
 
   def permitted_params
     @_permitted_attributes ||= begin
@@ -24,7 +25,8 @@ class ProblemsController < ApplicationController
   # GET /problems
   # GET /problems.xml
   def index
-    @problems = @problems.distinct.score_by_user(current_user.id)
+    #@problems = @problems.distinct.score_by_user(current_user.id)
+    @problems = Problem.with_permissions_to(:index).score_by_user(current_user.id)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @problems }

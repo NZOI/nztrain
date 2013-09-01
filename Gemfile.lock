@@ -91,6 +91,7 @@ GEM
       debugger-ruby_core_source (~> 1.2.3)
     debugger-linecache (1.2.0)
     debugger-ruby_core_source (1.2.3)
+    declarative_authorization (0.5.7)
     devise (2.2.3)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
@@ -252,6 +253,7 @@ DEPENDENCIES
   carrierwave
   coffee-rails (~> 3.2.1)
   debugger
+  declarative_authorization
   devise (~> 2.2.3)
   facebox-rails
   factory_girl
