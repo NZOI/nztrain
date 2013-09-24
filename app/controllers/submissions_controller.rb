@@ -15,16 +15,24 @@ class SubmissionsController < ApplicationController
   # GET /submissions
   # GET /submissions.xml
   def index
-    params[:by_user] = current_user.id unless permitted_to? :index, Submission.new
-    permitted_to! :read, Problem.find(params[:by_problem]) unless params[:by_problem].nil?
-    @submissions = apply_scopes(Submission).paginate(:order => "created_at DESC", :page => params[:page], :per_page => 20)
+    params[:by_user] = current_user.id if params[:filter] == 'my'
+    permitted_to! :index, Submission.new if params[:by_user].nil?
+    if current_user.openbook? || permitted_to?(:read, Problem.new)
+      permitted_to! :read, Problem.find(params[:by_problem]) unless params[:by_problem].nil?
+      @submissions = apply_scopes(Submission).paginate(:order => "created_at DESC", :page => params[:page], :per_page => 20)
+    else # only allowed to see contest submissions
+      @submissions = Submission.joins(:contest_scores => :contest_relations).where{
+        (user_id == my{current_user.id}) & 
+        (contest_scores.contest_relations.started_at <= DateTime.now) &
+        (contest_scores.contest_relations.finish_at > DateTime.now)
+      }.paginate(:order => "created_at DESC", :page => params[:page], :per_page => 20)
+    end
 
     # TODO: fix submission permissions
 
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @submissions }
-      #ajax_respond format, :section_id => "page"
     end
   end
 

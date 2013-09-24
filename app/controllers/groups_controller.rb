@@ -1,7 +1,7 @@
 class GroupsController < ApplicationController
   #load_and_authorize_resource :except => [:create]
   #skip_load_and_authorize_resource :only => [:add_contest]
-  filter_resource_access :additional_collection => {:browse => :index}, :additional_member => {:show => :index}
+  filter_resource_access :additional_collection => { :browse => :index }, :additional_member => { :show => :index, :info => :index, :contests => :access_problems, :members => :access_problems }
 
   def permitted_params
     @_permitted_attributes ||= begin
@@ -97,11 +97,30 @@ class GroupsController < ApplicationController
   # GET /groups/1
   # GET /groups/1.xml
   def show
-    @problem_sets = @group.problem_sets
+    if permitted_to? :access_problems, @group
+      @problem_sets = @group.problem_sets
+      render :layout => "group"
+    else
+      redirect_to info_group_path(@group)
+    end
+  end
+
+  def contests
+    @contests = @group.contests
     respond_to do |format|
       format.html { render :layout => "group" }
-      #format.xml  { render :xml => @group }
     end
+  end
+  
+  def info 
+    respond_to do |format|
+      format.html { render :layout => "group" }
+    end
+  end
+
+  def members
+    @users = @group.users
+    render :layout => "group"
   end
 
   # GET /groups/new

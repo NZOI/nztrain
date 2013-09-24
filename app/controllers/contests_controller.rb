@@ -35,13 +35,13 @@ class ContestsController < ApplicationController
     groups_contests = Contest.joins(:groups => :users).where{(groups.id == 0) | (groups.users.id == my{current_user.id})}.distinct
     case params[:filter].to_s
     when 'active'
-      @contests = Contest.joins(:contest_relations).where(:contest_relations => { :user_id => current_user.id}).order("end_time ASC")
+      @contests = Contest.joins(:contest_relations).where{ (contest_relations.user_id == my{current_user.id}) & (contest_relations.finish_at > Time.now) }.order("end_time ASC")
     when 'current'
       @contests = groups_contests.where{(start_time < Time.now+30.minutes) & (end_time > Time.now)}.order("end_time ASC")
     when 'upcoming'
       @contests = groups_contests.where{(start_time > Time.now+30.minutes)}.order("start_time ASC")
     when 'past'
-      @contests = groups_contests.where{(end_time > Time.now)}.order("end_time DESC")
+      @contests = groups_contests.where{(end_time < Time.now)}.order("end_time DESC")
     else
       raise Authorization::AuthorizationError
     end

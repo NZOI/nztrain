@@ -49,6 +49,7 @@ NZTrain::Application.routes.draw do
   resources :submissions, :except => [:new,:create] do
     collection do
       get '(by_user/:by_user)(/by_problem/:by_problem)', :action => :index, :constraints => {:by_user => /[\d,]+/, :by_problem => /[\d,]+/}
+      get 'my', :to => 'submissions#index', :defaults => { :filter => 'my' }
     end
     member do
       post 'rejudge'
@@ -114,6 +115,10 @@ NZTrain::Application.routes.draw do
       get 'browse'
     end
     member do
+      get 'contests'
+      get 'info'
+      get 'members'
+
       put 'join'
       put 'leave'
 

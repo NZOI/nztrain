@@ -121,8 +121,9 @@ authorization do
 end
 privileges do
   privilege :manage do
-    includes :create, :inspect, :update, :delete, :use
+    includes :create, :inspect, :update, :delete, :use, :access
   end
+  privilege :access, :includes => :access_problems
   privilege :create, :includes => :new
   privilege :update, :includes => :edit
   privilege :delete, :includes => :destroy

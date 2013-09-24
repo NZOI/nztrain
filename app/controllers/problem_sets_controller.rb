@@ -55,7 +55,11 @@ class ProblemSetsController < ApplicationController
   # GET /problem_sets/1
   # GET /problem_sets/1.xml
   def show
-    @groups = Group.all
+    if permitted_to? :update, Group.new
+      @groups = Group.all
+    else
+      @groups = Group.where(:owner_id => current_user.id)
+    end
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @problem_set }

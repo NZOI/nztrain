@@ -36,12 +36,6 @@
               <td width="100%">&nbsp;&nbsp;&nbsp;<%= link_to problem.title, problem %></td>
               <td><%= progress_bar(problem.score) %></td>
               <td><%= link_to 'Show', problem %></td>
-              <!--<% if permitted_to? :update, Problem %>
-                <td><%= link_to 'Edit', edit_problem_path(problem) if permitted_to? :update, problem %></td>
-              <% end %>
-              <% if permitted_to? :destroy, Problem %>
-                <td><%= link_to 'Destroy', problem, :data => { :confirm => 'Are you sure?' }, :method => :delete if permitted_to? :destroy, problem %></td>
-              <% end %>-->
             </tr>
           <% end %>
         </table>

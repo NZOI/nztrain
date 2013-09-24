@@ -376,3 +376,6 @@ input[type="file"] {
   background-color: #A91313;
   color: white;
 }
+.ui-datepicker {
+  margin-top: 50px;
+}

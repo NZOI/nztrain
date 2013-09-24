@@ -10,10 +10,10 @@
     <th>User</th>
     <th>Score</th>
     <th></th>
-    <% if permitted_to? :update, Problem %>
+    <% if permitted_to? :update, :problems %>
       <th></th>
     <% end %>
-    <% if permitted_to? :destroy, Problem %>
+    <% if permitted_to? :destroy, :problems %>
       <th></th>
     <% end %>
   </tr>
@@ -27,10 +27,10 @@
     <td onClick="location.href='<%= problem_path(problem) %>'"><%= problem.owner_id %></td>
     <td onClick="location.href='<%= problem_path(problem) %>'"><%= progress_bar(problem.score) if problem.score %></td>
     <td><%= link_to 'Show', problem %></td>
-    <% if permitted_to? :update, Problem %>
+    <% if permitted_to? :update, :problems %>
       <td><%= link_to 'Edit', edit_problem_path(problem) if permitted_to? :update, problem %></td>
     <% end %>
-    <% if permitted_to? :destroy, Problem %>
+    <% if permitted_to? :destroy, :problems %>
       <td><%= link_to 'Destroy', problem, :data => { :confirm => 'Are you sure?' }, :method => :delete if permitted_to? :destroy, problem %></td>
     <% end %>
   </tr>
@@ -39,6 +39,6 @@
 
 <br />
 
-<% if permitted_to? :create, Problem %>
+<% if permitted_to? :create, :problems %>
   <%= link_to 'New Problem', new_problem_path %>
 <% end %>

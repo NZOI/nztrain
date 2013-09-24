@@ -29,6 +29,6 @@
 
 <br />
 
-<% if permitted_to? :create, Group %>
+<% if permitted_to? :create, :groups %>
   <%= link_to 'New Group', new_group_path %>
 <% end %>
