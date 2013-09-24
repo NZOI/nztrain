@@ -2,10 +2,15 @@ class AiContestsController < ApplicationController
   # GET /ai_contests
   # GET /ai_contests.json
 
-  load_and_authorize_resource :except => [:create, :submit, :submissions]
+  #load_and_authorize_resource :except => [:create, :submit, :submissions]
+  filter_resource_access :additional_member => {:sample => :show, :submit => :show, :submissions => :show, :judge => :judge, :rejudge => :rejudge}
+
+  def new_ai_contest_from_params
+    @ai_contest = AiContest.new(:owner_id => current_user.id)
+  end
 
   def index
-    @ai_contests = AiContest.accessible_by(current_ability)
+    #@ai_contests = AiContest.accessible_by(current_ability)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -94,10 +99,6 @@ class AiContestsController < ApplicationController
   # POST /ai_contests
   # POST /ai_contests.json
   def create
-    @ai_contest = AiContest.new(:owner_id => current_user.id)
-
-    authorize! :create, @ai_contest
-
     respond_to do |format|
       if @ai_contest.update_attributes(permitted_params)
         format.html { redirect_to @ai_contest, notice: 'Ai contest was successfully created.' }
@@ -151,7 +152,7 @@ class AiContestsController < ApplicationController
     def permitted_params
       @_permitted_params ||= begin
         permitted_attributes = [:title, :start_time, :end_time, :statement, :judge, :sample_ai, :iterations, :iterations_preview]
-        permitted_attributes << :owner_id if can? :transfer, @contest
+        permitted_attributes << :owner_id if permitted_to? :transfer, @contest
         params.require(:ai_contest).permit(*permitted_attributes)
       end
     end
@@ -166,7 +167,7 @@ class AiContestsController < ApplicationController
     def submit_params # attributes allowed to be included in submissions
       @_submit_attributes ||= begin
         submit_attributes = [:language, :source_file]
-        submit_attributes << [:source] if can? :submit_source, @problem
+        submit_attributes << [:source] if permitted_to? :submit_source, @problem
         submit_attributes
       end
       params.require(:ai_submission).permit(*@_submit_attributes).merge(:user_id => current_user.id, :ai_contest_id => params[:id],

@@ -4,5 +4,4 @@
 
 <%= render 'admin' %>
 
-<%= link_to 'Edit', edit_problem_path(@problem) if can? :update, @problem %> 
-<%= link_to 'Back', problems_path %>
+<%= link_to 'Edit', edit_problem_path(@problem) if permitted_to? :update, @problem %> 

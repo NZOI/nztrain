@@ -1,71 +1,65 @@
-<%= ajax_links :section_id => "page" do %>
-  <%= will_paginate @submissions %>
-<% end %>
-<%= ajax_loadzone do %>
-  <% if @submissions.length == 0 %>
-    <% if current_user.id == params[:by_user] %>
-      You have no submissions.
-    <% else %>
-      No submissions found.
-    <% end %>
+<%= will_paginate @submissions %>
+<% if @submissions.length == 0 %>
+  <% if current_user.id == params[:by_user] %>
+    You have no submissions.
   <% else %>
-
-    <% @table_columns = 4 %>
-    <table width="100%">
-      <tr>
-        <th>Submission</th>
-        <th></th>
-        <th>Score</th>
-        <% if !params[:by_user] || params[:by_user][',']
-             @table_columns+=1
-        %>
-        <th>User</th>
-        <% end %>
-          <% if !params[:by_problem] || params[:by_problem][',']
-             @table_columns+=1
-        %>
-          <th>Problem</th>
-        <% end %>
-        <th></th>
-          <% if can? :update, Submission
-             @table_columns += 1
-        %>
-          <th></th>
-        <% end %>
-          <% if can? :destroy, Submission
-             @table_columns += 1
-        %>
-          <th></th>
-        <% end %>
-      </tr>
-    
-    <% @submissions.each do |submission| %>
-      <tr onClick="toggle_height(<%= "'submission#{submission.id}source'" %>);">
-        <td><%= submission.created_at.strftime("%b %d %Y, %H:%M") %>
-          <td><%= submission.language %></td>
-        <td><%= submission.score %></td>
-        <% if !params[:by_user] || params[:by_user][','] %>
-          <td><% if submission.user %><%= submission.user.handle(current_ability) %><% end %></td>
-        <% end %>
-        <% if !params[:by_problem] || params[:by_problem][','] %>
-          <td><%= submission.problem.title %></td>
-        <% end %>
-        <td><%= link_to 'Show', submission %></td>
-        <% if can? :update, submission %>
-          <td><%= link_to 'Edit', edit_submission_path(submission) %></td>
-        <% end %>
-        <% if can? :destroy, submission %>
-          <td><%= link_to 'Destroy', submission, :data => { :confirm => 'Are you sure?' }, :method => :delete %></td>
-        <% end %>
-      </tr>
-        <tr>
-        <td colspan="<%= @table_columns %>"><pre id="submission<%= submission.id %>source" style="overflow-y: hidden; width: 100%; display: none; border: 0px; padding: 0px;"><%= submission.source %></pre></td>
-      </tr>
-    <% end %>
-    </table>
+    No submissions found.
   <% end %>
+<% else %>
+
+  <% @table_columns = 4 %>
+  <table width="100%">
+    <tr>
+      <th>Submission</th>
+      <th>Language</th>
+      <th>Score</th>
+      <% if params[:by_user].nil?
+           @table_columns+=1
+      %>
+        <th>User</th>
+      <% end %>
+      <% if params[:by_problem].nil?
+           @table_columns+=1
+      %>
+        <th>Problem</th>
+      <% end %>
+      <th></th>
+      <% if permitted_to? :update, :submissions
+           @table_columns += 1
+      %>
+        <th></th>
+      <% end %>
+      <% if permitted_to? :destroy, :submissions
+           @table_columns += 1
+      %>
+        <th></th>
+      <% end %>
+    </tr>
+  
+  <% @submissions.each do |submission| %>
+    <tr onClick="toggle_height(<%= "'submission#{submission.id}source'" %>);">
+      <td><%= submission.created_at.strftime("%b %d %Y, %H:%M") %>
+        <td><%= submission.language %></td>
+      <td><%= submission.score %></td>
+      <% if params[:by_user].nil? %>
+        <td><% if submission.user %><%= submission.user.handle %><% end %></td>
+      <% end %>
+      <% if params[:by_problem].nil? %>
+        <td><%= submission.problem.title %></td>
+      <% end %>
+      <td><%= link_to 'Show', submission %></td>
+      <% if permitted_to? :update, submission %>
+        <td><%= link_to 'Edit', edit_submission_path(submission) %></td>
+      <% end %>
+      <% if permitted_to? :destroy, submission %>
+        <td><%= link_to 'Destroy', submission, :data => { :confirm => 'Are you sure?' }, :method => :delete %></td>
+      <% end %>
+    </tr>
+      <tr>
+      <td colspan="<%= @table_columns %>"><pre id="submission<%= submission.id %>source" style="overflow-y: hidden; width: 100%; display: none; border: 0px; padding: 0px;"><%= submission.source %></pre></td>
+    </tr>
+  <% end %>
+  </table>
 <% end %>
-<%= ajax_links :section_id => "page" do %>
-  <%= will_paginate @submissions %>
-<% end %>
+<%= will_paginate @submissions %>
 

@@ -68,33 +68,80 @@
   </div>
   <div id="nav">
     <ul>
+      <li><a href="<%= root_path %>">home</a></li>
       <!--<li><a href="#">information</a></li>-->
       <% if user_signed_in? %>
-        <li><a href="<%= contests_path %>">contests</a>
+        <li><a href="<%= browse_groups_path %>">groups</a>
           <ul>
-            <li><a href="<%= contests_path %>">contests</a></li>
-            <li><a href="<%= ai_contests_path %>">AI contests</a></li>
+            <li><a href="<%= browse_groups_path %>">groups</a></li>
+            <li><a href="#" onClick="return false;">contests</a>
+              <ul>
+                <li><a href="<%= active_contests_path %>">active</a></li>
+                <li><a href="<%= current_contests_path %>">current</a></li>
+                <li><a href="<%= upcoming_contests_path %>">upcoming</a></li>
+                <li><a href="<%= past_contests_path %>">past</a></li>
+                <!--<li><a href="<%= ai_contests_path %>">AI contests</a></li>-->
+              </ul>
+            </li>
           </ul>
         </li>
-        <li><a href="#" onClick="return false;">problems</a>
+        <!--<li><a href="#" onClick="return false;">problems</a>
           <ul>
             <li><a href="<%= problem_sets_path %>">problem sets</a></li>
             <li><a href="<%= problems_path %>">problems</a></li>
             <li><a href="<%= submissions_path %>">submissions</a></li>
-            <li><a href="<%= evaluators_path %>">evaluators</a></li>
+            <% if permitted_to? :index, Evaluator %>
+              <li><a href="<%= evaluators_path %>">evaluators</a></li>
+            <% end %>
           </ul>
-        </li>
-        <li><a href="#" onClick="return false;">community</a>
+        </li>-->
+        <li><a href="#" onClick="return false;">my stuff</a>
           <ul>
-            <li><a href="<%= users_path %>">users</a></li>
-            <li><a href="<%= groups_path %>">groups</a></li>
+            <li><a href="<%= my_submissions_path %>">submissions</a></li>
+            <% if permitted_to? :manage, Problem.new(:owner_id => current_user.id) %>
+              <li><a href="<%= my_problems_path %>">problems</a></li>
+            <% end %>
+            <% if permitted_to? :manage, ProblemSet.new(:owner_id => current_user.id) %>
+              <li><a href="<%= my_problem_sets_path %>">problem sets</a></li>
+            <% end %>
+            <% if permitted_to? :manage, Contest.new(:owner_id => current_user.id) %>
+              <li><a href="<%= my_contests_path %>">contests</a></li>
+            <% end %>
+            <% if permitted_to? :manage, Group.new(:owner_id => current_user.id) %>
+              <li><a href="<%= my_groups_path %>">groups</a></li>
+            <% end %>
           </ul>
         </li>
+        <% if permitted_to? :manage, Problem.new %>
+          <li><a href="#" onClick="return false;">manage</a>
+            <ul>
+              <% if permitted_to? :manage, Problem.new %>
+                <li><a href="<%= problems_path %>">problems</a></li>
+              <% end %>
+              <% if permitted_to? :manage, ProblemSet.new %>
+                <li><a href="<%= problem_sets_path %>">problem sets</a></li>
+              <% end %>
+              <% if permitted_to? :manage, Contest.new %>
+                <li><a href="<%= contests_path %>">contests</a></li>
+              <% end %>
+              <% if permitted_to? :manage, Group.new %>
+                <li><a href="<%= groups_path %>">groups</a></li>
+              <% end %>
+              <% if permitted_to? :index, :evaluators %>
+                <li><a href="<%= evaluators_path %>">evaluators</a></li>
+              <% end %>
+              <% if permitted_to? :index, Submission.new %>
+                <li><a href="<%= submissions_path %>">submissions</a></li>
+              <% end %>
+            </ul>
+          </li>
+        <% end %>
+        <li><a href="<%= users_path %>">users</a></li>
         <% if current_user && current_user.is_admin? %>
           <li><a href="#" onClick="return false;">admin</a>
             <ul>
-              <% if can? :index, Role %><li><a href="<%= roles_path %>">roles</a></li><% end %>
-              <% if can? :index, Setting %><li><a href="<%= settings_path %>">settings</a></li><% end %>
+              <% if permitted_to? :index, Role %><li><a href="<%= roles_path %>">roles</a></li><% end %>
+              <% if permitted_to? :index, Setting %><li><a href="<%= settings_path %>">settings</a></li><% end %>
             </ul>
           </li>
         <% end %>
@@ -108,9 +155,9 @@
 	    Congratulations to our current brownie point leader <%= @brownie_leader.email %> who has <%= @brownie_leader.brownie_points %> points!<br/>
 	  </div>-->
 	  <div id="main-container">
-          <div class="message-container">
+          <!--<div class="message-container">
 	    Most problems now use standard I/O (stdin and stdout) instead of files!<br/>
-	  </div>
+	  </div>-->
 	        <% if alert %>
 	          <p id="alert"><%= alert %></p>
                 <% end %>

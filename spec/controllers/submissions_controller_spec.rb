@@ -21,6 +21,6 @@ describe SubmissionsController do
     before(:each) do
       sign_in users(:user)
     end
-    can_index :submissions
+    can_index :submissions, :params => { :filter => 'my' }
   end
 end

@@ -1,0 +1,23 @@
+<table class="main_table" >
+  <tr>
+    <th>Username</th>
+    <% if permitted_to? :inspect, User %>
+      <th>Name</th>
+      <th>Email</th>
+    <% end %>
+  </tr>
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= link_to user.username, user %></td>
+      <% if permitted_to? :inspect, User %>
+        <td><%= user.name if permitted_to? :inspect, user %></td>
+        <td>
+          <% if permitted_to? :inspect, user %>
+            <%= user.email %> <span style="color:red;"><%= "(unconfirmed)" if !user.confirmed? %></span>
+          <% end %>
+        </td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+

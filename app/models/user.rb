@@ -41,8 +41,8 @@ class User < ActiveRecord::Base
     self.where("email = ?", conditions[:email]).limit(1).first
   end
 
-  def handle(current_ability = nil)
-    if current_ability && (current_ability.can? :inspect, self)
+  def handle
+    if permitted_to? :inspect
       if self.name && !self.name.empty?
         return "#{self.username} \"#{self.name}\""
       else
@@ -72,6 +72,9 @@ class User < ActiveRecord::Base
       self.roles.map(&:name).include? role
     end
   end
+  def role_symbols
+    rolelist = (roles || []).map {|r| r.name.to_sym} << :user << (self.openbook? ? :openbook : :closedbook)
+  end
   def is_admin?
     self.is_any? [:admin, :superadmin]
   end
@@ -80,5 +83,8 @@ class User < ActiveRecord::Base
   end
   def competing?
     ContestRelation.active.user(self.id).any?
+  end
+  def openbook?
+    !self.competing?
   end
 end

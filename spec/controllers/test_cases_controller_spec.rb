@@ -12,7 +12,7 @@ describe TestCasesController do
     before(:each) do
       sign_in users(:admin)
     end
-    can_index :test_cases
+    can_index :test_cases, :params => { :problem_id => Proc.new { problems(:problem) } }
     #can_manage :test_case, :attributes => { :name => "A unique name", :input => "Some secret judging data", :output => "The unguessable answer" }
     can_show :test_case
     can_destroy :test_case

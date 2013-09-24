@@ -10,28 +10,28 @@
     <th>User</th>
     <th>Score</th>
     <th></th>
-    <% if can? :update, Problem %>
+    <% if permitted_to? :update, :problems %>
       <th></th>
     <% end %>
-    <% if can? :destroy, Problem %>
+    <% if permitted_to? :destroy, :problems %>
       <th></th>
     <% end %>
   </tr>
 <% @problems.each do |problem| %>
     <tr>
-    <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.title %></td>
-    <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.input || "stdin" %></td>
-    <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.output || "stdout" %></td>
-    <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.memory_limit %></td>
-    <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.time_limit %></td>
-    <td onClick="location.href='<%= url_for(problem) %>'"><%= problem.owner_id %></td>
-    <td onClick="location.href='<%= url_for(problem) %>'"><%= progress_bar(problem.score) if problem.score %></td>
+    <td onClick="location.href='<%= problem_path(problem) %>'"><%= problem.title %></td>
+    <td onClick="location.href='<%= problem_path(problem) %>'"><%= problem.input || "stdin" %></td>
+    <td onClick="location.href='<%= problem_path(problem) %>'"><%= problem.output || "stdout" %></td>
+    <td onClick="location.href='<%= problem_path(problem) %>'"><%= problem.memory_limit %></td>
+    <td onClick="location.href='<%= problem_path(problem) %>'"><%= problem.time_limit %></td>
+    <td onClick="location.href='<%= problem_path(problem) %>'"><%= problem.owner_id %></td>
+    <td onClick="location.href='<%= problem_path(problem) %>'"><%= progress_bar(problem.score) if problem.score %></td>
     <td><%= link_to 'Show', problem %></td>
-    <% if can? :update, Problem %>
-      <td><%= link_to 'Edit', edit_problem_path(problem) if can? :update, problem %></td>
+    <% if permitted_to? :update, :problems %>
+      <td><%= link_to 'Edit', edit_problem_path(problem) if permitted_to? :update, problem %></td>
     <% end %>
-    <% if can? :destroy, Problem %>
-      <td><%= link_to 'Destroy', problem, :data => { :confirm => 'Are you sure?' }, :method => :delete if can? :destroy, problem %></td>
+    <% if permitted_to? :destroy, :problems %>
+      <td><%= link_to 'Destroy', problem, :data => { :confirm => 'Are you sure?' }, :method => :delete if permitted_to? :destroy, problem %></td>
     <% end %>
   </tr>
 <% end %>
@@ -39,6 +39,6 @@
 
 <br />
 
-<% if can? :create, Problem %>
+<% if permitted_to? :create, :problems %>
   <%= link_to 'New Problem', new_problem_path %>
 <% end %>

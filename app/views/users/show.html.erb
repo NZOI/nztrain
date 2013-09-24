@@ -4,7 +4,7 @@
   <b>Username:</b>
   <%= @user.username %>
   <br />
-  <% if can? :inspect, @user %>
+  <% if permitted_to? :inspect, @user %>
     <b>Name:</b>
     <%= @user.name %>
     <br />
@@ -32,5 +32,5 @@
 
 <%= render 'admin' %>
 
-<%= link_to 'Edit', edit_user_path(@user) if can? :update, @user %>
+<%= link_to 'Edit', edit_user_path(@user) if permitted_to? :update, @user %>
 <%= link_to 'Back', users_path %>

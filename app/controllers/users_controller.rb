@@ -1,17 +1,18 @@
 class UsersController < ApplicationController
-  load_and_authorize_resource
-  skip_authorize_resource :only => [:add_role, :remove_role, :suexit, :admin_email, :send_admin_email]
+  #load_and_authorize_resource
+  #skip_authorize_resource :only => [:add_role, :remove_role, :suexit, :admin_email, :send_admin_email]
+  filter_resource_access :additional_member => {:add_role => :update, :remove_role => :update, :add_brownie => :add_brownie, :admin_email => :email, :send_admin_email => :email, :su => :su}, :additional_collection => :suexit
 
   def permitted_params
     @_permitted_attributes ||= begin
       permitted_attributes = [:name, :avatar, :remove_avatar, :avatar_cache]
-      permitted_attributes << :brownie_points if can? :add_brownie, @user
+      permitted_attributes << :brownie_points if permitted_to? :add_brownie, @user
     end
     params.require(:user).permit(*@_permitted_attributes)
   end
 
   def index
-    @users = @users.distinct.num_solved.order(:email)
+    @users = User.select('*').num_solved.order(:email)
     respond_to do |format|
       format.html
       format.xml {render :xml => @users }
@@ -44,7 +45,7 @@ class UsersController < ApplicationController
 
   def add_role
     role = Role.find(params[:user][:role_ids])
-    authorize! :grant, role
+    permitted_to! :grant, role
     if @user.roles.exists?(role)
       redirect_to(@user, :alert => "This user already has this role")
       return
@@ -54,7 +55,7 @@ class UsersController < ApplicationController
   end
   def remove_role
     role = Role.find(params[:role_id])
-    authorize! :revoke, role
+    permitted_to! :revoke, role
     @user.roles.delete(role)
     redirect_to(@user, :notice => "Role #{role.name} removed.")
   end
@@ -87,7 +88,8 @@ class UsersController < ApplicationController
 
   def suexit
     if (!session[:su]) || session[:su].empty?
-      raise CanCan::AccessDenied.new("Not authorized!", :suexit, User)
+      #raise CanCan::AccessDenied.new("Not authorized!", :suexit, User)
+      raise Authorization::AuthorizationError
     end
     old_user = current_user.username
     sign_in User.find(session[:su].pop)
@@ -95,7 +97,6 @@ class UsersController < ApplicationController
   end
 
   def add_brownie
-    authorize! :add_brownie, @user
     logger.debug "adding brownie"
     @user.brownie_points += 1
     @user.save
@@ -103,10 +104,8 @@ class UsersController < ApplicationController
   end
 
   def admin_email
-    authorize! :email, @user
   end
   def send_admin_email
-    authorize! :email, @user
     AdminMailer.custom_email(current_user,@user,params[:subject],params[:body]).deliver
     redirect_to user_path(@user), :notice => "Email sent."
   end

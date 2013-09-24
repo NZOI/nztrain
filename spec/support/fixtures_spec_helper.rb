@@ -2,7 +2,12 @@ module FixturesSpecHelper
   @@table_names = [:users, :problems, :test_sets]
 
   def self.initialize
-    @@users = { :user => FactoryGirl.create(:user), :admin => FactoryGirl.create(:admin), :superadmin => FactoryGirl.create(:superadmin) }
+    @@users = {
+      :user => FactoryGirl.create(:user),
+      :admin => FactoryGirl.create(:admin),
+      :superadmin => FactoryGirl.create(:superadmin),
+      :organiser => FactoryGirl.create(:organiser)
+    }
     @@problems = { :problem => FactoryGirl.create(:problem) }
     @@test_sets = { :test_set => FactoryGirl.create(:test_set, :problem => @@problems[:problem]) }
   end

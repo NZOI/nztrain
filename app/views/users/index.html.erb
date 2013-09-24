@@ -1,12 +1,12 @@
 <% content_for :title, "Users" %>
 <div id="main-page-title">Listing users</div>
-<% if can? :su, User %>
+<% if permitted_to? :su, User %>
   <%= render :partial => 'su', :formats => [:js] %>
 <% end %>
 <table class="main_table" >
   <tr>
     <th>Username</th>
-    <% if can? :inspect, User %>
+    <% if permitted_to? :inspect, User %>
       <th>Name</th>
       <th>Email</th>
     <% end %>
@@ -14,13 +14,13 @@
     <th>Solved Problems</th>
     <th>Brownie Points</th>
     <th></th>
-    <% if can? :update, User %>
+    <% if permitted_to? :update, User %>
       <th></th>
     <% end %>
-    <% if can? :destroy, User %>
+    <% if permitted_to? :destroy, User %>
       <th></th>
     <% end %>
-    <% if can? :su, User %>
+    <% if permitted_to? :su, User %>
       <th></th>
     <% end %>
   </tr>
@@ -28,10 +28,10 @@
   <% @users.each do |user| %>
     <tr>
       <td><%= user.username %></td>
-      <% if can? :inspect, User %>
-        <td><%= user.name if can? :inspect, user %></td>
+      <% if permitted_to? :inspect, User %>
+        <td><%= user.name if permitted_to? :inspect, user %></td>
         <td>
-          <% if can? :inspect, user %>
+          <% if permitted_to? :inspect, user %>
             <%= user.email %> <span style="color:red;"><%= "(unconfirmed)" if !user.confirmed? %></span>
           <% end %>
         </td>
@@ -40,13 +40,13 @@
       <td><%= user.num_solved %></td>
       <td><%= user.brownie_points %></td>
       <td><%= link_to 'Show', user %></td>
-      <% if can? :update, User %>
-        <td><%= link_to 'Edit', edit_user_path(user) if can? :update, user%></td>
+      <% if permitted_to? :update, User %>
+        <td><%= link_to 'Edit', edit_user_path(user) if permitted_to? :update, user%></td>
       <% end %>
-      <% if can? :destroy, User %>
-        <td><%= link_to 'Destroy', user, :data => { :confirm => 'Are you sure?' }, :method => :delete if can? :destroy, user %></td>
+      <% if permitted_to? :destroy, User %>
+        <td><%= link_to 'Destroy', user, :data => { :confirm => 'Are you sure?' }, :method => :delete if permitted_to? :destroy, user %></td>
       <% end %>
-      <% if can? :su, user %>
+      <% if permitted_to? :su, user %>
         <td><%= link_to "su", su_user_path(user), :rel => "facebox" %></td>
       <% end %>
     </tr>

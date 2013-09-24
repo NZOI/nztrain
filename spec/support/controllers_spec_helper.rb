@@ -5,6 +5,16 @@ module ControllersSpecHelper
       @request.env["devise.mapping"] = Devise.mappings[:user]
     end
   end
+  def process_hash hash
+    if hash.class == Proc
+      return instance_eval &hash
+    elsif hash.class == Hash
+      hash.each do |key, value|
+        hash[key] = process_hash value
+      end
+    end
+    hash
+  end
   module ClassMethods
     def _process_options options
       options[:attributes] ||= {}
@@ -26,12 +36,15 @@ module ControllersSpecHelper
       _process_options options
     end
     def can_index resource, options ={}
-      options = process_plural_options resource, options
-      it "can index #{resource}" do
-        get :index
+      options = process_plural_options resource, {:action => :index}.merge(options)
+      it "can #{options[:action]} #{resource}" do
+        get options[:action], (process_hash options[:params])
         response.should be_success
-        assigns(options[:resources_name]).class.should == ActiveRecord::Relation
+        [ActiveRecord::Relation, Array].should include assigns(options[:resources_name]).class
       end
+    end
+    def can_browse resource, options ={}
+      can_index resource, options.merge(:action => :browse)
     end
     def can_manage resource, options = {}
       can_show resource, options

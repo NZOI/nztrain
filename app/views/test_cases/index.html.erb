@@ -9,10 +9,10 @@
     <th>Name</th>
     <th>Problem</th>
     <th></th>
-    <% if can? :update, TestSet %>
+    <% if permitted_to? :update, TestSet %>
       <th></th>
     <% end %>
-    <% if can? :destroy, TestSet %>
+    <% if permitted_to? :destroy, TestSet %>
       <th></th>
     <% end %>
   </tr>
@@ -25,10 +25,10 @@
     <td><%= test_case.name %></td>
     <td><%= test_case.test_set.problem_id %></td>
     <td><%= link_to 'Show', test_case %></td>
-    <% if can? :update, test_case %>
+    <% if permitted_to? :update, test_case %>
       <td><%= link_to 'Edit', edit_test_case_path(test_case) %></td>
     <% end %>
-    <% if can? :destroy, test_case %>
+    <% if permitted_to? :destroy, test_case %>
       <td><%= link_to 'Destroy', test_case, :data => { :confirm => 'Are you sure?' }, :method => :delete %></td>
     <% end %>
   </tr>

@@ -1,17 +1,23 @@
 class GroupsController < ApplicationController
-  load_and_authorize_resource :except => [:create]
-  skip_load_and_authorize_resource :only => [:add_contest]
+  #load_and_authorize_resource :except => [:create]
+  #skip_load_and_authorize_resource :only => [:add_contest]
+  filter_resource_access :additional_collection => { :browse => :index }, :additional_member => { :show => :index, :info => :index, :contests => :access_problems, :members => :access_problems }
 
   def permitted_params
     @_permitted_attributes ||= begin
       permitted_attributes = [:name]
-      permitted_attributes << :owner_id if can? :transfer, @group
+      permitted_attributes << :owner_id if permitted_to? :transfer, @group
+      permitted_attributes
     end
     params.require(:group).permit(*@_permitted_attributes)
   end
 
+  def new_group_from_params
+    @group = Group.new(:owner => current_user)
+  end
+
   def join
-    authorize! :join, @group
+    permitted_to! :join, @group
     if @group.users.exists?(current_user)
       redirect_to(@group, :alert => "You are already a member of this group")
       return
@@ -21,15 +27,15 @@ class GroupsController < ApplicationController
   end
 
   def leave
-    authorize! :leave, @group
+    permitted_to! :leave, @group
     @group.users.delete(current_user)
     redirect_to(@group, :notice => "You are no longer a member of this group")
   end
   def add_problem_set # not currently used (setup like problem_problem_sets_controller method, other way is to setup like the add_contest method)
     @group = Group.find(params[:problem_set][:group_ids])
-    authorize! :update, @group
+    permitted_to! :update, @group
     problem_set = ProblemSet.find(params[:problem_set_id])
-    authorize! :use, problem_set # cannot add problem sets without use permission
+    permitted_to! :use, problem_set # cannot add problem sets without use permission
     if @group.problem_sets.exists?(problem_set)
       redirect_to(problem, :alert => "This group already has access to this problem set")
       return
@@ -39,7 +45,7 @@ class GroupsController < ApplicationController
   end
 
   def remove_problem_set
-    authorize! :update, @group
+    permitted_to! :update, @group
     problem_set = ProblemSet.find(params[:problem_set_id])
     @group.problem_sets.delete(problem_set)
     redirect_to(@group, :notice => "Problem set removed.")
@@ -47,9 +53,9 @@ class GroupsController < ApplicationController
 
   def add_contest
     @group = Group.find(params[:contest][:group_ids])
-    authorize! :update, @group
+    permitted_to! :update, @group
     contest = Contest.find(params[:contest_id])
-    authorize! :use, contest # cannot add contests without use permission
+    permitted_to! :use, contest # cannot add contests without use permission
     if @group.contests.exists?(contest)
       redirect_to(contest, :alert => "This group already has access to this contest")
       return
@@ -59,7 +65,7 @@ class GroupsController < ApplicationController
   end
 
   def remove_contest
-    authorize! :update, @group
+    permitted_to! :update, @group
     contest = Contest.find(params[:contest_id])
     @group.contests.delete(contest)
     redirect_to(@group, :notice => "Contest removed.")
@@ -68,28 +74,58 @@ class GroupsController < ApplicationController
   # GET /groups
   # GET /groups.xml
   def index
-    @groups = @groups.distinct
+    case params[:filter].to_s
+    when 'my'
+      permitted_to! :manage, Group.new(:owner_id => current_user.id)
+      @groups = Group.where(:owner_id => current_user.id)
+    else
+      permitted_to! :manage, Group.new
+      @groups = Group.scoped
+    end
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @groups }
     end
+  end
+
+  def browse
+    @groups = Group.scoped
+
+    render 'index'
   end
 
   # GET /groups/1
   # GET /groups/1.xml
   def show
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @group }
+    if permitted_to? :access_problems, @group
+      @problem_sets = @group.problem_sets
+      render :layout => "group"
+    else
+      redirect_to info_group_path(@group)
     end
+  end
+
+  def contests
+    @contests = @group.contests
+    respond_to do |format|
+      format.html { render :layout => "group" }
+    end
+  end
+  
+  def info 
+    respond_to do |format|
+      format.html { render :layout => "group" }
+    end
+  end
+
+  def members
+    @users = @group.users
+    render :layout => "group"
   end
 
   # GET /groups/new
   # GET /groups/new.xml
   def new
-    @group.owner_id = current_user.id
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @group }
@@ -103,9 +139,6 @@ class GroupsController < ApplicationController
   # POST /groups
   # POST /groups.xml
   def create
-    @group = Group.new(:owner_id => current_user.id)
-    authorize! :create, @group
-
     respond_to do |format|
       if @group.update_attributes(permitted_params)
         format.html { redirect_to(@group, :notice => 'Group was successfully created.') }

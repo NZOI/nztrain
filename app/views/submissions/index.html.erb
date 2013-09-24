@@ -3,12 +3,12 @@
   <h1>My submissions</h1>
 <% else %>
   <h1>Listing submissions</h1>
-  <% if current_user.is_admin? && params[:by_user] && !params[:by_user][',']
+  <% if current_user.is_admin? && !params[:by_user].nil?
        u = User.find(params[:by_user]) %>
-    <p><b>User:</b> <%= link_to u.handle(current_ability), u %></p>
+    <p><b>User:</b> <%= link_to u.handle, u %></p>
   <% end %>
 <% end %>
-<% if params[:by_problem] && !params[:by_problem][',']
+<% if params[:by_problem] && !params[:by_problem].nil?
      p = Problem.find(params[:by_problem]) %>
   <p><b>Problem:</b> <%= link_to p.title, p %></p>
 <% end %>

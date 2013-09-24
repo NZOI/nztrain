@@ -11,7 +11,6 @@
 //= require sets/markdown/set
 //= require superfish
 //= require history
-//= require ajax_pagination
 //= require jquery.facebox
 //= require jquery.facebox.adapter
 //= require_self
@@ -103,11 +102,13 @@ $(document).ready(function() {
     	$(this).toggleClass("main-table-highlight");
     });
 
-    $("#nav ul").superfish({
-        animation: {opacity:'show',height:'show'}
+    $("#nav > ul").superfish({
+        animation: {opacity:'show',height:'show'},
+        speed: 'fast'
     });
     $("#nav2 ul").superfish({
-        autoArrows: false
+        autoArrows: false,
+        speed: 'fast'
     });
 
     $('.markdown').markItUp(myMarkdownSettings);

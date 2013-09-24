@@ -21,6 +21,14 @@ describe GroupsController do
     before(:each) do
       sign_in users(:user)
     end
-    can_index :groups
+    can_browse :groups
   end
+
+  context "as an organiser" do
+    before(:each) do
+      sign_in users(:organiser)
+    end
+    can_index :groups, :params => { :filter => 'my' }
+  end
+
 end

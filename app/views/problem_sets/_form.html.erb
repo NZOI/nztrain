@@ -17,10 +17,10 @@
   </div>
   <div class="field">
     <%= f.label :owner_id %><br />
-    <% if can? :transfer, @problem_set %>
+    <% if permitted_to? :transfer, @problem_set %>
       <%= f.text_field :owner_id %>
     <% else %>
-      <%= @problem_set.user.handle %>
+      <%= @problem_set.owner.handle %>
     <% end %>
 
   </div>

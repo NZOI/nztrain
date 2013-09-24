@@ -1,0 +1,55 @@
+<table class="main_table">
+  <tr>
+    <th>Title</th>
+    <th>Start time</th>
+    <th>End time</th>
+    <th>Duration</th>
+    <th>User</th>
+    <th>Score</th>
+    <th></th>
+    <% if permitted_to? :update, Contest %>
+      <th></th>
+    <% end %>
+    <% if permitted_to? :destroy, Contest %>
+      <th></th>
+    <% end %>
+  </tr>
+
+<% @contests.each do |contest| %>
+  <% if Time.new.to_f < contest.end_time.to_f and Time.new.to_f > contest.start_time.to_f %>
+    <tr style="background-color:#9AD282">
+  <% else %>
+    <tr>
+  <% end %>
+    <td><%= contest.title %></td>
+    <td><%= contest.start_time.strftime("%b %d, %H:%M") %></td>
+    <td><%= contest.end_time.strftime("%b %d, %H:%M") %></td>
+    <td><%= contest.duration %></td>
+    <td><%= contest.owner_id %></td>
+    <td><%= contest.get_score(current_user.id) %></td>
+    <td>
+      <% if contest.is_running? && (permitted_to? :start, contest) %>
+        <% if !contest.get_relation(current_user) %>
+          <%= link_to 'Start Contest', start_contest_path(contest), :method => :put %>
+          <% if permitted_to? :show, contest %>
+            <%= link_to 'Watch', contest %>
+          <% end %>
+        <% elsif contest.has_current_competitor?(current_user) %>
+          <%= link_to 'Continue Contest', contest %>
+        <% else %>
+          <%= link_to 'Watch', contest %>
+        <% end %>
+      <% elsif permitted_to? :show, contest %>
+        <%= link_to 'Show', contest %>
+      <% end %>
+    </td>
+    <% if permitted_to? :update, Contest %>
+      <td><%= link_to 'Edit', edit_contest_path(contest) if permitted_to? :update, contest %></td>
+    <% end %>
+    <% if permitted_to? :destroy, Contest %>
+      <td><%= link_to 'Destroy', contest, :data => { :confirm => 'Are you sure?' }, :method => :delete if permitted_to? :destroy, contest %></td>
+    <% end %>
+  </tr>
+<% end %>
+</table>
+

@@ -9,7 +9,7 @@
   <b>Description:</b>
   <%= @evaluator.description %>
 </p>
-<% if can? :inspect, @evaluator %>
+<% if permitted_to? :inspect, @evaluator %>
   <p>
     <b>Source:</b>
     <pre>
@@ -24,5 +24,5 @@
 </p>
 
 
-<%= link_to 'Edit', edit_evaluator_path(@evaluator) if can? :update, @evaluator %> 
+<%= link_to 'Edit', edit_evaluator_path(@evaluator) if permitted_to? :update, @evaluator %> 
 <%= link_to 'Back', evaluators_path %>
