@@ -34,7 +34,7 @@ class Problem < ActiveRecord::Base
   end
 
   def self.score_by_user(user_id)
-    select("(SELECT MAX(submissions.score) FROM submissions WHERE submissions.problem_id = problems.id AND user_id = #{user_id.to_i}) AS score")
+    select("(SELECT MAX(submissions.score) FROM submissions WHERE submissions.problem_id = problems.id AND submissions.user_id = #{user_id.to_i}) AS score")
   end
   def self.by_group(group_id)
     joins(:problem_sets => :groups).where(:groups => {:id => group_id}).distinct

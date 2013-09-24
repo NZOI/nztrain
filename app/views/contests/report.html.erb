@@ -20,7 +20,7 @@
    <b>Duration:</b>    <%= @contest.duration %><br />
 </p>
 <br />
-<% if @contest.finalized_at.nil? and can? :update, @contest %>
+<% if @contest.finalized_at.nil? and permitted_to? :update, @contest %>
   <%= link_to "Finalize results", finalize_contest_path(@contest), :data => { :confirm => 'Are you sure?' }, :method => :put %>
   <%#= "Re-judge all" %><br />
 <% elsif @contest.finalized_at and current_user.is_admin? %>
@@ -42,13 +42,13 @@
   <% rank = 1 %>
   <% previous_record = @scoreboard.first %>
   <% @scoreboard.each_with_index do |record,index| %>
-    <% if record.id != current_user.id and cannot? :inspect, @contest %>
-      <% break if record.score < median.score || (record.score == median.score && record.time_taken > median.time_taken) # no permission to view %>
+    <% if record.id != current_user.id and !permitted_to? :inspect, @contest %>
+      <% next if record.score < median.score || (record.score == median.score && record.time_taken > median.time_taken) # no permission to view %>
     <% end %>
     <tr <% if (record.id==current_user.id) %> class="emphasized"<% end %>>
       <td>
         <% if record.user %>
-          <%= link_to record.user.handle(current_ability), record.user %>
+          <%= link_to record.user.handle, record.user %>
         <% else %>
           <%= "Deleted User ID #{record[:user_id]}" %>
         <% end %>

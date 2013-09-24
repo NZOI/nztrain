@@ -1,5 +1,5 @@
 class TestSetsController < ApplicationController
-  load_and_authorize_resource :except => [:create]
+  #load_and_authorize_resource :except => [:create]
 
   def permitted_params
     @_permitted_params ||= begin
@@ -11,7 +11,8 @@ class TestSetsController < ApplicationController
   # GET /test_sets
   # GET /test_sets.json
   def index
-    @test_sets = @test_sets.where(:problem_id => params[:problem_id]) if params[:problem_id]
+    permitted_to! :inspect, Problem.find(params[:problem_id])
+    @test_sets = TestSet.where(:problem_id => params[:problem_id])
 
     respond_to do |format|
       format.html # index.html.erb
@@ -22,6 +23,8 @@ class TestSetsController < ApplicationController
   # GET /test_sets/1
   # GET /test_sets/1.json
   def show
+    @test_set = TestSet.find(params[:id])
+    permitted_to! :inspect, @test_set.problem
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @test_set }
@@ -31,6 +34,7 @@ class TestSetsController < ApplicationController
   # GET /test_sets/new
   # GET /test_sets/new.json
   def new
+    raise Authorization::AuthorizationError
     respond_to do |format|
       format.html # new.html.erb
       format.json { render :json => @test_set }
@@ -44,6 +48,7 @@ class TestSetsController < ApplicationController
   # POST /test_sets
   # POST /test_sets.json
   def create
+    raise Authorization::AuthorizationError
     @test_set = TestSet.new(permitted_params)
     authorize! :create, @test_set
 
@@ -61,6 +66,8 @@ class TestSetsController < ApplicationController
   # PUT /test_sets/1
   # PUT /test_sets/1.json
   def update
+    @test_set = TestSet.find(params[:id])
+    permitted_to! :update, @test_set.problem
     respond_to do |format|
       if @test_set.update_attributes(permitted_params)
         format.html { redirect_to @test_set, :notice => 'Test set was successfully updated.' }
@@ -75,6 +82,8 @@ class TestSetsController < ApplicationController
   # DELETE /test_sets/1
   # DELETE /test_sets/1.json
   def destroy
+    @test_set = TestSet.find(params[:id])
+    permitted_to! :destroy, @test_set
     @test_set.destroy
 
     respond_to do |format|

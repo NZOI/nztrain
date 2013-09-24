@@ -1,35 +1,27 @@
 module AbilitySpecHelper
-  RSpec::Matchers.define :be_able_to_do_all do |actions,subjects|
-    match do |ability|
-      Array(actions).all? { |action| Array(subjects).all? { |subject| ability.can? action, subject } }
-    end
-    failure_message_for_should do |ability|
-      action = Array(actions).detect { |action| Array(subjects).detect { |subject| ability.cannot? action, subject } }
-      subject = Array(subjects).detect { |subject| ability.cannot? action, subject }
-      "expected can? :#{action}, #{subject}, but could not"
-    end
-    failure_message_for_should_not do |relation|
-      "expected at least one cannot? #{actions}, #{subjects}, but was able to do all"
-    end
-    description do
-      "is able to do all actions on all subjects"
+  class AuthorizationTestHelper
+    include Test::Unit::Assertions
+    include Authorization::TestHelper
+  end
+  testhelper = AuthorizationTestHelper.new
+
+  User.define_method 'should_be_permitted_to' do |actions,subjects|
+    testhelper.with_user self do
+      Array(actions).each do |action|
+        Array(subjects).each do |subject|
+          testhelper.should_be_allowed_to action, subject
+        end
+      end
     end
   end
 
-  RSpec::Matchers.define :not_be_able_to_do_any do |actions,subjects|
-    match do |ability|
-      Array(actions).all? { |action| Array(subjects).all? { |subject| ability.cannot? action, subject } }
-    end
-    failure_message_for_should do |relation|
-      action = Array(actions).detect { |action| Array(subjects).detect { |subject| ability.can? action, subject } }
-      subject = Array(subjects).detect { |subject| ability.can? action, subject }
-      "expected cannot? :#{action}, #{subject}, but could"
-    end
-    failure_message_for_should_not do |relation|
-      "expected at least one can? #{actions}, #{subjects}, but was not able to do any"
-    end
-    description do
-      "is unable to do any actions on any subjects"
+  User.define_method 'should_not_be_permitted_to' do |actions,subjects|
+    testhelper.with_user self do
+      Array(actions).each do |action|
+        Array(subjects).each do |subject|
+          testhelper.should_not_be_allowed_to action, subject
+        end
+      end
     end
   end
 end

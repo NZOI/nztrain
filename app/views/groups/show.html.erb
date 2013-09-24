@@ -1,4 +1,6 @@
-<% content_for :title, @group.name %>
+<%= render "problem_sets/index" %>
+<%# content_for :title, @group.name %>
+<!--
 <b>Name:</b>
 <%= @group.name %>
 <br />
@@ -7,7 +9,7 @@
 <b>Users in this group:</b>
 <% @group.users.each do |user| %>
   <li>
-  <%= user.handle(current_ability) %>
+  <%= user.handle %>
   </li>
 <% end %>
 <br />
@@ -36,8 +38,5 @@
 <% end %>
 <br />
 
-
-<%= link_to 'Join group', join_group_path(@group), :method => :put if can? :join, @group %>
-<%= link_to 'Leave group', leave_group_path(@group), :method => :put if can? :leave, @group %>
-<%= link_to 'Edit', edit_group_path(@group) if can? :update, @group %>
-<%= link_to 'Back', groups_path %>
+-->
+<%#= link_to 'Back', groups_path %>

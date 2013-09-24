@@ -5,10 +5,10 @@
   <tr>
     <th>Name</th>
     <th></th>
-    <% if can? :update, Group %>
+    <% if permitted_to? :update, Group %>
       <th></th>
     <% end %>
-    <% if can? :destroy, Group %>
+    <% if permitted_to? :destroy, Group %>
       <th></th>
     <% end %>
   </tr>
@@ -17,11 +17,11 @@
   <tr>
     <td><%= group.name %></td>
     <td><%= link_to 'Show', group %></td>
-    <% if can? :update, Group %>
-      <td><%= link_to 'Edit', edit_group_path(group) if can? :update, group %></td>
+    <% if permitted_to? :update, Group %>
+      <td><%= link_to 'Edit', edit_group_path(group) if permitted_to? :update, group %></td>
     <% end %>
-    <% if can? :destroy, Group %>
-      <td><%= link_to 'Destroy', group, :data => { :confirm => 'Are you sure?' }, :method => :delete if can? :destroy, group %></td>
+    <% if permitted_to? :destroy, Group %>
+      <td><%= link_to 'Destroy', group, :data => { :confirm => 'Are you sure?' }, :method => :delete if permitted_to? :destroy, group %></td>
     <% end %>
   </tr>
 <% end %>
@@ -29,6 +29,6 @@
 
 <br />
 
-<% if can? :create, Group %>
+<% if permitted_to? :create, Group %>
   <%= link_to 'New Group', new_group_path %>
 <% end %>

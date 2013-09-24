@@ -16,8 +16,8 @@
     <td><%= ai_contest.start_time %></td>
     <td><%= ai_contest.end_time %></td>
     <td><%= link_to 'Show', ai_contest %></td>
-    <td><%= link_to 'Edit', edit_ai_contest_path(ai_contest) if can? :edit, ai_contest %></td>
-    <td><%= link_to 'Destroy', ai_contest, method: :delete, data: { confirm: 'Are you sure?' } if can? :destroy, ai_contest %></td>
+    <td><%= link_to 'Edit', edit_ai_contest_path(ai_contest) if permitted_to? :edit, ai_contest %></td>
+    <td><%= link_to 'Destroy', ai_contest, method: :delete, data: { confirm: 'Are you sure?' } if permitted_to? :destroy, ai_contest %></td>
   </tr>
 <% end %>
 </table>

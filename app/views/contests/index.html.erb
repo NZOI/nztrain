@@ -10,10 +10,10 @@
     <th>User</th>
     <th>Score</th>
     <th></th>
-    <% if can? :update, Contest %>
+    <% if permitted_to? :update, Contest %>
       <th></th>
     <% end %>
-    <% if can? :destroy, Contest %>
+    <% if permitted_to? :destroy, Contest %>
       <th></th>
     <% end %>
   </tr>
@@ -31,10 +31,10 @@
     <td><%= contest.owner_id %></td>
     <td><%= contest.get_score(current_user.id) %></td>
     <td>
-      <% if contest.is_running? && (can? :start, contest) %>
+      <% if contest.is_running? && (permitted_to? :start, contest) %>
         <% if !contest.get_relation(current_user) %>
           <%= link_to 'Start Contest', start_contest_path(contest), :method => :put %>
-          <% if can? :show, contest %>
+          <% if permitted_to? :show, contest %>
             <%= link_to 'Watch', contest %>
           <% end %>
         <% elsif contest.has_current_competitor?(current_user) %>
@@ -42,15 +42,15 @@
         <% else %>
           <%= link_to 'Watch', contest %>
         <% end %>
-      <% elsif can? :show, contest %>
+      <% elsif permitted_to? :show, contest %>
         <%= link_to 'Show', contest %>
       <% end %>
     </td>
-    <% if can? :update, Contest %>
-      <td><%= link_to 'Edit', edit_contest_path(contest) if can? :update, contest %></td>
+    <% if permitted_to? :update, Contest %>
+      <td><%= link_to 'Edit', edit_contest_path(contest) if permitted_to? :update, contest %></td>
     <% end %>
-    <% if can? :destroy, Contest %>
-      <td><%= link_to 'Destroy', contest, :data => { :confirm => 'Are you sure?' }, :method => :delete if can? :destroy, contest %></td>
+    <% if permitted_to? :destroy, Contest %>
+      <td><%= link_to 'Destroy', contest, :data => { :confirm => 'Are you sure?' }, :method => :delete if permitted_to? :destroy, contest %></td>
     <% end %>
   </tr>
 <% end %>
@@ -58,6 +58,6 @@
 
 <br />
 
-<% if can? :create, Contest %>
+<% if permitted_to? :create, Contest %>
   <%= link_to 'New Contest', new_contest_path %>
 <% end %>

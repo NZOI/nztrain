@@ -1,0 +1,15 @@
+<div style="float: right; width: 30%">
+  <h2 style="padding-bottom: 10px; border-bottom: 1px solid black;">My Groups</h2>
+  <% if @mygroups.empty? %>
+  <i>You are not in any groups</i>
+  <% end %>
+  <% @mygroups.each do |group| %>
+    <div style="margin-top: 3px; border-bottom: 1px solid black; text-align: right;">
+      <div style="float: left;"><b><%= link_to group.name, group_path(group) %></b></div>
+      <i><!--x problems, progress bar-->&nbsp;</i>
+    </div>
+  <% end %>
+</div>
+
+<%# display public problems %>
+

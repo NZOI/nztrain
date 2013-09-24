@@ -15,5 +15,8 @@ FactoryGirl.define do
     factory :superadmin do
       roles { [Role.find_by_name("superadmin")] }
     end
+    factory :organiser do
+      roles { [Role.find_by_name("organiser")] }
+    end
   end
 end

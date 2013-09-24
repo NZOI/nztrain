@@ -41,8 +41,8 @@ class User < ActiveRecord::Base
     self.where("email = ?", conditions[:email]).limit(1).first
   end
 
-  def handle(current_ability = nil)
-    if current_ability && (current_ability.can? :inspect, self)
+  def handle
+    if permitted_to? :inspect
       if self.name && !self.name.empty?
         return "#{self.username} \"#{self.name}\""
       else

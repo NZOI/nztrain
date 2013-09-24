@@ -3,6 +3,7 @@ class Submission < ActiveRecord::Base
   
   belongs_to :user
   belongs_to :problem
+  has_many :contest_scores
   
   validates :source, :presence => true
 

@@ -17,10 +17,10 @@ describe ProblemSetsController do
     can_manage :problem_set, :attributes => { :title => "A unique title" }
   end
 
-  context "as a normal user" do
+  context "as an organiser" do
     before(:each) do
-      sign_in users(:user)
+      sign_in users(:organiser)
     end
-    can_index :problem_sets
+    can_index :problem_sets, :params => { :filter => 'my' }
   end
 end

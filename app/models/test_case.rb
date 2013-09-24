@@ -7,4 +7,7 @@ class TestCase < ActiveRecord::Base
 
   scope :distinct, select("distinct(test_cases.id), test_cases.*")
 
+  def problem
+    self.test_set.problem
+  end
 end

@@ -220,16 +220,8 @@ a.progress_link:hover {
 
 .main_table, #main-container table{  
   border-collapse: collapse;
-  border: 1px solid #DDD;
+  border: 0px;
   width: 100%;
-}
-
-.main_table, #main-container  tr {
-  border: 1px solid #DDD;
-}
-
-.main_table, #main-container  tr:hover {
-  background-color: #EEE;
 }
 
 #main-container tr.emphasized {
@@ -238,15 +230,8 @@ a.progress_link:hover {
   font-weight: bold;
 }
 
-#main-container  tr.emphasized:hover {
+#main-container tr.emphasized:hover {
   background-color: #AAAAAA;
-}
-
-.main_table, #main-container th {
-  padding-left: 10px;
-  padding-right: 10px;
-  text-align: left;
-  padding-top: 2px;
 }
 
 .main-table-highlight {
@@ -257,7 +242,6 @@ a.progress_link:hover {
   background-color: #D2D2D2 !important;
 } 
 
-
 .main_table td {
   padding-left: 10px;
   padding-right: 10px;
@@ -265,9 +249,15 @@ a.progress_link:hover {
   padding-top: 2px;
 }
 
+.main_table th {
+  padding-left:10px;
+  padding-right:10px;
+  text-align:left;
+  padding-top:2px;
+}
+
 #main-page-title
 {
-
   font-size: 2.5em;
   margin-bottom: 25px;
 }

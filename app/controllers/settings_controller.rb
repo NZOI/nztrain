@@ -1,5 +1,6 @@
 class SettingsController < ApplicationController
- load_and_authorize_resource :except => :create
+  #load_and_authorize_resource :except => :create
+  filter_resource_access
 
   def permitted_params
     @_permitted_params ||= begin
@@ -8,9 +9,15 @@ class SettingsController < ApplicationController
     end
   end
 
+  def new_setting_from_params
+    @setting = Setting.new
+  end
+
   # GET /settings
   # GET /settings.xml
   def index
+    @settings = Setting.scoped
+
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @settings }
@@ -29,7 +36,6 @@ class SettingsController < ApplicationController
   # GET /settings/new
   # GET /settings/new.xml
   def new
-
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @setting }
@@ -43,11 +49,8 @@ class SettingsController < ApplicationController
   # POST /settings
   # POST /settings.xml
   def create
-    @setting = Setting.new(permitted_params)
-    authorize! :create, @setting
-
     respond_to do |format|
-      if @setting.save
+      if @setting.update_attributes(permitted_params)
         format.html { redirect_to(@setting, :notice => 'Setting was successfully created.') }
         format.xml  { render :xml => @setting, :status => :created, :location => @setting }
       else

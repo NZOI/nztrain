@@ -4,6 +4,7 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
 require 'capybara/rspec'
+require 'declarative_authorization/maintenance'
 
 # include seeds
 require "#{Rails.root}/db/seeds.rb"

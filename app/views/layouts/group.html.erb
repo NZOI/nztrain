@@ -1,0 +1,24 @@
+<% content_for :title, @group.name %>
+<% content_for :content do %>
+  <div id="main-page-title"><%= @group.name %></div>
+  <table style="background-color: none; border: 0px; font-size: 20pt;"><tr><td><%= @group.users.count %> members</td><td><%= @group.problem_sets.count %> problem sets</td></tr></table>
+  <%= link_to 'Join group', join_group_path(@group), :method => :put if permitted_to? :join, @group %>
+  <%= link_to 'Leave group', leave_group_path(@group), :method => :put if permitted_to? :leave, @group %>
+  <%= link_to 'Edit', edit_group_path(@group) if permitted_to? :update, @group %>
+  <% if permitted_to? :show, @group %>
+    <%=
+  #  SimpleNavigation::ItemContainer.new do |menu|
+    render_navigation do |menu|
+      menu.dom_class = :tab_menu
+      menu.item :problems, "problems", group_path(@group)
+      #menu.item :contests, "contests", contests_group_path(@problem)
+      #menu.item :members, "members", members_group_path(@problem)
+  #  end.render
+    end
+    %>
+    <%= content_tag :div, :class => :tab_box do %>
+      <%= yield %>
+    <% end %>
+  <% end %>
+<% end %>
+<%= render :template => 'layouts/application' %>

@@ -1,11 +1,11 @@
 class ProblemsController < ApplicationController
   #load_and_authorize_resource :except => [:create, :submit, :submissions]
-  filter_resource_access
+  filter_resource_access :additional_member => {:submit => :submit, :submissions => :submit}
 
   def permitted_params
     @_permitted_attributes ||= begin
       permitted_attributes = [:title, :statement, :input_type, :output_type, :memory_limit, :time_limit, :evaluator_id]
-      permitted_attributes << :owner_id if can? :transfer, @problem
+      permitted_attributes << :owner_id if permitted_to? :transfer, @problem
       permitted_attributes << :input if params.require(:problem)[:input_type] == 'file'
       permitted_attributes << :output if params.require(:problem)[:output_type] == 'file'
       permitted_attributes
@@ -16,17 +16,28 @@ class ProblemsController < ApplicationController
   def submit_params # attributes allowed to be included in submissions
     @_submit_attributes ||= begin
       submit_attributes = [:language, :source_file]
-      submit_attributes << :source if can? :submit_source, @problem
+      submit_attributes << :source if permitted_to? :submit_source, @problem
       submit_attributes
     end
     params.require(:submission).permit(*@_submit_attributes).merge(:user_id => current_user.id, :problem_id => params[:id])
   end
 
+  def new_problem_from_params
+    @problem = Problem.new(:owner => current_user)
+  end
+
   # GET /problems
   # GET /problems.xml
   def index
-    #@problems = @problems.distinct.score_by_user(current_user.id)
-    @problems = Problem.with_permissions_to(:index).score_by_user(current_user.id)
+    case params[:filter].to_s
+    when 'my'
+      permitted_to! :manage, Problem.new(:owner_id => current_user.id)
+      @problems = Problem.where(:owner_id => current_user.id).score_by_user(current_user.id).select('*')
+    else
+      permitted_to! :manage, Problem.new
+      @problems = Problem.score_by_user(current_user.id).select('*')
+    end
+
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @problems }
@@ -37,7 +48,8 @@ class ProblemsController < ApplicationController
   # GET /problems/1.xml
   def show
     #TODO: restrict to problems that current user owns/manages
-    @problem_sets = ProblemSet.accessible_by(current_ability,:update) # can only add problem to problem sets user can update to
+    #@problem_sets = ProblemSet.accessible_by(current_ability,:update) # can only add problem to problem sets user can update to
+    @problem_sets = ProblemSet.with_permissions_to(:update) if permitted_to? :update, :problem_sets # can only add problem to problem sets user can update to
     @submissions = @problem.submission_history(current_user)
 
     @all_subs = {};
@@ -93,7 +105,6 @@ class ProblemsController < ApplicationController
   # GET /problems/new
   # GET /problems/new.xml
   def new
-    @problem.owner_id = current_user.id
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @problem }
@@ -107,9 +118,6 @@ class ProblemsController < ApplicationController
   # POST /problems
   # POST /problems.xml
   def create
-    @problem = Problem.new(:owner_id => current_user.id)
-    authorize! :create, @problem
-
     respond_to do |format|
       if @problem.update_attributes(permitted_params)
         format.html { redirect_to(@problem, :notice => 'Problem was successfully created.') }

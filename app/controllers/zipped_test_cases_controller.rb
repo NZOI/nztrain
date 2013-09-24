@@ -5,7 +5,7 @@ class ZippedTestCasesController < ApplicationController
   # POST /test_cases/bulk_upload
   def upload
     @problem = Problem.find(params[:problem_id])
-    authorize! :update, @problem
+    permitted_to! :update, @problem
     if params[:test_cases_zip].nil?
       redirect_to(edit_problem_path(@problem), :alert => 'No zip file uploaded')
       return
@@ -120,7 +120,7 @@ class ZippedTestCasesController < ApplicationController
   end
   def download
     @problem = Problem.find(params[:problem_id])
-    authorize! :inspect, @problem
+    permitted_to! :inspect, @problem
     name = @problem.title.gsub(/[\W]/,"")
     name = "testcases" if name.empty?
     filename = name + ".zip"

@@ -10,7 +10,7 @@ describe ProblemsController do
     [@group, @group_set, @group_problem].each { |object| object.destroy }
   end
   shared_examples "for any user" do
-    can_index :problems
+    can_index :problems, :params => { :filter => 'my' }
     can_create :problem, :attributes => { :title => "A unique title", :statement => "A unique statement" }
     can_manage :owned_problem, :resource_name => :problem, :attributes => { :title => "A unique title", :statement => "A unique statement" }
   end

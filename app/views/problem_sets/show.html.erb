@@ -5,10 +5,10 @@
   <tr>
     <th>Title</th>
     <th></th>
-    <% if can? :update, Problem %>
+    <% if permitted_to? :update, Problem %>
       <th></th>
     <% end %>
-    <% if can? :destroy, Problem %>
+    <% if permitted_to? :destroy, Problem %>
       <th></th>
     <% end %>
   </tr>
@@ -16,16 +16,16 @@
     <tr>
       <td><%= problem.title %></td>
       <td><%= link_to 'Show', problem %></td>
-      <% if can? :update, Problem %>
-        <td><%= link_to 'Edit', edit_problem_path(problem) if can? :update, problem %></td>
+      <% if permitted_to? :update, Problem %>
+        <td><%= link_to 'Edit', edit_problem_path(problem) if permitted_to? :update, problem %></td>
       <% end %>
-      <% if can? :destroy, Problem %>
-        <td><%= link_to 'Remove', remove_problem_problem_set_path(@problem_set, :problem_id => problem.id), :method => "put" if can? :destroy, problem %></td>
+      <% if permitted_to? :destroy, Problem %>
+        <td><%= link_to 'Remove', remove_problem_problem_set_path(@problem_set, :problem_id => problem.id), :method => "put" if permitted_to? :destroy, problem %></td>
       <% end %>
     </tr>
   <% end %>
 </table>
-<% if can? :update, @problem_set %>
+<% if permitted_to? :update, @problem_set %>
   <p>
   <%= form_tag(:controller => "group_problem_set", :action => "add", :method => :put, :problem_set_id => @problem_set) do %>
     <%= collection_select :problem_set, :group_ids, @groups, :id, :name %>

@@ -6,11 +6,11 @@
     <th width="100%">Name</th>
     <th>Points</th>
     <th></th>
-    <% if can? :update, TestSet %>
+    <% if permitted_to? :update, TestSet %>
       <% @colspan += 1 %>
       <th></th>
     <% end %>
-    <% if can? :destroy, TestSet %>
+    <% if permitted_to? :destroy, TestSet %>
       <% @colspan += 1 %>
       <th></th>
     <% end %>
@@ -22,10 +22,10 @@
     <td><%= test_set.name %></td>
     <td><%= test_set.points %></td>
     <td><%= link_to 'Show', test_set %></td>
-    <% if can? :update, test_set %>
+    <% if permitted_to? :update, test_set %>
       <td><%= link_to 'Edit', edit_test_set_path(test_set) %></td>
     <% end %>
-    <% if can? :destroy, test_set %>
+    <% if permitted_to? :destroy, test_set %>
       <td><%= link_to 'Destroy', test_set, :data => { :confirm => 'Are you sure?' }, :method => :delete %></td>
     <% end %>
   </tr>
@@ -48,4 +48,4 @@
 
 <br />
 
-<%= link_to 'New Test set', new_test_set_path if can? :create, TestSet %>
+<%= link_to 'New Test set', new_test_set_path if permitted_to? :create, TestSet %>

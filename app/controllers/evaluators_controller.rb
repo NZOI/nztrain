@@ -1,17 +1,23 @@
 class EvaluatorsController < ApplicationController
-  load_and_authorize_resource :except => [:create]
+  #load_and_authorize_resource :except => [:create]
+  filter_resource_access
 
   def permitted_params
     @_permitted_params ||= begin
       permitted_attributes = [:name, :description, :source]
-      permitted_attributes << :owner_id if can? :transfer, @owner
+      permitted_attributes << :owner_id if permitted_to? :transfer, @evaluator
       params.require(:evaluator).permit(*permitted_attributes)
     end
+  end
+
+  def new_evaluator_from_params
+    @evaluator = Evaluator.new(:owner => current_user)
   end
 
   # GET /evaluators
   # GET /evaluators.xml
   def index
+    @evaluators = Evaluator.scoped
 
     respond_to do |format|
       format.html # index.html.erb
@@ -22,7 +28,6 @@ class EvaluatorsController < ApplicationController
   # GET /evaluators/1
   # GET /evaluators/1.xml
   def show
-
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @evaluator }
@@ -32,7 +37,6 @@ class EvaluatorsController < ApplicationController
   # GET /evaluators/new
   # GET /evaluators/new.xml
   def new
-    @evaluator.owner_id = current_user.id
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @evaluator }
@@ -46,9 +50,6 @@ class EvaluatorsController < ApplicationController
   # POST /evaluators
   # POST /evaluators.xml
   def create
-    @evaluator = Evaluator.new(:owner_id => current_user.id)
-    authorize! :create, @evaluator
-
     respond_to do |format|
       if @evaluator.update_attributes(permitted_params)
         format.html { redirect_to(@evaluator, :notice => 'Evaluator was successfully created.') }

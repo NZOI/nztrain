@@ -28,6 +28,13 @@ NZTrain::Application.routes.draw do
   resources :roles
 
   resources :contests do
+    collection do
+      get 'my', :to => 'contests#index', :defaults => { :filter => 'my' }
+      get 'active', :to => 'contests#browse', :defaults => { :filter => 'active' }
+      get 'current', :to => 'contests#browse', :defaults => { :filter => 'current' }
+      get 'upcoming', :to => 'contests#browse', :defaults => { :filter => 'upcoming' }
+      get 'past', :to => 'contests#browse', :defaults => { :filter => 'past' }
+    end
     member do
       put 'start'
       put 'finalize'
@@ -37,7 +44,7 @@ NZTrain::Application.routes.draw do
 
   resources :contest_relations
 
-  root :to => "problems#index"
+  root :to => "home#home"
 
   resources :submissions, :except => [:new,:create] do
     collection do
@@ -49,6 +56,9 @@ NZTrain::Application.routes.draw do
   end
 
   resources :problems do
+    collection do
+      get 'my', :to => 'problems#index', :defaults => { :filter => 'my' }
+    end
     member do
       post 'submit'
       get 'submit'
@@ -57,6 +67,9 @@ NZTrain::Application.routes.draw do
   end
 
   resources :problem_sets do
+    collection do
+      get 'my', :to => 'problem_sets#index', :defaults => { :filter => 'my' }
+    end
     member do
       put 'add_problem'
       put 'remove_problem'
@@ -96,6 +109,10 @@ NZTrain::Application.routes.draw do
   match 'group_problem_set/:action(:format)' => "group_problem_set"
 
   resources :groups do
+    collection do
+      get 'my', :to => 'groups#index', :defaults => { :filter => 'my' }
+      get 'browse'
+    end
     member do
       put 'join'
       put 'leave'

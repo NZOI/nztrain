@@ -4,8 +4,8 @@ class ProblemProblemSetController < ApplicationController
   def add
     @problem = Problem.find(params[:problem_id])
     @problem_set = ProblemSet.find(params[:problem][:problem_set_ids])
-    authorize! :use, @problem
-    authorize! :update, @problem_set
+    permitted_to! :use, @problem
+    permitted_to! :update, @problem_set
     # TODO: check for existence of problem and problem set
     @problem_set.problems.push(@problem)
 
@@ -16,8 +16,8 @@ class ProblemProblemSetController < ApplicationController
 
   def remove
     @problem = Problem.find(params[:problem_id])
-    @problem_set = Contest.find(params[:problem_set_id])
-    authorize! :update, @problem_set
+    @problem_set = ProblemSet.find(params[:problem_set_id])
+    permitted_to! :update, @problem_set
     # TODO: check for existence of problem and problem set
     @problem_set.problems.delete(@problem)
 

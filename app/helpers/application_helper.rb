@@ -1,12 +1,18 @@
 module ApplicationHelper
   def progress_bar(percent, link = nil)
-    percent = percent.to_i
-    if link != nil
-      text = link_to((percent.to_s + '%'),link,{:class => "progress_link", :style => "display: block; width: 100%;"})
-    else
+    unless percent.nil?
+      percent = percent.to_i
       text = percent.to_s + '%'
+    else
+      text = '-'
     end
-    if percent <= 50 # make a nice spectrum of colours
+    if link != nil
+      text = link_to(text,link,{:class => "progress_link", :style => "display: block; width: 100%;"})
+    end
+    if percent.nil?
+      colour = "rgb(192,192,192)"
+      percent = 0;
+    elsif percent <= 50 # make a nice spectrum of colours
       colour = "rgb(255,#{(percent*255/50).to_i},0)"
     else
       colour = "rgb(#{255-((percent-50)*255/50).to_i},#{255-((percent-50)*60/50).to_i},0)"

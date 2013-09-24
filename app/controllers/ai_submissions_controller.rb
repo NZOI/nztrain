@@ -6,7 +6,7 @@ class AiSubmissionsController < ApplicationController
   # GET /ai_contests/1.json
   def show
     @ai_contest = @ai_submission.ai_contest
-    iteration_limit = @ai_contest.end_time < DateTime.now || (can? :foresee, @ai_contest) ? @ai_contest.iterations : @ai_contest.iterations_preview
+    iteration_limit = @ai_contest.end_time < DateTime.now || (permitted_to? :foresee, @ai_contest) ? @ai_contest.iterations : @ai_contest.iterations_preview
     @ai_contest_games = AiContestGame.where{((ai_submission_1_id == my{@ai_submission.id}) | (ai_submission_2_id == my{@ai_submission.id})) & (iteration < iteration_limit)}
     respond_to do |format|
       format.html# { render :layout => "ai_submission" }
@@ -40,7 +40,7 @@ class AiSubmissionsController < ApplicationController
     def permitted_params
       @_permitted_params ||= begin
         permitted_attributes = [:title, :start_time, :end_time, :statement, :judge, :sample_ai, :iterations, :iterations_preview]
-        permitted_attributes << :owner_id if can? :transfer, @contest
+        permitted_attributes << :owner_id if permitted_to? :transfer, @contest
         params.require(:ai_contest).permit(*permitted_attributes)
       end
     end
@@ -55,7 +55,7 @@ class AiSubmissionsController < ApplicationController
     def submit_params # attributes allowed to be included in submissions
       @_submit_attributes ||= begin
         submit_attributes = [:language, :source_file]
-        submit_attributes << [:source] if can? :submit_source, @problem
+        submit_attributes << [:source] if permitted_to? :submit_source, @problem
         submit_attributes
       end
       params.require(:ai_submission).permit(*@_submit_attributes).merge(:user_id => current_user.id, :ai_contest_id => params[:id],

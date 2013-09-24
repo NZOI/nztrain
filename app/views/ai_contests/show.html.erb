@@ -1,6 +1,6 @@
 <%= raw Loofah.fragment(markdown_parse(@ai_contest.statement)).scrub!(:escape).scrub!(Loofah::Scrubbers::NoForm.new) %>
 
-<% if can? :edit, @ai_contest %>
+<% if permitted_to? :edit, @ai_contest %>
   <%= link_to 'Edit', edit_ai_contest_path(@ai_contest) %> |
 <% end %>
 <%= link_to 'Back', ai_contests_path %>

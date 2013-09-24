@@ -1,6 +1,3 @@
-<% content_for :title, "Problem Sets" %>
-<div id="main-page-title">Problems</div>
-
 <% @colspan = 3 %>
 <table class="main_table" style="width: 100%;">
   <tr>
@@ -36,15 +33,15 @@
         <table width="100%" onClick="event.cancelBubble = true;">
           <% problems.each do |problem| %>
             <tr>
-              <td width="100%">&nbsp;&nbsp;&nbsp;<%= problem.title %></td>
-              <td><%= progress_bar(problem.score) if problem.score %></td>
+              <td width="100%">&nbsp;&nbsp;&nbsp;<%= link_to problem.title, problem %></td>
+              <td><%= progress_bar(problem.score) %></td>
               <td><%= link_to 'Show', problem %></td>
-              <% if permitted_to? :update, Problem %>
+              <!--<% if permitted_to? :update, Problem %>
                 <td><%= link_to 'Edit', edit_problem_path(problem) if permitted_to? :update, problem %></td>
               <% end %>
               <% if permitted_to? :destroy, Problem %>
                 <td><%= link_to 'Destroy', problem, :data => { :confirm => 'Are you sure?' }, :method => :delete if permitted_to? :destroy, problem %></td>
-              <% end %>
+              <% end %>-->
             </tr>
           <% end %>
         </table>
@@ -55,8 +52,3 @@
 <% end %>
 </table>
 
-<br />
-
-<% if permitted_to? :create, ProblemSet %>
-  <%= link_to 'New Problem set', new_problem_set_path %>
-<% end %>

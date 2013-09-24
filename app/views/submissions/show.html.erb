@@ -5,7 +5,7 @@
   </b>
   </p>
 <p>
-  <%= link_to "Rejudge", rejudge_submission_path(@submission), :data => { :confirm => 'Are you sure?' }, :method => "post" if can? :rejudge, @submission %>
+  <%= link_to "Rejudge", rejudge_submission_path(@submission), :data => { :confirm => 'Are you sure?' }, :method => "post" if permitted_to? :rejudge, @submission %>
 <% else %>
   <% if @submission.score >= 100 %>
       <div id="submission_judged" class="green" />100% - All done. Nice.</div>
@@ -15,7 +15,7 @@
       <div id="submission_judged" class="red" />0% - Er...</div>
   <% end %>
   </p>
-  <%= link_to "Rejudge", rejudge_submission_path(@submission), :data => { :confirm => 'Are you sure?' }, :method => "post" if can? :rejudge, @submission %>
+  <%= link_to "Rejudge", rejudge_submission_path(@submission), :data => { :confirm => 'Are you sure?' }, :method => "post" if permitted_to? :rejudge, @submission %>
   <p>
   <b>Problem:</b>
   <%= link_to @submission.problem.title, @submission.problem %>
@@ -52,5 +52,5 @@
 <pre><%= @submission.source %></pre>
 </p>
 
-<%= link_to 'Edit', edit_submission_path(@submission) if can? :edit, @submission %> 
+<%= link_to 'Edit', edit_submission_path(@submission) if permitted_to? :edit, @submission %> 
 <%= link_to 'Back', @submission.problem %>

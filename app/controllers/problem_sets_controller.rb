@@ -1,20 +1,25 @@
 class ProblemSetsController < ApplicationController
-  load_and_authorize_resource :except => :create
-  skip_authorize_resource :only => [:add_problem, :remove_problem]
+  #load_and_authorize_resource :except => :create
+  #skip_authorize_resource :only => [:add_problem, :remove_problem]
+  filter_resource_access :collection => {:index => :browse}, :additional_member => {:remove_problem => :update}
 
   def permitted_params
     @_permitted_params ||= begin
       permitted_attributes = [:title]
-      permitted_attributes << :owner_id if can? :transfer, @problem_set
+      permitted_attributes << :owner_id if permitted_to? :transfer, @problem_set
       params.require(:problem_set).permit(*permitted_attributes)
     end
   end
 
+  def new_problem_set_from_params
+    @problem_set = ProblemSet.new(:owner => current_user)
+  end
+
   def add_problem # currently unused function
     @problem_set = ProblemSet.find(params[:problem][:problem_set_ids])
-    authorize! :update, @problem_set
+    permitted_to! :update, @problem_set
     problem = Problem.find(params[:problem_id])
-    authorize! :use, problem
+    permitted_to! :use, problem
     if @problem_set.problems.exists?(problem)
       redirect_to(problem, :alert => "This problem set already contains this problem")
       return
@@ -24,7 +29,6 @@ class ProblemSetsController < ApplicationController
   end
 
   def remove_problem
-    authorize! :update, @problem_set
     problem = Problem.find(params[:problem_id])
     @problem_set.problems.delete(problem)
     redirect_to(@problem_set, :notice => "Problem removed.")
@@ -33,7 +37,15 @@ class ProblemSetsController < ApplicationController
   # GET /problem_sets
   # GET /problem_sets.xml
   def index
-    @problem_sets = @problem_sets.distinct
+    case params[:filter].to_s
+    when 'my'
+      permitted_to! :manage, ProblemSet.new(:owner_id => current_user.id)
+      @problem_sets = ProblemSet.where(:owner_id => current_user.id)
+    else
+      permitted_to! :manage, ProblemSet.new
+      @problem_sets = ProblemSet.scoped
+    end
+
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @problem_sets }
@@ -53,7 +65,6 @@ class ProblemSetsController < ApplicationController
   # GET /problem_sets/new
   # GET /problem_sets/new.xml
   def new
-    @problem_set.owner_id = current_user.id
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @problem_set }
@@ -67,9 +78,6 @@ class ProblemSetsController < ApplicationController
   # POST /problem_sets
   # POST /problem_sets.xml
   def create
-    @problem_set = ProblemSet.new(:owner_id => current_user.id)
-    authorize! :create, @problem_set
-
     respond_to do |format|
       if @problem_set.update_attributes(permitted_params)
         format.html { redirect_to(@problem_set, :notice => 'Problem set was successfully created.') }
