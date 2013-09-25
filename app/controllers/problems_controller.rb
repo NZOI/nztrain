@@ -69,7 +69,6 @@ class ProblemsController < ApplicationController
   def submit
     if request.post? # post request
       @problem = Problem.find(params[:id])
-      authorize! :submit, @problem # make sure user can submit to this problem
       @submission = Submission.new(submit_params) # create submission
       respond_to do |format|
         if @submission.save
@@ -83,7 +82,6 @@ class ProblemsController < ApplicationController
       end
     else # get request
       @problem = Problem.find(params[:id])
-      authorize! :submit, @problem
       @submission = Submission.new
       respond_to do |format|
         format.html { render :layout => "problem" }
@@ -94,8 +92,13 @@ class ProblemsController < ApplicationController
 
   def submissions
     @problem = Problem.find(params[:id])
-    authorize! :submit, @problem
-    @submissions = @problem.submission_history(current_user)
+    if current_user.openbook?
+      @submissions = @problem.submission_history(current_user)
+    else
+      start_time = current_user.contest_relations.joins(:contest => {:problem_set => :problems}).where{(started_at <= DateTime.now) & (finish_at > DateTime.now) & (contest.problem_set.problems.id == my{params[:id]})}.minimum(:started_at)
+      @submissions = @problem.submission_history(current_user,start_time)
+    end
+    
     respond_to do |format|
       format.html { render :layout => "problem" }
       format.xml  { render :xml => @problem }

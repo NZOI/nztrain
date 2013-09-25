@@ -1,6 +1,6 @@
 class ContestsController < ApplicationController
   #load_and_authorize_resource :except => [:create]
-  filter_resource_access :additional_collection => {:browse => :index}, :additional_member => [:start, :finalize, :unfinalize]
+  filter_resource_access :additional_collection => {:browse => :index}, :additional_member => [:start, :finalize, :unfinalize, [:info, :show], :scoreboard]
 
   def permitted_params
     @_permitted_params ||= begin
@@ -46,41 +46,39 @@ class ContestsController < ApplicationController
       raise Authorization::AuthorizationError
     end
 
-    render 'index'
   end
 
   # GET /contests/1
   # GET /contests/1.xml
   def show
+    if !permitted_to? :access_problems, @contest
+      redirect_to info_contest_path(@contest)
+      return
+    end
     @problems = @contest.problem_set.problems
     @groups = Group.all
     @contest_message = nil
-    
+    if @contest.get_relation(current_user) && !@contest.has_current_competitor?(current_user)
+      @contest_message = "Your time slot is over and you can no longer submit for this contest."
+    elsif @contest.is_running? && !@contest.get_relation(current_user)
+      @contest_message = "You have not started this contest."
+    end
+
+    render :layout => 'contest'
+  end
+
+  def info
+    @groups = Group.all
+    render :layout => 'contest'
+  end
+
+  def scoreboard
+    @groups = Group.all
+    @problems = @contest.problem_set.problems
     @realtimejudging = true # if false, scores only revealed at the end
     @scoreboard = @contest.scoreboard
 
-    respond_to do |format|
-      if current_user.is_admin? || !@contest.is_running?
-        format.html { render "report" }
-        format.xml  { render :xml => @contest }
-      elsif @contest.has_current_competitor?(current_user)
-        @contest_relation = @contest.get_relation(current_user)
-        #render proper contest page
-        format.html
-        format.xml  { render :xml => @contest }
-      elsif @contest.get_relation(current_user)
-        #user has finished contest. render contest page, but with a message saying "you're done"
-        @contest_relation = @contest.get_relation(current_user)
-        logger.debug "got finished contest\n"
-        @contest_message = "Your time slot is over and you can no longer submit for this contest."
-
-        format.html 
-        format.xml  { render :xml => @contest }
-      else
-        #redirect, user doesn't have access
-        redirect("You have not started this contest.")
-      end
-    end
+    render :layout => 'contest'
   end
 
   # GET /contests/new

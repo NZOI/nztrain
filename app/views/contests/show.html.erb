@@ -1,55 +1,22 @@
-<% content_for :title, @contest.title %>
-
-<script>
-  $(document).ready(function(){
-    var datesec = <%= @contest_relation.finish_at.to_i %>;
-    var date = new Date(Number(datesec) * 1000);
-    $("#countDownTimer").countdown({until: date, layout: '{sn} {sl}, {mn} {ml}, {hn} {hl}, and {dn} {dl} remaining'});
-  });
-</script>
-
-<h1>
-Contest: <%= @contest.title %>
-</h1>
-
-<div id="countDownTimer"></div>
+<% if !@contest_message.nil? %>
+  <p><%= @contest_message %></p>
+<% end %>
 
 <p>
-<b>Started at:</b>
-<%= @contest_relation.started_at %>
-</p>
-
-<p>
-<b>Duration:</b>
-<%= @contest.duration %>
-</p>
-
-<p>
-<b>User:</b>
-<%= @contest.owner_id %>
-</p>
-
-<p>
-<b> Problems: </b>
 <table class="main_table" >
   <tr>
-    <th> Name </th>
+    <th> Problem </th>
     <th> Score </th>
+    <th> # Correct </th>
   </tr>
 
   <% @problems.each do |problem| %>
     <tr>
       <td> <%= link_to problem.title, problem_path(problem) %> </td>
       <td> <%= @contest.problem_score(current_user, problem) %> </td>
+      <td> <%= @contest.num_solved(problem) %> </td>
     </tr>
   <% end %>
 </table>
 </p>
-
-<% if permitted_to? :update, @contest %>
-  <%= render 'admin' %>
-<% end %>
-
-<%= link_to 'Edit', edit_contest_path(@contest) if permitted_to? :update, @contest %>
-<%= link_to 'Back', contests_path %>
 

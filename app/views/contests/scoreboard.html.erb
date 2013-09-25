@@ -1,5 +1,3 @@
-<% content_for :title, @contest.title %>
-
 <% if @contest.end_time >= DateTime.now() %>
   <script type="text/javascript">
   <!--
@@ -11,23 +9,7 @@
   //-->
   </script>
 <% end %>
-<div id="main-page-title">Contest Report: <%= @contest.title %></div>
-<br />
-<p>
-   <%= @contest.num_competitors %> people competed in this contest. <br />
-   <b>Start time:</b>  <%= @contest.start_time %><br />
-   <b>End time:</b>    <%= @contest.end_time %><br />
-   <b>Duration:</b>    <%= @contest.duration %><br />
-</p>
-<br />
-<% if @contest.finalized_at.nil? and permitted_to? :update, @contest %>
-  <%= link_to "Finalize results", finalize_contest_path(@contest), :data => { :confirm => 'Are you sure?' }, :method => :put %>
-  <%#= "Re-judge all" %><br />
-<% elsif @contest.finalized_at and current_user.is_admin? %>
-  <%= link_to "Un-finalize", unfinalize_contest_path(@contest), :data => { :confirm => 'Are you sure?' }, :method => :put %><br />
-  <%#= "Re-judge all" %><br />
-<% end %>
-<b>High Scorers</b>
+
 <table class="main_table" >
   <tr>
     <th style="min-width: 25%;"> User </th>
@@ -42,7 +24,7 @@
   <% rank = 1 %>
   <% previous_record = @scoreboard.first %>
   <% @scoreboard.each_with_index do |record,index| %>
-    <% if record.id != current_user.id and !permitted_to? :inspect, @contest %>
+    <% if record.user.id != current_user.id and !permitted_to? :inspect, @contest %>
       <% next if record.score < median.score || (record.score == median.score && record.time_taken > median.time_taken) # no permission to view %>
     <% end %>
     <tr <% if (record.id==current_user.id) %> class="emphasized"<% end %>>
@@ -74,27 +56,3 @@
     </tr>
   <% end %>
 </table>
-<br />
-
-<b>Problems</b>
-<table class="main_table">
-  <tr>
-    <th> Name </th>
-    <th> Your Score </th>
-    <th> Correct Solutions </th>
-  </tr>
-
-  <% @problems.each do |problem| %>
-    <tr>
-      <td> <%= link_to problem.title, problem_path(problem) %> </td>
-      <td> <%= @contest.problem_score(current_user, problem) || '-' %> </td>
-      <td> <%= @contest.num_solved(problem) %> </td>
-    </tr>
-  <% end %>
-</table>
-<br />
-<% if current_user.is_admin? %>
-  <%= render 'admin' %>
-<% end %>
-
-<%= link_to 'Edit', edit_contest_path(@contest) %>

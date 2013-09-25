@@ -1,0 +1,51 @@
+<% content_for :title, @contest.title %>
+
+<% content_for :content do %>
+  <div id="main-page-title"><%= @contest.title %></div>
+  <table style="background-color: none; border: 0px; font-size: 20pt;"><tr><td><%= @contest.users.count %> competitors</td><td><%= @contest.problem_set.problems.count %> problems</td></tr></table>
+  <% if permitted_to? :start, @contest %>
+    <div style="float: right"><%= link_to 'Start Contest', start_contest_path(@contest), :method => :put %></div>
+  <% end %>
+  <% if @contest.is_running? %>
+    <% end_time = @contest.has_current_competitor?(current_user) ? @contest.get_relation(current_user).finish_at : @contest.end_time %>
+    <div id="countDownTimer" style="width: 50%"><%= distance_of_time_in_words(DateTime.now,end_time) %> remaining</div>
+    <script>
+      $(document).ready(function(){
+        var datesec = <%= end_time.to_i %>;
+        var date = new Date(Number(datesec) * 1000);
+        $("#countDownTimer").countdown({until: date, layout: '{sn} {sl}, {mn} {ml}, {hn} {hl}, and {dn} {dl} remaining'});
+      });
+    </script>
+  <% end %>
+  <p>
+    <b>Start time:</b>  <%= @contest.start_time %><br>
+    <b>End time:</b>    <%= @contest.end_time %><br>
+    <b>Duration:</b>    <%= @contest.duration %><br>
+    <b>Owner:</b> <%= @contest.owner_id %><br>
+  </p>
+  <% if @contest.end_time < DateTime.now and @contest.finalized_at.nil? and permitted_to? :update, @contest %>
+    <%= link_to "Finalize results", finalize_contest_path(@contest), :data => { :confirm => 'Are you sure?' }, :method => :put %>
+    <%#= "Re-judge all" %><br />
+  <% elsif @contest.finalized_at and current_user.is_admin? %>
+    <%= link_to "Un-finalize", unfinalize_contest_path(@contest), :data => { :confirm => 'Are you sure?' }, :method => :put %><br />
+    <%#= "Re-judge all" %><br />
+  <% end %>
+  <%=
+#  SimpleNavigation::ItemContainer.new do |menu|
+  render_navigation do |menu|
+    menu.dom_class = :tab_menu
+    menu.item :info, "info", info_contest_path(@contest) if permitted_to? :read, @contest
+    menu.item :problems, "problems", contest_path(@contest) if permitted_to? :access_problems, @contest
+    menu.item :scoreboard, "scoreboard", scoreboard_contest_path(@contest) if permitted_to? :read, @contest
+#  end.render
+  end
+  %>
+  <%= content_tag :div, :class => :tab_box do %>
+    <%= yield %>
+  <% end %>
+  <% if permitted_to? :update, @contest %>
+    <%= render 'admin' %>
+  <% end %>
+  <%= link_to 'Edit', edit_contest_path(@contest) if permitted_to? :update, @contest %>
+<% end %>
+<%= render :template => 'layouts/application' %>

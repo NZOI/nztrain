@@ -29,7 +29,7 @@
     <td><%= contest.get_score(current_user.id) %></td>
     <td>
       <% if contest.is_running? && (permitted_to? :start, contest) %>
-        <% if !contest.get_relation(current_user) %>
+        <% if permitted_to? :start, contest %>
           <%= link_to 'Start Contest', start_contest_path(contest), :method => :put %>
           <% if permitted_to? :show, contest %>
             <%= link_to 'Watch', contest %>

@@ -66,6 +66,11 @@ authorization do
       if_attribute :users => does_not_contain{user}, :start_time => lte{DateTime.now}, :end_time => gt{DateTime.now}
       if_permitted_to :index
     end
+    has_permission_on :contests, :to => :scoreboard do
+      if_attribute :groups => {:id => 0}, :start_time => lte{DateTime.now}
+      if_attribute :groups => {:users => contains{user}}, :start_time => lte{DateTime.now}
+      if_attribute :contest_relations => {:user => is{user}}, :start_time => lte{DateTime.now}
+    end
     has_permission_on :groups, :to => :index
     has_permission_on :groups, :to => :show do
       if_attribute :users => contains{user}
@@ -77,7 +82,7 @@ authorization do
       if_attribute :users => contains{user}
     end
     has_permission_on :submissions, :to => :read do
-      if_attribute :contest_scores => {:contest_relations => {:user => is{user}, :started_at => lte{DateTime.now}, :finish_at => gt{DateTime.now}}}
+      if_attribute :problem => {:problem_sets => {:contests => {:contest_relations => {:user => is{user}, :started_at => lte{DateTime.now}, :finish_at => gt{DateTime.now}, :started_at => lte{object.created_at}}}}}
     end
     has_permission_on :problems, :to => :submit do
       if_permitted_to :read
@@ -129,7 +134,7 @@ privileges do
   privilege :delete, :includes => :destroy
   privilege :regrant, :includes => [:grant, :revoke]
   privilege :read, :includes => [:index, :show]
-  privilege :inspect, :includes => :read
+  privilege :inspect, :includes => [:read, :scoreboard]
   privilege :access_problems, :includes => [:read_problems, :submit_problems]
   privilege :index, :includes => :browse
 end

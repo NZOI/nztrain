@@ -36,6 +36,9 @@ NZTrain::Application.routes.draw do
       get 'past', :to => 'contests#browse', :defaults => { :filter => 'past' }
     end
     member do
+      get 'info'
+      get 'scoreboard'
+
       put 'start'
       put 'finalize'
       put 'unfinalize'
