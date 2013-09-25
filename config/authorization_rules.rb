@@ -63,7 +63,7 @@ authorization do
       if_attribute :contest_relations => {:user => is{user}}
     end
     has_permission_on :contests, :to => :start, :join_by => :and do
-      if_attribute :users => does_not_contain{user}, :start_time => lte{DateTime.now}, :end_time => gt{DateTime.now}
+      if_attribute :contestants => does_not_contain{user}, :start_time => lte{DateTime.now}, :end_time => gt{DateTime.now}
       if_permitted_to :index
     end
     has_permission_on :contests, :to => :scoreboard do

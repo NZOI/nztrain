@@ -25,7 +25,6 @@ class User < ActiveRecord::Base
   has_many :problem_sets
   has_many :evaluators
   has_many :contest_relations
-  has_many :contests, :through => :contest_relations
   # NOTE: difference between groups and roles
   # Groups are used to assign local permissions, eg. access to individual problems/problem sets
   # Roles are used to assign global permissions, eg. access to problems on the whole site
