@@ -1,6 +1,5 @@
 class AiSubmissionsController < ApplicationController
-  load_and_authorize_resource
-
+  filter_resource_access
 
   # GET /ai_contests/1
   # GET /ai_contests/1.json

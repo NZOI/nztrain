@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Ability do
+describe Authorization do
   include FixturesSpecHelper
   before(:all) do
     @superadmin = users(:superadmin)

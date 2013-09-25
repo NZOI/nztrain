@@ -1,6 +1,4 @@
 class GroupsController < ApplicationController
-  #load_and_authorize_resource :except => [:create]
-  #skip_load_and_authorize_resource :only => [:add_contest]
   filter_resource_access :additional_collection => { :browse => :index }, :additional_member => { :show => :index, :info => :index, :contests => :access_problems, :members => :access_problems }
 
   def permitted_params

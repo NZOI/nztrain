@@ -1,5 +1,4 @@
 class TestSetsController < ApplicationController
-  #load_and_authorize_resource :except => [:create]
 
   def permitted_params
     @_permitted_params ||= begin
@@ -50,7 +49,7 @@ class TestSetsController < ApplicationController
   def create
     raise Authorization::AuthorizationError
     @test_set = TestSet.new(permitted_params)
-    authorize! :create, @test_set
+    permitted_to! :create, @test_set
 
     respond_to do |format|
       if @test_set.save

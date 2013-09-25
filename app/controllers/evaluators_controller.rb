@@ -1,5 +1,4 @@
 class EvaluatorsController < ApplicationController
-  #load_and_authorize_resource :except => [:create]
   filter_resource_access
 
   def permitted_params

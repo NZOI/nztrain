@@ -1,5 +1,4 @@
 class ContestsController < ApplicationController
-  #load_and_authorize_resource :except => [:create]
   filter_resource_access :additional_collection => {:browse => :index}, :additional_member => [:start, :finalize, :unfinalize, [:info, :show], :scoreboard]
 
   def permitted_params

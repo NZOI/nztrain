@@ -1,6 +1,4 @@
 class ProblemSetsController < ApplicationController
-  #load_and_authorize_resource :except => :create
-  #skip_authorize_resource :only => [:add_problem, :remove_problem]
   filter_resource_access :collection => {:index => :browse}, :additional_member => {:remove_problem => :update}
 
   def permitted_params

@@ -1,6 +1,4 @@
 class UsersController < ApplicationController
-  #load_and_authorize_resource
-  #skip_authorize_resource :only => [:add_role, :remove_role, :suexit, :admin_email, :send_admin_email]
   filter_resource_access :additional_member => {:add_role => :update, :remove_role => :update, :add_brownie => :add_brownie, :admin_email => :email, :send_admin_email => :email, :su => :su}, :additional_collection => :suexit
 
   def permitted_params
@@ -88,7 +86,6 @@ class UsersController < ApplicationController
 
   def suexit
     if (!session[:su]) || session[:su].empty?
-      #raise CanCan::AccessDenied.new("Not authorized!", :suexit, User)
       raise Authorization::AuthorizationError
     end
     old_user = current_user.username

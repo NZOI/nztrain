@@ -51,7 +51,6 @@ GEM
       debug_inspector (>= 0.0.1)
     bluecloth (2.2.0)
     builder (3.0.4)
-    cancan (1.6.8)
     capybara (2.0.3)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
@@ -242,7 +241,6 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   bluecloth
-  cancan (= 1.6.8)
   capybara
   carrierwave
   coffee-rails (~> 3.2.1)

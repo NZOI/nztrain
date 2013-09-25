@@ -2,7 +2,6 @@ class AiContestsController < ApplicationController
   # GET /ai_contests
   # GET /ai_contests.json
 
-  #load_and_authorize_resource :except => [:create, :submit, :submissions]
   filter_resource_access :additional_member => {:sample => :show, :submit => :show, :submissions => :show, :judge => :judge, :rejudge => :rejudge}
 
   def new_ai_contest_from_params
@@ -37,7 +36,7 @@ class AiContestsController < ApplicationController
   def submit
     if request.post? # post request
       @ai_contest = AiContest.find(params[:id]) 
-      authorize! :submit, @ai_contest # make sure user can submit to this problem
+      permitted_to! :submit, @ai_contest # make sure user can submit to this problem
       @ai_submission = AiSubmission.new(submit_params) # create submission
       respond_to do |format|
         if @ai_submission.submit
@@ -51,7 +50,7 @@ class AiContestsController < ApplicationController
       end
     else # get request
       @ai_contest = AiContest.find(params[:id])
-      authorize! :submit, @ai_contest
+      permitted_to! :submit, @ai_contest
       @ai_submission = AiSubmission.new
       respond_to do |format|
         format.html { render :layout => "ai_contest" }
@@ -62,7 +61,7 @@ class AiContestsController < ApplicationController
 
   def submissions
     @ai_contest = AiContest.find(params[:id])
-    authorize! :submit, @ai_contest
+    permitted_to! :submit, @ai_contest
     @ai_submissions = AiSubmission.where(:user_id => current_user.id, :ai_contest_id => @ai_contest.id)
     respond_to do |format|
       format.html { render :layout => "ai_contest" }

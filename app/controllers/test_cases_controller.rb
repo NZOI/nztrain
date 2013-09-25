@@ -1,5 +1,4 @@
 class TestCasesController < ApplicationController
-  #load_and_authorize_resource :except => [:create]
   #filter_resource_access :collection => []
 
   def permitted_params
@@ -43,7 +42,7 @@ class TestCasesController < ApplicationController
   # GET /test_cases/new.xml
   def new
     raise Authorization::AuthorizationError
-    #authorize! :update, Problem.find(params[:problem_id])
+    #permitted_to! :update, Problem.find(params[:problem_id])
     @defaultProblem = params[:problem_id]
 
     respond_to do |format|
@@ -63,7 +62,7 @@ class TestCasesController < ApplicationController
   def create
     raise Authorization::AuthorizationError
     @test_case = TestCase.new(permitted_params)
-    authorize! :update, Problem.find(params[:test_case][:problem_id])
+    permitted_to! :update, Problem.find(params[:test_case][:problem_id])
 
     respond_to do |format|
       if @test_case.save
@@ -81,8 +80,6 @@ class TestCasesController < ApplicationController
   def update
     @test_case = TestCase.find(params[:id])
     permitted_to! :update, @test_case.problem
-    #authorize! :update, Problem.find(@test_case.test_set.problem_id)
-    #authorize! :update, TestSet.find(params[:test_case][:test_set_id]).problem
 
     respond_to do |format|
       if @test_case.update_attributes(permitted_params)

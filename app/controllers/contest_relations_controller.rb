@@ -1,5 +1,5 @@
 class ContestRelationsController < ApplicationController
-  load_and_authorize_resource :except => [:create]
+  filter_resource_access
 
   def permitted_params
     @_permitted_params ||= begin
@@ -52,7 +52,7 @@ class ContestRelationsController < ApplicationController
   # POST /contest_relations.xml
   def create
     @contest_relation = ContestRelation.new(permitted_params)
-    authorize! :create, @contest_relation
+    permitted_to! :create, @contest_relation
 
     respond_to do |format|
       if @contest_relation.save

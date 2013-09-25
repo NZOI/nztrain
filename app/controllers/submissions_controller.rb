@@ -1,5 +1,4 @@
 class SubmissionsController < ApplicationController
-  #load_and_authorize_resource :except => [:create]
   filter_resource_access :additional_member => [:rejudge], :new => []
 
   def permitted_params
