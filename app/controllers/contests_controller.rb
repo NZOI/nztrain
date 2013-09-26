@@ -31,7 +31,7 @@ class ContestsController < ApplicationController
   end
 
   def browse
-    groups_contests = Contest.joins(:groups => :users).where{(groups.id == 0) | (groups.users.id == my{current_user.id})}.distinct
+    groups_contests = Contest.joins(:groups => :members).where{(groups.id == 0) | (groups.members.id == my{current_user.id})}.distinct
     case params[:filter].to_s
     when 'active'
       @contests = Contest.joins(:contest_relations).where{ (contest_relations.user_id == my{current_user.id}) & (contest_relations.finish_at > Time.now) }.order("end_time ASC")
