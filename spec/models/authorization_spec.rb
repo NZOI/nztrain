@@ -7,7 +7,7 @@ describe Authorization do
     @admin = users(:admin)
     @user = users(:user)
     # various objects to test ability on
-    @group = FactoryGirl.create(:group, :users => [users(:user), users(:admin), users(:superadmin)])
+    @group = FactoryGirl.create(:group, :members => [users(:user), users(:admin), users(:superadmin)])
     @private_problem = FactoryGirl.create(:problem)
     @group_set = FactoryGirl.create(:problem_set, :groups => [@group])
     @everyone_set = FactoryGirl.create(:problem_set, :group_ids => [0])

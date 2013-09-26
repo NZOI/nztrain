@@ -10,16 +10,6 @@ class Contest < ActiveRecord::Base
 
   has_many :group_members, :through => :groups, :source => :users, :uniq => true
 
-  sifter :for_contestant do |u_id|
-    id >> ContestRelation.select(:contest_id).where{ sift(:is_active) & (user_id == u_id) }
-  end
-  sifter :for_group_user do |u_id|
-    id >> Contest.select(:id).joins(:group_members).where(:users => {:id => u_id})
-  end
-  sifter :for_everyone do
-    id >> Contest.joins(:groups).where(:groups => {:id => 0})
-  end
-
   before_save do # update the end time that was cached
     contest_relations.find_each do |relation|
       relation.finish_at = [end_time,relation.started_at.advance(:hours => duration.to_f)].min

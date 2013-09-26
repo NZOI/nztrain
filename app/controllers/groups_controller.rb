@@ -16,17 +16,18 @@ class GroupsController < ApplicationController
 
   def join
     permitted_to! :join, @group
-    if @group.users.exists?(current_user)
+    if @group.members.exists?(current_user)
       redirect_to(@group, :alert => "You are already a member of this group")
       return
     end
-    @group.users.push(current_user)
+    #Membership.create(:group => @group, :member => current_user)
+    @group.members.push(current_user)
     redirect_to(@group, :notice => "You are now a member of this group")
   end
 
   def leave
     permitted_to! :leave, @group
-    @group.users.delete(current_user)
+    @group.members.delete(current_user)
     redirect_to(@group, :notice => "You are no longer a member of this group")
   end
   def add_problem_set # not currently used (setup like problem_problem_sets_controller method, other way is to setup like the add_contest method)
@@ -117,7 +118,7 @@ class GroupsController < ApplicationController
   end
 
   def members
-    @users = @group.users
+    @users = @group.members
     render :layout => "group"
   end
 

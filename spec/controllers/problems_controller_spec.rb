@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe ProblemsController do
   before(:all) do
-    @group = FactoryGirl.create(:group, :name => "Special Group", :users => [users(:admin),users(:user)])
+    @group = FactoryGirl.create(:group, :name => "Special Group", :members => [users(:admin),users(:user)])
     @group_set = FactoryGirl.create(:problem_set, :title => "Set in Group", :groups => [@group])
     @group_problem = FactoryGirl.create(:adding_problem, :problem_sets => [@group_set])
   end

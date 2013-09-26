@@ -5,12 +5,8 @@ class ContestRelation < ActiveRecord::Base
   belongs_to :contest
   has_many :contest_scores
 
-  scope :active, lambda { where{sift :is_active} }
+  scope :active, lambda { where{(started_at <= DateTime.now) & (finish_at > DateTime.now)} }
   scope :user, lambda { |u_id| where(:user_id => u_id) }
-
-  sifter :is_active do
-    (started_at <= DateTime.now) & (finish_at > DateTime.now)
-  end
 
   def active?
     (started_at <= DateTime.now) && (finish_at > DateTime.now)

@@ -12,20 +12,6 @@ class ProblemSet < ActiveRecord::Base
   # Scopes
   scope :distinct, select("distinct(problem_sets.id), problem_sets.*")
 
-  # Sifters
-  sifter :for_contestant do |u_id|
-    id >> ContestRelation.active.user(u_id).joins(:contest).select(:contest => :problem_set_id)
-  end
-  sifter :for_owner do |u_id|
-    owner_id == u_id
-  end
-  sifter :for_group_user do |u_id|
-    id >> ProblemSet.select(:id).joins(:groups => :users).where(:users => { :id => u_id })
-  end
-  sifter :for_everyone do
-    id >> ProblemSet.joins(:groups).where(:groups => { :id => 0 })
-  end
-
   def for_contestant? u_id
     self.contests.joins(:contest_relations).where(:contest_relations => {:user_id => u_id}).where{{ contest_relations => sift(:active) }}.any?
   end

@@ -23,16 +23,6 @@ class Problem < ActiveRecord::Base
   # Scopes
   scope :distinct, select("distinct(problems.id), problems.*")
 
-  sifter :for_contestant do |u_id|
-    id >> Problem.joins(:contest_relations).where{ contest_relations.sift(:is_active) & (contest_relations.user_id == u_id) }
-  end
-  sifter :for_group_user do |u_id|
-    id >> Problem.select(:id).joins(:group_members).where(:users => {:id => u_id})
-  end
-  sifter :for_everyone do
-    id >> Problem.joins(:groups).where(:groups => {:id => 0})
-  end
-
   def self.score_by_user(user_id)
     select("(SELECT MAX(submissions.score) FROM submissions WHERE submissions.problem_id = problems.id AND submissions.user_id = #{user_id.to_i}) AS score")
   end

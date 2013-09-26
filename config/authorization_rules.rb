@@ -54,12 +54,12 @@ authorization do
   role :user do
     has_permission_on :users, :to => :read
     has_permission_on :groups, :to => :read do
-      if_attribute :users => contains{user}
+      if_attribute :members => contains{user}
       if_attribute :id => 0
     end
     has_permission_on :contests, :to => :read do
       if_attribute :groups => {:id => 0}
-      if_attribute :groups => {:users => contains{user}}
+      if_attribute :groups => {:members => contains{user}}
       if_attribute :contest_relations => {:user => is{user}}
     end
     has_permission_on :contests, :to => :start, :join_by => :and do
@@ -68,18 +68,18 @@ authorization do
     end
     has_permission_on :contests, :to => :scoreboard do
       if_attribute :groups => {:id => 0}, :start_time => lte{DateTime.now}
-      if_attribute :groups => {:users => contains{user}}, :start_time => lte{DateTime.now}
+      if_attribute :groups => {:members => contains{user}}, :start_time => lte{DateTime.now}
       if_attribute :contest_relations => {:user => is{user}}, :start_time => lte{DateTime.now}
     end
     has_permission_on :groups, :to => :index
     has_permission_on :groups, :to => :show do
-      if_attribute :users => contains{user}
+      if_attribute :members => contains{user}
     end
     has_permission_on :groups, :to => :join do
-      if_attribute :users => does_not_contain{user}, :id => is_not{0}
+      if_attribute :members => does_not_contain{user}, :id => is_not{0}
     end
     has_permission_on :groups, :to => :leave do
-      if_attribute :users => contains{user}
+      if_attribute :members => contains{user}
     end
     has_permission_on :submissions, :to => :read do
       if_attribute :problem => {:problem_sets => {:contests => {:contest_relations => {:user => is{user}, :started_at => lte{DateTime.now}, :finish_at => gt{DateTime.now}, :started_at => lte{object.created_at}}}}}
@@ -103,13 +103,13 @@ authorization do
   role :openbook do
     has_permission_on :groups, :to => :access_problems do
       if_attribute :id => 0
-      if_attribute :users => contains { user }
+      if_attribute :members => contains { user }
     end
     has_permission_on :problems, :to => :manage do
       if_attribute :owner => is{user}
     end
     has_permission_on :problems, :to => :read do
-      if_attribute :problem_sets => {:groups => {:users => contains{user}}}
+      if_attribute :problem_sets => {:groups => {:members => contains{user}}}
       if_attribute :problem_sets => {:groups => {:id => 0}}
     end
     has_permission_on :problems, :to => :create do
