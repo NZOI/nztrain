@@ -1,9 +1,9 @@
 class GroupsController < ApplicationController
-  filter_resource_access :additional_collection => { :browse => :index }, :additional_member => { :show => :index, :info => :index, :contests => :access_problems, :members => :access_problems }
+  filter_resource_access :additional_collection => { :browse => :index }, :additional_member => { :info => :show, :contests => :access }
 
   def permitted_params
     @_permitted_attributes ||= begin
-      permitted_attributes = [:name]
+      permitted_attributes = [:name, :visibility, :membership]
       permitted_attributes << :owner_id if permitted_to? :transfer, @group
       permitted_attributes
     end
@@ -14,22 +14,6 @@ class GroupsController < ApplicationController
     @group = Group.new(:owner => current_user)
   end
 
-  def join
-    permitted_to! :join, @group
-    if @group.members.exists?(current_user)
-      redirect_to(@group, :alert => "You are already a member of this group")
-      return
-    end
-    #Membership.create(:group => @group, :member => current_user)
-    @group.members.push(current_user)
-    redirect_to(@group, :notice => "You are now a member of this group")
-  end
-
-  def leave
-    permitted_to! :leave, @group
-    @group.members.delete(current_user)
-    redirect_to(@group, :notice => "You are no longer a member of this group")
-  end
   def add_problem_set # not currently used (setup like problem_problem_sets_controller method, other way is to setup like the add_contest method)
     @group = Group.find(params[:problem_set][:group_ids])
     permitted_to! :update, @group
@@ -88,7 +72,7 @@ class GroupsController < ApplicationController
   end
 
   def browse
-    @groups = Group.scoped
+    @groups = Group.where(:visibility => Group::VISIBILITY[:public])
 
     render 'index'
   end
@@ -115,11 +99,6 @@ class GroupsController < ApplicationController
     respond_to do |format|
       format.html { render :layout => "group" }
     end
-  end
-
-  def members
-    @users = @group.members
-    render :layout => "group"
   end
 
   # GET /groups/new

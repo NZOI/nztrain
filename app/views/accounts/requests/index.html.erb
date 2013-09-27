@@ -1,0 +1,23 @@
+<b>Requests:</b>
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th>Expires</th>
+    <th>Status</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <% [@pending_requests, @requests].each do |requests| %>
+    <% requests.each do |request| %>
+      <tr>
+        <td><%= request.created_at %></td>
+        <td><%= request_description request %></td>
+        <td><%= request.expired_at == Float::INFINITY ? 'Never' : request.expired_at %></td>
+        <td><%= Request::STATUS[request.status].capitalize %></td>
+        <td><%= link_to_accept_request request if permitted_to? :accept, request %></td>
+        <td><%= link_to_reject_request request if permitted_to? :reject, request %></td>
+      <tr>
+    <% end %>
+  <% end %>
+</table>

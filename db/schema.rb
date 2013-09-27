@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130926021023) do
+ActiveRecord::Schema.define(:version => 20130926105411) do
 
   create_table "ai_contest_games", :force => true do |t|
     t.integer  "ai_contest_id"
@@ -107,21 +107,23 @@ ActiveRecord::Schema.define(:version => 20130926021023) do
     t.datetime "updated_at"
   end
 
+  create_table "group_memberships", :force => true do |t|
+    t.integer "group_id"
+    t.integer "member_id"
+  end
+
   create_table "groups", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "owner_id"
+    t.integer  "visibility", :default => 0, :null => false
+    t.integer  "membership", :default => 0, :null => false
   end
 
   create_table "groups_problem_sets", :id => false, :force => true do |t|
     t.integer "group_id"
     t.integer "problem_set_id"
-  end
-
-  create_table "memberships", :force => true do |t|
-    t.integer "group_id"
-    t.integer "member_id"
   end
 
   create_table "problem_sets", :force => true do |t|
@@ -147,6 +149,20 @@ ActiveRecord::Schema.define(:version => 20130926021023) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "evaluator_id"
+  end
+
+  create_table "requests", :force => true do |t|
+    t.integer  "requester_id"
+    t.integer  "object_id"
+    t.string   "object_type"
+    t.string   "verb",                               :null => false
+    t.integer  "subject_id",                         :null => false
+    t.string   "subject_type",                       :null => false
+    t.integer  "status",       :default => 0,        :null => false
+    t.integer  "requestee_id"
+    t.datetime "expired_at",   :default => Infinity, :null => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
   end
 
   create_table "roles", :force => true do |t|

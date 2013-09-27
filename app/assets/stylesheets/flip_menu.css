@@ -1,0 +1,32 @@
+ul.flip_menu {
+  margin: 3px;
+  text-align: center;
+}
+
+ul.flip_menu > li {
+  display: inline-block;
+  border: 1px solid #888888;
+  margin: 0 2px 0 2px;
+  padding: 1px 5px 1px 5px;
+  background-color: #DDDDDD;
+}
+
+ul.flip_menu > li > a {
+  color: #000000;
+  white-space: nowrap;
+  margin: -3px -5px -3px -5px;
+  padding: 3px 5px 3px 5px;
+  background-color: #DDDDDD;
+}
+
+ul.flip_menu > li > a:hover {
+  color: #000000;
+  background-color: #AAAAAA;
+  text-decoration: none;
+}
+
+ul.flip_menu > li > a.selected {
+  background-color: #AAAAAA;
+  pointer-events: none;
+  cursor: default;
+}

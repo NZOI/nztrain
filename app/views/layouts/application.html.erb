@@ -54,6 +54,7 @@
                     <li><%= link_to "exit su", suexit_users_path, :method => 'post' %></li>
                   <% end %>
                   <li><a href="/accounts/settings/edit">edit profile</a></li>
+                  <li><a href="<%= accounts_requests_path %>">requests</a></li>
                   <li><%= link_to "sign out", destroy_user_session_path, :method => :delete, :id => 'sign_out' %></li>
                 </td>
               </tr>

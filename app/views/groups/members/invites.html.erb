@@ -1,0 +1,28 @@
+<%= render 'menu' %>
+
+<%= form_tag invites_members_group_path, :method => :post do %>
+  <%= label_tag :username, 'Username:' %>
+  <%= text_field_tag :username %>
+  <%= submit_tag 'Invite' %>
+<% end %>
+
+<b>Invitations:</b>
+<table>
+  <tr>
+    <th></th>
+    <th>User</th>
+    <th>Status</th>
+    <th></th>
+  </tr>
+  <% [@pending_requests, @requests].each do |requests| %>
+    <% requests.each do |request| %>
+      <tr>
+        <td><%= request.created_at %></td>
+        <td><%= request.subject.handle %></td>
+        <td><%= Request::STATUS[request.status].capitalize %></td>
+        <td><%= link_to 'Cancel', cancel_members_group_path(@group, request), :method => :put if request.pending? and permitted_to? :reject, @group %></td>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
+

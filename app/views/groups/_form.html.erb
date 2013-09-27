@@ -16,6 +16,14 @@
     <%= f.text_field :name %>
   </div>
   <div class="field">
+    <%= f.label :visibility %><br />
+    <%= f.select :visibility, Group::VISIBILITY.entries.invert %>
+  </div>
+  <div class="field">
+    <%= f.label :membership %><br />
+    <%= f.select :membership, Group::MEMBERSHIP.entries.invert %>
+  </div>
+  <div class="field">
     <%= f.label :owner_id %><br />
     <% if permitted_to? :transfer, @group %>
       <%= f.text_field :owner_id %>

@@ -1,4 +1,4 @@
-class Membership < ActiveRecord::Base
+class GroupMembership < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
   
   belongs_to :group

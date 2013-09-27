@@ -28,11 +28,15 @@ class User < ActiveRecord::Base
   # NOTE: difference between groups and roles
   # Groups are used to assign local permissions, eg. access to individual problems/problem sets
   # Roles are used to assign global permissions, eg. access to problems on the whole site
-  has_many :memberships, :foreign_key => :member_id, :dependent => :destroy
+  has_many :memberships, :class_name => :GroupMembership, :foreign_key => :member_id, :dependent => :destroy
   has_many :groups, :through => :memberships
   has_and_belongs_to_many :roles
 
+  #has_many :group_invitations, :class_name => :Request, :as => :subject, :conditions => { :verb => 'invite', :object_type => 'Group' }
+  has_many :requests, :class_name => :Request, :as => :subject, :conditions => { :requestee_id => :subject_id }
+
   # Scopes
+
   scope :distinct, select("distinct(users.id), users.*")
   scope :num_solved, select("(SELECT COUNT(DISTINCT submissions.problem_id) FROM submissions JOIN problems ON problems.id = submissions.problem_id WHERE submissions.user_id = users.id AND submissions.score = 100 AND problems.owner_id != users.id) as num_solved")
   

@@ -190,6 +190,7 @@ GEM
     simple_form (2.1.0)
       actionpack (~> 3.0)
       activemodel (~> 3.0)
+    spring (0.0.10)
     sprockets (2.2.2)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -268,6 +269,7 @@ DEPENDENCIES
   sass-rails (~> 3.2.3)
   simple-navigation
   simple_form
+  spring
   squeel
   strong_parameters
   therubyracer (~> 0.11.4)

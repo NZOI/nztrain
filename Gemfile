@@ -54,6 +54,7 @@ group :development do
   gem 'binding_of_caller'
 
   gem 'foreman'
+  gem 'spring'
 end
 
 # Bundle gems for the local environment. Make sure to

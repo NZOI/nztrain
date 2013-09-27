@@ -105,6 +105,8 @@ NZTrain::Application.routes.draw do
       put 'update/:type', :to => 'registrations#update'
       get 'settings/edit', :to => 'settings#edit'
       put 'settings/update', :to => 'settings#update'
+
+      get 'requests', :to => 'requests#index'
     end
   end
 
@@ -120,10 +122,24 @@ NZTrain::Application.routes.draw do
     member do
       get 'contests'
       get 'info'
-      get 'members'
 
-      put 'join'
-      put 'leave'
+      scope path: :members, module: :groups, controller: :members do
+        put 'join'
+        put 'leave'
+        put 'apply'
+
+        scope as: :members do
+          get '', action: :index, as: ''
+
+          get 'invites'
+          post 'invites'
+          get 'join_requests'
+
+          put 'accept/:request_id', action: :accept, as: :accept
+          put 'reject/:request_id', action: :reject, as: :reject
+          put 'cancel/:request_id', action: :cancel, as: :cancel
+        end
+      end
 
       put 'add_problem_set'
       put 'remove_problem_set'

@@ -17,6 +17,9 @@ authorization do
     has_permission_on :groups, :to => :manage do
       if_attribute :id => is_not{0}
     end
+    has_permission_on :requests, :to => [:accept, :reject, :cancel] do
+      if_attribute :pending? => is{true}
+    end
     has_permission_on [:problems, :problem_sets, :contests, :test_cases, :test_sets, :evaluators, :submissions], :to => :manage
     has_permission_on :contests, :to => [:finalize, :unfinalize]
   end
@@ -53,10 +56,6 @@ authorization do
   end
   role :user do
     has_permission_on :users, :to => :read
-    has_permission_on :groups, :to => :read do
-      if_attribute :members => contains{user}
-      if_attribute :id => 0
-    end
     has_permission_on :contests, :to => :read do
       if_attribute :groups => {:id => 0}
       if_attribute :groups => {:members => contains{user}}
@@ -71,15 +70,33 @@ authorization do
       if_attribute :groups => {:members => contains{user}}, :start_time => lte{DateTime.now}
       if_attribute :contest_relations => {:user => is{user}}, :start_time => lte{DateTime.now}
     end
-    has_permission_on :groups, :to => :index
+    has_permission_on :groups, :to => :index do
+      if_attribute :visibility => Group::VISIBILITY[:public]
+    end
     has_permission_on :groups, :to => :show do
+      if_attribute :visibility => Group::VISIBILITY[:public]
+      if_attribute :visibility => Group::VISIBILITY[:unlisted]
+      if_attribute :members => contains{user}
+    end
+    has_permission_on :groups, :to => :access do
+      if_attribute :id => 0
       if_attribute :members => contains{user}
     end
     has_permission_on :groups, :to => :join do
-      if_attribute :members => does_not_contain{user}, :id => is_not{0}
+      if_attribute :members => does_not_contain{user}, :id => is_not{0}, :membership => Group::MEMBERSHIP[:open]
     end
     has_permission_on :groups, :to => :leave do
       if_attribute :members => contains{user}
+    end
+    has_permission_on :groups, :to => :invite do
+      if_attribute :members => contains{user}, :membership => Group::MEMBERSHIP[:open]
+      if_attribute :members => contains{user}, :membership => Group::MEMBERSHIP[:invitation]
+    end
+    has_permission_on :groups, :to => :apply do
+      if_attribute :members => does_not_contain{user}, :id => is_not{0},
+                   :membership => Group::MEMBERSHIP[:invitation], :visibility => is_not{Group::VISIBILITY[:private]}
+      if_attribute :members => does_not_contain{user}, :id => is_not{0},
+                   :membership => Group::MEMBERSHIP[:application], :visibility => is_not{Group::VISIBILITY[:private]}
     end
     has_permission_on :submissions, :to => :read do
       if_attribute :problem => {:problem_sets => {:contests => {:contest_relations => {:user => is{user}, :started_at => lte{DateTime.now}, :finish_at => gt{DateTime.now}, :started_at => lte{object.created_at}}}}}
@@ -95,6 +112,13 @@ authorization do
     end
     has_permission_on :problem_sets, :to => :browse
     has_permission_on :users, :to => :suexit
+
+    has_permission_on :requests, :to => [:accept, :reject] do
+      if_attribute :requestee => is{user}, :pending? => is{true}
+    end
+    has_permission_on :requests, :to => :cancel do
+      if_attribute :requester => is{user}, :pending? => is{true}
+    end
   end
   # user in closed book contest
   role :closedbook do
@@ -104,6 +128,7 @@ authorization do
     has_permission_on :groups, :to => :access_problems do
       if_attribute :id => 0
       if_attribute :members => contains { user }
+      if_attribute :owner => is{user}
     end
     has_permission_on :problems, :to => :manage do
       if_attribute :owner => is{user}
@@ -126,9 +151,8 @@ authorization do
 end
 privileges do
   privilege :manage do
-    includes :create, :inspect, :update, :delete, :use, :access
+    includes :create, :inspect, :update, :delete, :use, :access, :access_problems, :invite, :reject
   end
-  privilege :access, :includes => :access_problems
   privilege :create, :includes => :new
   privilege :update, :includes => :edit
   privilege :delete, :includes => :destroy

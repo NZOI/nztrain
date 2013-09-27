@@ -4,8 +4,10 @@
   <table style="background-color: none; border: 0px; font-size: 20pt;"><tr><td><%= @group.memberships.count %> members</td><td><%= @group.problem_sets.count %> problem sets</td></tr></table>
   <% if @group.members.exists?(current_user) %>
     <%= link_to 'Leave group', leave_group_path(@group), :method => :put if permitted_to? :leave, @group %>
-  <% else %>
-    <%= link_to 'Join group', join_group_path(@group), :method => :put if permitted_to? :join, @group %>
+  <% elsif permitted_to? :join, @group %>
+    <%= link_to 'Join group', join_group_path(@group), :method => :put  %>
+  <% elsif permitted_to? :apply, @group %>
+    <%= link_to 'Apply to join', apply_group_path(@group), :method => :put  %>
   <% end %>
   <%= link_to 'Edit', edit_group_path(@group) if permitted_to? :update, @group %>
   <%=
@@ -15,7 +17,7 @@
     menu.item :info, "info", info_group_path(@group)
     menu.item :problems, "problems", group_path(@group) if permitted_to? :access_problems, @group
     menu.item :contests, "contests", contests_group_path(@group) if permitted_to? :access_problems, @group
-    menu.item :members, "members", members_group_path(@group) if permitted_to? :access_problems, @group
+    menu.item :members, "members", members_group_path(@group), :highlights_on => %r(#{members_group_path(@group)}) if permitted_to? :access_problems, @group
 #  end.render
   end
   %>
