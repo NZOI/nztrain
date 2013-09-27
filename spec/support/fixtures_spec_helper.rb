@@ -4,9 +4,9 @@ module FixturesSpecHelper
   def self.initialize
     @@users = {
       :user => FactoryGirl.create(:user),
+      :organiser => FactoryGirl.create(:organiser),
       :admin => FactoryGirl.create(:admin),
-      :superadmin => FactoryGirl.create(:superadmin),
-      :organiser => FactoryGirl.create(:organiser)
+      :superadmin => FactoryGirl.create(:superadmin)
     }
     @@problems = { :problem => FactoryGirl.create(:problem) }
     @@test_sets = { :test_set => FactoryGirl.create(:test_set, :problem => @@problems[:problem]) }
