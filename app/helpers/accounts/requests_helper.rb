@@ -1,16 +1,16 @@
 module Accounts::RequestsHelper
   @@request_display = {
     ['Group','invite','User'] => {
-      description: lambda { |request| "<b>#{link_to(h(request.requester.username), request.requester)}</b> invites #{current_user == request.subject ? 'you' : link_to(h(request.subject.username), request.subject)} to join the group <b>#{permitted_to?(:show, request.object) ? link_to(h(request.object.name), request.object) : h(request.object.name)}</b>" },
-      accept: lambda { |request| accept_members_group_path(request.object, request) },
-      reject: lambda { |request| reject_members_group_path(request.object, request) },
+      description: lambda { |request| "<b>#{link_to(h(request.requester.username), request.requester)}</b> invites #{current_user == request.target ? 'you' : link_to(h(request.target.username), request.target)} to join the group <b>#{permitted_to?(:show, request.subject) ? link_to(h(request.subject.name), request.subject) : h(request.subject.name)}</b>" },
+      accept: lambda { |request| accept_members_group_path(request.subject, request) },
+      reject: lambda { |request| reject_members_group_path(request.subject, request) },
     }
   }
 
   def request_description request
     format = request_display_format(request)
     if format.nil?
-      raw "Request #{h request.object_type.downcase} <b>#{request.object_id}</b> #{h request.verb.downcase} #{h request.subject_type.downcase} <b>#{request.subject.id}</b>"
+      raw "Request #{h request.subject_type.downcase} <b>#{request.subject_id}</b> #{h request.verb.downcase} #{h request.target_type.downcase} <b>#{request.target.id}</b>"
     else
       raw instance_exec(request, &format[:description])
     end
@@ -53,6 +53,6 @@ module Accounts::RequestsHelper
   end
 
   def request_display_format request
-    @@request_display[[request.object_type, request.verb, request.subject_type]]
+    @@request_display[[request.subject_type, request.verb, request.target_type]]
   end
 end

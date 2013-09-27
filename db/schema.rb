@@ -153,11 +153,11 @@ ActiveRecord::Schema.define(:version => 20130926105411) do
 
   create_table "requests", :force => true do |t|
     t.integer  "requester_id"
-    t.integer  "object_id"
-    t.string   "object_type"
+    t.integer  "subject_id"
+    t.string   "subject_type"
     t.string   "verb",                               :null => false
-    t.integer  "subject_id",                         :null => false
-    t.string   "subject_type",                       :null => false
+    t.integer  "target_id",                          :null => false
+    t.string   "target_type",                        :null => false
     t.integer  "status",       :default => 0,        :null => false
     t.integer  "requestee_id"
     t.datetime "expired_at",   :default => Infinity, :null => false

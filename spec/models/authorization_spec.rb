@@ -5,9 +5,12 @@ describe Authorization do
   before(:all) do
     @superadmin = users(:superadmin)
     @admin = users(:admin)
+    @organiser = users(:organiser)
     @user = users(:user)
     # various objects to test ability on
-    @group = FactoryGirl.create(:group, :members => [users(:user), users(:admin), users(:superadmin)])
+    @member = FactoryGirl.create(:user)
+    @group = FactoryGirl.create(:group, :members => [users(:user), users(:admin), users(:superadmin), @member])
+    @organiser_group = FactoryGirl.create(:group, :owner => users(:organiser), :members => [@member])
     @private_problem = FactoryGirl.create(:problem)
     @group_set = FactoryGirl.create(:problem_set, :groups => [@group])
     @everyone_set = FactoryGirl.create(:problem_set, :group_ids => [0])
@@ -100,7 +103,37 @@ describe Authorization do
       end
     end
   end
-  describe 'contests' do
+  describe 'on groups' do
+    it 'members can invite users to open group' do
+      @organiser_group.update_attributes(:visibility => Group::VISIBILITY[:public], :membership => Group::MEMBERSHIP[:open])
+      @organiser.should_be_permitted_to [:invite, :reject], @organiser_group
+      @member.should_be_permitted_to :invite, @organiser_group
+      @member.should_not_be_permitted_to :reject, @organiser_group
+      @admin.should_be_permitted_to [:invite, :reject], @organiser_group
+    end
+    it 'members can invite users if group membership is by invitation' do
+      @organiser_group.update_attributes(:visibility => Group::VISIBILITY[:public], :membership => Group::MEMBERSHIP[:invitation])
+      @member.should_be_permitted_to :invite, @organiser_group
+      @member.should_not_be_permitted_to :reject, @organiser_group
+    end
+    it 'members cannot invite users if group membership is by application' do
+      @organiser_group.update_attributes(:visibility => Group::VISIBILITY[:public], :membership => Group::MEMBERSHIP[:application])
+      @member.should_not_be_permitted_to :invite, @organiser_group
+    end
+    it 'user can apply to join if group membership is by invitation' do
+      @organiser_group.update_attributes(:visibility => Group::VISIBILITY[:public], :membership => Group::MEMBERSHIP[:invitation])
+      @user.should_be_permitted_to :apply, @organiser_group
+    end
+    it 'user can apply to join if group membership is by application' do
+      @organiser_group.update_attributes(:visibility => Group::VISIBILITY[:public], :membership => Group::MEMBERSHIP[:application])
+      @user.should_be_permitted_to :apply, @organiser_group
+    end
+    it 'user cannot see, nor apply to private visibility groups, even if membership settings otherwise allow it' do
+      @organiser_group.update_attributes(:visibility => Group::VISIBILITY[:private], :membership => Group::MEMBERSHIP[:invitation])
+      @user.should_not_be_permitted_to [:show, :apply], @organiser_group
+    end
+  end
+  describe 'on contests' do
     it 'user can index contest in group or for everyone' do
       @user.should_be_permitted_to :index, [@contest, @everyone_contest, @past_contest, @future_contest]
       @user.should_be_permitted_to :show, [@contest, @everyone_contest, @past_contest]

@@ -7,16 +7,16 @@ class Group < ActiveRecord::Base
   has_and_belongs_to_many :contests
   belongs_to :owner, :class_name => :User
 
-  has_many :join_requests, :class_name => :Request, :as => :subject, :conditions => { :object_type => 'User', :verb => 'join' }
-  #, -> { where :object_type => :users, :verb => :join }
-  #has_many :applicants, :through => :applications, :source => :object, :source_type => 'User'
+  has_many :join_requests, :class_name => :Request, :as => :target, :conditions => { :subject_type => 'User', :verb => 'join' }
+  #, -> { where :subject_type => :users, :verb => :join }
+  #has_many :applicants, :through => :applications, :source => :subject, :source_type => 'User'
   #def applicants
-  #  self.join_requests.pending.object
+  #  self.join_requests.pending.subject
   #end
 
-  has_many :invitations, :class_name => :Request, :as => :object, :conditions => { :verb => 'invite', :subject_type => 'User' }
-  #, -> { where :verb => :invite, :subject_type => :users }
-  #has_many :invitees, :through => :invitations, :source => :subject, :source_type => 'User', :conditions => { :status => Request::STATUS[:pending] } # TODO: expired_at condition
+  has_many :invitations, :class_name => :Request, :as => :subject, :conditions => { :verb => 'invite', :target_type => 'User' }
+  #, -> { where :verb => :invite, :target_type => :users }
+  #has_many :invitees, :through => :invitations, :source => :target, :source_type => 'User', :conditions => { :status => Request::STATUS[:pending] } # TODO: expired_at condition
 
   # Scopes
   scope :distinct, select("distinct(groups.id), groups.*")
@@ -33,19 +33,19 @@ class Group < ActiveRecord::Base
     else
       self.members.push(current_user)
       # consider any pending invitations/applications accepted
-      self.invitations.pending.where(:subject_id => current_user.id).each(&:accept!)
-      self.applications.pending.where(:object_id => current_user.id).each(&:accept!)
+      self.invitations.pending.where(:target_id => current_user.id).each(&:accept!)
+      self.join_requests.pending.where(:subject_id => current_user.id).each(&:accept!)
       true
     end
   end
 
-  def apply!(current_user, user)
+  def apply!(current_user, user = nil)
     user = current_user if user.nil?
-    Request.create(:requester => current_user, :object => user, :verb => :join, :subject => self, :requestee => self.owner)
+    Request.create(:requester => current_user, :subject => user, :verb => :join, :target => self, :requestee => self.owner)
   end
 
   def invite!(user, current_user)
-    Request.create(:requester => current_user, :object => self, :verb => :invite, :subject => user, :requestee => user)
+    Request.create(:requester => current_user, :subject => self, :verb => :invite, :target => user, :requestee => user)
   end
 end
 

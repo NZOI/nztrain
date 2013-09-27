@@ -13,7 +13,7 @@
     <% requests.each do |request| %>
       <tr>
         <td><%= request.created_at %></td>
-        <td><%= request.object.handle %></td>
+        <td><%= request.subject.handle %></td>
         <td><%= Request::STATUS[request.status].capitalize %></td>
         <td><%= link_to 'Accept', accept_members_group_path(@group, request), :method => :put if request.pending? and permitted_to? :invite, @group %></td>
         <td><%= link_to 'Reject', reject_members_group_path(@group, request), :method => :put if request.pending? and permitted_to? :reject, @group %></td>

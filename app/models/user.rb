@@ -32,8 +32,8 @@ class User < ActiveRecord::Base
   has_many :groups, :through => :memberships
   has_and_belongs_to_many :roles
 
-  #has_many :group_invitations, :class_name => :Request, :as => :subject, :conditions => { :verb => 'invite', :object_type => 'Group' }
-  has_many :requests, :class_name => :Request, :as => :subject, :conditions => { :requestee_id => :subject_id }
+  #has_many :group_invitations, :class_name => :Request, :as => :target, :conditions => { :verb => 'invite', :subject_type => 'Group' }
+  has_many :requests, :class_name => :Request, :as => :target, :conditions => { :requestee_id => :target_id }
 
   # Scopes
 

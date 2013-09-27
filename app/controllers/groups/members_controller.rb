@@ -62,10 +62,10 @@ class Groups::MembersController < ApplicationController
   def apply
     if @group.members.exists?(current_user)
       redirect_to(@group, :alert => "You are already a member of this group")
-    elsif invitation = @group.invitations.pending.where(:subject_id => @user).first
+    elsif invitation = @group.invitations.pending.where(:target_id => @user).first
       invitation.accept!
       redirect_to(@group, :notice => "You have accepted an invitation to join the group")
-    elsif @group.join_requests.pending.where(:object_id => @user).first
+    elsif @group.join_requests.pending.where(:subject_id => @user).first
       redirect_to(@group, :alert => "You already have a pending join request for this group")
     else
       @group.apply!(current_user)
@@ -80,10 +80,10 @@ class Groups::MembersController < ApplicationController
         redirect_to(invites_members_group_path(@group), :alert => "No user found with username \"#{params[:username]}\"")
       elsif @group.members.exists?(@user)
         redirect_to(invites_members_group_path(@group), :alert => "#{@user.username} is already a member of this group")
-      elsif join_request = @group.join_requests.pending.where(:object_id => @user).first
+      elsif join_request = @group.join_requests.pending.where(:subject_id => @user).first
         join_request.accept!
         redirect_to(invites_members_group_path(@group), :notice => "#{@user.username}'s join request has been accepted")
-      elsif @group.invitations.pending.where(:subject_id => @user).first
+      elsif @group.invitations.pending.where(:target_id => @user).first
         redirect_to(invites_members_group_path(@group), :alert => "#{@user.username} has already been invited to join this group")
       else
         @group.invite!(@user, current_user)
@@ -102,14 +102,14 @@ class Groups::MembersController < ApplicationController
 
   def accept
     if @request_type == :invitation
-      if @group.join(@request.subject)
+      if @group.join(@request.target)
         @request.accept!
         redirect_to(@group, :notice => "Invitation accepted")
       else
         redirect_to(@group, :alert => "Failed to join group")
       end
     else # :join_request
-      if @group.join(@request.object)
+      if @group.join(@request.subject)
         @request.accept!
         redirect_to(join_requests_members_group_path(@group), :notice => "Join request accepted")
       else
