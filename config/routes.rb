@@ -82,7 +82,13 @@ NZTrain::Application.routes.draw do
 
   resources :test_cases
 
-  resources :users do
+  resources :users, :only => :index do
+    collection do
+      post 'suexit'
+    end
+  end
+
+  resources :user, :only => [:index, :show, :edit, :update, :destroy] do
     member do
       put 'add_role'
       put 'remove_role'
@@ -91,9 +97,6 @@ NZTrain::Application.routes.draw do
       get 'admin_email'
       post 'admin_email', :action => :send_admin_email
       post 'add_brownie'
-    end
-    collection do
-      post 'suexit'
     end
   end
 
