@@ -1,22 +1,25 @@
 <% content_for :title, "Problems" %>
 <div id="main-page-title">Problems</div>
 <table class="main_table">
-  <tr>
-    <th>Title</th>
-    <th>Input</th>
-    <th>Output</th>
-    <th>Memory limit</th>
-    <th>Time limit</th>
-    <th>User</th>
-    <th>Score</th>
-    <th></th>
-    <% if permitted_to? :update, :problems %>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Input</th>
+      <th>Output</th>
+      <th>Memory limit</th>
+      <th>Time limit</th>
+      <th>User</th>
+      <th>Score</th>
       <th></th>
-    <% end %>
-    <% if permitted_to? :destroy, :problems %>
-      <th></th>
-    <% end %>
-  </tr>
+      <% if permitted_to? :update, :problems %>
+        <th></th>
+      <% end %>
+      <% if permitted_to? :destroy, :problems %>
+        <th></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
 <% @problems.each do |problem| %>
     <tr>
     <td onClick="location.href='<%= problem_path(problem) %>'"><%= problem.title %></td>
@@ -35,6 +38,7 @@
     <% end %>
   </tr>
 <% end %>
+  </tbody>
 </table>
 
 <br />

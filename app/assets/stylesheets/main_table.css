@@ -1,0 +1,58 @@
+table.main_table {  
+  border-collapse: collapse;
+  border: 0px;
+  width: 100%;
+}
+
+table.main_table > thead > tr {
+  background-color: #A1CCA1;
+  border: 1px solid black;
+  border-style: double;
+}
+
+table.main_table > tbody > tr {
+  background-color: #FFFFFF;
+}
+
+table.main_table.hoverable > tbody > tr:hover {
+  background-color: #EEEEEE;
+}
+
+table.main_table > tbody > tr.subheading {
+  border: 2px;
+  background-color: #BBBBBB;
+  font-weight: bold;
+}
+
+table.main_table.hoverable > tbody > tr.subheading:hover {
+  background-color: #AAAAAA;
+} 
+
+table.main_table > tbody > tr.emphasized {
+  background-color: #9AD282;
+}
+
+table.main_table.hoverable > tbody > tr.emphasized:hover {
+  background-color: #8AC872;
+}
+
+table.main_table.selectable > tbody > tr.selected_row > td {
+  background-color: rgba(255,255,0,0.45);
+}
+
+table.main_table.selectable > tbody > tr.selected_row:hover > td {
+  background-color: rgba(255,255,0,0.35);
+}
+
+table.main_table > tbody > tr > td, table.main_table > thead > tr > th {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 2px;
+  text-align:left;
+  border: 1px solid #DDD;
+}
+
+table.main_table > thead > tr > th {
+  font-weight: bold;
+}
+

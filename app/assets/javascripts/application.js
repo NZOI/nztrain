@@ -98,8 +98,8 @@ $(document).ready(function() {
         shrink();
     });
 
-    $("table.main_table tr").click(function() {
-    	$(this).toggleClass("main-table-highlight");
+    $("table.selectable > tbody > tr").click(function() {
+    	$(this).toggleClass("selected_row");
     });
 
     $("#nav > ul").superfish({

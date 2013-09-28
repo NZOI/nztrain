@@ -218,44 +218,6 @@ a.progress_link:hover {
   padding-bottom: 30px;
 }
 
-.main_table, #main-container table{  
-  border-collapse: collapse;
-  border: 0px;
-  width: 100%;
-}
-
-#main-container tr.emphasized {
-  border: 2px;
-  background-color: #BBBBBB;
-  font-weight: bold;
-}
-
-#main-container tr.emphasized:hover {
-  background-color: #AAAAAA;
-}
-
-.main-table-highlight {
-  background-color: #D2D2D2;
-}
-
-.main-table-highlight:hover {
-  background-color: #D2D2D2 !important;
-} 
-
-.main_table td {
-  padding-left: 10px;
-  padding-right: 10px;
-  border: 1px solid #DDD;
-  padding-top: 2px;
-}
-
-.main_table th {
-  padding-left:10px;
-  padding-right:10px;
-  text-align:left;
-  padding-top:2px;
-}
-
 #main-page-title
 {
   font-size: 2.5em;

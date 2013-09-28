@@ -1,23 +1,27 @@
 <b>Requests:</b>
-<table class="group_invitations_list<%# for feature invitation spec %>">
-  <tr>
-    <th></th>
-    <th></th>
-    <th>Expires</th>
-    <th>Status</th>
-    <th></th>
-    <th></th>
-  </tr>
-  <% [@pending_requests, @requests].each do |requests| %>
-    <% requests.each do |request| %>
-      <tr>
-        <td><%= request.created_at %></td>
-        <td><%= request_description request %></td>
-        <td><%= request.expired_at == Float::INFINITY ? 'Never' : request.expired_at %></td>
-        <td><%= Request::STATUS[request.status].capitalize %></td>
-        <td><%= link_to_accept_request request if request.pending? and permitted_to? :accept, request %></td>
-        <td><%= link_to_reject_request request if request.pending? and permitted_to? :reject, request %></td>
-      </tr>
+<table class="main_table group_invitations_list<%# for feature invitation spec %>">
+  <thead>
+    <tr>
+      <th></th>
+      <th></th>
+      <th>Expires</th>
+      <th>Status</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% [@pending_requests, @requests].each do |requests| %>
+      <% requests.each do |request| %>
+        <tr>
+          <td><%= request.created_at %></td>
+          <td><%= request_description request %></td>
+          <td><%= request.expired_at == Float::INFINITY ? 'Never' : request.expired_at %></td>
+          <td><%= Request::STATUS[request.status].capitalize %></td>
+          <td><%= link_to_accept_request request if request.pending? and permitted_to? :accept, request %></td>
+          <td><%= link_to_reject_request request if request.pending? and permitted_to? :reject, request %></td>
+        </tr>
+      <% end %>
     <% end %>
-  <% end %>
+  </tbody>
 </table>

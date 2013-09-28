@@ -1,23 +1,25 @@
-<table class="main_table">
-  <tr>
-    <th>Title</th>
-    <th>Start time</th>
-    <th>End time</th>
-    <th>Duration</th>
-    <th>User</th>
-    <th>Score</th>
-    <th></th>
-    <% if permitted_to? :update, Contest %>
+<table class="main_table hoverable selectable">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Start time</th>
+      <th>End time</th>
+      <th>Duration</th>
+      <th>User</th>
+      <th>Score</th>
       <th></th>
-    <% end %>
-    <% if permitted_to? :destroy, Contest %>
-      <th></th>
-    <% end %>
-  </tr>
-
+      <% if permitted_to? :update, Contest %>
+        <th></th>
+      <% end %>
+      <% if permitted_to? :destroy, Contest %>
+        <th></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
 <% @contests.each do |contest| %>
   <% if Time.new.to_f < contest.end_time.to_f and Time.new.to_f > contest.start_time.to_f %>
-    <tr style="background-color:#9AD282">
+    <tr class="emphasized">
   <% else %>
     <tr>
   <% end %>
@@ -51,5 +53,6 @@
     <% end %>
   </tr>
 <% end %>
+  </tbody>
 </table>
 

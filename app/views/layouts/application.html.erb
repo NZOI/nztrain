@@ -72,19 +72,19 @@
       <li><a href="<%= root_path %>">home</a></li>
       <!--<li><a href="#">information</a></li>-->
       <% if user_signed_in? %>
-        <li><a href="<%= browse_groups_path %>">groups</a>
+        <li><a href="#" onClick="return false;">contests</a>
           <ul>
-            <li><a href="<%= browse_groups_path %>">groups</a></li>
-            <li><a href="#" onClick="return false;">contests</a>
-              <ul>
-                <li><a href="<%= active_contests_path %>">active</a></li>
-                <li><a href="<%= current_contests_path %>">current</a></li>
-                <li><a href="<%= upcoming_contests_path %>">upcoming</a></li>
-                <li><a href="<%= past_contests_path %>">past</a></li>
-                <!--<li><a href="<%= ai_contests_path %>">AI contests</a></li>-->
-              </ul>
-            </li>
+            <li><a href="<%= active_contests_path %>">active</a></li>
+            <li><a href="<%= current_contests_path %>">current</a></li>
+            <li><a href="<%= upcoming_contests_path %>">upcoming</a></li>
+            <li><a href="<%= past_contests_path %>">past</a></li>
+            <!--<li><a href="<%= ai_contests_path %>">AI contests</a></li>-->
           </ul>
+        </li>
+        <li><a href="<%= browse_groups_path %>">groups</a>
+          <!--<ul>
+            <li><a href="<%= browse_groups_path %>">groups</a></li>
+          </ul>-->
         </li>
         <!--<li><a href="#" onClick="return false;">problems</a>
           <ul>
@@ -116,6 +116,9 @@
         <% if permitted_to? :manage, Problem.new %>
           <li><a href="#" onClick="return false;">manage</a>
             <ul>
+              <% if permitted_to? :index, Submission.new %>
+                <li><a href="<%= submissions_path %>">submissions</a></li>
+              <% end %>
               <% if permitted_to? :manage, Problem.new %>
                 <li><a href="<%= problems_path %>">problems</a></li>
               <% end %>
@@ -130,9 +133,6 @@
               <% end %>
               <% if permitted_to? :index, :evaluators %>
                 <li><a href="<%= evaluators_path %>">evaluators</a></li>
-              <% end %>
-              <% if permitted_to? :index, Submission.new %>
-                <li><a href="<%= submissions_path %>">submissions</a></li>
               <% end %>
             </ul>
           </li>

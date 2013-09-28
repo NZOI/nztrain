@@ -1,19 +1,21 @@
 <h1>Listing evaluators</h1>
 
-<table class="main-table" width="100%">
-  <tr>
-    <th>Name</th>
-    <th>Description</th>
-    <th>User</th>
-    <th></th>
-    <% if permitted_to? :update, Evaluator %>
+<table class="main_table hoverable selectable" width="100%">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>User</th>
       <th></th>
-    <% end %>
-    <% if permitted_to? :destroy, Evaluator %>
-      <th></th>
-    <% end %>
-  </tr>
-
+      <% if permitted_to? :update, Evaluator %>
+        <th></th>
+      <% end %>
+      <% if permitted_to? :destroy, Evaluator %>
+        <th></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
 <% @evaluators.each do |evaluator| %>
   <tr>
     <td><%= evaluator.name %></td>
@@ -28,6 +30,7 @@
     <% end %>
   </tr>
 <% end %>
+  </tbody>
 </table>
 
 <br />

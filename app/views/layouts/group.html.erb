@@ -1,7 +1,12 @@
 <% content_for :title, @group.name %>
 <% content_for :content do %>
   <div id="main-page-title"><%= @group.name %></div>
-  <table style="background-color: none; border: 0px; font-size: 20pt;"><tr><td><%= @group.memberships.count %> members</td><td><%= @group.problem_sets.count %> problem sets</td></tr></table>
+  <table style="background-color: none; border: 0px; width: 100%; font-size: 150%;">
+    <tr>
+      <td><span style="font-size: 200%"><%= @group.memberships.count %> </span>members</td>
+      <td><span style="font-size: 200%"><%= @group.problem_sets.count %> </span>problem sets</td>
+    </tr>
+  </table>
   <% if @group.members.exists?(current_user) %>
     <%= link_to 'Leave group', leave_group_path(@group), :method => :put if permitted_to? :leave, @group %>
   <% elsif permitted_to? :join, @group %>

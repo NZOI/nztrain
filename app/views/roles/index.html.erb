@@ -1,29 +1,32 @@
 <h1>Listing roles</h1>
 
-<table>
-  <tr>
-    <th>Name</th>
-    <th></th>
-    <% if permitted_to? :update, Role %>
+<table class="main_table hoverable selectable">
+  <thead>
+    <tr>
+      <th>Name</th>
       <th></th>
+      <% if permitted_to? :update, Role %>
+        <th></th>
+      <% end %>
+      <% if permitted_to? :destroy, Role %>
+        <th></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @roles.each do |role| %>
+      <tr>
+        <td><%= role.name %></td>
+        <td><%= link_to 'Show', role %></td>
+        <% if permitted_to? :update, Role %>
+          <td><%= link_to 'Edit', edit_role_path(role) if permitted_to? :update, role %></td>
+        <% end %>
+        <% if permitted_to? :destroy, Role %>
+          <td><%= link_to 'Destroy', role, :data => { :confirm => 'Are you sure?' }, :method => :delete if permitted_to? :destroy, role %></td>
+        <% end %>
+      </tr>
     <% end %>
-    <% if permitted_to? :destroy, Role %>
-      <th></th>
-    <% end %>
-  </tr>
-
-<% @roles.each do |role| %>
-  <tr>
-    <td><%= role.name %></td>
-    <td><%= link_to 'Show', role %></td>
-    <% if permitted_to? :update, Role %>
-      <td><%= link_to 'Edit', edit_role_path(role) if permitted_to? :update, role %></td>
-    <% end %>
-    <% if permitted_to? :destroy, Role %>
-      <td><%= link_to 'Destroy', role, :data => { :confirm => 'Are you sure?' }, :method => :delete if permitted_to? :destroy, role %></td>
-    <% end %>
-  </tr>
-<% end %>
+  </tbody>
 </table>
 
 <br />

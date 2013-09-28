@@ -8,34 +8,36 @@
 <% else %>
 
   <% @table_columns = 4 %>
-  <table width="100%">
-    <tr>
-      <th>Submission</th>
-      <th>Language</th>
-      <th>Score</th>
-      <% if params[:by_user].nil?
-           @table_columns+=1
-      %>
-        <th>User</th>
-      <% end %>
-      <% if params[:by_problem].nil?
-           @table_columns+=1
-      %>
-        <th>Problem</th>
-      <% end %>
-      <th></th>
-      <% if permitted_to? :update, :submissions
-           @table_columns += 1
-      %>
+  <table class="main_table hoverable">
+    <thead>
+      <tr>
+        <th>Submission</th>
+        <th>Language</th>
+        <th>Score</th>
+        <% if params[:by_user].nil?
+             @table_columns+=1
+        %>
+          <th>User</th>
+        <% end %>
+        <% if params[:by_problem].nil?
+             @table_columns+=1
+        %>
+          <th>Problem</th>
+        <% end %>
         <th></th>
-      <% end %>
-      <% if permitted_to? :destroy, :submissions
-           @table_columns += 1
-      %>
-        <th></th>
-      <% end %>
-    </tr>
-  
+        <% if permitted_to? :update, :submissions
+             @table_columns += 1
+        %>
+          <th></th>
+        <% end %>
+        <% if permitted_to? :destroy, :submissions
+             @table_columns += 1
+        %>
+          <th></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
   <% @submissions.each do |submission| %>
     <tr onClick="toggle_height(<%= "'submission#{submission.id}source'" %>);">
       <td><%= submission.created_at.strftime("%b %d %Y, %H:%M") %>
@@ -56,9 +58,10 @@
       <% end %>
     </tr>
       <tr>
-      <td colspan="<%= @table_columns %>"><pre id="submission<%= submission.id %>source" style="overflow-y: hidden; width: 100%; display: none; border: 0px; padding: 0px;"><%= submission.source %></pre></td>
+      <td colspan="<%= @table_columns %>" style="padding: 0px;"><pre id="submission<%= submission.id %>source" style="overflow-y: hidden; width: 100%; display: none; border: 0px; padding: 0px; margin: 0px;"><%= submission.source %></pre></td>
     </tr>
   <% end %>
+    </tbody>
   </table>
 <% end %>
 <%= will_paginate @submissions %>

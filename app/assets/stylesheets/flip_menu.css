@@ -5,18 +5,17 @@ ul.flip_menu {
 
 ul.flip_menu > li {
   display: inline-block;
-  border: 1px solid #888888;
-  margin: 0 2px 0 2px;
-  padding: 1px 5px 1px 5px;
-  background-color: #DDDDDD;
+  margin: 0 3px 0 3px;
+  padding: 0;
 }
 
 ul.flip_menu > li > a {
   color: #000000;
-  white-space: nowrap;
-  margin: -3px -5px -3px -5px;
+  margin: 0;
   padding: 3px 5px 3px 5px;
+  border: 1px solid #888888;
   background-color: #DDDDDD;
+  white-space: nowrap;
 }
 
 ul.flip_menu > li > a:hover {
@@ -30,3 +29,4 @@ ul.flip_menu > li > a.selected {
   pointer-events: none;
   cursor: default;
 }
+

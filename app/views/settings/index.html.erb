@@ -1,23 +1,26 @@
 <h1>Listing settings</h1>
 
-<table style="table-layout: fixed; width: 100%;">
-  <tr>
-    <th style="width: 20%;">Key</th>
-    <th>Value</th>
-    <th style="width: 40px;"></th>
-    <th style="width: 40px;"></th>
-    <th style="width: 40px;"></th>
-  </tr>
-
-<% @settings.each do |setting| %>
-  <tr>
-    <td><%= setting.key %></td>
-    <td><div style="overflow: hidden; text-overflow: ellipsis;"><nobr><%= setting.value %></nobr></div></td>
-    <td><%= link_to 'Show', setting %></td>
-    <td><%= link_to 'Edit', edit_setting_path(setting) %></td>
-    <td><%= link_to 'Destroy', setting, :data => { :confirm => 'Are you sure?' }, :method => :delete %></td>
-  </tr>
-<% end %>
+<table class="main_table hoverable selectable">
+  <thead>
+    <tr>
+      <th style="width: 20%;">Key</th>
+      <th>Value</th>
+      <th style="width: 40px;"></th>
+      <th style="width: 40px;"></th>
+      <th style="width: 40px;"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @settings.each do |setting| %>
+      <tr>
+        <td><%= setting.key %></td>
+        <td><div style="overflow: hidden; text-overflow: ellipsis;"><nobr><%= setting.value %></nobr></div></td>
+        <td><%= link_to 'Show', setting %></td>
+        <td><%= link_to 'Edit', edit_setting_path(setting) %></td>
+        <td><%= link_to 'Destroy', setting, :data => { :confirm => 'Are you sure?' }, :method => :delete %></td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>
 
 <br />
