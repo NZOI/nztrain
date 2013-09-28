@@ -137,7 +137,12 @@
             </ul>
           </li>
         <% end %>
-        <li><a href="<%= users_path %>">users</a></li>
+        <li><a href="<%= users_path %>">users</a>
+          <ul>
+            <li><a href="<%= newest_users_path %>">newest</a></li>
+            <% if permitted_to? :inspect, :users %><li><a href="<%= online_users_path %>">online</a></li><% end %>
+          </ul>
+        </li>
         <% if current_user && current_user.is_admin? %>
           <li><a href="#" onClick="return false;">admin</a>
             <ul>

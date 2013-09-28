@@ -30,12 +30,10 @@
     <% @users.each do |user| %>
       <tr>
         <td><%= user.username %></td>
-        <% if permitted_to? :inspect, User %>
-          <td><%= user.name if permitted_to? :inspect, user %></td>
+        <% if permitted_to? :inspect, user %>
+          <td><%= user.name %></td>
           <td>
-            <% if permitted_to? :inspect, user %>
               <%= user.email %> <span style="color:red;"><%= "(unconfirmed)" if !user.confirmed? %></span>
-            <% end %>
           </td>
         <% end %>
         <td><%= user.roles.map {|r| r.name}.join(', ') %></td>

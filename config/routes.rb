@@ -85,6 +85,9 @@ NZTrain::Application.routes.draw do
   resources :users, :only => :index do
     collection do
       post 'suexit'
+
+      get 'online'
+      get 'newest'
     end
   end
 

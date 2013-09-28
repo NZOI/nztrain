@@ -3,6 +3,7 @@ require 'declarative_authorization/maintenance'
 class ApplicationController < ActionController::Base
   include Authorization::Maintenance
   include ApplicationHelper
+  before_filter :update_last_seen_at
   before_filter :set_current_user
   before_filter :read_settings
   before_filter :check_su_loss
@@ -72,5 +73,12 @@ class ApplicationController < ActionController::Base
   protected
   def set_current_user
     Authorization.current_user = current_user
+  end
+
+  def update_last_seen_at
+    if user_signed_in?
+      current_user.last_seen_at = DateTime.now
+      current_user.save
+    end
   end
 end

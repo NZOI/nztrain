@@ -1,12 +1,19 @@
 class UsersController < ApplicationController
-  filter_resource_access :member => [], :new => [], :additional_collection => :suexit
+  filter_resource_access :member => [], :new => [], :additional_collection => {:online => :inspect, :newest => :index, :suexit => :suexit}
 
   def index
     @users = User.select('*').num_solved.order(:email)
-    respond_to do |format|
-      format.html
-      format.xml {render :xml => @users }
-    end
+    render
+  end
+
+  def online
+    @users = User.order(:last_seen_at).reverse_order
+    render
+  end
+
+  def newest
+    @users = User.order(:created_at).reverse_order.limit(100)
+    render
   end
 
   def suexit
