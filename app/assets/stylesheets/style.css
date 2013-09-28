@@ -218,10 +218,19 @@ a.progress_link:hover {
   padding-bottom: 30px;
 }
 
-#main-page-title
+#main-page-title-box
 {
-  font-size: 2.5em;
-  margin-bottom: 25px;
+  margin: -20px 0px 15px -25px;
+  padding: 10px 0px 10px 25px;
+  border-bottom: 1px solid black;
+}
+
+#main-page-title-box > h1 {
+  font-size: 2em;
+  font-family: 'Ubuntu', Arial, sans-serif;
+  font-style: italic;
+  margin: 0;
+  padding: 0;
 }
 
 #main-container pre {
@@ -243,7 +252,7 @@ a.progress_link:hover {
   border: 0px;
 }
 
-#main-container h1, h2, h3, h4, h5, h6, h7 {
+h1, h2, h3, h4, h5, h6 {
   margin-left: -2px;
   margin-top: 14px;
   margin-bottom: 2px;

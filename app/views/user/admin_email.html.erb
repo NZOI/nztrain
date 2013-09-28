@@ -1,7 +1,7 @@
 <% content_for :title, "Email " + @user.handle %>
 
 <%= form_tag do |f| %>
-  <h1>Email <%= @user.handle %> as admin</h1>
+  <div id="main-page-title-box"><h1>Email <%= @user.handle %> as admin</h1></div>
 
   <p>From: <%= ActionMailer::Base.smtp_settings[:user_name] %></p>
   <p>To: <%= @user.email %></p>

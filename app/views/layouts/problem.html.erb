@@ -1,6 +1,6 @@
 <% content_for :title, @problem.title %>
 <% content_for :content do %>
-  <div id="main-page-title"><%= @problem.title %></div>
+  <div id="main-page-title-box"><h1><%= @problem.title %></h1></div>
 
 <% if @problem.input.nil? %>
   <b>Input: </b>Standard Input (stdin)<br />

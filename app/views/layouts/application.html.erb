@@ -5,6 +5,7 @@
     <%= stylesheet_link_tag "application" %>
     <%= javascript_include_tag "application", :async => true %>
     <%= javascript_include_tag "http://cdn.mathjax.org/mathjax/2.1-latest/MathJax.js?config=TeX-AMS_HTML", :async => true %>
+    <%= stylesheet_link_tag "http://fonts.googleapis.com/css?family=Ubuntu:400italic"%>
     <noscript><style type="text/css">.js_only { display: none; }</style></noscript>
     <%= csrf_meta_tag %>
     <!-- Google Analytics -->
@@ -69,7 +70,7 @@
   </div>
   <div id="nav">
     <ul>
-      <li><a href="<%= root_path %>">home</a></li>
+      <li><a href="<%= root_path %>">dashboard</a></li>
       <!--<li><a href="#">information</a></li>-->
       <% if user_signed_in? %>
         <li><a href="#" onClick="return false;">contests</a>
