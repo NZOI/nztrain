@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-sdo=sudo
+sdo="sudo "
 rvm --version &>/dev/null && {
   if [[ `rvm current` != "system" ]] ; then
     sdo=
