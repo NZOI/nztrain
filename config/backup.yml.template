@@ -3,6 +3,7 @@ rsync:
   schedule: ${BACKUP_RSYNC}
   mode: ${BACKUP_RSYNC_MODE}
   port: ${BACKUP_RSYNC_PORT}
+  host: ${BACKUP_RSYNC_HOST}
   username: ${BACKUP_RSYNC_USER}
   password: ${BACKUP_RSYNC_PASS}
   ssh_key: ${BACKUP_RSYNC_SSH_KEY}

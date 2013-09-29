@@ -111,6 +111,10 @@ if [[ "$SCHEDULE_BACKUPS" = "1" ]] ; then
       prompt 'Backups: What port to use for rsync (default=22)? ' BACKUP_RSYNC_PORT
       if [[ ! $BACKUP_RSYNC_PORT ]] ; then BACKUP_RSYNC_PORT=22 ; fi
     }
+    declare -p BACKUP_RSYNC_HOST &> /dev/null || {
+      anyset=true
+      prompt 'Backups: What is the host for rsync? ' BACKUP_RSYNC_HOST
+    }
     declare -p BACKUP_RSYNC_USER &> /dev/null || {
       anyset=true
       prompt 'Backups: What is the username for rsync? ' BACKUP_RSYNC_USER
@@ -122,6 +126,7 @@ if [[ "$SCHEDULE_BACKUPS" = "1" ]] ; then
     declare -p BACKUP_RSYNC_SSH_KEY &> /dev/null || {
       anyset=true
       prompt 'Backups: What is the path to the ssh key (optional)? ' BACKUP_RSYNC_SSH_KEY
+      if [[ ! $BACKUP_RSYNC_SSH_KEY ]] ; then BACKUP_RSYNC_SSH_KEY="~/.ssh/id_rsa" ; fi
     }
     declare -p BACKUP_RSYNC_PATH &> /dev/null || {
       anyset=true
@@ -131,9 +136,10 @@ if [[ "$SCHEDULE_BACKUPS" = "1" ]] ; then
   else
     BACKUP_RSYNC_MODE=ssh
     BACKUP_RSYNC_PORT=22
+    BACKUP_RSYNC_HOST=
     BACKUP_RSYNC_USER=
     BACKUP_RSYNC_PASS=
-    BACKUP_RSYNC_SSH_KEY=
+    BACKUP_RSYNC_SSH_KEY="~/.ssh/id_rsa"
     BACKUP_RSYNC_PATH="~/backups"
   fi
 else
@@ -144,7 +150,7 @@ shopt -u nocasematch;
 
 if $anyset ; then
   export SERVER_NAME APP_NAME RAILS_ROOT APP_USER RAILS_ENV DATABASE TEST_DATABASE DATABASE_USERNAME UNICORN_PORT
-  export SCHEDULE_BACKUPS BACKUP_RSYNC BACKUP_RSYNC_MODE BACKUP_RSYNC_PORT BACKUP_RSYNC_USER BACKUP_RSYNC_PASS BACKUP_RSYNC_SSH_KEY BACKUP_RSYNC_PATH
+  export SCHEDULE_BACKUPS BACKUP_RSYNC BACKUP_RSYNC_MODE BACKUP_RSYNC_PORT BACKUP_RSYNC_HOST BACKUP_RSYNC_USER BACKUP_RSYNC_PASS BACKUP_RSYNC_SSH_KEY BACKUP_RSYNC_PATH
 
   # generate template
   bash script/template.bash < script/install.cfg.template > script/install.cfg

@@ -1,5 +1,9 @@
 # encoding: utf-8
 
+RAILS_ROOT = File.expand_path('',  File.dirname(__FILE__))
+
+require 'yaml'
+backup_config = YAML.load_file(File.join(RAILS_ROOT, 'config', 'backup.yml'))
 ##
 # Backup Generated: daily
 # Once configured, you can run the backup with the following command:
@@ -34,7 +38,38 @@ Backup::Model.new(:latest, 'Dump of database and associated data to local server
   end
 
   # Rsync here
-
+  if backup_config["rsync"]["schedule"] == 1
+    store_with RSync do |storage|
+      storage.mode = backup_config["rsync"]["mode"].to_sym
+      ##
+      # May be a hostname or IP address.
+      storage.host = backup_config["rsync"]["host"]
+      ##
+      # When using :ssh or :ssh_daemon mode, this will be the SSH port (default: 22).
+      # When using :rsync_daemon mode, this is the rsync:// port (default: 873).
+      storage.port = backup_config["rsync"]["port"]
+      ##
+      # The SSH user must have a passphrase-less SSH key setup to authenticate to the remote host.
+      # If this is not desirable, you can provide the path to a specific SSH key for this purpose
+      # using SSH's -i option in #additional_ssh_options
+      storage.ssh_user = backup_config["rsync"]["username"]
+      ##
+      # If you need to pass additional options to the SSH command, specify them here.
+      storage.additional_ssh_options = "-i '#{backup_config["rsync"]["ssh_key"]}'"
+      ##
+      # When using :ssh_daemon or :rsync_daemon mode, this is the user used to authenticate to the rsync daemon.
+      storage.rsync_user = backup_config["rsync"]["username"]
+      ##
+      # When using :ssh_daemon or :rsync_daemon mode, if a password is needed to authenticate to the rsync daemon
+      storage.rsync_password = backup_config["rsync"]["password"]
+      ##
+      # When set to `true`, rsync will compress the data being transerred.
+      storage.compress = true
+      ##
+      # The path to store the backup package file(s) to.
+      storage.path = backup_config["rsync"]["path"]
+    end
+  end
   ##
   # Local (Copy) [Storage]
   #
