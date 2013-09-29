@@ -28,6 +28,13 @@ Backup::Model.new(:latest, 'Dump of database and associated data to local server
     archive.add 'uploads'
   end
 
+  compress_with Gzip do |compression|
+    compression.level = 6
+    compression.rsyncable = true
+  end
+
+  # Rsync here
+
   ##
   # Local (Copy) [Storage]
   #

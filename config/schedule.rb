@@ -33,10 +33,6 @@ if backup["schedule"]==1
   every 1.day do
     cmd "backup perform -t latest -c config/backup.rb"
   end
-
-  every 1.week do
-    cmd "backup perform -t weekly -c config/backup.rb"
-  end
 end
 
 # Learn more: http://github.com/javan/whenever
