@@ -1,6 +1,7 @@
+== NZTrain
 {<img src="https://secure.travis-ci.org/NZOI/nztrain.png?branch=master" alt="Build Status" />}[http://travis-ci.org/NZOI/nztrain]
 
-== NZTrain
+{<img src="https://badge.waffle.io/NZOI/nztrain.png" alt="WIP Issues" />}[http://waffle.io/NZOI/nztrain]
 
 === Installation
 Run `script/install.bash` to install dependencies.
