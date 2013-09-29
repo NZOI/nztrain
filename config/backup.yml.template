@@ -1,0 +1,10 @@
+schedule: ${SCHEDULE_BACKUPS}
+rsync:
+  schedule: ${BACKUP_RSYNC}
+  mode: ${BACKUP_RSYNC_MODE}
+  port: ${BACKUP_RSYNC_PORT}
+  username: ${BACKUP_RSYNC_USER}
+  password: ${BACKUP_RSYNC_PASS}
+  ssh_key: ${BACKUP_RSYNC_SSH_KEY}
+  path: ${BACKUP_RSYNC_PATH}
+

@@ -22,6 +22,10 @@ do
     esac
 done
 
+if [ ! -f script/update.time ]; then
+  echo 2000-01-01+00:00:00 > script/update.time
+fi
+
 # optional: mark website down (.htaccess url rewrite or other similar)
 
 if ${gitpull:=true} ; then
@@ -45,4 +49,5 @@ fi
 
 # If using Phusion Passenger, touch tmp/restart.txt can restart Rails
 
+echo `date +'%F+%T'` > script/update.time
 

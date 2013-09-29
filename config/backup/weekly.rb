@@ -6,7 +6,7 @@
 #
 # $ backup perform -t daily [-c <path_to_configuration_file>]
 #
-Backup::Model.new(:latest, 'Dump of database and associated data to local server storage') do
+Backup::Model.new(:weekly, 'Dump of database and associated data to local server storage') do
   ##
   # Split [Splitter]
   #
@@ -28,12 +28,17 @@ Backup::Model.new(:latest, 'Dump of database and associated data to local server
     archive.add 'uploads'
   end
 
+  compress_with Gzip do |compression|
+    compression.level = 6
+    compression.rsyncable = true
+  end
+
   ##
   # Local (Copy) [Storage]
   #
   store_with Local do |local|
     local.path       = File.join(RAILS_ROOT, 'db', 'backups')
-    local.keep       = 1 # keep only latest daily dump (to minimize storage of uncompressed dump)
+    local.keep       = 2 # keep last 2 weeks
   end
 
 #  ##

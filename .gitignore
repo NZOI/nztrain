@@ -8,9 +8,11 @@
 /public/assets/
 /public/uploads/tmp/
 /db/data/
+/config/backup.yml
 /config/database.yml
 /config/unicorn.yml
 /script/install.cfg
+/script/update.time
 /db/backup/
 /db/backups/
 

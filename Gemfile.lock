@@ -39,7 +39,7 @@ GEM
     albino (1.3.3)
       posix-spawn (>= 0.3.6)
     arel (3.0.2)
-    backup (3.1.3)
+    backup (3.4.0)
       open4 (~> 1.3.0)
       thor (>= 0.15.4, < 2)
     bb-ruby (0.9.8)

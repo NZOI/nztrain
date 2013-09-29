@@ -13,6 +13,13 @@ if [ ! -f config/database.yml ] ; then
   bash script/template.bash < config/database.yml.template | cat > config/database.yml
 fi
 
+# check if backup.yml exists, if not, generate from backup.yml.template
+if [ ! -f config/backup.yml ] ; then
+  cmd="bash script/template.bash < config/backup.yml.template | cat > config/backup.yml"
+  echo "$ $cmd"
+  bash script/template.bash < config/backup.yml.template | cat > config/backup.yml
+fi
+
 # get unicorn.yml up
 if [ ! -f config/unicorn.yml ] ; then
   cmd="bash script/template.bash < config/unicorn.yml.template | cat > config/unicorn.yml"

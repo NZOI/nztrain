@@ -90,10 +90,61 @@ declare -p UNICORN_PORT &> /dev/null || {
   prompt 'What port should unicorn listen on (default=none)? ' UNICORN_PORT
 }
 
+declare -p SCHEDULE_BACKUPS &> /dev/null || {
+  anyset=true
+  DEFAULT=1 bash script/confirm.bash 'Schedule backups' && SCHEDULE_BACKUPS=1 || SCHEDULE_BACKUPS=0
+}
+
+if [[ "$SCHEDULE_BACKUPS" = "1" ]] ; then
+  declare -p BACKUP_RSYNC &> /dev/null || {
+    anyset=true
+    DEFAULT=1 bash script/confirm.bash 'Backup using rsync' && BACKUP_RSYNC=1 || BACKUP_RSYNC=0
+  }
+  if [[ "$BACKUP_RSYNC" = "1" ]] ; then
+    declare -p BACKUP_RSYNC_MODE &> /dev/null || {
+      anyset=true
+      prompt 'Backups: What mode should rsync operate in (default=ssh, or ssh_daemon, rsync_daemon)? ' BACKUP_RSYNC_MODE
+      if [[ ! $BACKUP_RSYNC_MODE ]] ; then BACKUP_RSYNC_MODE=ssh ; fi
+    }
+    declare -p BACKUP_RSYNC_PORT &> /dev/null || {
+      anyset=true
+      prompt 'Backups: What port to use for rsync (default=22)? ' BACKUP_RSYNC_PORT
+      if [[ ! $BACKUP_RSYNC_PORT ]] ; then BACKUP_RSYNC_PORT=22 ; fi
+    }
+    declare -p BACKUP_RSYNC_USER &> /dev/null || {
+      anyset=true
+      prompt 'Backups: What is the username for rsync? ' BACKUP_RSYNC_USER
+    }
+    declare -p BACKUP_RSYNC_PASS &> /dev/null || {
+      anyset=true
+      prompt 'Backups: What is the password for rsync? ' BACKUP_RSYNC_PASS
+    }
+    declare -p BACKUP_RSYNC_SSH_KEY &> /dev/null || {
+      anyset=true
+      prompt 'Backups: What is the path to the ssh key (optional)? ' BACKUP_RSYNC_SSH_KEY
+    }
+    declare -p BACKUP_RSYNC_PATH &> /dev/null || {
+      anyset=true
+      prompt 'Backups: What path to rsync to (default=~/backups)? ' BACKUP_RSYNC_PATH
+      if [[ ! $BACKUP_RSYNC_PATH ]] ; then BACKUP_RSYNC_PATH="~/backups" ; fi
+    }
+  else
+    BACKUP_RSYNC_MODE=ssh
+    BACKUP_RSYNC_PORT=22
+    BACKUP_RSYNC_USER=
+    BACKUP_RSYNC_PASS=
+    BACKUP_RSYNC_SSH_KEY=
+    BACKUP_RSYNC_PATH="~/backups"
+  fi
+else
+  BACKUP_RSYNC=0
+fi
+
 shopt -u nocasematch;
 
 if $anyset ; then
   export SERVER_NAME APP_NAME RAILS_ROOT APP_USER RAILS_ENV DATABASE TEST_DATABASE DATABASE_USERNAME UNICORN_PORT
+  export SCHEDULE_BACKUPS BACKUP_RSYNC BACKUP_RSYNC_MODE BACKUP_RSYNC_PORT BACKUP_RSYNC_USER BACKUP_RSYNC_PASS BACKUP_RSYNC_SSH_KEY BACKUP_RSYNC_PATH
 
   # generate template
   bash script/template.bash < script/install.cfg.template > script/install.cfg
