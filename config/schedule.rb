@@ -8,6 +8,8 @@ RAILS_ROOT = File.expand_path('../',  File.dirname(__FILE__))
 require 'yaml'
 backup = YAML.load_file(File.join(RAILS_ROOT, 'config', 'backup.yml'))
 
+env :PATH, '/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin'
+
 # Example:
 #
 # set :output, "/path/to/my/cron_log.log"
