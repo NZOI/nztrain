@@ -1,3 +1,19 @@
 <%= render 'menu' %>
 
-<%= render 'users/index' %>
+<table class="main_table" >
+  <thead>
+    <tr>
+      <th width="50%">Username</th>
+      <th width="50%">Joined on</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @memberships.each do |membership| %>
+      <tr>
+        <td><%= link_to membership.member.username, membership.member %></td>
+        <td><%= membership.created_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+

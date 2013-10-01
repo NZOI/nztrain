@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130928133936) do
+ActiveRecord::Schema.define(:version => 20131001082750) do
 
   create_table "ai_contest_games", :force => true do |t|
     t.integer  "ai_contest_id"
@@ -108,8 +108,9 @@ ActiveRecord::Schema.define(:version => 20130928133936) do
   end
 
   create_table "group_memberships", :force => true do |t|
-    t.integer "group_id"
-    t.integer "member_id"
+    t.integer  "group_id"
+    t.integer  "member_id"
+    t.datetime "created_at"
   end
 
   create_table "groups", :force => true do |t|

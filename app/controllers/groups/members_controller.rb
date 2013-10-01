@@ -43,7 +43,7 @@ class Groups::MembersController < ApplicationController
 
   public
   def index
-    @users = @group.members
+    @memberships = @group.memberships.includes(:member).order(:created_at).reverse_order
   end
 
   def join
