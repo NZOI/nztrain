@@ -155,6 +155,15 @@ NZTrain::Application.routes.draw do
     end
   end
 
+  resources :file_attachments do
+    collection do
+      get 'my', :to => 'file_attachments#index', :defaults => { :filter => 'my' }
+    end
+    member do
+      get 'download'
+    end
+  end
+
   resources :zipped_test_cases do
     member do
       post 'upload'

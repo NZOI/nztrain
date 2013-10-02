@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131001082750) do
+ActiveRecord::Schema.define(:version => 20131001083843) do
 
   create_table "ai_contest_games", :force => true do |t|
     t.integer  "ai_contest_id"
@@ -107,6 +107,21 @@ ActiveRecord::Schema.define(:version => 20131001082750) do
     t.datetime "updated_at"
   end
 
+  create_table "file_attachments", :force => true do |t|
+    t.string   "name"
+    t.string   "file_attachment"
+    t.string   "string"
+    t.integer  "owner_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  create_table "group_file_attachments", :force => true do |t|
+    t.integer  "group_id"
+    t.integer  "file_attachment_id"
+    t.datetime "created_at"
+  end
+
   create_table "group_memberships", :force => true do |t|
     t.integer  "group_id"
     t.integer  "member_id"
@@ -125,6 +140,11 @@ ActiveRecord::Schema.define(:version => 20131001082750) do
   create_table "groups_problem_sets", :id => false, :force => true do |t|
     t.integer "group_id"
     t.integer "problem_set_id"
+  end
+
+  create_table "problem_file_attachments", :force => true do |t|
+    t.integer "problem_id"
+    t.integer "file_attachment_id"
   end
 
   create_table "problem_sets", :force => true do |t|

@@ -112,6 +112,9 @@
             <% if permitted_to? :manage, Group.new(:owner_id => current_user.id) %>
               <li><a href="<%= my_groups_path %>">groups</a></li>
             <% end %>
+            <% if permitted_to? :manage, FileAttachment.new(:owner_id => current_user.id) %>
+              <li><a href="<%= my_file_attachments_path %>">file attachments</a></li>
+            <% end %>
           </ul>
         </li>
         <% if permitted_to? :manage, Problem.new %>
@@ -134,6 +137,9 @@
               <% end %>
               <% if permitted_to? :index, :evaluators %>
                 <li><a href="<%= evaluators_path %>">evaluators</a></li>
+              <% end %>
+              <% if permitted_to? :manage, FileAttachment.new %>
+                <li><a href="<%= file_attachments_path %>">file attachments</a></li>
               <% end %>
             </ul>
           </li>

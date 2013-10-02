@@ -1,0 +1,33 @@
+<%= form_for(@file_attachment, :html => { :multipart => true }) do |f| %>
+  <% if @file_attachment.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@file_attachment.errors.count, "error") %> prohibited this file_attachment from being saved:</h2>
+      <ul>
+      <% @file_attachment.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name, 'Filename' %><br>
+    <%= f.radio_button(:name_type, "filename") %><%= f.label(:name_type_filename, "upload filename") %><br>
+    <%= f.radio_button(:name_type, "other", "data-radio-enable" => :file_attachment_name) %><%= f.label(:name_type_other, "other") %> <%= f.text_field :name %>
+  </div>
+
+  <p><%= f.label :file_attachment %><br>
+  <% if @file_attachment.file_attachment? %>
+    <% if @file_attachment.file_attachment_cache.nil? %>
+      <%= link_to File.basename(@file_attachment.file_attachment_url), download_file_attachment_path(@file_attachment) %><br>
+    <% else %>
+      <%= link_to File.basename(@file_attachment.file_attachment_url), @file_attachment.file_attachment_url %><br>
+    <% end %>
+  <% end %>
+  <%= f.file_field :file_attachment %>
+  <%= f.hidden_field :file_attachment_cache %></p>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
