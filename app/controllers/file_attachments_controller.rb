@@ -32,7 +32,7 @@ class FileAttachmentsController < ApplicationController
 
   # GET /file_attachments/1/download
   def download
-    send_file FileAttachmentUploader.root + @file_attachment.file_attachment_url, :filename => @file_attachment.filename
+    send_file FileAttachmentUploader.root + @file_attachment.file_attachment_url, :filename => @file_attachment.filename, :disposition => 'inline'
   end
 
   # GET /file_attachments/new

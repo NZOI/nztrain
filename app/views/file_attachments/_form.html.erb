@@ -12,7 +12,7 @@
 
   <div class="field">
     <%= f.label :name, 'Filename' %><br>
-    <%= f.radio_button(:name_type, "filename") %><%= f.label(:name_type_filename, "upload filename") %><br>
+    <%= f.radio_button(:name_type, "filename") %><%= f.label(:name_type_filename, "original filename (as uploaded)") %><br>
     <%= f.radio_button(:name_type, "other", "data-radio-enable" => :file_attachment_name) %><%= f.label(:name_type_other, "other") %> <%= f.text_field :name %>
   </div>
 
