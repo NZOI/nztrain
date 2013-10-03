@@ -1,0 +1,38 @@
+
+<%= form_for @new_file, :url => group_files_path do |f| %>
+  <%= f.label :file_attachment_id %>
+  <%= f.text_field :file_attachment_id %>
+  <%= f.label :filepath %>
+  <%= f.text_field :filepath %>
+  <%= f.submit 'Add File' %>
+<% end if permitted_to? :update, @group %>
+
+<table class="main_table" >
+  <thead>
+    <tr>
+      <th width="30%">Path</th>
+      <th width="25%">File</th>
+      <% if permitted_to? :update, @group %>
+        <th width="40%"></th>
+        <th></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @files.each do |file| %>
+      <tr>
+        <td><%= File.dirname(file.filepath) %></td>
+        <td><%= link_to File.basename(file.filepath), group_file_path(@group, file) %></td>
+        <% if permitted_to? :update, @group %>
+          <td>
+            <%= form_for file, :url => group_file_path(@group, file) do |f| %>
+              <%= f.text_field :filepath %><%= f.submit 'Move' %>
+            <% end %>
+          </td>
+          <td><%= link_to 'Remove', group_file_path(@group, file), :method => :delete, :data => { :confirm => "Are you sure?" } %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+

@@ -21,6 +21,7 @@
     menu.dom_class = :tab_menu
     menu.item :info, "info", info_group_path(@group)
     menu.item :problems, "problems", group_path(@group) if permitted_to? :access_problems, @group
+    menu.item :files, "files", group_files_path(@group) if permitted_to? :access_files, @group
     menu.item :contests, "contests", contests_group_path(@group) if permitted_to? :access_problems, @group
     menu.item :members, "members", members_group_path(@group), :highlights_on => %r(#{members_group_path(@group)}) if permitted_to? :access_problems, @group
 #  end.render

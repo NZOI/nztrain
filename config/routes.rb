@@ -153,6 +153,7 @@ NZTrain::Application.routes.draw do
       put 'add_contest'
       put 'remove_contest'
     end
+    resources :files, :module => :groups, :except => [:new, :edit]
   end
 
   resources :file_attachments do

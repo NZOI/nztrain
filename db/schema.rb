@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131001083843) do
+ActiveRecord::Schema.define(:version => 20131002083519) do
 
   create_table "ai_contest_games", :force => true do |t|
     t.integer  "ai_contest_id"
@@ -120,7 +120,11 @@ ActiveRecord::Schema.define(:version => 20131001083843) do
     t.integer  "group_id"
     t.integer  "file_attachment_id"
     t.datetime "created_at"
+    t.string   "filepath"
   end
+
+  add_index "group_file_attachments", ["file_attachment_id"], :name => "index_group_file_attachments_on_file_attachment_id"
+  add_index "group_file_attachments", ["group_id", "filepath"], :name => "index_group_file_attachments_on_group_id_and_filepath"
 
   create_table "group_memberships", :force => true do |t|
     t.integer  "group_id"

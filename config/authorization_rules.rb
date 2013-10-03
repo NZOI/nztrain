@@ -129,7 +129,7 @@ authorization do
   end
   # users not in a contest or in open book contest
   role :openbook do
-    has_permission_on :groups, :to => :access_problems do
+    has_permission_on :groups, :to => [:access_problems, :access_files] do
       if_attribute :id => 0
       if_attribute :members => contains { user }
       if_attribute :owner => is{user}
@@ -155,7 +155,7 @@ authorization do
 end
 privileges do
   privilege :manage do
-    includes :create, :inspect, :update, :delete, :use, :access, :access_problems, :invite, :reject
+    includes :create, :inspect, :update, :delete, :use, :access, :access_problems, :access_files, :invite, :reject
   end
   privilege :create, :includes => :new
   privilege :update, :includes => :edit
