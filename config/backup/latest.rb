@@ -30,6 +30,7 @@ Backup::Model.new(:latest, 'Dump of database and associated data to local server
   archive :db_data do |archive|
     archive.root 'db/data'
     archive.add 'uploads'
+    archive.exclude 'uploads/tmp'
   end
 
   compress_with Gzip do |compression|

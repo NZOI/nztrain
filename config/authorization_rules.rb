@@ -20,7 +20,7 @@ authorization do
     has_permission_on :requests, :to => [:accept, :reject, :cancel] do
       if_attribute :pending? => is{true}
     end
-    has_permission_on [:problems, :problem_sets, :contests, :test_cases, :test_sets, :evaluators, :submissions], :to => :manage
+    has_permission_on [:problems, :problem_sets, :contests, :test_cases, :test_sets, :evaluators, :submissions, :file_attachments], :to => :manage
     has_permission_on :contests, :to => [:finalize, :unfinalize]
   end
   role :staff do
@@ -37,6 +37,10 @@ authorization do
     has_permission_on [:problems, :problem_sets, :contests, :test_cases, :test_sets, :evaluators, :submissions], :to => :inspect
     has_permission_on :problems, :to => :submit
     has_permission_on [:problems, :problem_sets], :to => :transfer do
+      if_attribute :owner => is{user}
+    end
+
+    has_permission_on :file_attachments, :to => :manage do
       if_attribute :owner => is{user}
     end
   end
@@ -125,7 +129,7 @@ authorization do
   end
   # users not in a contest or in open book contest
   role :openbook do
-    has_permission_on :groups, :to => :access_problems do
+    has_permission_on :groups, :to => [:access_problems, :access_files] do
       if_attribute :id => 0
       if_attribute :members => contains { user }
       if_attribute :owner => is{user}
@@ -151,14 +155,14 @@ authorization do
 end
 privileges do
   privilege :manage do
-    includes :create, :inspect, :update, :delete, :use, :access, :access_problems, :invite, :reject
+    includes :create, :inspect, :update, :delete, :use, :access, :access_problems, :access_files, :invite, :reject
   end
   privilege :create, :includes => :new
   privilege :update, :includes => :edit
   privilege :delete, :includes => :destroy
   privilege :regrant, :includes => [:grant, :revoke]
   privilege :read, :includes => [:index, :show]
-  privilege :inspect, :includes => [:read, :scoreboard]
+  privilege :inspect, :includes => [:read, :scoreboard, :download]
   privilege :access_problems, :includes => [:read_problems, :submit_problems]
   privilege :index, :includes => :browse
 end

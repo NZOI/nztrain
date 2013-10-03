@@ -1,0 +1,37 @@
+<% content_for :title, "File attachments" %>
+<div id="main-page-title-box"><h1>Listing file attachments</h1></div>
+
+<table class="main_table selectable hoverable">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Filename</th>
+      <th>Attachment</th>
+      <th>Owner</th>
+      <th>Updated</th>
+      <th>Created</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @file_attachments.each do |file_attachment| %>
+      <tr>
+        <td><%= file_attachment.id %></td>
+        <td><%= file_attachment.filename %></td>
+        <td><%= link_to file_attachment.filename, download_file_attachment_path(file_attachment) %></td>
+        <td><%= file_attachment.owner.username %></td>
+        <td><%= file_attachment.updated_at %></td>
+        <td><%= file_attachment.created_at %></td>
+        <td><%= link_to "Show", file_attachment %></td>
+        <td><%= link_to "Edit", edit_file_attachment_path(file_attachment) %></td>
+        <td><%= link_to "Destroy", file_attachment, :method => :delete, :data => { :confirm => "Are you sure?" } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+<%= link_to "New", new_file_attachment_path if permitted_to? :create, :file_attachments %>
+

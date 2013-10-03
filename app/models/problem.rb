@@ -13,6 +13,9 @@ class Problem < ActiveRecord::Base
   has_many :groups, :through => :problem_sets, :uniq => :true
   has_many :group_members, :through => :groups, :source => :users, :uniq => true
 
+  has_many :problem_file_attachments
+  has_many :file_attachments, :through => :problem_file_attachments
+
   validates :title, :presence => true, :uniqueness => { :case_sensitive => false }
 
   before_save do

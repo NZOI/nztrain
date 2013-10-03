@@ -153,6 +153,16 @@ NZTrain::Application.routes.draw do
       put 'add_contest'
       put 'remove_contest'
     end
+    resources :files, :module => :groups, :except => [:new, :edit]
+  end
+
+  resources :file_attachments do
+    collection do
+      get 'my', :to => 'file_attachments#index', :defaults => { :filter => 'my' }
+    end
+    member do
+      get 'download'
+    end
   end
 
   resources :zipped_test_cases do
