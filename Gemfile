@@ -42,6 +42,8 @@ gem 'unicorn'
 # Deploy with Capistrano
 # gem 'capistrano'
 
+# Monitoring
+gem 'newrelic_rpm'
 
 # Bundle the extra gems:
 # gem 'bj'
