@@ -8,9 +8,8 @@
       <th>Output</th>
       <th>Memory limit</th>
       <th>Time limit</th>
-      <th>User</th>
+      <th>Owner</th>
       <th>Score</th>
-      <th></th>
       <% if permitted_to? :update, :problems %>
         <th></th>
       <% end %>
@@ -20,21 +19,13 @@
     </tr>
   </thead>
   <tbody>
+<% fields = [:linked_title, :input, :output, :memory_limit, :time_limit, :linked_owner, :progress_bar] %>
+<% fields << :edit_link if permitted_to? :update, :problems %>
+<% fields << :destroy_link if permitted_to? :destroy, :problems %>
 <% @problems.each do |problem| %>
-    <tr>
-    <td onClick="location.href='<%= problem_path(problem) %>'"><%= problem.title %></td>
-    <td onClick="location.href='<%= problem_path(problem) %>'"><%= problem.input || "stdin" %></td>
-    <td onClick="location.href='<%= problem_path(problem) %>'"><%= problem.output || "stdout" %></td>
-    <td onClick="location.href='<%= problem_path(problem) %>'"><%= problem.memory_limit %></td>
-    <td onClick="location.href='<%= problem_path(problem) %>'"><%= problem.time_limit %></td>
-    <td onClick="location.href='<%= problem_path(problem) %>'"><%= problem.owner_id %></td>
-    <td onClick="location.href='<%= problem_path(problem) %>'"><%= progress_bar(problem.score) if problem.score %></td>
-    <td><%= link_to 'Show', problem %></td>
-    <% if permitted_to? :update, :problems %>
-      <td><%= link_to 'Edit', edit_problem_path(problem) if permitted_to? :update, problem %></td>
-    <% end %>
-    <% if permitted_to? :destroy, :problems %>
-      <td><%= link_to 'Destroy', problem, :data => { :confirm => 'Are you sure?' }, :method => :delete if permitted_to? :destroy, problem %></td>
+  <tr>
+    <% present problem do |problem_presenter| %>
+      <%= problem_presenter.present :td, *fields %>
     <% end %>
   </tr>
 <% end %>
