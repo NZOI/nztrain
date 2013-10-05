@@ -163,25 +163,19 @@
   </div>
 </div>
 <div id="main">
-        <div id="content-container">
-	  <!--<div id="main-message-container">
-	    Congratulations to our current brownie point leader <%= @brownie_leader.email %> who has <%= @brownie_leader.brownie_points %> points!<br/>
-	  </div>-->
-	  <div id="main-container">
-          <!--<div class="message-container">
-	    Most problems now use standard I/O (stdin and stdout) instead of files!<br/>
-	  </div>-->
-	        <% if alert %>
-	          <p id="alert"><%= alert %></p>
-                <% end %>
-	        <% if flash[:notice] %>
-	          <p id="alert"><%= flash[:notice] %></p>
-	        <% end %>
-                <div>
-	        <%= yield(:content).empty? ? yield : yield(:content) %>
-                </div>
-	  </div>
-        </div>
+  <% if alert %>
+    <div class="messagebox alert"><%= alert %></div>
+  <% end %>
+  <% if flash[:notice] %>
+    <div class="messagebox notice"><%= flash[:notice] %></div>
+  <% end %>
+  <% if false %><div class="messagebox notification">Notification here</div><% end %>
+  <% if (yield :title).length>0 %>
+    <div id="main-page-title-box"><h1><%= yield :title %></h1></div>
+  <% end %>
+  <div id="main-container">
+    <%= yield(:content).empty? ? yield : yield(:content) %>
+  </div>
 </div>
 </body>
 </html>

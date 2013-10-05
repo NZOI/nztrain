@@ -44,7 +44,6 @@ a.progress_link:hover {
   top: 0px;
   bottom: 0px;
   background: #2D2D2D;
-  padding-left: 10px;
   color: white;
   z-index: 9;
 }
@@ -58,7 +57,7 @@ a.progress_link:hover {
 
 #menu {
   position: fixed;
-  left: 210px;
+  left: 200px;
   right: 0px;
   min-width: 500px;
   height: 25px;
@@ -74,19 +73,19 @@ a.progress_link:hover {
 }
 
 #side-minify {
-      position: absolute;
+  position: absolute;
   color: white;
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
   width: 19px;
-      right: 0px;
+  right: 0px;
   padding: 6px;
   bottom: 10px;
   color: #666;
   background-color: #333;
   cursor: pointer;
   padding-right: 2px;
-      z-index: 2;
+  z-index: 2;
 }
 
 #side-minify:hover {
@@ -117,47 +116,17 @@ a.progress_link:hover {
 }
 
 #main {
+  padding-top: 25px;
   margin-left: 200px;
   min-height: 100%;
   position: relative;
-}
-
-#content-container {
-  padding-top: 25px;
   padding-bottom: 5em;
 }
-
-#main-message-container {
-  margin: 10px;
-  margin-left: 22px;
-  border-radius: 3px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  padding: 10px;
-  border: 1px solid #C1C1C1;
-  text-align: center;
-  background-color: #333;
-  color: #FAFAFA;  
-}
-
-.message-container {
-  margin: -10px;
-  margin-bottom: 20px;
-  border-radius: 3px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  padding: 10px;
-  border: 1px solid #C1C1C1;
-  text-align: center;
-  background-color: #333;
-  color: #FAFAFA;  
-}
-
 
 #main-container
 {
   margin: 10px;
-  margin-left: 22px;
+  margin-top: 0px;
   padding: 10px;
 }
 
@@ -220,8 +189,7 @@ a.progress_link:hover {
 
 #main-page-title-box
 {
-  margin: -20px 0px 15px -25px;
-  padding: 10px 0px 10px 25px;
+  margin-right: 20px;
   border-bottom: 1px solid black;
 }
 
@@ -230,7 +198,7 @@ a.progress_link:hover {
   font-family: 'Ubuntu', Arial, sans-serif;
   font-style: italic;
   margin: 0;
-  padding: 0;
+  padding: 10px 0px 8px 25px;
 }
 
 #main-container pre {

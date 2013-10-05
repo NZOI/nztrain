@@ -1,8 +1,7 @@
-<% content_for :title, "Submissions" %>
 <% if current_user.id.to_s == params[:by_user] %>
-  <div id="main-page-title-box"><h1>My submissions</h1></div>
+  <% content_for :title, "My submissions" %>
 <% else %>
-  <div id="main-page-title-box"><h1>Listing submissions</h1></div>
+  <% content_for :title, "Submissions" %>
   <% if current_user.is_admin? && !params[:by_user].nil?
        u = User.find(params[:by_user]) %>
     <p><b>User:</b> <%= link_to u.handle, u %></p>
