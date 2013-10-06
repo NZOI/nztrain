@@ -1,4 +1,6 @@
 <% content_for :title, @contest.title %>
+<%= toolbox_push :edit, edit_contest_path(@contest) if permitted_to? :update, @contest %>
+<%= toolbox_push :delete, @contest if permitted_to? :destroy, @contest %>
 
 <% content_for :content do %>
   <table style="background-color: none; border: 0px; width: 100%; font-size: 150%;">
@@ -50,6 +52,5 @@
   <% if permitted_to? :update, @contest %>
     <%= render 'admin' %>
   <% end %>
-  <%= link_to 'Edit', edit_contest_path(@contest) if permitted_to? :update, @contest %>
 <% end %>
 <%= render :template => 'layouts/application' %>

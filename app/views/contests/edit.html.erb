@@ -1,4 +1,5 @@
 <% content_for :title, "Editing #{@contest.title}" %>
+<% toolbox_push :back, @contest %>
 
 <p>
 <%= render 'form' %>
@@ -12,4 +13,3 @@
 <% end %>
 </p>
 <% end %>
-<%= link_to 'Show', @contest %>

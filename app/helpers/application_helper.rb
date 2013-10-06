@@ -35,4 +35,38 @@ module ApplicationHelper
   def in_su?
     session[:su] && !session[:su].empty?
   end
+
+  def icon name
+    content_tag :i, "", :class => "icon-#{name}"
+  end
+
+  def toolbox_push text, link, options = {}
+    if text.class == Symbol
+      newopts = toolbox_options text
+      text = newopts[:text] || text.to_s.capitalize
+      options.reverse_merge! newopts.except(:text)
+    end
+    text = icon(options[:icon]) + text if options.has_key? :icon
+    link_options = options.except(:icon, :color)
+    content_for :toolbox do
+      content_tag :li, :class => options[:color] do
+        link_to link, link_options do
+          text
+        end
+      end
+    end
+  end
+
+  def toolbox_options symbol
+    map = {
+      :back => { :icon => :back, :color => :blue },
+      :delete => { :icon => :trash, :color => :red, :method => :delete, :data => { :confirm => "Are you sure?" } },
+      :edit => { :icon => :edit, :color => :blue },
+      :new => { :icon => :new, :color => :blue },
+      :apply => { :icon => :mail, :color => :blue, :method => :put },
+      :join => { :icon => :login, :color => :green, :method => :put },
+      :leave => { :icon => :logout, :color => :red, :method => :put }
+    }
+    map[symbol]
+  end
 end

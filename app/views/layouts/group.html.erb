@@ -1,4 +1,13 @@
 <% content_for :title, @group.name %>
+<% toolbox_push :edit, edit_group_path(@group) if permitted_to? :update, @group %>
+<% toolbox_push :delete, @group if permitted_to? :destroy, @group %>
+<% if @group.members.exists?(current_user) %>
+  <% toolbox_push :leave, leave_group_path(@group) if permitted_to? :leave, @group %>
+<% elsif permitted_to? :join, @group %>
+  <%= toolbox_push :join, join_group_path(@group)  %>
+<% elsif permitted_to? :apply, @group %>
+  <%= toolbox_push :apply, apply_group_path(@group)  %>
+<% end %>
 <% content_for :content do %>
   <table style="background-color: none; border: 0px; width: 100%; font-size: 150%;">
     <tr>
@@ -6,14 +15,6 @@
       <td><span style="font-size: 200%"><%= @group.problem_sets.count %> </span>problem sets</td>
     </tr>
   </table>
-  <% if @group.members.exists?(current_user) %>
-    <%= link_to 'Leave group', leave_group_path(@group), :method => :put if permitted_to? :leave, @group %>
-  <% elsif permitted_to? :join, @group %>
-    <%= link_to 'Join group', join_group_path(@group), :method => :put  %>
-  <% elsif permitted_to? :apply, @group %>
-    <%= link_to 'Apply to join', apply_group_path(@group), :method => :put  %>
-  <% end %>
-  <%= link_to 'Edit', edit_group_path(@group) if permitted_to? :update, @group %>
   <%=
 #  SimpleNavigation::ItemContainer.new do |menu|
   render_navigation do |menu|

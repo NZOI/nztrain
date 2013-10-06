@@ -1,4 +1,7 @@
 <% content_for :title, @problem.title %>
+<%= toolbox_push :edit, edit_problem_path(@problem) if permitted_to? :update, @problem %> 
+<%= toolbox_push :delete, @problem if permitted_to? :destroy, @problem %> 
+
 <% content_for :content do %>
 
 <% if @problem.input.nil? %>

@@ -1,4 +1,5 @@
 <% content_for :title, "Groups" %>
+<% toolbox_push :new, new_group_path if permitted_to? :create, :groups %>
 
 <table class="main_table hoverable selectable">
   <thead>
@@ -32,7 +33,3 @@
 </table>
 
 <br />
-
-<% if permitted_to? :create, :groups %>
-  <%= link_to 'New Group', new_group_path %>
-<% end %>
