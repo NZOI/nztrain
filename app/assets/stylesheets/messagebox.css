@@ -1,0 +1,18 @@
+div.messagebox {
+  padding: 2px 3px 2px 10px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  border-bottom: 1px solid rgba(0,0,0,0.3);
+  font-weight: bold;
+}
+
+div.notice {
+  background-color: #50E050;
+}
+
+div.alert {
+  background-color: #E05050;
+}
+
+div.notification {
+  background-color: #8080FF;
+}

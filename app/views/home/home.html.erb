@@ -1,4 +1,5 @@
-<div id="main-page-title-box"><h1>Dashboard</h1></div>
+<% content_for :title, "Dashboard" %>
+
 <div style="padding: 0px; padding-right: 250px">
   <div style="float: right; width: 240px; margin: 0px; margin-right: -250px">
     <h2 style="padding-bottom: 10px; border-bottom: 1px solid black; margin-top: 0;">My Groups</h2>
@@ -13,7 +14,7 @@
     <% end %>
   </div>
   <div style="width: 100%">
-    <% if permitted_to? :access_problems, Group.find(0) %>
+    <% if permitted_to? :access_problems, Group.find(1) %>
       <h2>Public Problems</h2>
       <%= render 'problem_sets/index' %>
     <% end %>

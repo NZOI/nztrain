@@ -1,6 +1,5 @@
 <% content_for :title, @ai_contest.title %>
 <% content_for :content do %>
-  <div id="main-page-title-box"><h1><%= @ai_contest.title %></h1></div>
 <p>
   <% if permitted_to? :rejudge, @ai_contest %>
     <%= link_to "Rejudge", rejudge_ai_contest_path(@ai_contest), :method => "post" %>

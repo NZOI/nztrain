@@ -1,5 +1,4 @@
 <% content_for :title, "Users" %>
-<div id="main-page-title-box"><h1>Listing users</h1></div>
 <% if permitted_to? :su, User %>
   <%= render :partial => 'su', :formats => [:js] %>
 <% end %>
