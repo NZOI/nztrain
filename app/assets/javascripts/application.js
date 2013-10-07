@@ -1,6 +1,7 @@
 //= require jquery.min
 //= require jquery_ujs
 //= require jquery.ui.datepicker
+//= require jquery.ui.slider
 //= require jquery-ui-timepicker-addon
 //= require jquery.event.hover-1.0
 //= require jquery.countdown
