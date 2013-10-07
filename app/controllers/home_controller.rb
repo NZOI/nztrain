@@ -4,7 +4,7 @@ class HomeController < ApplicationController
 
     @mygroups = current_user.groups
 
-    @problem_sets = Group.find(1).problem_sets
+    @problem_sets = Group.find(0).problem_sets
 
     respond_to do |format|
       format.html

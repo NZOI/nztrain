@@ -14,7 +14,7 @@
     <% end %>
   </div>
   <div style="width: 100%">
-    <% if permitted_to? :access_problems, Group.find(1) %>
+    <% if permitted_to? :access_problems, Group.find(0) %>
       <h2>Public Problems</h2>
       <%= render 'problem_sets/index' %>
     <% end %>
