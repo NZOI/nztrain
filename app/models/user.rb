@@ -93,7 +93,7 @@ class User < ActiveRecord::Base
   end
 
   def reload(options = nil)
-    super
     remove_instance_variable(:@competing) if defined? @competing
+    super
   end
 end
