@@ -66,10 +66,12 @@ describe Authorization do
         @relation = FactoryGirl.create(:contest_relation, :user_id => users(:user).id, :contest_id => @contest.id, :started_at => DateTime.now.advance(:hours => -1))
         @contest_problem.reload
         @contest_user = users(:user)
+        @contest_user.reload
       end
       after(:all) do
         @relation.destroy
         @contest_problem.reload
+        @contest_user.reload
       end
       it 'can read contest problem' do
         @contest_user.should_be_permitted_to :read, [@contest_problem]

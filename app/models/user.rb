@@ -91,4 +91,9 @@ class User < ActiveRecord::Base
   def openbook?
     !self.competing?
   end
+
+  def reload(options = nil)
+    super
+    remove_instance_variable(:@competing) if defined? @competing
+  end
 end
