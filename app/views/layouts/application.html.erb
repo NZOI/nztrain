@@ -128,8 +128,8 @@
             <ul>
               <table class="invis" style="min-width: 250px">
                 <tr>
-                  <td style="vertical-align: top; padding: 3px"><img src="<%= current_user.avatar.small.url %>" style="background: #a1cca1; padding: 3px;"></td>
-                  <td style="vertical-align: top; padding: 3px; padding-left: 0; width: 100%">
+                  <td style="padding: 3px"><img src="<%= current_user.avatar.small.url %>" style="background: #a1cca1; padding: 3px;"></td>
+                  <td style="padding: 3px; padding-left: 0; width: 100%">
                     <% if in_su? %>
                       <li><%= link_to "exit su", suexit_users_path, :method => 'post' %></li>
                     <% end %>
