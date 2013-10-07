@@ -86,7 +86,7 @@ class User < ActiveRecord::Base
     (self.roles.map(&:name) & roles.map(&:to_s)).any?
   end
   def competing?
-    ContestRelation.active.user(self.id).any?
+    defined?(@competing) ? @competing : @competing = self.contest_relations.active.any?
   end
   def openbook?
     !self.competing?
