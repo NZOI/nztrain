@@ -11,5 +11,5 @@
      p = Problem.find(params[:by_problem]) %>
   <p><b>Problem:</b> <%= link_to p.title, p %></p>
 <% end %>
-<%= ajax_section :id => "page" %>
+<%= render "page" %>
 <% # :reload => '[{"urlregex":"page=([0-9]+)","regexindex":1},{"query":"page"}]' # :reload => [{:urlregex => "page=([0-9]+)", :regexindex => 1},{:query => "page"}] %>

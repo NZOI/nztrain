@@ -1,11 +1,9 @@
-//= require jquery
+//= require jquery.min
 //= require jquery_ujs
-//= require jquery-ui.min
+//= require jquery.ui.datepicker
 //= require jquery-ui-timepicker-addon
 //= require jquery.event.hover-1.0
-//= require jquery.fileinput
 //= require jquery.countdown
-//= require jquery.ba-bbq
 //= require jquery.markitup
 //= require jquery.url
 //= require sets/markdown/set
@@ -102,12 +100,13 @@ $(document).ready(function() {
     	$(this).toggleClass("selected_row");
     });
 
-    $("#nav > ul").superfish({
+    $("#left-menu").superfish({
         animation: {opacity:'show',height:'show'},
         speed: 'fast'
     });
-    $("#nav2 ul").superfish({
-        autoArrows: false,
+
+    $("#right-menu").superfish({
+        cssArrows: false,
         speed: 'fast'
     });
 

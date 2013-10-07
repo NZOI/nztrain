@@ -6,7 +6,6 @@
 
 jQuery(document).ready(function($) {
   $(document).on('click.facebox', 'a[rel*=facebox]', function(e) {
-    if (!this.href.match(/#/)) $(this).attr('href',$.param.querystring(this.href,{ajax_section:'lightbox'}));
     $(this).facebox();
     $(this).trigger('click.facebox');
     return false;

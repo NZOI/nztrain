@@ -69,10 +69,7 @@ class UserController < ApplicationController
         redirect_to request.referrer, :alert => "Password incorrect"
       end
     else
-      respond_to do |format|
-        format.html
-        ajax_respond format, :section_id => "lightbox", :render => { :template => "users/su" }
-      end
+      render "users/su", :layout => !request.xhr?
     end
   end
 

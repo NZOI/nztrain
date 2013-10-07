@@ -11,8 +11,10 @@ gem 'strong_parameters'#, :git => 'git://github.com/rails/strong_parameters.git'
 
 gem 'rubyzip', :require => 'zip/zip'
 
-gem 'jquery-rails', '~> 2.1.1'
+gem 'jquery-rails', '~> 3.0.4'
+gem 'jquery-ui-rails'
 gem 'jquery-historyjs'
+gem 'superfish-rails'
 
 gem "bluecloth"
 gem "albino"
@@ -21,7 +23,6 @@ gem 'markitup_rails'
 gem 'rmagick'
 gem 'carrierwave'
 gem 'will_paginate'
-gem 'ajax_pagination'
 gem 'has_scope'
 gem 'declarative_authorization'
 gem 'recaptcha', :require => 'recaptcha/rails'
