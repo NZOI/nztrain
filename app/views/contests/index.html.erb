@@ -1,7 +1,5 @@
 <% content_for :title, "Contests" %>
+<% toolbox_push :new, new_contest_path if permitted_to? :create, :contests %>
 
 <%= render 'index' %>
 <br>
-<% if permitted_to? :create, :contests %>
-  <%= link_to 'New Contest', new_contest_path %>
-<% end %>

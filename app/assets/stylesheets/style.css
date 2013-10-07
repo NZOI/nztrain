@@ -138,36 +138,6 @@ a.progress_link:hover {
   bottom: 0;
 }
 
-#main-message-container-close {
-  float: right;
-  background: #333;
-  border: 1px solid #C1C1C1;
-  border-left: none;
-  color: white;
-  padding-top: 3px;
-  margin: 10px;
-  padding: 10px;
-  border-radius: 3px;
-  margin-right: -68px;
-  margin-top: -30px;
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
-  cursor: pointer;
-}
-
-#main-message-container-close:hover
-{
-  background-color: #666;
-  color: black;
-}
-
-#alert
-{
-  background-color: #D2D2D2;
-  padding: 5px;
-  margin-bottom: 5px;
-}
-
 #side-logo
 {
   position: relative;
@@ -199,6 +169,73 @@ a.progress_link:hover {
   font-style: italic;
   margin: 0;
   padding: 10px 0px 8px 25px;
+}
+
+#main-toolbox {
+  float: right;
+  margin-right: -5px;
+}
+
+#main-toolbox > li {
+  display: inline-block;
+  border: 2px solid rgba(0,0,0,0.5);
+  background-color: #4040C0;
+  margin: 4px;
+  padding: 0;
+  vertical-align: middle;
+  box-shadow: inset 0 3px 6px rgba(255,255,255,0.5), 0 1px 1px black;
+  -o-box-shadow: inset 0 3px 6px rgba(255,255,255,0.5), 0 1px 1px black;
+  -webkit-box-shadow: inset 0 3px 6px rgba(255,255,255,0.5), 0 1px 1px black;
+  -moz-box-shadow: inset 0 3px 6px rgba(255,255,255,0.5), 0 1px 1px black;
+}
+
+#main-toolbox > li.blue {
+  background-color: #4040C0;
+}
+
+#main-toolbox > li.green {
+  background-color: #30B030;
+}
+
+#main-toolbox > li.red {
+  background-color: #C04040;
+}
+
+#main-toolbox > li > a {
+  display: inline-block;
+  font-weight: bold;
+  color: white;
+  font-family: 'Ubuntu';
+  font-size: 16px;
+  vertical-align: middle;
+  padding: 4px 10px 4px 10px;
+  margin: -2px;
+  text-shadow: 1px 1px black;
+}
+
+#main-toolbox > li > a:hover {
+  text-decoration: none;
+  background-color: rgba(255,255,255,0.1);
+}
+
+#main-toolbox > li:hover {
+  box-shadow: inset 0 3px 6px rgba(255,255,255,0.5), 0 0 0 black;
+  -o-box-shadow: inset 0 3px 6px rgba(255,255,255,0.5), 0 0 0 black;
+  -webkit-box-shadow: inset 0 3px 6px rgba(255,255,255,0.5), 0 0 0 black;
+  -moz-box-shadow: inset 0 3px 6px rgba(255,255,255,0.5), 0 0 0 black;
+  position: relative;
+  top: 1px;
+}
+
+#main-toolbox > li i:before {
+  color: white;
+  margin: 0 4px -2px -3px;
+  vertical-align: 0%;
+  font-size: 20px;
+}
+
+#main-toolbox > li:first-line {
+  vertical-align: middle;
 }
 
 #main-container pre {

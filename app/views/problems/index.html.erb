@@ -1,4 +1,6 @@
 <% content_for :title, "Problems" %>
+<% toolbox_push :new, new_problem_path if permitted_to? :create, :problems %>
+
 <table class="main_table">
   <thead>
     <tr>
@@ -33,6 +35,3 @@
 
 <br />
 
-<% if permitted_to? :create, :problems %>
-  <%= link_to 'New Problem', new_problem_path %>
-<% end %>

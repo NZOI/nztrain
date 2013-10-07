@@ -5,7 +5,7 @@
     <%= stylesheet_link_tag "application" %>
     <%= javascript_include_tag "application", :async => true %>
     <%= javascript_include_tag "http://cdn.mathjax.org/mathjax/2.1-latest/MathJax.js?config=TeX-AMS_HTML", :async => true %>
-    <%= stylesheet_link_tag "http://fonts.googleapis.com/css?family=Ubuntu:400italic"%>
+    <%= stylesheet_link_tag "http://fonts.googleapis.com/css?family=Ubuntu:400italic,Ubuntu:400"%>
     <noscript><style type="text/css">.js_only { display: none; }</style></noscript>
     <%= csrf_meta_tag %>
     <!-- Google Analytics -->
@@ -171,7 +171,10 @@
   <% end %>
   <% if false %><div class="messagebox notification">Notification here</div><% end %>
   <% if (yield :title).length>0 %>
-    <div id="main-page-title-box"><h1><%= yield :title %></h1></div>
+    <div id="main-page-title-box">
+      <ul id="main-toolbox"><%= yield :toolbox %></ul>
+      <h1><%= yield :title %></h1>
+    </div>
   <% end %>
   <div id="main-container">
     <%= yield(:content).empty? ? yield : yield(:content) %>
