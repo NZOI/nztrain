@@ -1,7 +1,8 @@
 class TestCase < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
-  belongs_to :test_set
+  has_many :test_case_relations, :dependent => :destroy
+  has_many :test_sets, :through => :test_case_relations
   validates :input, :presence => true
   validates :output, :presence => true
 

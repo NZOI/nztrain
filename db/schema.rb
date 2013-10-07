@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131002083519) do
+ActiveRecord::Schema.define(:version => 20131007002316) do
 
   create_table "ai_contest_games", :force => true do |t|
     t.integer  "ai_contest_id"
@@ -233,6 +233,13 @@ ActiveRecord::Schema.define(:version => 20131002083519) do
 
   add_index "submissions", ["problem_id", "created_at"], :name => "index_submissions_on_problem_id_and_created_at"
   add_index "submissions", ["user_id", "problem_id"], :name => "index_submissions_on_user_id_and_problem_id"
+
+  create_table "test_case_relations", :id => false, :force => true do |t|
+    t.integer  "test_case_id"
+    t.integer  "test_set_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
 
   create_table "test_cases", :force => true do |t|
     t.text     "input"
