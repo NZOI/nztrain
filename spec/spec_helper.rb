@@ -1,3 +1,6 @@
+require 'coveralls'
+Coveralls.wear!('rails')
+
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
@@ -5,8 +8,6 @@ require 'rspec/rails'
 require 'rspec/autorun'
 require 'capybara/rspec'
 require 'declarative_authorization/maintenance'
-require 'coveralls'
-Coveralls.wear!('rails')
 
 # include seeds
 require "#{Rails.root}/db/seeds.rb"
