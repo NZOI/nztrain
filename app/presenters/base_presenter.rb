@@ -4,11 +4,24 @@ class BasePresenter
     @template = template
   end
 
-  def present tag, *fields
+  def present tags, *fields
     options = fields.extract_options!
-    fields.map do |args|
-      h.content_tag tag, options do
-        args = Array(args)
+    if tags.class != Array
+      options = {tags => options}
+      tags = Array(tags)
+    end
+    fields.map do |fieldargs|
+      present_field tags, fieldargs, options
+    end.reduce(:+)
+  end
+
+private
+
+  def present_field tags, fieldargs, options
+    h.content_tag tags[0], options[tags[0]] do
+      tags = tags.drop(1)
+      if tags.empty?
+        args = Array(fieldargs)
         field = args.slice!(0)
         result = case field
         when Symbol, String
@@ -18,11 +31,11 @@ class BasePresenter
         else
           raise
         end
+      else
+        present_field tags, fieldargs, options
       end
-    end.reduce(:+)
+    end
   end
-
-private
 
   def self.presents name
     define_method name do

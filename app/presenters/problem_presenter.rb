@@ -1,6 +1,6 @@
 class ProblemPresenter < BasePresenter
   presents :problem
-  delegate :title, to: :user
+  delegate :title, to: :problem
 
   present_resource_links
   present_owner_link
