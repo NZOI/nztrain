@@ -42,6 +42,7 @@ gem 'unicorn'
 
 # Monitoring
 gem 'newrelic_rpm'
+gem 'coveralls', require: false
 
 group :development do
   gem 'better_errors'
