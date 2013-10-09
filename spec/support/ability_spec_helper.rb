@@ -5,7 +5,7 @@ module AbilitySpecHelper
   end
   testhelper = AuthorizationTestHelper.new
 
-  User.define_method 'should_be_permitted_to' do |actions,subjects|
+  User.send :define_method, 'should_be_permitted_to' do |actions,subjects|
     testhelper.with_user self do
       Array(actions).each do |action|
         Array(subjects).each do |subject|
@@ -15,7 +15,7 @@ module AbilitySpecHelper
     end
   end
 
-  User.define_method 'should_not_be_permitted_to' do |actions,subjects|
+  User.send :define_method, 'should_not_be_permitted_to' do |actions,subjects|
     testhelper.with_user self do
       Array(actions).each do |action|
         Array(subjects).each do |subject|
