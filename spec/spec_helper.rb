@@ -6,7 +6,7 @@ require 'rspec/autorun'
 require 'capybara/rspec'
 require 'declarative_authorization/maintenance'
 require 'coveralls'
-Coveralls.wear!
+Coveralls.wear!('rails')
 
 # include seeds
 require "#{Rails.root}/db/seeds.rb"
