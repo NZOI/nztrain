@@ -13,8 +13,8 @@ module StrongPresenter
     end
 
     # Checks if fields are visible on first presenter in collection
-    def visible? *args, &block
-      self.first.visible? *args, &block
+    def filter *args
+      self.first.filter *args
     end
   end
 
@@ -66,12 +66,6 @@ module StrongPresenter
     #
     #   user_presenter.presents :username, :email # returns [user_presenter.username, user_presenter.email]
     #
-    # If the block takes one argument, the presented value is passed:
-    #
-    #   <% user_presenter.presents :username, :email do |value| %>
-    #     <td><%= value %></td>
-    #   <% end %>
-    #
     # Or with two arguments, the name of the field is passed first:
     #
     #   <ul>
@@ -80,13 +74,15 @@ module StrongPresenter
     #     <% end %>
     #   </ul>
     #
+    # If only the presented value is desired, use `each`:
+    #
+    #   <% user_presenter.presents(:username, :email).each do |value| %>
+    #     <td><%= value %></td>
+    #   <% end %>
+    #
     # A field can have arguments in an array:
     #
     #   user_presenter.presents :username, [:notifications, :unread] # returns [user_presenter.username, user_presenter.notifications(:unread)]
-    #
-    # Each field can have a field name associated (becoming the first argument passed to block instead of the field method name):
-    #
-    #   user_presenter.presents {"Username" => :username}, {"Email" => :email}, "Address" => :address, "Phone number" => :phone
     #
     # Notice that this interface allows you to concisely put authorization logic in the controller, with a dumb view layer:
     #
@@ -100,7 +96,7 @@ module StrongPresenter
     #       end
     #     end
     #     def show
-    #       @users_presenter = UserPresenter.present_each(User.all).permit!
+    #       @users_presenter = UserPresenter.wrap_each(User.all).permit!
     #     end
     #   end
     #
@@ -113,40 +109,47 @@ module StrongPresenter
     #     </tr>
     #     <% @users_presenter.each do |user_presenter| %>
     #       <tr>
-    #         <% user_presenter.presents *visible_params do |value| %>
+    #         <% user_presenter.presents(*visible_params).each do |value| %>
     #           <td><%= value %></td>
     #         <% end %>
     #       </tr>
     #     <% end %>
     #   </table>
     #
-    def presents *fieldsplat, &block
-      process_fieldsplat(fieldsplat).map do |args|
-        value = self.public_send *args.drop(1)
-        if block_given?
-          if block.arity == 1
-            yield value
-          else
-            yield args[0], value
-          end
-        end
+    def presents *fields, &block
+      process_fields(fields).map do |args|
+        value = self.public_send *args
+        yield args[0], value if block_given?
         value
       end
     end
 
-    # Checks which fields are visible according to what is permitted. Does the same thing as
-    # `presents`, but never calls the method to present each field. Instead, it just returns the
-    # heading name of each field that is visible.
-    def visible? *fieldsplat, &block
-      process_fieldsplat(fieldsplat).map do |args|
-        if block_given?
-          if block.arity == 1
-            yield args[0]
-          else
-            yield args[0], args[1]
-          end
+    # Checks which fields are visible according to what is permitted. An array is returned.
+    # The array can be converted to labels using `to_labels`
+    #
+    def filter *fields
+      fields = process_fields(fields).map(&:first)
+      presenter_class = self.class
+      (class << fields; self; end).class_eval do
+        define_method :to_labels do
+          presenter_class.label fields
         end
-        args[0]
+      end
+      fields
+    end
+
+    # Pass a hash to set field labels { field => label}
+    # Pass an array to retrieve labels for field symbols. If no label is set, the return
+    # value is the humanized field by default.
+    #
+    def self.label fields
+      @labels ||= {}
+      if fields.class == Hash
+        @labels.merge!(fields)
+      else
+        labels = Array(fields).map { |field| @labels[field] || field.to_s.humanize }
+        return labels if fields.respond_to? :map
+        labels.first
       end
     end
 
@@ -170,16 +173,13 @@ module StrongPresenter
     end
 
   private
-    def process_fieldsplat fieldsplat
-      fields = [];
-      fieldsplat.each do |field| # convert everything to arrays
-        if field.class == Hash
-          fields += field.map { |key, value| [key] + Array(value) }
-        else
-          fields << [Array(field).first] + Array(field)
-        end
+    def process_fields fields
+      fields.map! do |field|
+        field = Array(field)
+        field[0] = field[0].to_sym
+        field
       end
-      fields.select! { |field| permitted_attributes.include? Array(field)[1].to_sym } if permitted_attributes != :all
+      fields.select! { |field| permitted_attributes.include? field[0] } if permitted_attributes != :all
       fields
     end
 

@@ -4,7 +4,7 @@
 
 <div style="height: 150px; padding: 25px; padding-left: 200px;">
   <% @user_presenter.presents :username, :name, :email do |key, value| %>
-    <b><%= key.capitalize %>:</b> <%= value %><br>
+    <b><%= UserPresenter.label(key).capitalize %>:</b> <%= value %><br>
   <% end %>
 
   <b>Brownie Points:</b><%= @user.brownie_points %><br>
