@@ -205,6 +205,7 @@ GEM
       actionpack (~> 3.0)
       activemodel (~> 3.0)
       railties (~> 3.0)
+    strong_presenter (0.0.1)
     superfish-rails (1.6.0.1)
     term-ansicolor (1.2.2)
       tins (~> 0.8)
@@ -277,6 +278,7 @@ DEPENDENCIES
   spring
   squeel
   strong_parameters
+  strong_presenter
   superfish-rails
   therubyracer (~> 0.11)
   tilt
