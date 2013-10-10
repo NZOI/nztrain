@@ -1,32 +1,20 @@
 <% content_for :title, "Problems" %>
 <% toolbox_push :new, new_problem_path if permitted_to? :create, :problems %>
 
+<% fields = [{title: :linked_title}, :input, :output, :memory_limit, :time_limit, {owner: :linked_owner}, {progress: :progress_bar}, {"" => :edit_link}, {"" => :destroy_link}] %>
 <table class="main_table">
   <thead>
     <tr>
-      <th>Title</th>
-      <th>Input</th>
-      <th>Output</th>
-      <th>Memory limit</th>
-      <th>Time limit</th>
-      <th>Owner</th>
-      <th>Score</th>
-      <% if permitted_to? :update, :problems %>
-        <th></th>
-      <% end %>
-      <% if permitted_to? :destroy, :problems %>
-        <th></th>
+      <% @problems_presenter.visible? *fields do |field| %>
+        <th><%= "#{field}".humanize %></th>
       <% end %>
     </tr>
   </thead>
   <tbody>
-<% fields = [:linked_title, :input, :output, :memory_limit, :time_limit, :linked_owner, :progress_bar] %>
-<% fields << :edit_link if permitted_to? :update, :problems %>
-<% fields << :destroy_link if permitted_to? :destroy, :problems %>
-<% @problems.each do |problem| %>
+<% @problems_presenter.each do |problem_presenter| %>
   <tr>
-    <% present problem do |problem_presenter| %>
-      <%= problem_presenter.present :td, *fields %>
+    <% problem_presenter.presents *fields do |value| %>
+      <%= content_tag :td, value %>
     <% end %>
   </tr>
 <% end %>

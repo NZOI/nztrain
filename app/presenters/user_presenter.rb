@@ -1,4 +1,4 @@
-class UserPresenter < BasePresenter
+class UserPresenter < ApplicationPresenter
   presents :user
   delegate :username, :name, :email, to: :user
 

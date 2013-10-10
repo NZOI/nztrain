@@ -1,4 +1,4 @@
-class ProblemPresenter < BasePresenter
+class ProblemPresenter < ApplicationPresenter
   presents :problem
   delegate :title, to: :problem
 

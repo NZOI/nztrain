@@ -1,28 +1,24 @@
-<% present @user do |user_presenter| %>
-  <% content_for :title, user_presenter.username %>
+<% content_for :title, @user_presenter.username %>
 
-  <div style="float: left; height: 150px;"><%= user_presenter.avatar %></div>
-  
-  <div style="height: 150px; padding: 25px; padding-left: 200px;">
-    <b>Username:</b> <%= user_presenter.username %><br>
-    <% if permitted_to? :inspect, @user %>
-      <b>Name:</b> <%= user_presenter.name %><br>
-      <b>Email:</b><%= user_presenter.email %><br>
-    <% end %>
+<div style="float: left; height: 150px;"><%= @user_presenter.avatar %></div>
 
-    <b>Brownie Points:</b><%= @user.brownie_points %><br>
-  </div>
-
-  <b> <%= @solved_problems.size %> solved problems: </b>
-  <ul>
-  <% @solved_problems.each do |prob| %>
-    <li>
-    <%= link_to prob.title, prob %>
-    </li>
+<div style="height: 150px; padding: 25px; padding-left: 200px;">
+  <% @user_presenter.presents :username, :name, :email do |key, value| %>
+    <b><%= key.capitalize %>:</b> <%= value %><br>
   <% end %>
-  </ul>
-  <br>
+
+  <b>Brownie Points:</b><%= @user.brownie_points %><br>
+</div>
+
+<b> <%= @solved_problems.size %> solved problems: </b>
+<ul>
+<% @solved_problems.each do |prob| %>
+  <li>
+  <%= link_to prob.title, prob %>
+  </li>
 <% end %>
+</ul>
+<br>
 <%= render 'admin' %>
 
 <%= link_to 'Edit', edit_user_path(@user) if permitted_to? :update, @user %>

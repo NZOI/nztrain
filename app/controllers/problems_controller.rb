@@ -25,17 +25,29 @@ class ProblemsController < ApplicationController
     @problem = Problem.new(:owner => current_user)
   end
 
+  def visible_attributes
+    @_visible_attributes ||= begin
+      visible_attributes = [:linked_title, :input, :output, :memory_limit, :time_limit, :linked_owner, :progress_bar]
+      visible_attributes << :edit_link if permitted_to? :update, @problem
+      visible_attributes << :destroy_link if permitted_to? :destroy, @problem
+      visible_attributes
+    end
+  end
+
   # GET /problems
   # GET /problems.xml
   def index
     case params[:filter].to_s
     when 'my'
-      permitted_to! :manage, Problem.new(:owner_id => current_user.id)
+      @problem = Problem.new(:owner_id => current_user.id)
       @problems = Problem.where(:owner_id => current_user.id).score_by_user(current_user.id).select('*')
     else
-      permitted_to! :manage, Problem.new
+      @problem = Problem.new
       @problems = Problem.score_by_user(current_user.id).select('*')
     end
+    permitted_to! :manage, @problem
+
+    @problems_presenter = ProblemPresenter.wrap_each(@problems).permit(*visible_attributes)
 
     respond_to do |format|
       format.html # index.html.erb

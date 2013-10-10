@@ -5,13 +5,23 @@ class UserController < ApplicationController
     @_permitted_attributes ||= begin
       permitted_attributes = [:name, :avatar, :remove_avatar, :avatar_cache]
       permitted_attributes << :brownie_points if permitted_to? :add_brownie, @user
+      permitted_attributes
     end
     params.require(:user).permit(*@_permitted_attributes)
+  end
+
+  def visible_attributes
+    @_visible_attributes ||= begin
+      visible_attributes = [:username]
+      visible_attributes += [:name, :email] if permitted_to? :inspect, @user
+      visible_attributes
+    end
   end
 
   def show
     @solved_problems = @user.get_solved
 
+    @user_presenter = UserPresenter.wrap(@user).permit(*visible_attributes)
     respond_to do |format|
       format.html
       format.xml {render :xml => @user }
