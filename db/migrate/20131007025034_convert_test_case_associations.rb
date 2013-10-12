@@ -10,5 +10,13 @@ class ConvertTestCaseAssociations < ActiveRecord::Migration
   end
 
   def down
+    add_column :test_cases, :test_set_id, :integer
+    TestCase.find_each do |test_case|
+      sets = test_case.test_sets
+      test_case.test_set_id = sets.first.id
+      sets.drop(1).each do |set|
+        TestCase.create(test_case.attributes.merge(:test_set_id => set.id))
+      end
+    end
   end
 end
