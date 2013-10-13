@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131007025034) do
+ActiveRecord::Schema.define(:version => 20131013050536) do
 
   create_table "ai_contest_games", :force => true do |t|
     t.integer  "ai_contest_id"
@@ -146,6 +146,14 @@ ActiveRecord::Schema.define(:version => 20131007025034) do
     t.integer "problem_set_id"
   end
 
+  create_table "languages", :force => true do |t|
+    t.string   "name"
+    t.string   "compiler"
+    t.boolean  "is_interpreted"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
   create_table "problem_file_attachments", :force => true do |t|
     t.integer "problem_id"
     t.integer "file_attachment_id"
@@ -229,6 +237,7 @@ ActiveRecord::Schema.define(:version => 20131007025034) do
     t.text     "debug_output"
     t.string   "input"
     t.string   "output"
+    t.integer  "language_id"
   end
 
   add_index "submissions", ["problem_id", "created_at"], :name => "index_submissions_on_problem_id_and_created_at"
