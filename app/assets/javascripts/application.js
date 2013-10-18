@@ -1,11 +1,10 @@
-//= require jquery
+//= require jquery.min
 //= require jquery_ujs
-//= require jquery-ui.min
+//= require jquery.ui.datepicker
+//= require jquery.ui.slider
 //= require jquery-ui-timepicker-addon
 //= require jquery.event.hover-1.0
-//= require jquery.fileinput
 //= require jquery.countdown
-//= require jquery.ba-bbq
 //= require jquery.markitup
 //= require jquery.url
 //= require sets/markdown/set
@@ -67,7 +66,7 @@ var duration = 250;
 function shrink() {
     createCookie("expanded", "false", 31);
     $("#side").animate({width:'50px'}, duration);
-    $('#menu').animate({'left':'50px'}, duration);
+    $('#main-menu').animate({'left':'50px'}, duration);
     $('#side-minify').html("&#9654;");
     $('#main').animate({'margin-left':'50px'}, duration);
     $('#side-expanded').animate({'opacity':'0'},duration);
@@ -77,7 +76,7 @@ function shrink() {
 function expand() {
     createCookie("expanded", "true", 31);
     $("#side").animate({width:'200px'}, duration);
-    $('#menu').animate({'left':'200px'}, duration);
+    $('#main-menu').animate({'left':'200px'}, duration);
     $('#side-minify').html("&#9664;");
     $('#main').animate({'margin-left':'200px'}, duration);
     $('#side-expanded').animate({'opacity':'1'},duration);
@@ -102,12 +101,13 @@ $(document).ready(function() {
     	$(this).toggleClass("selected_row");
     });
 
-    $("#nav > ul").superfish({
+    $("#left-menu").superfish({
         animation: {opacity:'show',height:'show'},
         speed: 'fast'
     });
-    $("#nav2 ul").superfish({
-        autoArrows: false,
+
+    $("#right-menu").superfish({
+        cssArrows: false,
         speed: 'fast'
     });
 

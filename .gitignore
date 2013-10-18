@@ -16,3 +16,4 @@
 /db/backup/
 /db/backups/
 /.fontello
+/coverage/.*

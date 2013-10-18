@@ -86,9 +86,14 @@ class User < ActiveRecord::Base
     (self.roles.map(&:name) & roles.map(&:to_s)).any?
   end
   def competing?
-    ContestRelation.active.user(self.id).any?
+    defined?(@competing) ? @competing : @competing = self.contest_relations.active.any?
   end
   def openbook?
     !self.competing?
+  end
+
+  def reload(options = nil)
+    remove_instance_variable(:@competing) if defined? @competing
+    super
   end
 end

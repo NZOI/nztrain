@@ -5,13 +5,17 @@
   color: #2D2D2D;
 }
 
+table.invis {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  border-spacing: 0;
+  width: 100%;
+}
+
 ul, ol {
   margin-left: 30px;
   margin-bottom: 10px;
-}
-
-ul.tab_menu {
-  margin: 0px;
 }
 
 p {
@@ -53,23 +57,6 @@ a.progress_link:hover {
   height: 100%;
   left: 0px;
   right: 0px;
-}
-
-#menu {
-  position: fixed;
-  left: 200px;
-  right: 0px;
-  min-width: 500px;
-  height: 25px;
-  background: #2D2D2D;
-  color: white;
-  z-index: 10;
-  white-space: nowrap;
-}
-
-#controls {
-  float: right;
-  margin-right: 10px;
 }
 
 #side-minify {
@@ -116,7 +103,6 @@ a.progress_link:hover {
 }
 
 #main {
-  padding-top: 25px;
   margin-left: 200px;
   min-height: 100%;
   position: relative;
@@ -353,5 +339,8 @@ input[type="file"] {
   color: white;
 }
 .ui-datepicker {
-  margin-top: 50px;
+  font-size: smaller;
+}
+.ui-datepicker td {
+  padding: 0;
 }

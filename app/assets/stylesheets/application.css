@@ -2,12 +2,12 @@
 *= require skins/markitup/style
 *= require sets/markdown/style
 *= require jquery.countdown
-*= require jquery-ui-1.8.16.custom
-*= require fileinput
+*= require jquery.ui.datepicker
+*= require jquery.ui.slider
 *= require scaffold
-*= require ajax_pagination
 *= require jquery.facebox
 *= require style
+*= require superfish
 *= require nav-superfish
 *= require tab_box
 *= require flip_menu

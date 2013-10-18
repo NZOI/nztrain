@@ -1,16 +1,4 @@
 module ApplicationHelper
-  def present(object, klass = nil)
-    klass ||= begin
-      klass = object.class
-      klass = object.first.class if klass == Array
-      klass = object.to_a.first.class if klass == ActiveRecord::Relation
-      "#{klass}Presenter".constantize
-    end
-    presenter = klass.new(object, self)
-    yield presenter if block_given?
-    presenter
-  end
-
   def progress_bar(percent, link = nil)
     unless percent.nil?
       percent = percent.to_i
