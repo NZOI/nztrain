@@ -238,6 +238,7 @@ ActiveRecord::Schema.define(:version => 20131013050536) do
     t.string   "input"
     t.string   "output"
     t.integer  "language_id"
+    t.string   "old_language"
   end
 
   add_index "submissions", ["problem_id", "created_at"], :name => "index_submissions_on_problem_id_and_created_at"
