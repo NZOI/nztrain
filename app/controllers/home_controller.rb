@@ -6,6 +6,9 @@ class HomeController < ApplicationController
 
     @problem_sets = Group.find(0).problem_sets
 
+    groups_contests = Contest.joins(:groups => :members).where{(groups.id == 0) | (groups.members.id == my{current_user.id})}.distinct
+    @contests = groups_contests.where{(end_time > Time.now)}.order("end_time ASC")
+
     respond_to do |format|
       format.html
     end
