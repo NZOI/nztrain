@@ -47,7 +47,7 @@ class ProblemsController < ApplicationController
     end
     permitted_to! :manage, @problem
 
-    @problems_presenter = ProblemPresenter.wrap_each(@problems).permit(*visible_attributes)
+    @problems_presenter = ProblemPresenter::Collection.new(@problems).permit!(*visible_attributes)
 
     respond_to do |format|
       format.html # index.html.erb
