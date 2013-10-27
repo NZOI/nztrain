@@ -30,7 +30,7 @@ gem 'tilt'
 gem 'simple-navigation'
 gem 'simple_form'
 gem 'facebox-rails'
-gem 'strong_presenter', '~> 0.2'
+gem 'strong_presenter', '~> 0.2.1'
 
 gem 'pg'
 gem 'backup'

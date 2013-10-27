@@ -1,12 +1,3 @@
-PATH
-  remote: /home/ronald/Git/strong_presenter
-  specs:
-    strong_presenter (0.1.0)
-      actionpack (>= 3.0)
-      activemodel (>= 3.0)
-      activesupport (>= 3.0)
-      request_store (~> 1.0.3)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -215,6 +206,11 @@ GEM
       actionpack (~> 3.0)
       activemodel (~> 3.0)
       railties (~> 3.0)
+    strong_presenter (0.2.1)
+      actionpack (>= 3.0)
+      activemodel (>= 3.0)
+      activesupport (>= 3.0)
+      request_store (~> 1.0.3)
     superfish-rails (1.6.0.1)
     term-ansicolor (1.2.2)
       tins (~> 0.8)
@@ -287,7 +283,7 @@ DEPENDENCIES
   spring
   squeel
   strong_parameters
-  strong_presenter!
+  strong_presenter (~> 0.2.1)
   superfish-rails
   therubyracer (~> 0.11)
   tilt
