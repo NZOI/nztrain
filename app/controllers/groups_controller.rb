@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  filter_resource_access :additional_collection => { :browse => :index }, :additional_member => { :info => :show, :contests => :access }
+  filter_resource_access :additional_collection => { :browse => :index, :add_problem_set => :index, :add_contest => :index }, :additional_member => { :info => :show, :contests => :access }
 
   def permitted_params
     @_permitted_attributes ||= begin
