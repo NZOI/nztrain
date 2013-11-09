@@ -5,8 +5,6 @@ class ProblemPresenter < ApplicationPresenter
   present_resource_links
   present_owner_link
 
-  label :linked_title => "Title", :linked_owner => "Owner", :progress_bar => "Progress"
-
   def avatar
     h.tag :img, :src => user.avatar_url
   end

@@ -1,5 +1,14 @@
-
 <%= form_for @new_file, :url => group_files_path do |f| %>
+  <% if @new_file.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@new_file.errors.count, "error") %> prohibited this post from being saved:</h2>
+      <ul>
+      <% @new_file.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
   <%= f.label :file_attachment_id %>
   <%= f.text_field :file_attachment_id %>
   <%= f.label :filepath %>

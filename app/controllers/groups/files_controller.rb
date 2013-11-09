@@ -40,11 +40,12 @@ class Groups::FilesController < ApplicationController
   end
 
   def create
-    @file = @group.group_file_attachments.build(group_file_attachment_params)
-    if @file.save
+    @new_file = @group.group_file_attachments.build(group_file_attachment_params)
+    if @new_file.save
       redirect_to(group_files_path(@group), :notice => "File attachment added")
     else
-      redirect_to(group_files_path(@group), :notice => "File attachment not added")
+      @files = @group.group_file_attachments.order(:filepath)
+      render :action => :index
     end
   end
 

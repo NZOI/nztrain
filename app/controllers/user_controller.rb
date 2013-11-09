@@ -21,7 +21,8 @@ class UserController < ApplicationController
   def show
     @solved_problems = @user.get_solved
 
-    @user_presenter = UserPresenter.wrap(@user).permit(*visible_attributes)
+    @user_presenter = UserPresenter.new(@user).permit!(*visible_attributes)
+
     respond_to do |format|
       format.html
       format.xml {render :xml => @user }

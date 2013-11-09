@@ -1,4 +1,5 @@
 require 'csv'
+require 'zip'
 
 class ZippedTestCasesController < ApplicationController
   # POST /test_cases/bulk_upload
@@ -20,7 +21,7 @@ class ZippedTestCasesController < ApplicationController
 
     new_test_cases = []
 
-    ZipInputStream.open(params[:test_cases_zip].path) do |zip|
+    Zip::InputStream.open(params[:test_cases_zip].path) do |zip|
       while entry = zip.get_next_entry
         if entry.file?
           files_in_zip[entry.name] = entry.get_input_stream.read
@@ -125,7 +126,7 @@ class ZippedTestCasesController < ApplicationController
     filename = name + ".zip"
     t = Tempfile.new("zip-testcases-#{@problem.id}-#{current_user.id}-#{Time.now}")
     spec = ""
-    ZipOutputStream.open(t.path) do |z|
+    Zip::OutputStream.open(t.path) do |z|
       @problem.test_sets.each_with_index do |test_set,index|
         spec += CSV.generate_line([test_set.name,test_set.points]) + "\n"
 

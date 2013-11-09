@@ -3,8 +3,9 @@
 <div style="float: left; height: 150px;"><%= @user_presenter.avatar %></div>
 
 <div style="height: 150px; padding: 25px; padding-left: 200px;">
-  <% @user_presenter.presents :username, :name, :email do |key, value| %>
-    <b><%= UserPresenter.label(key).capitalize %>:</b> <%= value %><br>
+  <% fields = { :username => "Username", :name => "Real Name", :email => "E-mail"} %>
+  <% @user_presenter.presents *fields.keys do |key, value| %>
+    <b><%= fields[key] %>:</b> <%= value %><br>
   <% end %>
 
   <b>Brownie Points:</b><%= @user.brownie_points %><br>

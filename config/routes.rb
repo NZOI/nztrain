@@ -124,6 +124,9 @@ NZTrain::Application.routes.draw do
     collection do
       get 'my', :to => 'groups#index', :defaults => { :filter => 'my' }
       get 'browse'
+
+      put 'add_problem_set'
+      put 'add_contest'
     end
     member do
       get 'contests'
@@ -147,10 +150,7 @@ NZTrain::Application.routes.draw do
         end
       end
 
-      put 'add_problem_set'
       put 'remove_problem_set'
-
-      put 'add_contest'
       put 'remove_contest'
     end
     resources :files, :module => :groups, :except => [:new, :edit]

@@ -1,19 +1,27 @@
 <% content_for :title, "Problems" %>
 <% toolbox_push :new, new_problem_path if permitted_to? :create, :problems %>
 
-<% fields = [:linked_title, :input, :output, :memory_limit, :time_limit, :linked_owner, :progress_bar, :edit_link, :destroy_link] %>
+<% columns = {:linked_title => "Title",
+              :input => "Input",
+              :output => "Output",
+               :memory_limit => "Memory Limt",
+               :time_limit => "Time Limit",
+               :linked_owner => "Owner",
+               :progress_bar => "Progress",
+               :edit_link => "",
+               :destroy_link => ""} %>
 <table class="main_table">
   <thead>
     <tr>
-      <% @problems_presenter.filter(*fields).to_labels.each do |field| %>
-        <th><%= "#{field}".humanize %></th>
+      <% @problems_presenter.select_permitted(*columns.keys) do |key| %>
+        <th><%= columns[key] %></th>
       <% end %>
     </tr>
   </thead>
   <tbody>
 <% @problems_presenter.each do |problem_presenter| %>
   <tr>
-    <% problem_presenter.presents(*fields).each do |value| %>
+    <% problem_presenter.presents(*columns.keys).each do |value| %>
       <%= content_tag :td, value %>
     <% end %>
   </tr>
