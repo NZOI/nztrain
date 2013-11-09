@@ -202,15 +202,18 @@ GEM
       activerecord (>= 3.0)
       activesupport (>= 3.0)
       polyamorous (~> 0.6.0)
+    strong_attributes (0.0.2)
+      activesupport (>= 3.0)
     strong_parameters (0.2.1)
       actionpack (~> 3.0)
       activemodel (~> 3.0)
       railties (~> 3.0)
-    strong_presenter (0.2.1)
+    strong_presenter (0.2.2)
       actionpack (>= 3.0)
       activemodel (>= 3.0)
       activesupport (>= 3.0)
       request_store (~> 1.0.3)
+      strong_attributes (~> 0.0.2)
     superfish-rails (1.6.0.1)
     term-ansicolor (1.2.2)
       tins (~> 0.8)
@@ -283,7 +286,7 @@ DEPENDENCIES
   spring
   squeel
   strong_parameters
-  strong_presenter (~> 0.2.1)
+  strong_presenter (~> 0.2.2)
   superfish-rails
   therubyracer (~> 0.11)
   tilt
