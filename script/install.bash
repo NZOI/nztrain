@@ -37,6 +37,7 @@ bash script/install/nokogiri.bash || exit 1 # nokogiri dependencies
 bash script/install/jdk.bash || exit 1 # required by yui-compressor
 
 sudo bash script/install/isolate.bash || exit 1 # install isolate
+sudo bash script/install/isolock.bash || exit 1 # install isolock
 
 if ${update:=true} ; then
   # stuff that update needs to do as well
