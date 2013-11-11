@@ -5,7 +5,7 @@
 cd /usr/local/src/
 ls
 if [ -d "isolock" ]; then
-  cd moe
+  cd isolock
   done=true
   git pull | grep -q -v 'Already up-to-date.' && done=false
   if $done; then
