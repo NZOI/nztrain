@@ -35,3 +35,7 @@ export BACKUP_RSYNC_USER=${BACKUP_RSYNC_USER}
 export BACKUP_RSYNC_PASS=${BACKUP_RSYNC_PASS}
 export BACKUP_RSYNC_SSH_KEY=${BACKUP_RSYNC_SSH_KEY}
 export BACKUP_RSYNC_PATH="${BACKUP_RSYNC_PATH}"
+
+# Isolate
+export ISOLATE_ROOT="${ISOLATE_ROOT}" # path of linux installation for the isolate sandbox
+

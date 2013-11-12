@@ -38,6 +38,7 @@ bash script/install/jdk.bash || exit 1 # required by yui-compressor
 
 sudo bash script/install/isolate.bash || exit 1 # install isolate
 sudo bash script/install/isolock.bash || exit 1 # install isolock
+sudo bash script/install/debootstrap.bash || exit 1 # install debootstrap ubuntu if required
 
 if ${update:=true} ; then
   # stuff that update needs to do as well

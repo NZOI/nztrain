@@ -1,4 +1,6 @@
 class Isolate
+  RESOURCE_OPTIONS = { :time => '-t', :wall_time => '-w', :mem => '-m', :stack => '-k' }
+  CONFIG = YAML.load_file(File.expand_path('config/isolate.yml', Rails.root))
 
   # Create an isolate box to execute commands within.
   # Pass a block which will be instance_exec-ed, giving access to system, popen, fopen, ...
@@ -40,24 +42,25 @@ class Isolate
   #   specify stderr
   def system *command
     options = command.extract_options!
-    options.assert_valid_keys(:in, :out, :err)
+    options.assert_valid_keys(:in, :out, :err, *RESOURCE_OPTIONS.keys)
     if command.size == 1 && command[0].is_a?(String)
       command = Shellwords.split(command[0])
     end
-    super(*isolate_sandbox(command), options)
+    super(*self.class.send(:sandbox_command, @box_id, command, options.extract!(*RESOURCE_OPTIONS.keys).select{|k,v|v}), options)
   end
 
   # popen a single command in isolate context
   #
   # Example:
   #   Isolate.box { popen("/bin/ls") {|io| puts io.read} }
-  def popen command, mode = "r", &block
+  def popen command, mode = "r", options = {}, &block
+    options.assert_valid_keys(*RESOURCE_OPTIONS.keys)
     if command.is_a? String
       command = Shellwords.split(command)
     elsif !command.is_a? Array
       raise ArgumentError
     end
-    IO.popen isolate_sandbox(command), mode, &block
+    IO.popen self.class.send(:sandbox_command, @box_id, command, options), mode, &block
   end
 
   # Example:
@@ -79,13 +82,13 @@ class Isolate
   #     system("/bin/cat test")
   #   end
   def fopen filename, mode = "r", options = {}, &block
-    File.open(isolate_expand(filename), mode, options, &block)
+    File.open(self.class.send(:file_expand, @box_id, filename), mode, options, &block)
   end
 
   protected
 
   def initialize
-    response = Kernel.send :`, 'isolock'
+    response = Kernel.send :`, "isolock --lock"
     if $?.success?
       @box_id = response.to_i
     else
@@ -99,12 +102,33 @@ class Isolate
     raise UnlockError unless $?.success?
   end
 
-  private
-  def isolate_sandbox command
-    ["isolate","-b#{@box_id}","--run","--"] + command
-  end
+  class << self
+    private
+    def sandbox_command box_id, command, options = {}
+      ["isolate","-b#{box_id}"] + options.map{ |k,v| "#{RESOURCE_OPTIONS[k]}#{v}" } + directory_bindings + environment + ["--run","--"] + command
+    end
 
-  def isolate_expand filename
-    File.expand_path(filename,"/tmp/box/#{@box_id}/box")
+    def file_expand box_id, filename
+      File.expand_path(filename,"/tmp/box/#{box_id}/box")
+    end
+
+    def directory_bindings
+      %w{bin dev lib lib64 usr}.map do |dir|
+        fullpath = File.expand_path(dir, isolate_root)
+        next nil unless File.exist?(fullpath)
+        "--dir=#{File.expand_path(dir, "/")}=#{fullpath}"
+      end.compact
+    end
+
+    # returns root if debootstrap enabled
+    def isolate_root
+      CONFIG['root']
+    end
+
+    def environment
+      Shellwords.split(`cat #{isolate_root}/etc/environment`).map do |pair|
+        "--env=#{pair}"
+      end
+    end
   end
 end

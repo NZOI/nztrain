@@ -146,11 +146,25 @@ else
   BACKUP_RSYNC=0
 fi
 
+if [ -z "$ISOLATE_ROOT" ] ; then
+  anyset=true
+  isolate_root_default=/
+  if [[ $RAILS_ENV = "production" ]] ; then
+    isolate_root_default=/srv/chroot/nztrain
+  fi
+  echo "What is root linux installation for programs run in the isolate sandbox?"
+  echo "Recommendation: '/' for development, '/srv/chroot/nztrain' for production)"
+  echo "Note: a path other than '/' installs a chrooted ubuntu via debootstrap"
+  prompt "Path to isolate root (default=$isolate_root_default): " ISOLATE_ROOT
+  if [[ ! $ISOLATE_ROOT ]] ; then ISOLATE_ROOT=$isolate_root_default ; fi
+fi
+
 shopt -u nocasematch;
 
 if $anyset ; then
   export SERVER_NAME APP_NAME RAILS_ROOT APP_USER RAILS_ENV DATABASE TEST_DATABASE DATABASE_USERNAME UNICORN_PORT
   export SCHEDULE_BACKUPS BACKUP_RSYNC BACKUP_RSYNC_MODE BACKUP_RSYNC_PORT BACKUP_RSYNC_HOST BACKUP_RSYNC_USER BACKUP_RSYNC_PASS BACKUP_RSYNC_SSH_KEY BACKUP_RSYNC_PATH
+  export ISOLATE_ROOT
 
   # generate template
   bash script/template.bash < script/install.cfg.template > script/install.cfg

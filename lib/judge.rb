@@ -7,8 +7,22 @@ class Judge
   CompileSandboxOptions ='-m262144 -w60 -e -i/dev/null'
   StackLimitBytes = 1024 * 4
 
+  attr_accessor :program
+
+  def initialize(program)
+    self.program = program
+  end
+
   def compile!
-    File.open(SourceFileName, 'w') { |f| f.write(program.source)
+    Isolate.box do
+      fopen(SourceFileName, 'w') { |f| f.write(program.source) }
+      execute(program.language.compile(SourceFileName, ExeFileName), :err => :out, :out => "pipe", :mem => 262144, :wall_time => 60)
+
+      # copy output file to safe place
+    end
+  end
+  def compile_old!
+    File.open(SourceFileName, 'w') { |f| f.write(program.source) }
     language = program.language
     compiler = language.compiler
 
@@ -43,7 +57,7 @@ class Judge
     end
     Dir.chdir(self.working_directory)
 
-    if not program.language.is_interpreted
+    if not program.language.interpreted
       return self.compile!
     else
       File.open(exe_file, 'w') { |f| f.write(source) }
@@ -79,4 +93,4 @@ class Judge
       test_case_results[test_case] = self.judge_test_case(test_case)
     end
   end
-
+end

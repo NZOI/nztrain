@@ -60,13 +60,12 @@ if !(User.exists?(0))
   user.save
 end
 
-languages = [{:name => "C++", :compiler => "/usr/bin/g++", :interpreted => false},
-             {:name => "Python", :compiler => "/usr/bin/python", :interpreted => true},
-             {:name => "Haskell", :compiler => "/usr/bin/ghc --make", :interpreted => false},
-             {:name => "C", :compiler => "/usr/bin/gcc", :interpreted => false}]
-languages.each do |language|
-  Language.where(:name => language[:name]).first_or_create!(
-    :compiler => language[:compiler],
-    :is_interpreted => language[:interpreted]);
+
+languages = {"C++" => {:compiler => '/usr/bin/g++', :flags => '-O2 -lm -o %{output}', :interpreted => false},
+             "Python" => {:compiler => '/usr/bin/python', :interpreted => true},
+             "Haskell" => {:compiler => '/usr/bin/ghc --make', :flags => '-O2 -lm -o %{output}', :interpreted => false},
+             "C" => {:compiler => '/usr/bin/gcc', :flags => '-O2 -lm -o %{output}', :interpreted => false}}
+languages.each do |name, configuration|
+  Language.where(:name => name).first_or_create!(configuration);
 end
 
