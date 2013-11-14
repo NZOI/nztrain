@@ -20,5 +20,5 @@ make
 
 chmod +s run/bin/isolate
 
-ln -s /usr/local/src/moe/run/bin/isolate /usr/local/bin
+ln -sf /usr/local/src/moe/run/bin/isolate /usr/local/bin
 
