@@ -3,7 +3,6 @@
 # run this script as root
 
 cd /usr/local/src/
-ls
 if [ -d "isolock" ]; then
   cd isolock
   done=true
