@@ -11,6 +11,7 @@
 /config/backup.yml
 /config/database.yml
 /config/unicorn.yml
+/config/isolate.yml
 /script/install.cfg
 /script/update.time
 /db/backup/
