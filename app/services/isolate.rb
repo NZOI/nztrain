@@ -56,14 +56,16 @@ class Isolate
   # Example:
   #   Isolate.box { popen("/bin/ls") {|io| puts io.read} }
   def popen command, mode = "r", options = {}, &block
-    options.assert_valid_keys(*RESOURCE_OPTIONS.keys)
+    options, mode = mode, "r" if mode.is_a? Hash
+    options.assert_valid_keys(:err, *RESOURCE_OPTIONS.keys)
     if command.is_a? String
       command = Shellwords.split(command)
     elsif !command.is_a? Array
       raise ArgumentError
     end
-    self.class.send(:sandbox_command, @box_id, command, options) do |command|
-      IO.popen command, mode, &block
+
+    self.class.send(:sandbox_command, @box_id, command, options.extract!(*RESOURCE_OPTIONS.keys)) do |command|
+      IO.popen command, mode, options, &block
     end
   end
 
@@ -87,6 +89,31 @@ class Isolate
   #   end
   def fopen filename, mode = "r", options = {}, &block
     File.open(self.class.send(:file_expand, @box_id, filename), mode, options, &block)
+  end
+
+  def tmpfile basename = 'tmpfile'
+    basename = Array(basename) + ['']
+    tmpname = 'tmp/' + basename.join
+    prng = Random.new
+    int = prng.rand(100)
+    while File.exist?(fullname = self.class.send(:file_expand, @box_id, tmpname))
+      int += prng.rand(11..100)
+      tmpname = 'tmp/' + basename[0] + int.to_s + basename[1]
+    end
+    FileUtils.mkdir_p(File.dirname(fullname))
+    FileUtils.touch(fullname)
+    yield tmpname
+  ensure
+    FileUtils.remove(fullname)
+  end
+
+  def exist? filename
+    File.exist?(self.class.send(:file_expand, @box_id, filename))
+  end
+
+  # cleans the box directory of any files by re-initializing
+  def clean!
+    system "isolate -b#{@box_id} --init"
   end
 
   protected

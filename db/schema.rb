@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131112032835) do
+ActiveRecord::Schema.define(:version => 20131117055333) do
 
   create_table "ai_contest_games", :force => true do |t|
     t.integer  "ai_contest_id"
@@ -146,6 +146,14 @@ ActiveRecord::Schema.define(:version => 20131112032835) do
     t.integer "problem_set_id"
   end
 
+  create_table "groups_users", :id => false, :force => true do |t|
+    t.integer "group_id"
+    t.integer "user_id"
+  end
+
+  add_index "groups_users", ["group_id"], :name => "index_groups_users_on_group_id"
+  add_index "groups_users", ["user_id"], :name => "index_groups_users_on_user_id"
+
   create_table "languages", :force => true do |t|
     t.string   "name"
     t.string   "compiler"
@@ -153,6 +161,7 @@ ActiveRecord::Schema.define(:version => 20131112032835) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.string   "flags"
+    t.string   "extension"
   end
 
   create_table "problem_file_attachments", :force => true do |t|
