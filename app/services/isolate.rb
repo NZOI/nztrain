@@ -1,3 +1,5 @@
+require 'open3'
+
 class Isolate
   RESOURCE_OPTIONS = { :time => '-t', :wall_time => '-w', :mem => '-m', :stack => '-k', :processes => '-p', :meta => '-M', :noexec => nil } # TODO: :quota
   CONFIG = YAML.load_file(File.expand_path('config/isolate.yml', Rails.root))
@@ -40,13 +42,12 @@ class Isolate
   #   specify stdout
   # :err
   #   specify stderr
-  def exec *command
+  def exec command
     options = command.extract_options!
     options.assert_valid_keys(:in, :out, :err, *RESOURCE_OPTIONS.keys)
-    if command.size == 1 && command[0].is_a?(String)
-      command = Shellwords.split(command[0])
-    end
-    self.class.send(:sandbox_command, @box_id, command, options.extract!(*RESOURCE_OPTIONS.keys).select{|k,v|v}) do |command|
+    command = self.class.send(:process_command, command)
+
+    self.class.send(:sandbox_command, @box_id, command, extract_resource(options)) do |command|
       system(*command, options)
     end
   end
@@ -58,14 +59,28 @@ class Isolate
   def popen command, mode = "r", options = {}, &block
     options, mode = mode, "r" if mode.is_a? Hash
     options.assert_valid_keys(:err, *RESOURCE_OPTIONS.keys)
-    if command.is_a? String
-      command = Shellwords.split(command)
-    elsif !command.is_a? Array
-      raise ArgumentError
-    end
+    command = self.class.send(:process_command, command)
 
-    self.class.send(:sandbox_command, @box_id, command, options.extract!(*RESOURCE_OPTIONS.keys)) do |command|
-      IO.popen command, mode, options, &block
+    self.class.send(:sandbox_command, @box_id, command, extract_resource(options)) do |command|
+      IO.popen [*command,options], mode, &block
+    end
+  end
+
+  def popen2 command, options = {}, &block
+    options.assert_valid_keys(*RESOURCE_OPTIONS.keys)
+    command = self.class.send(:process_command, command)
+    
+    self.class.send(:sandbox_command, @box_id, command, extract_resource(options)) do |command|
+      Open3.popen2 *command, options, &block
+    end
+  end
+
+  def popen3 command, options = {}, &block
+    options.assert_valid_keys(*RESOURCE_OPTIONS.keys)
+    command = self.class.send(:process_command, command)
+    
+    self.class.send(:sandbox_command, @box_id, command, extract_resource(options)) do |command|
+      Open3.popen3 *command, options, &block
     end
   end
 
@@ -88,7 +103,7 @@ class Isolate
   #     exec("/bin/cat test")
   #   end
   def fopen filename, mode = "r", options = {}, &block
-    File.open(self.class.send(:file_expand, @box_id, filename), mode, options, &block)
+    File.open(expand_path(filename), mode, options, &block)
   end
 
   def tmpfile basename = 'tmpfile'
@@ -96,24 +111,35 @@ class Isolate
     tmpname = 'tmp/' + basename.join
     prng = Random.new
     int = prng.rand(100)
-    while File.exist?(fullname = self.class.send(:file_expand, @box_id, tmpname))
+    while File.exist?(fullname = expand_path(tmpname))
       int += prng.rand(11..100)
       tmpname = 'tmp/' + basename[0] + int.to_s + basename[1]
     end
     FileUtils.mkdir_p(File.dirname(fullname))
     FileUtils.touch(fullname)
-    yield tmpname
-  ensure
-    FileUtils.remove(fullname)
+
+    if block_given?
+      begin
+        yield tmpname
+      ensure
+        FileUtils.remove(fullname)
+      end
+    else
+      return tmpname
+    end
   end
 
   def exist? filename
-    File.exist?(self.class.send(:file_expand, @box_id, filename))
+    File.exist?(expand_path(filename))
   end
 
   # cleans the box directory of any files by re-initializing
   def clean!
-    system "isolate -b#{@box_id} --init"
+    system "isolate -b#{@box_id} --init", :out => '/dev/null'
+  end
+
+  def expand_path filename
+    self.class.send(:file_expand, @box_id, filename)
   end
 
   protected
@@ -133,7 +159,15 @@ class Isolate
     raise UnlockError unless $?.success?
   end
 
+  def extract_resource(options)
+    options.extract!(*RESOURCE_OPTIONS.keys).select{|k,v|v}
+  end
+
   class << self
+    def parse_meta raw
+      Hash[raw.split.map{|e|e.split':'}]
+    end
+
     private
     def sandbox_command box_id, command, options = {}
       boxcmd = ["isolate","-b#{box_id}"] + directory_bindings(options.extract!(:noexec)) + sandbox_options(options) + environment + ["--run","--"]
@@ -171,6 +205,16 @@ class Isolate
     def environment
       Shellwords.split(`cat #{isolate_root}/etc/environment`).map do |pair|
         "--env=#{pair}"
+      end
+    end
+
+    def process_command command
+      if command.is_a? String
+        command = Shellwords.split(command)
+      elsif command.is_a? Array
+        command
+      else
+        raise ArgumentError
       end
     end
   end
