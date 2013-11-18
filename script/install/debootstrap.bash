@@ -42,7 +42,6 @@ if [[ "$ISOLATE_ROOT" != "/" ]] && [[ ! -d "$ISOLATE_ROOT" ]]; then
   ln --force /etc/resolv.conf "$ISOLATE_ROOT/etc/resolv.conf"
 fi
 
-
 if ${update:=true} || ${new_debootstrap:=true} ; then
   chroot "$ISOLATE_ROOT" apt-get update
 fi
@@ -55,5 +54,14 @@ chroot "$ISOLATE_ROOT" apt-get install build-essential # C/C++ (g++, gcc)
 echo "$chroot_install ghc6"
 chroot "$ISOLATE_ROOT" apt-get install ghc6 # Haskell (ghc)
 
+if [ ! -f "$ISOLATE_ROOT/usr/bin/cint.rb" ] ; then
+  cmd="cp `dirname $0`/cint.rb $ISOLATE_ROOT/usr/bin"
+  echo "$cmd"
+  $cmd
+
+  cmd="chmod 0755 $ISOLATE_ROOT/usr/bin/cint.rb"
+  echo "$cmd"
+  $cmd
+fi
 # let user know that chroot installs are finished
 

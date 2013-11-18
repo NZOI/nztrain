@@ -1,7 +1,7 @@
 require 'open3'
 
 class Isolate
-  RESOURCE_OPTIONS = { :time => '-t', :wall_time => '-w', :mem => '-m', :stack => '-k', :processes => '-p', :meta => '-M', :noexec => nil } # TODO: :quota
+  RESOURCE_OPTIONS = { :time => '-t', :wall_time => '-w', :mem => '-m', :stack => '-k', :processes => '-p', :meta => '-M', :stderr => '-r', :stdin => '-i', :stdout => '-o' } # TODO: :quota
   CONFIG = YAML.load_file(File.expand_path('config/isolate.yml', Rails.root))
 
   # Create an isolate box to execute commands within.
@@ -10,11 +10,7 @@ class Isolate
   # Alternatively, the isolate box is passed as an argument to a block with an arity, which is not instance_exec-ed
   def self.box &block
     isolate = self.new
-    if block.arity == 0
-      isolate.instance_exec &block
-    else
-      yield isolate
-    end if block_given?
+    yield isolate if block_given?
     true
   rescue LockError => e
     false
@@ -42,12 +38,8 @@ class Isolate
   #   specify stdout
   # :err
   #   specify stderr
-  def exec command
-    options = command.extract_options!
-    options.assert_valid_keys(:in, :out, :err, *RESOURCE_OPTIONS.keys)
-    command = self.class.send(:process_command, command)
-
-    self.class.send(:sandbox_command, @box_id, command, extract_resource(options)) do |command|
+  def exec command, options = {}
+    sandbox_command(command, options) do |command, options|
       system(*command, options)
     end
   end
@@ -58,49 +50,28 @@ class Isolate
   #   Isolate.box { popen("/bin/ls") {|io| puts io.read} }
   def popen command, mode = "r", options = {}, &block
     options, mode = mode, "r" if mode.is_a? Hash
-    options.assert_valid_keys(:err, *RESOURCE_OPTIONS.keys)
-    command = self.class.send(:process_command, command)
 
-    self.class.send(:sandbox_command, @box_id, command, extract_resource(options)) do |command|
-      IO.popen [*command,options], mode, &block
+    sandbox_command(command) do |command, options|
+      IO.popen [*command, options], mode, &block
     end
   end
 
-  def popen2 command, options = {}, &block
-    options.assert_valid_keys(*RESOURCE_OPTIONS.keys)
-    command = self.class.send(:process_command, command)
-    
-    self.class.send(:sandbox_command, @box_id, command, extract_resource(options)) do |command|
-      Open3.popen2 *command, options, &block
-    end
-  end
-
-  def popen3 command, options = {}, &block
-    options.assert_valid_keys(*RESOURCE_OPTIONS.keys)
-    command = self.class.send(:process_command, command)
-    
-    self.class.send(:sandbox_command, @box_id, command, extract_resource(options)) do |command|
-      Open3.popen3 *command, options, &block
-    end
-  end
-
-  # Example:
-  #   Isolate.box { puts `/bin/ls /` }
-  def `(command)
-    r, w = IO.pipe
-    exec(command, {:out => w})
-    w.close
-    output = r.read
-    r.close
-    output
+  [:popen2, :popen2e, :popen3, :capture2, :capture2e, :capture3].each do |method|
+    class_eval <<EOF
+      def #{method} command, options = {}, &block
+        sandbox_command(command, options) do |command, options|
+          Open3.#{method} *command, options, &block
+        end
+      end
+EOF
   end
 
   # Identical to File.open, except that the filename is automatically appended to the box path
   #
   # Example:
-  #   Isolate.box do
-  #     fopen("test","w") { |f| f.write("hello world\n") }
-  #     exec("/bin/cat test")
+  #   Isolate.box do |box|
+  #     box.fopen("test","w") { |f| f.write("hello world\n") }
+  #     box.exec("/bin/cat test")
   #   end
   def fopen filename, mode = "r", options = {}, &block
     File.open(expand_path(filename), mode, options, &block)
@@ -139,7 +110,7 @@ class Isolate
   end
 
   def expand_path filename
-    self.class.send(:file_expand, @box_id, filename)
+    File.expand_path(filename,"/tmp/box/#{@box_id}/box")
   end
 
   protected
@@ -163,59 +134,54 @@ class Isolate
     options.extract!(*RESOURCE_OPTIONS.keys).select{|k,v|v}
   end
 
+  def sandbox_command command, options = {}
+    boxcmd = ["isolate","-b#{@box_id}"] + directory_bindings(options.extract!(:noexec)) + sandbox_options(extract_resource(options)) + environment + ["--run","--"]
+    yield boxcmd + process_command(command), options
+  end
+
+  def sandbox_options options = {}
+    # TODO: add --cg, --cg-timing --cg-mem
+    options[:processes] = 1 if options[:processes] == false
+    options[:processes] = nil if options[:processes] == true
+    options.map{ |k,v| "#{RESOURCE_OPTIONS[k]}#{v}" }
+  end
+
+  def directory_bindings options = {}
+    options.reverse_merge!({:noexec => false}).assert_valid_keys(:noexec)
+    {'bin' => [], 'dev' => ['dev'], 'lib' => [], 'lib64' => [], 'usr' => []}.map do |dir, opt|
+      fullpath = File.expand_path(dir, isolate_root)
+      boxpath = File.expand_path(dir, "/")
+      opt << 'noexec' if options[:noexec]
+      binding = opt.unshift(fullpath).join(':')
+      next "--dir=#{boxpath}=" unless File.exist?(fullpath)
+      "--dir=#{boxpath}=#{binding}"
+    end.compact
+  end
+
+  # returns root if debootstrap enabled
+  def isolate_root
+    CONFIG['root']
+  end
+
+  def environment
+    Shellwords.split(`cat #{isolate_root}/etc/environment`).map do |pair|
+      "--env=#{pair}"
+    end
+  end
+
+  def process_command command
+    if command.is_a? String
+      command = Shellwords.split(command)
+    elsif command.is_a? Array
+      command
+    else
+      raise ArgumentError
+    end
+  end
+
   class << self
     def parse_meta raw
-      Hash[raw.split.map{|e|e.split':'}]
-    end
-
-    private
-    def sandbox_command box_id, command, options = {}
-      boxcmd = ["isolate","-b#{box_id}"] + directory_bindings(options.extract!(:noexec)) + sandbox_options(options) + environment + ["--run","--"]
-      yield boxcmd + command
-    end
-
-    def sandbox_options options = {}
-      # TODO: add --cg, --cg-timing --cg-mem
-      options[:processes] = 1 if options[:processes] == false
-      options[:processes] = nil if options[:processes] == true
-      options.map{ |k,v| "#{RESOURCE_OPTIONS[k]}#{v}" }
-    end
-
-    def file_expand box_id, filename
-      File.expand_path(filename,"/tmp/box/#{box_id}/box")
-    end
-
-    def directory_bindings options = {}
-      options.reverse_merge!({:noexec => false}).assert_valid_keys(:noexec)
-      {'bin' => [], 'dev' => ['dev'], 'lib' => [], 'lib64' => [], 'usr' => []}.map do |dir,opt|
-        fullpath = File.expand_path(dir, isolate_root)
-        boxpath = File.expand_path(dir, "/")
-        opt << 'noexec' if options[:noexec]
-        binding = opt.unshift(fullpath).join(':')
-        next "--dir=#{boxpath}=" unless File.exist?(fullpath)
-        "--dir=#{boxpath}=#{binding}"
-      end.compact
-    end
-
-    # returns root if debootstrap enabled
-    def isolate_root
-      CONFIG['root']
-    end
-
-    def environment
-      Shellwords.split(`cat #{isolate_root}/etc/environment`).map do |pair|
-        "--env=#{pair}"
-      end
-    end
-
-    def process_command command
-      if command.is_a? String
-        command = Shellwords.split(command)
-      elsif command.is_a? Array
-        command
-      else
-        raise ArgumentError
-      end
+      Hash[raw.split("\n").map{|e|e.strip.split(':',2)}].symbolize_keys.reverse_merge!(:status => 'OK')
     end
   end
 end
