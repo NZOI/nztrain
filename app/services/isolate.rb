@@ -56,11 +56,29 @@ class Isolate
     end
   end
 
-  [:popen2, :popen2e, :popen3, :capture2, :capture2e, :capture3].each do |method|
+  ['2', '2e', '3'].each do |suffix|
     class_eval <<EOF
-      def #{method} command, options = {}, &block
+      def popen#{suffix} command, options = {}, &block
         sandbox_command(command, options) do |command, options|
-          Open3.#{method} *command, options, &block
+          Open3.popen#{suffix} *command, options, &block
+        end
+      end
+
+      def capture#{suffix} command, options = {}, &block
+        stdin_data = options.delete(:stdin_data) || ''
+        binmode = options.delete(:binmode)
+        popen#{suffix} command, options do |i, *p, t|
+          if binmode
+            i.binmode
+            p.each(&:binmode)
+          end
+          pipe_reader = p.map { |p| Thread.new { p.read } }
+          begin
+            i.write stdin_data
+          rescue Errno::EPIPE
+          end
+          i.close
+          [*pipe_reader.map(&:value), t.value]
         end
       end
 EOF

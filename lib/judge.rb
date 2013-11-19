@@ -76,15 +76,20 @@ class Judge
   def judge_test_case(test_case, run_command)
     result = run_test_case(test_case, run_command)
     result['evaluator'] = evaluate_output(test_case, result['output'], problem.evaluator)
+    result['output'] = truncate_output(result['output']) # store only a small portion
     result
   end
 
   def run_test_case(test_case, run_command)
     result = {}
-    box.fopen(program.input,"w") { |f| f.write(test_case.input) } unless program.input.nil?
     metafile = File.expand_path("case#{test_case.id}.meta", tmpdir)
     resource_limits = { :mem => problem.memory_limit*1024, :time => problem.time_limit, :wall_time => problem.time_limit*3+5 }
-    run_opts = resource_limits.reverse_merge(:processes => false, :meta => metafile, :stderr => '/dev/null', :stdin_data => test_case.input)
+    run_opts = resource_limits.reverse_merge(:processes => false, :meta => metafile, :stderr => '/dev/null')
+    if program.input.nil?
+      run_opts[:stdin_data] = test_case.input
+    else
+      box.fopen(program.input,"w") { |f| f.write(test_case.input) }
+    end
     result['output'], result['box'], status = box.capture3(run_command, run_opts)
     result['stat'] = status.to_i
     result['meta'] = File.open(metafile) { |f| Isolate.parse_meta(f.read) }
@@ -106,7 +111,7 @@ class Judge
         file.write(problem.evaluator.source.gsub(/\r\n?/, "\n"))
       end
       metafile = File.expand_path("eval#{test_case.id}.meta", tmpdir)
-      resource_limits = { :mem => 262144, :time => problem.time_limit, :wall_time => problem.time_limit*3+30 }
+      resource_limits = { :mem => 262144, :time => problem.time_limit*3, :wall_time => problem.time_limit*3+30 }
       box.fopen("actual","w") { |f| f.write(actual) } # DEPRECATED
       box.fopen("input","w") { |f| f.write(test_case.input) } # DEPRECATED
       box.fopen("expected","w") { |f| f.write(expected) } # DEPRECATED
@@ -114,8 +119,6 @@ class Judge
       eval_output = nil
       str_to_pipes(test_case.input, expected) do |input_stream, output_stream|
         run_opts = resource_limits.reverse_merge(:processes => true, :meta => metafile, 3 => input_stream, 4 => output_stream, :stdin_data => actual)
-        #run_opts = resource_limits.reverse_merge(:processes => true, :meta => metafile)
-        #### TODO: Fix interpreter directive not working through isolate
         output, result['box'], status = box.capture3("./#{EvalFileName} #{deprecated_args}", run_opts )
         eval_output = output.strip.split(nil,2)
         result['stat'] = status.to_i
@@ -188,4 +191,7 @@ class Judge
     output.split("\n").map{|s|s.rstrip.chomp}.join("\n").chomp << "\n"
   end
   
+  def truncate_output output
+    output.slice(0,100).split("\n").take(5).join("\n")
+  end
 end

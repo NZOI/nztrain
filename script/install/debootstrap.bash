@@ -51,6 +51,9 @@ chroot_install="$ chroot \"$ISOLATE_ROOT\" apt-get install"
 echo "$chroot_install build-essential"
 chroot "$ISOLATE_ROOT" apt-get install build-essential # C/C++ (g++, gcc)
 
+echo "$chroot_install ruby"
+chroot "$ISOLATE_ROOT" apt-get install ruby # Ruby (ruby)
+
 echo "$chroot_install ghc6"
 chroot "$ISOLATE_ROOT" apt-get install ghc6 # Haskell (ghc)
 
