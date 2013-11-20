@@ -14,7 +14,7 @@ gem 'jquery-historyjs'
 gem 'superfish-rails'
 
 gem "bluecloth"
-gem "albino"
+#gem "albino" # library is deprecated
 gem "nokogiri"
 gem 'markitup_rails'
 gem 'rmagick'
