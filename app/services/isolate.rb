@@ -40,7 +40,7 @@ class Isolate
   #   specify stderr
   def exec command, options = {}
     sandbox_command(command, options) do |command, options|
-      system(*command, options)
+      system(*command, options.reverse_merge(:close_others => true))
     end
   end
 
@@ -82,6 +82,24 @@ class Isolate
         end
       end
 EOF
+  end
+
+  # like capture3, but isolate overrides stderr, so capture3 returns [stdout_and_stderr, box-stderr, status]
+  # capture5 returns [stdout, stderr, box-stderr, meta, status]
+  # meta is the key-value list of information isolate outputs related to resource usage, signals and how the program exited
+  def capture5 command, options = {}, &block
+    # if isolate adds functionality to close file descriptors box_inside before execve, these files can be converted to pipes without security implications
+    metafile = Tempfile.new('metafile')
+    logfile = tmpfile
+    options.reverse_merge!(:stderr => logfile, :meta => metafile.path)
+    stdout, boxlog, status = capture3(command, options, &block)
+    metafile.open
+    meta = self.class.parse_meta(metafile.read)
+    stderr = File.open(expand_path(logfile)) { |f| f.read }
+    return stdout, stderr, boxlog, meta, status
+  ensure
+    metafile.close! unless metafile.nil?
+    FileUtils.remove(expand_path(logfile)) unless logfile.nil?
   end
 
   # Identical to File.open, except that the filename is automatically appended to the box path
@@ -197,9 +215,20 @@ EOF
     end
   end
 
+  def pipe_to_string(num = 1)
+    pipes = 1.upto(num).map do
+      IO.pipe
+    end
+    readers = pipes.map(&:first).map{ |r| Thread.new { r.read; r.close } }
+    ws = pipes.map(&:last)
+    result = yield *ws
+    ws.each(&:close)
+    readers.map(&:value)+Array(result)
+  end
+
   class << self
     def parse_meta raw
-      Hash[raw.split("\n").map{|e|e.strip.split(':',2)}].symbolize_keys.reverse_merge!(:status => 'OK')
+      Hash[raw.split("\n").map{|e|e.strip.split(':',2)}].reverse_merge!('status' => 'OK')
     end
   end
 end

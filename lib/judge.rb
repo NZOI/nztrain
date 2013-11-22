@@ -62,10 +62,9 @@ class Judge
       compile_command = program.language.compile_command(:source => source_file, :output => output)
       metafile = File.expand_path("compile.meta", tmpdir)
       resource_limits = { :mem => 262144, :wall_time => 60, :processes => true }
-      result['output'], result['box'], status = box.capture3(compile_command, resource_limits.reverse_merge(:meta => metafile, :stderr => '/dev/null'))
+      result.merge!(Hash[%w[output log box meta stat].zip(box.capture5(compile_command, resource_limits))])
       result['output'] = "No output." if result['output'].empty?
-      result['stat'] = status.to_i
-      result['meta'] = File.open(metafile) { |f| Isolate.parse_meta(f.read) }
+      result['stat'] = result['stat'].exitstatus
     end
     FileUtils.copy(box.expand_path(output), File.expand_path(output, tmpdir)) if result['stat']
     return result
@@ -82,17 +81,15 @@ class Judge
 
   def run_test_case(test_case, run_command)
     result = {}
-    metafile = File.expand_path("case#{test_case.id}.meta", tmpdir)
     resource_limits = { :mem => problem.memory_limit*1024, :time => problem.time_limit, :wall_time => problem.time_limit*3+5 }
-    run_opts = resource_limits.reverse_merge(:processes => false, :meta => metafile, :stderr => '/dev/null')
+    run_opts = resource_limits.reverse_merge(:processes => false)
     if program.input.nil?
       run_opts[:stdin_data] = test_case.input
     else
       box.fopen(program.input,"w") { |f| f.write(test_case.input) }
     end
-    result['output'], result['box'], status = box.capture3(run_command, run_opts)
-    result['stat'] = status.to_i
-    result['meta'] = File.open(metafile) { |f| Isolate.parse_meta(f.read) }
+    result.merge!(Hash[%w[output log box meta stat].zip(box.capture5(run_command, run_opts))])
+    result['stat'] = result['stat'].exitstatus
     box.fopen(program.output) { |f| result['output'] = f.read } unless program.output.nil?
     return result
   ensure
@@ -110,22 +107,20 @@ class Judge
         file.chmod(0700)
         file.write(problem.evaluator.source.gsub(/\r\n?/, "\n"))
       end
-      metafile = File.expand_path("eval#{test_case.id}.meta", tmpdir)
       resource_limits = { :mem => 262144, :time => problem.time_limit*3, :wall_time => problem.time_limit*3+30 }
       box.fopen("actual","w") { |f| f.write(actual) } # DEPRECATED
       box.fopen("input","w") { |f| f.write(test_case.input) } # DEPRECATED
       box.fopen("expected","w") { |f| f.write(expected) } # DEPRECATED
       deprecated_args = "input actual expected" # DEPRECATED
       eval_output = nil
-      str_to_pipes(test_case.input, expected) do |input_stream, output_stream|
-        run_opts = resource_limits.reverse_merge(:processes => true, :meta => metafile, 3 => input_stream, 4 => output_stream, :stdin_data => actual)
-        output, result['box'], status = box.capture3("./#{EvalFileName} #{deprecated_args}", run_opts )
+      str_to_pipe(test_case.input, expected) do |input_stream, output_stream|
+        run_opts = resource_limits.reverse_merge(:processes => true, 3 => input_stream, 4 => output_stream, :stdin_data => actual)
+        output, result['log'], result['box'], result['meta'], status = box.capture5("./#{EvalFileName} #{deprecated_args}", run_opts )
         eval_output = output.strip.split(nil,2)
-        result['stat'] = status.to_i
+        result['stat'] = status.exitstatus
       end
-      result['meta'] = File.open(metafile) { |f| Isolate.parse_meta(f.read) }
       if eval_output.empty? # DEPRECATED
-        result['evaluation'] = 0 if result['stat'] == 1 && result['meta']['status'] == 'RE' && result['meta']['exitcode'] == 1 # DEPRECATED
+        result['evaluation'] = 0 if result['stat'] == 1 && result['meta']['status'] == 'RE' && result['meta']['exitcode'] == '1' # DEPRECATED
         result['evaluation'] = 1 if result['stat'] == 0 # DEPRECATED
       else
         result['evaluation'] = eval_output[0].to_f
@@ -167,8 +162,8 @@ class Judge
     result = {}
     result['status'] = [*sets.map{ |s| s['status'] }, (sets.compact.count<sets.count) ? 1 : 0].max
     if result['status'] == 0
-      denominator = test_sets.map(&:points).inject(&:+)
-      numerator = test_sets.map{ |s| (graded_sets[s.id]['evaluation'] * s.points).floor }.inject(&:+)
+      denominator = test_sets.map(&:points).inject(&:+).to_f
+      numerator = test_sets.map{ |s| (graded_sets[s.id]['evaluation'] * s.points).floor }.inject(&:+).to_f
       result['evaluation'] = numerator/denominator
       result['score'] = (result['evaluation']*100).floor
     end
@@ -176,10 +171,17 @@ class Judge
   end
 
   # Utility methods
-  def str_to_pipes(*strings)
+  def str_to_pipe(*strings)
     pipes = strings.map do |str|
       r, w = IO.pipe
-      Thread.new { w.write(str); w.close } # to avoid full pipe deadlocks
+      Thread.new do # to avoid full pipe deadlocks
+        begin
+          w.write(str)
+        rescue Errno::EPIPE
+        ensure
+          w.close
+        end
+      end
       r
     end
     result = yield *pipes
