@@ -12,5 +12,6 @@
 
 cmd="sudo apt-get install openjdk-6-jdk" # java required by yui-compressor gem
 echo "$ $cmd"
-$cmd || exit 1
+$cmd
+[[ $? -le 1 ]] || exit 1 # apt-get exit 0 = success, 1 = decline, otherwise unknown error
 

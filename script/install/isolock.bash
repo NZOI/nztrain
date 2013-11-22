@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
 # run this script as root
+source `dirname $0`/../install.cfg
 
-cd /usr/local/src/
+isolockuser=isolock
+srclocation=/usr/local/src
+cd $srclocation
 if [ -d "isolock" ]; then
   cd isolock
   done=true
@@ -11,13 +14,19 @@ if [ -d "isolock" ]; then
     exit
   fi
 else
-  git clone https://github.com/ronalchn/isolock.git
-  cd isolock
+  git clone https://github.com/ronalchn/isolock.git && cd isolock || exit 1
 fi
 
-make
+if ! id -u $isolockuser >/dev/null 2>&1; then
+  useradd -r isolock
+fi
 
-chmod +s bin/isolock
+make && chown $isolockuser bin/isolock && chgrp $APP_USER bin/isolock && chmod 6750 bin/isolock || {
+  echo "Failure to setup isolock permissions - aborting"
+  cd ..
+  rm -r $srclocation/isolock
+  exit 1
+}
 
-ln -s /usr/local/src/isolock/bin/isolock /usr/local/bin
+ln -sf $srclocation/isolock/bin/isolock /usr/local/bin
 

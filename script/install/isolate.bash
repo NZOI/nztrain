@@ -3,7 +3,8 @@
 # run this script as root
 source `dirname $0`/../install.cfg
 
-cd /usr/local/src/
+srclocation=/usr/local/src
+cd $srclocation
 if [ -d "moe" ]; then
   cd moe
   done=true
@@ -12,15 +13,22 @@ if [ -d "moe" ]; then
     exit
   fi
 else
-  git clone -b nztrain https://github.com/NZOI/moe-cms moe
-  cd moe
+  git clone -b nztrain https://github.com/NZOI/moe-cms moe && cd moe || exit 1
 fi
 
-./configure
-make
+./configure && make || {
+  echo "Failure when configuring or making isolate - aborting"
+  cd ..
+  rm -r moe
+  exit 1
+}
 
-chgrp $APP_USER run/bin/isolate
-chmod 4750 run/bin/isolate
+chgrp $APP_USER run/bin/isolate && chmod 4750 run/bin/isolate || {
+  echo "Failure to setup isolate permissions - aborting"
+  cd ..
+  rm -r $srclocation/moe
+  exit 1
+}
 
-ln -sf /usr/local/src/moe/run/bin/isolate /usr/local/bin
+ln -sf $srclocation/moe/run/bin/isolate /usr/local/bin
 
