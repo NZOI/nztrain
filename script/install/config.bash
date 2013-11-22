@@ -159,12 +159,20 @@ if [ -z "$ISOLATE_ROOT" ] ; then
   if [[ ! $ISOLATE_ROOT ]] ; then ISOLATE_ROOT=$isolate_root_default ; fi
 fi
 
+declare -p ISOLATE_CGROUPS &> /dev/null || while [ -z "$ISOLATE_CGROUPS" ] ; do
+  anyset=true
+  prompt 'Install control groups for isolate? [Y/n]' ISOLATE_CGROUPS
+  shopt -s nocasematch;
+  if [[ yes =~ ^$ISOLATE_CGROUPS ]] ; then ISOLATE_CGROUPS=true
+  else ISOLATE_CGROUPS=false; fi
+done
+
 shopt -u nocasematch;
 
 if $anyset ; then
   export SERVER_NAME APP_NAME RAILS_ROOT APP_USER RAILS_ENV DATABASE TEST_DATABASE DATABASE_USERNAME UNICORN_PORT
   export SCHEDULE_BACKUPS BACKUP_RSYNC BACKUP_RSYNC_MODE BACKUP_RSYNC_PORT BACKUP_RSYNC_HOST BACKUP_RSYNC_USER BACKUP_RSYNC_PASS BACKUP_RSYNC_SSH_KEY BACKUP_RSYNC_PATH
-  export ISOLATE_ROOT
+  export ISOLATE_ROOT ISOLATE_CGROUPS
 
   # generate template
   bash script/template.bash < script/install.cfg.template > script/install.cfg

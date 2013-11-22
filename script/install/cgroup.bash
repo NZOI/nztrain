@@ -2,5 +2,9 @@
 
 # run this script as root
 
-apt-get install cgroup-bin libcgroup1
+source "`dirname $0`/../install.cfg"
+
+if $ISOLATE_CGROUPS; then
+  apt-get install cgroup-bin libcgroup1
+fi
 

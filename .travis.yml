@@ -9,7 +9,7 @@ rvm:
 #  - "sh -e /etc/init.d/xvfb start"
 
 before_script:
-  - RAILS_ENV=development DATABASE_USERNAME=postgres DATABASE= TEST_DATABASE=nztraintest SCHEDULE_BACKUPS=0 bash script/install/config.bash --defaults
+  - RAILS_ENV=development DATABASE_USERNAME=postgres DATABASE= TEST_DATABASE=nztraintest SCHEDULE_BACKUPS=0 ISOLATE_ROOT=/ ISOLATE_CGROUPS=false bash script/install/config.bash --defaults
   - AUTOCONFIRM=true script/install.bash --skip-update
   - rake db:test:load
 script: bundle exec rspec
