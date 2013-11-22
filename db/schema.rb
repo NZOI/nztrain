@@ -146,14 +146,6 @@ ActiveRecord::Schema.define(:version => 20131117055333) do
     t.integer "problem_set_id"
   end
 
-  create_table "groups_users", :id => false, :force => true do |t|
-    t.integer "group_id"
-    t.integer "user_id"
-  end
-
-  add_index "groups_users", ["group_id"], :name => "index_groups_users_on_group_id"
-  add_index "groups_users", ["user_id"], :name => "index_groups_users_on_user_id"
-
   create_table "languages", :force => true do |t|
     t.string   "name"
     t.string   "compiler"
@@ -237,7 +229,6 @@ ActiveRecord::Schema.define(:version => 20131117055333) do
 
   create_table "submissions", :force => true do |t|
     t.text     "source"
-    t.string   "language"
     t.integer  "score"
     t.integer  "user_id"
     t.integer  "problem_id"
@@ -248,7 +239,6 @@ ActiveRecord::Schema.define(:version => 20131117055333) do
     t.string   "input"
     t.string   "output"
     t.integer  "language_id"
-    t.string   "old_language"
   end
 
   add_index "submissions", ["problem_id", "created_at"], :name => "index_submissions_on_problem_id_and_created_at"
