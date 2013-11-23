@@ -17,12 +17,11 @@ class Judge
     setup_judging do
       if program.language.interpreted
         File.open(File.expand_path(ExeFileName, tmpdir)) { |f| f.write(program.source) }
+        run_command = program.language.compile_command(:source => ExeFileName)
       else
         result['compile'] = compile!(ExeFileName) # possible caching
+        run_command = "./#{ExeFileName}"
       end
-
-      run_command = "./#{ExeFileName}"
-      run_command = program.language.compile_command(:source => ExeFileName) if program.language.interpreted
 
       # test cases
       result['test_cases'] = {}
@@ -56,16 +55,7 @@ class Judge
   end
 
   def compile! output
-    result = {}
-    box.tmpfile(["program", program.language.extension]) do |source_file|
-      box.fopen(source_file, 'w') { |f| f.write(program.source) }
-      compile_command = program.language.compile_command(:source => source_file, :output => output)
-      metafile = File.expand_path("compile.meta", tmpdir)
-      resource_limits = { :mem => 262144, :wall_time => 60, :processes => true }
-      result.merge!(Hash[%w[output log box meta stat].zip(box.capture5(compile_command, resource_limits))])
-      result['output'] = "No output." if result['output'].empty?
-      result['stat'] = result['stat'].exitstatus
-    end
+    result = program.language.compile(box, program.source, output, :mem => 262144, :wall_time => 60)
     FileUtils.copy(box.expand_path(output), File.expand_path(output, tmpdir)) if result['stat']
     return result
   ensure
@@ -120,7 +110,7 @@ class Judge
         result['stat'] = status.exitstatus
       end
       if eval_output.empty? # DEPRECATED
-        result['evaluation'] = 0 if result['stat'] == 1 && result['meta']['status'] == 'RE' && result['meta']['exitcode'] == '1' # DEPRECATED
+        result['evaluation'] = 0 if result['stat'] == 1 && result['meta']['status'] == 'RE' && result['meta']['exitcode'] == 1 # DEPRECATED
         result['evaluation'] = 1 if result['stat'] == 0 # DEPRECATED
       else
         result['evaluation'] = eval_output[0].to_f

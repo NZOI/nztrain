@@ -1,25 +1,31 @@
 require 'open3'
 
 class Isolate
-  RESOURCE_OPTIONS = { :time => '-t', :wall_time => '-w', :mem => '-m', :stack => '-k', :processes => '-p', :meta => '-M', :stderr => '-r', :stdin => '-i', :stdout => '-o' } # TODO: :quota
-  CONFIG = YAML.load_file(File.expand_path('config/isolate.yml', Rails.root))
+  private
+  RESOURCE_OPTIONS = { :time => '-t', :wall_time => '-w', :extra_time => '-x', :mem => '-m', :stack => '-k', :processes => '-p', :meta => '-M', :stderr => '-r', :stdin => '-i', :stdout => '-o', :cg => '--cg', :cg_timing => '--cg-timing', :cg_mem => '--cg-mem=' } # TODO: :quota
+  CONFIG = YAML.load_file(File.expand_path('config/isolate.yml', Rails.root)).symbolize_keys
+  META = { 'time' => :to_f, 'time-wall' => :to_f, 'max-rss' => :to_i, 'csw-voluntary' => :to_i, 'csw-forced' => :to_i, 'killed' => :to_i, 'cg-mem' => :to_i, 'exitsig' => :to_i, 'exitcode' => :to_i }
 
+  public
   # Create an isolate box to execute commands within.
   # Pass a block which will be instance_exec-ed, giving access to exec, popen, fopen, ...
   # 
   # Alternatively, the isolate box is passed as an argument to a block with an arity, which is not instance_exec-ed
-  def self.box &block
-    isolate = self.new
+  def self.box options = {}, &block
+    options.reverse_merge!(:cg => has_cgroups?).assert_valid_keys(:cg)
+    raise CGroupsUnavailableError if options[:cg] && !has_cgroups?
+    isolate = self.new(options)
     yield isolate if block_given?
     true
   rescue LockError => e
     false
   ensure
-    isolate.send :destroy
+    isolate.send(:destroy, options)
   end
   
   class LockError < StandardError; end
   class UnlockError < StandardError; end
+  class CGroupsUnavailableError < StandardError; end
 
   # Execute a single command in isolate context
   # 
@@ -142,7 +148,7 @@ EOF
 
   # cleans the box directory of any files by re-initializing
   def clean!
-    system "isolate -b#{@box_id} --init", :out => '/dev/null'
+    system "isolate -b#{@box_id} --init #{"--cg" if has_cgroup?}", :out => '/dev/null'
   end
 
   def expand_path filename
@@ -151,8 +157,9 @@ EOF
 
   protected
 
-  def initialize
-    response = Kernel.send :`, "isolock --lock"
+  def initialize(options = {})
+    @has_cgroup = !!options[:cg]
+    response = Kernel.send :`, "isolock --lock -- #{"--cg" if has_cgroup?}"
     if $?.success?
       @box_id = response.to_i
     else
@@ -160,10 +167,14 @@ EOF
     end
   end
 
-  def destroy
+  def destroy(options = {})
     return if @box_id.nil?
-    system "isolock --free #{@box_id}"
+    system "isolock --free -- #{@box_id} #{"--cg" if has_cgroup?}"
     raise UnlockError unless $?.success?
+  end
+
+  def has_cgroup?
+    @has_cgroup
   end
 
   def extract_resource(options)
@@ -176,15 +187,22 @@ EOF
   end
 
   def sandbox_options options = {}
-    # TODO: add --cg, --cg-timing --cg-mem
+    if has_cgroup?
+      options[:cg] = "" unless options.delete(:cg) == false
+      options[:cg_timing] = "" unless options.delete(:cg_timing) == false || !options.has_key?(:cg)
+      options[:cg_mem] = options[:mem] unless options.delete(:cg_mem) == false || !options.has_key?(:cg) || !options.has_key?(:mem)
+    elsif !!options[:cg]
+      raise CGroupsUnavailableError
+    end
+
     options[:processes] = 1 if options[:processes] == false
-    options[:processes] = nil if options[:processes] == true
+    options[:processes] = "" if options[:processes] == true
     options.map{ |k,v| "#{RESOURCE_OPTIONS[k]}#{v}" }
   end
 
   def directory_bindings options = {}
     options.reverse_merge!({:noexec => false}).assert_valid_keys(:noexec)
-    {'bin' => [], 'dev' => ['dev'], 'lib' => [], 'lib64' => [], 'usr' => []}.map do |dir, opt|
+    {'bin' => [], 'dev' => ['dev'], 'lib' => [], 'lib64' => [], 'usr' => [], 'etc/alternatives' => []}.map do |dir, opt|
       fullpath = File.expand_path(dir, isolate_root)
       boxpath = File.expand_path(dir, "/")
       opt << 'noexec' if options[:noexec]
@@ -196,7 +214,7 @@ EOF
 
   # returns root if debootstrap enabled
   def isolate_root
-    CONFIG['root']
+    CONFIG[:root]
   end
 
   def environment
@@ -228,7 +246,11 @@ EOF
 
   class << self
     def parse_meta raw
-      Hash[raw.split("\n").map{|e|e.strip.split(':',2)}].reverse_merge!('status' => 'OK')
+      Hash[raw.split("\n").map{|kv|kv.strip.split(':',2)}.map{|k,v|[k,v.send(META.fetch(k,:to_s))]}].reverse_merge!('status' => 'OK')
+    end
+
+    def has_cgroups?
+      !!CONFIG[:cgroups]
     end
   end
 end

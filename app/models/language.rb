@@ -8,4 +8,17 @@ class Language < ActiveRecord::Base
     parameters.merge! :compiler => compiler
     sprintf("%{compiler} #{flags} %{source}", parameters)
   end
+
+  # compiles source to output in box
+  def compile box, source, output, options = {}
+    result = {}
+    box.tmpfile(["program", self.extension]) do |source_file|
+      box.fopen(source_file, 'w') { |f| f.write(source) }
+      compile_command = self.compile_command(:source => source_file, :output => output)
+      result.merge!(Hash[%w[output log box meta stat].zip(box.capture5(compile_command, options.reverse_merge(:processes => true)))])
+      result['output'] = "No output." if result['output'].empty?
+      result['stat'] = result['stat'].exitstatus
+    end
+    return result
+  end
 end
