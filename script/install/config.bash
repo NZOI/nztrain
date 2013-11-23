@@ -167,12 +167,15 @@ declare -p ISOLATE_CGROUPS &> /dev/null || while [ -z "$ISOLATE_CGROUPS" ] ; do
   else ISOLATE_CGROUPS=false; fi
 done
 
+declare -p ISOLATE_BRANCH &> /dev/null || ISOLATE_BRANCH=nztrain # no prompt
+
+
 shopt -u nocasematch;
 
 if $anyset ; then
   export SERVER_NAME APP_NAME RAILS_ROOT APP_USER RAILS_ENV DATABASE TEST_DATABASE DATABASE_USERNAME UNICORN_PORT
   export SCHEDULE_BACKUPS BACKUP_RSYNC BACKUP_RSYNC_MODE BACKUP_RSYNC_PORT BACKUP_RSYNC_HOST BACKUP_RSYNC_USER BACKUP_RSYNC_PASS BACKUP_RSYNC_SSH_KEY BACKUP_RSYNC_PATH
-  export ISOLATE_ROOT ISOLATE_CGROUPS
+  export ISOLATE_ROOT ISOLATE_CGROUPS ISOLATE_BRANCH
 
   # generate template
   bash script/template.bash < script/install.cfg.template > script/install.cfg

@@ -4,8 +4,6 @@
 source `dirname $0`/../install.cfg
 
 srclocation=/usr/local/src
-branch=nztrain
-[[ "$ISOLATE_BRANCH" != "" ]] && branch="$ISOLATE_BRANCH"
 
 cd $srclocation
 if [ -d "moe" ]; then
@@ -16,7 +14,7 @@ if [ -d "moe" ]; then
     exit
   fi
 else
-  git clone -b $branch https://github.com/NZOI/moe-cms moe && cd moe || exit 1
+  git clone -b $ISOLATE_BRANCH https://github.com/NZOI/moe-cms moe && cd moe || exit 1
 fi
 
 ./configure && make || {
