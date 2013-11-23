@@ -10,7 +10,7 @@ rvm:
 
 before_script:
   - RAILS_ENV=development DATABASE_USERNAME=postgres DATABASE= TEST_DATABASE=nztraintest SCHEDULE_BACKUPS=0 ISOLATE_ROOT=/ ISOLATE_CGROUPS=false bash script/install/config.bash --defaults
-  - AUTOCONFIRM=true script/install.bash --skip-update
+  - AUTOCONFIRM=true ISOLATE_BRANCH=nztrain.travis.ci script/install.bash --skip-update
   - bundle exec rake db:test:load
 script: bundle exec rspec
 
