@@ -56,7 +56,7 @@ class Submission < ActiveRecord::Base
     self.judge_log = result.to_json
     self.isolate_score = result['score']
     self.judged_at = DateTime.now
-    #printf "Scoring comparisons (box: %3d vs isolate: %3d)\n", score, isolate_score
+    printf "Scoring comparisons (box: %3d vs isolate: %3d)\n", score, isolate_score
     self.save
   end
 
