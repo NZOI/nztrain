@@ -3,7 +3,7 @@
 FactoryGirl.define do
   factory :submission do
     source "sauce"
-    language "C++"
+    language Language.find_by_name("C++")
     score nil
     user_id 0
     problem_id 0
@@ -12,7 +12,7 @@ FactoryGirl.define do
     judge_output "Judge"
     debug_output "Debug"
     factory :adding_submission do
-      language "C++"
+      language Language.find_by_name("C++")
       source <<sourcecode
         #include <cstdio>
         using namespace std;
@@ -28,7 +28,7 @@ FactoryGirl.define do
 sourcecode
     end
     factory :adding_submission_stdio do
-      language "C++"
+      language Language.find_by_name("C++")
       source <<sourcecode
         #include <cstdio>
         using namespace std;
@@ -42,7 +42,7 @@ sourcecode
 sourcecode
     end
     factory :adding_char_submission do
-      language "C++"
+      language Language.find_by_name("C++")
       source <<sourcecode
         #include <cstdio>
         using namespace std;
@@ -58,7 +58,7 @@ sourcecode
 sourcecode
     end
     factory :adding_unsigned_submission do
-      language "C++"
+      language Language.find_by_name("C++")
       source <<sourcecode
         #include <cstdio>
         using namespace std;

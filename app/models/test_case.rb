@@ -3,6 +3,8 @@ class TestCase < ActiveRecord::Base
 
   has_many :test_case_relations, :dependent => :destroy
   has_many :test_sets, :through => :test_case_relations
+  has_many :problems, :through => :test_sets
+
   validates :input, :presence => true
   validates :output, :presence => true
 

@@ -57,7 +57,7 @@ describe ProblemsController do
       response.should redirect_to submission_path(assigns(:submission))
       assigns(:submission).problem_id.should == @group_problem.id
       assigns(:submission).user_id.should == users(:user).id
-      assigns(:submission).language.should == 'C++'
+      assigns(:submission).language.name.should == 'C++'
       assigns(:submission).source.should_not be_empty
     end
   end

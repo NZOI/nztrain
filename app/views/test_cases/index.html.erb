@@ -4,9 +4,9 @@
   <tr>
     <th>Input</th>
     <th>Output</th>
-    <th>Test Set</th>
+    <th>Test Sets</th>
     <th>Name</th>
-    <th>Problem</th>
+    <th>Problems</th>
     <th></th>
     <% if permitted_to? :update, TestSet %>
       <th></th>
@@ -20,9 +20,9 @@
   <tr>
     <td><%= simple_format(test_case.input.shorten) %></td>
     <td><%= simple_format(test_case.output.shorten) %></td>
-    <td><%= test_case.test_set.id %></td>
+    <td><%= test_case.test_set_ids.to_s %></td>
     <td><%= test_case.name %></td>
-    <td><%= test_case.test_set.problem_id %></td>
+    <td><%= test_case.problem_ids %></td>
     <td><%= link_to 'Show', test_case %></td>
     <% if permitted_to? :update, test_case %>
       <td><%= link_to 'Edit', edit_test_case_path(test_case) %></td>

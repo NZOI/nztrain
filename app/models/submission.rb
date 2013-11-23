@@ -49,6 +49,17 @@ class Submission < ActiveRecord::Base
   end
 
   def judge
+    self.old_judge
+    return
+    # new judge
+    result = Judge.new(self).judge
+    self.judge_result = result.to_json
+    self.score = result['score']
+    self.judged_at = DateTime.now
+    self.save
+  end
+
+  def old_judge
     box_path = File.expand_path(Rails.root)+"/bin/box"
     if RbConfig::CONFIG["host_cpu"] == "x86_64"
       box_path += "64"
@@ -74,6 +85,7 @@ class Submission < ActiveRecord::Base
 
     self.debug_output = "Judging...\n"
     # TODO: store compiler info in config file
+    language = self.language.name
     if language != 'Python'
       File.open(source_file, 'w') { |f| f.write(source) }
       compiler = '/usr/bin/gcc'

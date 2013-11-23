@@ -18,7 +18,10 @@ class ProblemsController < ApplicationController
       submit_attributes << :source if permitted_to? :submit_source, @problem
       submit_attributes
     end
-    params.require(:submission).permit(*@_submit_attributes).merge(:user_id => current_user.id, :problem_id => params[:id])
+    p = params.require(:submission).permit(*@_submit_attributes).merge(:user_id => current_user.id, :problem_id => params[:id])
+    p[:language] = Language.find_by_name(p[:language]) # temporary measure
+    raise if p[:language].nil?
+    p
   end
 
   def new_problem_from_params
