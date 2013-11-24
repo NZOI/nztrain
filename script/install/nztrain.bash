@@ -34,6 +34,13 @@ if [ ! -f config/isolate.yml ] ; then
   bash script/template.bash < config/isolate.yml.template | cat > config/isolate.yml
 fi
 
+# get redis.yml up
+if [ ! -f config/redis.yml ] ; then
+  cmd="bash script/template.bash < config/redis.yml.template | cat > config/redis.yml"
+  echo "$ $cmd"
+  bash script/template.bash < config/redis.yml.template | cat > config/redis.yml
+fi
+
 # make directories for storage
 cmd="mkdir db/data/uploads/user/avatar/ -p"; echo "$ $cmd"; $cmd
 cmd="mkdir db/backup/log -p"; echo "$ $cmd"; $cmd

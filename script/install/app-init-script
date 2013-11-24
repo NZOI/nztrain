@@ -13,11 +13,19 @@ set -e
 
 # Feel free to change any of the following variables for your app:
 TIMEOUT=60
+APP_NAME=nztrain
 APP_ROOT=${RAILS_ROOT}
 APP_USER=${APP_USER}
-UNICORN_PID=$APP_ROOT/tmp/pids/unicorn.pid
 ENV=${RAILS_ENV}
-UNICORN_CMD="bundle exec unicorn -E $ENV -D -c $APP_ROOT/config/unicorn.rb"
+BUNDLE="bundle"
+
+UNICORN_PID="$APP_ROOT/tmp/pids/unicorn.pid"
+UNICORN_CMD="$BUNDLE exec unicorn -E $ENV -D -c $APP_ROOT/config/unicorn.rb"
+
+SIDEKIQ_LOG="$APP_ROOT/log/sidekiq.log"
+SIDEKIQ_PID="$APP_ROOT/tmp/pids/sidekiq.pid"
+SIDEKIQ_CMD="$BUNDLE exec sidekiq -e $ENV -d -c $APP_ROOT/config/sidekiq.rb -L $SIDEKIQ_LOG"
+
 action="$1"
 service="$2"
 set -u
@@ -95,17 +103,103 @@ unicorn () {
   esac
 }
 
+sidekiq () {
+  local PID=$SIDEKIQ_PID
+  #local OLD_PID=$UNICORN_OLD_PID
+  local CMD=$SIDEKIQ_CMD
+  case $1 in
+  status)
+          ps -ef | egrep 'sidekiq [0-9]+.[0-9]+.[0-9]+ '"$APP_NAME" | grep -v grep
+          return $?
+          ;;
+  start)
+          sidekiq("status")
+          sig 0 $PID && echo >&2 "Sidekiq server is already running .. " && return 0
+          [ -d $APP_ROOT ] || (echo "$APP_ROOT not found!.. Exiting"; exit 6)
+          echo >&2 "Starting sidekiq server..."
+          su --login $APP_USER -c "cd $APP_ROOT && $CMD"
+          sleep 3
+          sig 0 $PID && echo >&2 "Sidekiq server started." || echo >&2 "Sidekiq server failed to start."
+          ;;
+  stop)
+          echo >&2 -n "Stopping sidekiq server.."
+          sig INT $PID && {
+            for i in {1..30}
+            do
+              echo -n "." >&2
+              sleep 1
+              sig 0 $PID || {
+                echo >&2 -e "\nSidekiq server stopped."
+                return 0
+              }
+            done
+            echo >&2 -e "\nSidekiq server not yet stopped. Stopped waiting."
+            return 0
+          }
+          echo >&2 "Sidekiq server not running"
+          ;;
+  force-stop)
+          echo >&2 -n "Stopping sidekiq server.."
+          sig TERM $PID && {
+            for i in {1..10}
+            do
+              echo -n "." >&2
+              sleep 1
+              sig 0 $PID || {
+                echo >&2 -e "\nSidekiq server stopped."
+                return 0
+              }
+            done
+            echo >&2 -e "\nSidekiq server not yet stopped."
+            return 0
+          }
+          echo >&2 "Sidekiq server not running"
+          ;;
+#  upgrade)
+#          echo >&2 "Upgrading sidekiq server..."
+#          if sig USR1 $PID && sleep 2 && sig 0 $PID && sig QUIT $OLD_PID
+#          then
+#                  n=$TIMEOUT
+#                  while test -s $OLD_PID && test $n -ge 0
+#                  do
+#                          printf '.' && sleep 1 && n=$(( $n - 1 ))
+#                  done
+#                  echo
+#
+#                  if test $n -lt 0 && test -s $OLD_PID
+#                  then
+#                          echo >&2 "$OLD_PID still exists after $TIMEOUT seconds"
+#                          return 1
+#                  fi
+#                  echo >&2 "Unicorn server upgraded."
+#                  return 0
+#          fi
+#          echo >&2 "Couldn't upgrade, starting '$CMD' instead"
+#          su --login $APP_USER -c "$CMD"
+#          ;;
+  *)
+          echo >&2 "Usage: $0 (start|stop|force-stop) sidekiq"
+          return 1
+          ;;
+  esac
+}
+
 case $service in
   unicorn)
     unicorn "$action"
     exit $?
     ;;
-  '')
+  sidekiq)
     unicorn "$action"
     exit $?
     ;;
+  '')
+    unicorn "$action"
+    sidekiq "$action"
+    exit $?
+    ;;
   *)
-    echo >&2 "Usage: $0 (start|stop|restart) [unicorn]"
+    echo >&2 "Usage: $0 (start|stop|restart) [unicorn|sidekiq]"
     exit 1
     ;;
 esac

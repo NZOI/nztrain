@@ -38,6 +38,10 @@ gem 'backup'
 # Use unicorn as the web server
 gem 'unicorn'
 
+# Redis and Background Processing
+gem 'redis'
+gem 'sidekiq'
+
 # Deploy with Capistrano
 # gem 'capistrano'
 
