@@ -41,6 +41,10 @@ sudo bash script/install/cgroup.bash || exit 1 # install cgroups
 sudo bash script/install/isolock.bash || exit 1 # install isolock
 sudo bash script/install/debootstrap.bash || exit 1 # install debootstrap ubuntu if required
 
+if [[ "$REDIS_INSTALL" = "true" ]]; then
+  sudo bash script/install/redis.bash || exit 1 # install redis
+fi
+
 if ${update:=true} ; then
   # stuff that update needs to do as well
   bash script/install/bundle.bash || exit 1 # bundle install gems

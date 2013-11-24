@@ -59,11 +59,17 @@ done
 
 while [ -z "$RAILS_ENV" ] ; do
   anyset=true
-  prompt 'What environment is used to run this rails installation - d[evelopment] (default) or p[roduction]? ' RAILS_ENV
-  if [[ development =~ ^$RAILS_ENV ]] ; then RAILS_ENV=development
-  elif [[ production =~ ^$RAILS_ENV ]]; then RAILS_ENV=production
+  prompt 'What environment is used to run this rails installation - d[evelopment] (default), p[roduction] or t[est]? ' RAILS_ENV
+  if [[ "development" =~ "^$RAILS_ENV" ]] ; then RAILS_ENV=development
+  elif [[ "production" =~ "^$RAILS_ENV" ]]; then RAILS_ENV=production
+  elif [[ "test" =~ "^$RAILS_ENV" ]]; then RAILS_ENV=test
   else unset RAILS_ENV; fi
 done
+
+declare -p UNICORN_PORT &> /dev/null || {
+  anyset=true
+  prompt 'What port should unicorn listen on (default=none)? ' UNICORN_PORT
+}
 
 declare -p DATABASE &> /dev/null || while [[ -z "$DATABASE" ]] ; do
   anyset=true
@@ -85,9 +91,32 @@ while [ -z "$DATABASE_USERNAME" ] ; do
   if [[ ! $DATABASE_USERNAME ]] ; then DATABASE_USERNAME=$APP_USER ; fi
 done
 
-declare -p UNICORN_PORT &> /dev/null || {
+declare -p REDIS_HOST &> /dev/null || while [[ -z "$REDIS_HOST" ]] ; do
   anyset=true
-  prompt 'What port should unicorn listen on (default=none)? ' UNICORN_PORT
+  prompt 'What is the hostname for Redis (default=localhost)? ' REDIS_HOST
+  if [[ ! "$REDIS_HOST" ]] ; then REDIS_HOST=localhost ; fi
+done
+
+declare -p REDIS_PORT &> /dev/null || while [[ -z "$REDIS_PORT" ]] ; do
+  anyset=true
+  prompt 'What is the Redis port (default=6379)? ' REDIS_PORT
+  if [[ ! "$REDIS_PORT" ]] ; then REDIS_PORT=6379 ; fi
+done
+
+declare -p REDIS_PASS &> /dev/null || while [[ -z "$REDIS_PASS" ]] ; do
+  anyset=true
+  prompt 'What is the Redis password (@ to read from a configuration file default=@/etc/redis/redis.conf)? ' REDIS_PASS
+  if [[ ! "$REDIS_PASS" ]] ; then REDIS_PASS="@/etc/redis/redis.conf" ; fi
+  if [[ "$REDIS_PASS" = "!" ]] ; then REDIS_PASS=; break; fi
+done
+
+declare -p REDIS_INSTALL &> /dev/null || {
+  anyset=true
+  if [[ "$REDIS_HOST" = "localhost" ]]; then
+    REDIS_INSTALL="true"
+  else
+    REDIS_INSTALL="false"
+  fi
 }
 
 declare -p SCHEDULE_BACKUPS &> /dev/null || {
@@ -173,7 +202,9 @@ declare -p ISOLATE_BRANCH &> /dev/null || ISOLATE_BRANCH=nztrain # no prompt
 shopt -u nocasematch;
 
 if $anyset ; then
-  export SERVER_NAME APP_NAME RAILS_ROOT APP_USER RAILS_ENV DATABASE TEST_DATABASE DATABASE_USERNAME UNICORN_PORT
+  export SERVER_NAME APP_NAME RAILS_ROOT APP_USER RAILS_ENV UNICORN_PORT
+  export DATABASE TEST_DATABASE DATABASE_USERNAME
+  export REDIS_HOST REDIS_PORT REDIS_PASS REDIS_INSTALL
   export SCHEDULE_BACKUPS BACKUP_RSYNC BACKUP_RSYNC_MODE BACKUP_RSYNC_PORT BACKUP_RSYNC_HOST BACKUP_RSYNC_USER BACKUP_RSYNC_PASS BACKUP_RSYNC_SSH_KEY BACKUP_RSYNC_PATH
   export ISOLATE_ROOT ISOLATE_CGROUPS ISOLATE_BRANCH
 

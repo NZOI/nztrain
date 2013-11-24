@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+### BEGIN INIT INFO
+# Provides:          redis-server
+# Required-Start:    $syslog
+# Required-Stop:     $syslog
+# Should-Start:      $local_fs
+# Should-Stop:       $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: redis-server - Persistent key-value db
+# Description:       redis-server - Persistent key-value db
+### END INIT INFO
+#
+# Author:  Wayne E. Seguin <wayneeseguin@gmail.com>
+# License: The same licence as Redis, New BSD
+#          http://www.opensource.org/licenses/bsd-license.php
+#
+
+# Source the system config file, if it exists.
+if [[ -s /etc/conf.d/redis ]] ; then
+  source /etc/conf.d/redis
+fi
+
+# Default config variables that have not been set.
+port="${port:-6379}"
+prefix="${prefix:-/usr/local}"
+redis="$prefix/bin/redis-server"
+redis_cli="$prefix/bin/redis-cli"
+pidfile="${pidfile:-/var/run/redis/redis.pid}"
+config="${config:-/etc/redis/redis.conf}"
+user="${user:-redis}"
+
+#
+# Set the running $pid value based on $pidfile.
+#
+if [[ -s "$pidfile" ]] ; then
+  pid=$(cat $pidfile)
+else
+  rm -f $pidfile
+fi
+
+# In case there was pidfile corruption...
+if [[ "Linux" = "$(uname)" ]] ; then
+  # /proc does not exist on say, Darwin
+  if [[ ! -z "${pid}" ]] && [[ ! -x "/proc/${pid}" ]] ;then
+    pid="$(ps auxww | grep [r]edis | grep "$config" | grep -v 'grep' | awk '{print $2}')"
+  elif [[ -z "${pid}" ]] ; then
+    pid="$(ps auxww | grep [r]edis | grep "$config" | grep -v 'grep' | awk '{print $2}')"
+  fi
+else
+  if [[ -z "${pid}" ]] ; then
+    pid="$(ps auxww | grep [r]edis | grep "$config" | grep -v 'grep' | awk '{print $2}')"
+  fi
+fi
+
+#
+# Start redis using redis-server as user 'redis'.
+#
+redis_start() {
+  if [[ -f $pidfile ]] ; then
+    echo "$pidfile exists, redis-server is either already running or crashed."
+    exit 1
+  elif [[ ! -z "$pid" ]] ; then
+    echo -e "\nRedis is already running with configuration '$config'."
+    echo "$pid" > $pidfile # Ensure pidfile exists with the pid.
+  else
+    echo "Starting Redis server..."
+    su $user -c "$redis $config"
+    exit 0
+  fi
+}
+
+#
+# Stop redis using redis-cli SHUTDOWN.
+#
+redis_stop() {
+
+  echo -n "Stopping redis server on port ${port}...\n"
+  "$redis_cli" -p ${port} SHUTDOWN
+
+  # Keep user informed while server shuts down.
+  echo "Waiting for the redis server to shutdown "
+  if [[ "Linux" = "$(uname)" ]] ; then
+    while [[ -x /proc/${pid} ]] ; do
+      echo -n '.' ; sleep 1
+    done
+  else # Darwin, etc...
+    while [[ ! -z "$(ps auxww | grep [r]edis | grep "$config" | awk '{print $2}')" ]] ; do
+      echo -n '.' ; sleep 1
+    done
+  fi
+
+  # Clear out the old pidfile.
+  rm -f $pidfile
+
+  # Notify user of successful completion.
+  echo "redis server stopped."
+  exit 0
+}
+
+redis_usage() {
+  echo -e "Usage: $0 {start,stop}"
+  exit 1
+}
+
+#
+# CLI logic.
+#
+case "$1" in
+  start) redis_start ;;
+  stop)  redis_stop  ;;
+  *)     redis_usage       ;;
+esac
