@@ -124,7 +124,7 @@ sidekiq () {
   stop)
           echo >&2 -n "Stopping sidekiq server.."
           sig INT $PID && {
-            for i in {1..30}
+            for i in {1..20}
             do
               echo -n "." >&2
               sleep 1
@@ -190,13 +190,16 @@ case $service in
     exit $?
     ;;
   sidekiq)
-    unicorn "$action"
+    sidekiq "$action"
     exit $?
     ;;
   '')
+    result=true
     unicorn "$action"
+    result=$result && $?
     sidekiq "$action"
-    exit $?
+    result=$result && $?
+    exit $result
     ;;
   *)
     echo >&2 "Usage: $0 (start|stop|restart) [unicorn|sidekiq]"

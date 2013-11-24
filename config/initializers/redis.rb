@@ -7,14 +7,18 @@ if config[Rails.env.to_sym]
 end
 
 # if @configurationfilename given, find out what the password is
-if REDIS_CONFIG.has_key?(:password) && REDIS_CONFIG[:password][0]=="@"
-  redisconf = REDIS_CONFIG[:password]
-  redisconf.slice!(0)
-  matcher = File.open(redisconf,"r") { |f| f.read.match(/^ *requirepass +([[:word:]]*) *$/) }
-  if matcher.nil?
+if REDIS_CONFIG.has_key?(:password)
+  if REDIS_CONFIG[:password].empty?
     REDIS_CONFIG.delete(:password)
-  else
-    REDIS_CONFIG[:password] = matcher[1]
+  elsif REDIS_CONFIG[:password][0]=="@"
+    redisconf = REDIS_CONFIG[:password]
+    redisconf.slice!(0)
+    matcher = File.open(redisconf,"r") { |f| f.read.match(/^ *requirepass +([[:word:]]*) *$/) }
+    if matcher.nil?
+      REDIS_CONFIG.delete(:password)
+    else
+      REDIS_CONFIG[:password] = matcher[1]
+    end
   end
 end
 
