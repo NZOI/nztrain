@@ -1,0 +1,6 @@
+app: nztrain
+root: ../../..
+timeout: 10
+log: log
+template: ../../upstart
+

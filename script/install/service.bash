@@ -20,17 +20,23 @@ NGINX_INSTALL_DIR="/usr/local/nginx"
 # nginx includes this app configuration
 bash $RAILS_ROOT/script/template.bash < $RAILS_ROOT/script/install/nginx.app.conf | cat > $NGINX_INSTALL_DIR/conf/$APP_NAME.app.conf
 
-if [ ! -f /etc/init.d/$APP_NAME ] ; then
-  # setup unicorn init.d
-  bash script/template.bash < script/install/app-init-script | cat > /etc/init.d/$APP_NAME
+(
+  RAILS_ENV=production
+  cd config/procfiles/$RAILS_ENV
+  foreman export upstart /etc/init
+)
 
-  chmod +x /etc/init.d/$APP_NAME
-
-  # automatically startup service on boot
-  update-rc.d -f $APP_NAME defaults
-else # update the init.d script, but don't add service to startup
-  bash script/template.bash < script/install/app-init-script | cat > /etc/init.d/$APP_NAME
-
-  chmod +x /etc/init.d/$APP_NAME
-fi
+#if [ ! -f /etc/init.d/$APP_NAME ] ; then
+#  # setup unicorn init.d
+#  bash script/template.bash < script/install/app-init-script | cat > /etc/init.d/$APP_NAME
+#
+#  chmod +x /etc/init.d/$APP_NAME
+#
+#  # automatically startup service on boot
+#  update-rc.d -f $APP_NAME defaults
+#else # update the init.d script, but don't add service to startup
+#  bash script/template.bash < script/install/app-init-script | cat > /etc/init.d/$APP_NAME
+#
+#  chmod +x /etc/init.d/$APP_NAME
+#fi
 

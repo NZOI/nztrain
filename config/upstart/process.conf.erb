@@ -1,0 +1,18 @@
+start on starting <%= app %>-<%= name %>
+stop on stopping <%= app %>-<%= name %>
+respawn
+
+setuid <%= user %>
+setgid <%= user %>
+env PORT=<%= port %>
+<% engine.env.each_pair do |var,env| %>
+env <%= var.upcase %>=<%= shell_quote(env) %>
+<% end %>
+
+chdir <%= engine.root %>
+<% if engine.options.has_key?(:timeout) %>
+kill timeout <%= engine.options[:timeout] %>
+<% end %>
+
+exec bash -lc '<%= process.command %> >> <%= log %>/<%= name %>-<%= num %>.log 2>&1'
+
