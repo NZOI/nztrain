@@ -80,7 +80,13 @@ class Judge
     end
     result.merge!(Hash[%w[output log box meta stat].zip(box.capture5(run_command, run_opts))])
     result['stat'] = result['stat'].exitstatus
-    box.fopen(program.output) { |f| result['output'] = f.read } unless program.output.nil?
+    unless program.output.nil?
+      if box.exist?(program.output)
+        box.fopen(program.output) { |f| result['output'] = f.read }
+      else
+        result['output'] = ""
+      end
+    end
     return result
   ensure
     box.clean!
