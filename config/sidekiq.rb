@@ -3,8 +3,7 @@
 ---
 :verbose: false
 :pidfile: ./tmp/pids/sidekiq.pid
+:logfile: ./log/sidekiq.log
 :concurrency: 10
 :queues:
-  - [default, 5]
-#  - [often, 7]
-#  - [seldom, 3]
+  - default
