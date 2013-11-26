@@ -20,26 +20,25 @@ class Judge
         run_command = program.language.compile_command(:source => ExeFileName)
       else
         result['compile'] = compile!(ExeFileName) # possible caching
+        return result.merge!(grade_compile_error(result['compile'])) if result['compile']['stat'] != 0 #error
+
         run_command = "./#{ExeFileName}"
       end
-      if result['compile']['stat'] == 0 # no point doing everything else otherwise
-        # test cases
-        result['test_cases'] = {}
-        problem.test_cases.each do |test_case|
-          FileUtils.copy(File.expand_path(ExeFileName, tmpdir), box.expand_path(ExeFileName))
-          result['test_cases'][test_case.id] = judge_test_case(test_case, run_command) unless result['test_cases'].has_key?(test_case.id)
-        end
 
-        # test sets
-        result['test_sets'] = {}
-        problem.test_sets.each do |test_set|
-          result['test_sets'][test_set.id] = grade_test_set(test_set, result['test_cases'])
-        end
-
-        result.merge!(grade_program(result['test_sets']))
-      else
-        result.merge!(grade_compile_error(result['compile']))
+      # test cases
+      result['test_cases'] = {}
+      problem.test_cases.each do |test_case|
+        FileUtils.copy(File.expand_path(ExeFileName, tmpdir), box.expand_path(ExeFileName))
+        result['test_cases'][test_case.id] = judge_test_case(test_case, run_command) unless result['test_cases'].has_key?(test_case.id)
       end
+
+      # test sets
+      result['test_sets'] = {}
+      problem.test_sets.each do |test_set|
+        result['test_sets'][test_set.id] = grade_test_set(test_set, result['test_cases'])
+      end
+
+      result.merge!(grade_program(result['test_sets']))
     end
     result
   end
