@@ -22,21 +22,24 @@ class Judge
         result['compile'] = compile!(ExeFileName) # possible caching
         run_command = "./#{ExeFileName}"
       end
+      if result['compile']['stat'] == 0 # no point doing everything else otherwise
+        # test cases
+        result['test_cases'] = {}
+        problem.test_cases.each do |test_case|
+          FileUtils.copy(File.expand_path(ExeFileName, tmpdir), box.expand_path(ExeFileName))
+          result['test_cases'][test_case.id] = judge_test_case(test_case, run_command) unless result['test_cases'].has_key?(test_case.id)
+        end
 
-      # test cases
-      result['test_cases'] = {}
-      problem.test_cases.each do |test_case|
-        FileUtils.copy(File.expand_path(ExeFileName, tmpdir), box.expand_path(ExeFileName))
-        result['test_cases'][test_case.id] = judge_test_case(test_case, run_command) unless result['test_cases'].has_key?(test_case.id)
+        # test sets
+        result['test_sets'] = {}
+        problem.test_sets.each do |test_set|
+          result['test_sets'][test_set.id] = grade_test_set(test_set, result['test_cases'])
+        end
+
+        result.merge!(grade_program(result['test_sets']))
+      else
+        result.merge!(grade_compile_error(result['compile']))
       end
-
-      # test sets
-      result['test_sets'] = {}
-      problem.test_sets.each do |test_set|
-        result['test_sets'][test_set.id] = grade_test_set(test_set, result['test_cases'])
-      end
-
-      result.merge!(grade_program(result['test_sets']))
     end
     result
   end
@@ -164,6 +167,17 @@ class Judge
       result['score'] = (result['evaluation']*100).floor
     end
     result
+  end
+
+  def grade_compile_error(compiled)
+    case compiled['stat']
+    when 0:
+      return { 'status' => 1 } # pending
+    when 1:
+      return { 'status' => 0, 'evaluation' => 0.0, 'score' => 0 } if result['status'] == 1
+    else:
+      return { 'status' => 2 } # errored
+    end
   end
 
   # Utility methods
