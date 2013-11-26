@@ -171,11 +171,11 @@ class Judge
 
   def grade_compile_error(compiled)
     case compiled['stat']
-    when 0:
+    when 0
       return { 'status' => 1 } # pending
-    when 1:
+    when 1
       return { 'status' => 0, 'evaluation' => 0.0, 'score' => 0 } if result['status'] == 1
-    else:
+    else
       return { 'status' => 2 } # errored
     end
   end
