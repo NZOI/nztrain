@@ -174,7 +174,7 @@ class Judge
     when 0
       return { 'status' => 1 } # pending
     when 1
-      return { 'status' => 0, 'evaluation' => 0.0, 'score' => 0 } if result['status'] == 1
+      return { 'status' => 0, 'evaluation' => 0.0, 'score' => 0 }
     else
       return { 'status' => 2 } # errored
     end
