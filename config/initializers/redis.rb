@@ -24,7 +24,7 @@ end
 
 $redis = Redis.new(REDIS_CONFIG)
 # To clear out the db before each test
-$redis.flushdb if Rails.env = "test"
+$redis.flushdb if Rails.env == "test"
 
 # To use Redis::Objects
 #require 'redis/objects'

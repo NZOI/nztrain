@@ -66,9 +66,7 @@ class SubmissionsController < ApplicationController
     @submission.judge_output = nil
     if @submission.save
       logger.debug "rejudging submission id #{@submission.id}"
-      spawn do
-        @submission.judge
-      end
+      @submission.judge
       redirect_to @submission, :notice => "Rejudge request queued."
     end
   end
@@ -85,9 +83,7 @@ class SubmissionsController < ApplicationController
 
     respond_to do |format|
       if @submission.save
-        spawn do 
-          @submission.judge
-        end
+        @submission.judge
         format.html { redirect_to(@submission, :notice => 'Submission was successfully created.') }
         format.xml  { render :xml => @submission, :status => :created, :location => @submission }
       else

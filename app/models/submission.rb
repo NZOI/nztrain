@@ -49,15 +49,10 @@ class Submission < ActiveRecord::Base
   end
 
   def judge
-    self.old_judge # for now
+    Rails.env == 'test' ? self.old_judge : spawn { self.old_judge } # for now
 
     # new judge
-    result = Judge.new(self).judge
-    self.judge_log = result.to_json
-    self.isolate_score = result['score']
-    self.judged_at = DateTime.now
-    printf "Scoring comparisons (box: %3d vs isolate: %3d)\n", score, isolate_score
-    self.save
+    JudgeSubmissionWorker.perform_async(self.id)
   end
 
   def old_judge

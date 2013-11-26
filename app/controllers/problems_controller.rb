@@ -86,7 +86,7 @@ class ProblemsController < ApplicationController
       @submission = Submission.new(submit_params) # create submission
       respond_to do |format|
         if @submission.save
-          Rails.env == 'test' ? @submission.judge : spawn { @submission.judge }
+          @submission.judge
           format.html { redirect_to(@submission, :notice => 'Submission was successfully created.') }
           format.xml  { render :xml => @submission, :status => :created, :location => @submission }
         else

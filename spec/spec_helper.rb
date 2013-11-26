@@ -8,6 +8,9 @@ require 'rspec/rails'
 require 'rspec/autorun'
 require 'capybara/rspec'
 require 'declarative_authorization/maintenance'
+require 'sidekiq/testing'
+
+Sidekiq::Testing.inline!
 
 # include seeds
 require "#{Rails.root}/db/seeds.rb"
