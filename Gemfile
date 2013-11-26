@@ -41,6 +41,7 @@ gem 'unicorn'
 # Redis and Background Processing
 gem 'redis'
 gem 'sidekiq'
+gem 'sinatra'
 
 # Deploy with Capistrano
 # gem 'capistrano'

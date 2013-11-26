@@ -20,7 +20,8 @@
       })();
     </script>
 
-<title><%= yield :title %><%= "#{((yield :title).length>0?" - ":"")}NZOI Training" %></title>
+    <title><%= yield :title %><%= "#{((yield :title).length>0?" - ":"")}NZOI Training" %></title>
+    <%= yield :head %>
 </head>
 <body>
 <div id="side">

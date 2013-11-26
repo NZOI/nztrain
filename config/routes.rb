@@ -1,4 +1,9 @@
 NZTrain::Application.routes.draw do
+  root :to => "home#home"
+
+  match 'sidekiq/*path', :to => 'sidekiq#default'
+  match 'sidekiq', :to => 'sidekiq#default', :defaults => {:path => ''}
+
   resources :ai_contests do
     member do
       get 'sample'
@@ -46,8 +51,6 @@ NZTrain::Application.routes.draw do
   end
 
   resources :contest_relations
-
-  root :to => "home#home"
 
   resources :submissions, :except => [:new,:create] do
     collection do
