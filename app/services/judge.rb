@@ -59,7 +59,7 @@ class Judge
 
   def compile! output
     result = program.language.compile(box, program.source, output, :mem => 262144, :wall_time => 60)
-    FileUtils.copy(box.expand_path(output), File.expand_path(output, tmpdir)) if result['stat']
+    FileUtils.copy(box.expand_path(output), File.expand_path(output, tmpdir)) if result['stat'] == 0
     return result
   ensure
     box.clean!
