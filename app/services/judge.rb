@@ -16,7 +16,7 @@ class Judge
     result = {}
     setup_judging do
       if program.language.interpreted
-        File.open(File.expand_path(ExeFileName, tmpdir)) { |f| f.write(program.source) }
+        File.open(File.expand_path(ExeFileName, tmpdir),"w") { |f| f.write(program.source) }
         run_command = program.language.compile_command(:source => ExeFileName)
       else
         result['compile'] = compile!(ExeFileName) # possible caching
