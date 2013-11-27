@@ -41,7 +41,7 @@
   <% @submissions.each do |submission| %>
     <tr onClick="toggle_height(<%= "'submission#{submission.id}source'" %>);">
       <td><%= submission.created_at.strftime("%b %d %Y, %H:%M") %>
-        <td><%= submission.language %></td>
+        <td><%= submission.language.name %></td>
       <td><%= submission.score %></td>
       <% if params[:by_user].nil? %>
         <td><% if submission.user %><%= submission.user.handle %><% end %></td>

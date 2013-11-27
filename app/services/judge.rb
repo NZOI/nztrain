@@ -148,7 +148,7 @@ class Judge
     result['status'] = 2 if error
     if result['status'] == 0
       # test set = min case score
-      result['evaluation'] = evaluations.min
+      result['evaluation'] = evaluations.push(1).min
       result['evaluation'] = 0 if sig # any signal/runtime error/timeout fails the test set
     end
     result
