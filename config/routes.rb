@@ -1,8 +1,16 @@
 NZTrain::Application.routes.draw do
   root :to => "home#home"
 
-  match 'sidekiq/*path', :to => 'sidekiq#default'
-  match 'sidekiq', :to => 'sidekiq#default', :defaults => {:path => ''}
+  require 'sidekiq/web'
+  authenticate :user, ->(current_user) {current_user.is_admin?} do
+    get 'sidekiq', :to => 'sidekiq#default', :as => 'sidekiq'
+    constraints ->(request) {request.get?} do
+      mount Sidekiq::Web => 'sidekiq/web/', :as => 'sidekiq_web'
+    end
+  end
+  authenticate :user, ->(current_user){current_user.has_role?(:superadmin)} do
+    mount Sidekiq::Web => 'sidekiq/web/', :as => 'sidekiq_web'
+  end
 
   resources :ai_contests do
     member do

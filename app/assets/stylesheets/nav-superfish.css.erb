@@ -2,7 +2,6 @@
   position: fixed;
   left: 200px;
   right: 0px;
-  min-width: 600px;
   background: #2D2D2D;
   z-index: 10;
   white-space: nowrap;
@@ -12,21 +11,21 @@
   vertical-align: top;
 }
 
-#fake-menu {
-  visibility: hidden;
-  width: 100%
-}
-
-.sf-menu, #fake-menu .sf-menu li {
-  float: none;
+.sf-menu, .sf-menu li {
   margin: 0;
 }
 
 #right-menu {
-  float: right;
   margin-right: 20px;
 }
-
+ul.nav-theme {
+  width: 100%;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
 ul.nav-theme li {
   background: #2D2D2D;
 }

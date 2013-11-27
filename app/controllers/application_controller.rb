@@ -3,6 +3,8 @@ require 'declarative_authorization/maintenance'
 class ApplicationController < ActionController::Base
   include Authorization::Maintenance
   include ApplicationHelper
+  layout "scaffold"
+
   before_filter :update_last_seen_at
   before_filter :set_current_user
   before_filter :read_settings

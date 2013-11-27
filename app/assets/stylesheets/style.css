@@ -103,10 +103,12 @@ a.progress_link:hover {
 }
 
 #main {
-  margin-left: 200px;
-  min-height: 100%;
-  position: relative;
-  padding-bottom: 5em;
+  top: 30px;
+  left: 200px;
+  right: 0;
+  bottom: 0;
+  position: fixed;
+  overflow-y: auto;
 }
 
 #main-container

@@ -1,178 +1,157 @@
 <!DOCTYPE HTML>
 <html>
-<head>
-    <link rel="shortcut icon" href="/favicon.ico">
-    <%= stylesheet_link_tag "application" %>
-    <%= javascript_include_tag "application", :async => true %>
-    <%= javascript_include_tag "http://cdn.mathjax.org/mathjax/2.1-latest/MathJax.js?config=TeX-AMS_HTML", :async => true %>
-    <%= stylesheet_link_tag "http://fonts.googleapis.com/css?family=Ubuntu:400italic,Ubuntu:400"%>
-    <noscript><style type="text/css">.js_only { display: none; }</style></noscript>
-    <%= csrf_meta_tag %>
-    <!-- Google Analytics -->
-    <script defer="defer" async type="text/javascript">
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-37616650-1'],['_setDomainName', 'none'],['_trackPageview']);
+  <head>
+      <link rel="shortcut icon" href="/favicon.ico">
+      <%= stylesheet_link_tag "application" %>
+      <%= javascript_include_tag "application", :async => true %>
+      <%#= javascript_include_tag "http://cdn.mathjax.org/mathjax/2.1-latest/MathJax.js?config=TeX-AMS_HTML", :async => true %>
+      <%#= stylesheet_link_tag "http://fonts.googleapis.com/css?family=Ubuntu:400italic,Ubuntu:400"%>
+      <noscript><style type="text/css">.js_only { display: none; }</style></noscript>
+      <%= csrf_meta_tag %>
+      <!-- Google Analytics -->
+      <!--<script defer="defer" async type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-37616650-1'],['_setDomainName', 'none'],['_trackPageview']);
 
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    </script>
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>-->
 
-    <title><%= yield :title %><%= "#{((yield :title).length>0?" - ":"")}NZOI Training" %></title>
-    <%= yield :head %>
-</head>
-<body>
-<div id="side">
-  <div id="side-container">
-    <div id="side-minify">&#9664;</div>
-    <div id="side-expanded">
-      <div id="side-logo">
-         <%= image_tag("logo.svg") %>
-      </div>
-      <div id="side-title">
-        Training Site
+      <title><%= yield :title %><%= "#{((yield :title).length>0?" - ":"")}NZOI Training" %></title>
+      <%= yield :head %>
+  </head>
+  <body>
+    <div id="side">
+      <div id="side-container">
+        <div id="side-minify">&#9664;</div>
+        <div id="side-expanded">
+          <div id="side-logo">
+             <%= image_tag("logo.svg") %>
+          </div>
+          <div id="side-title">
+            Training Site
+          </div>
+        </div>
+        <div id="side-contracted">
+          <%= image_tag("sideways-banner.png") %>
+        </div>
       </div>
     </div>
-    <div id="side-contracted">
-      <%= image_tag("sideways-banner.png") %>
-    </div>
-  </div>
-</div>
-<nav id="main-menu">
-  <table class="invis">
-    <tr>
-      <td>
-        <ul id="left-menu" class="sf-menu nav-theme">
-          <li><a href="<%= root_path %>">dashboard</a></li>
-          <% if user_signed_in? %>
-            <li><a href="#" onClick="return false;">contests</a>
-              <ul>
-                <li><a href="<%= active_contests_path %>">active</a></li>
-                <li><a href="<%= current_contests_path %>">current</a></li>
-                <li><a href="<%= upcoming_contests_path %>">upcoming</a></li>
-                <li><a href="<%= past_contests_path %>">past</a></li>
-              </ul>
-            </li>
-            <li><a href="<%= browse_groups_path %>">groups</a>
-            </li>
-            <li><a href="#" onClick="return false;">my stuff</a>
-              <ul>
-                <li><a href="<%= my_submissions_path %>">submissions</a></li>
-                <% if permitted_to? :manage, Problem.new(:owner_id => current_user.id) %>
-                  <li><a href="<%= my_problems_path %>">problems</a></li>
-                <% end %>
-                <% if permitted_to? :manage, ProblemSet.new(:owner_id => current_user.id) %>
-                  <li><a href="<%= my_problem_sets_path %>">problem sets</a></li>
-                <% end %>
-                <% if permitted_to? :manage, Contest.new(:owner_id => current_user.id) %>
-                  <li><a href="<%= my_contests_path %>">contests</a></li>
-                <% end %>
-                <% if permitted_to? :manage, Group.new(:owner_id => current_user.id) %>
-                  <li><a href="<%= my_groups_path %>">groups</a></li>
-                <% end %>
-                <% if permitted_to? :manage, FileAttachment.new(:owner_id => current_user.id) %>
-                  <li><a href="<%= my_file_attachments_path %>">file attachments</a></li>
-                <% end %>
-              </ul>
-            </li>
-            <% if permitted_to? :manage, Problem.new %>
-              <li><a href="#" onClick="return false;">manage</a>
-                <ul>
-                  <% if permitted_to? :index, Submission.new %>
-                    <li><a href="<%= submissions_path %>">submissions</a></li>
-                  <% end %>
-                  <% if permitted_to? :manage, Problem.new %>
-                    <li><a href="<%= problems_path %>">problems</a></li>
-                  <% end %>
-                  <% if permitted_to? :manage, ProblemSet.new %>
-                    <li><a href="<%= problem_sets_path %>">problem sets</a></li>
-                  <% end %>
-                  <% if permitted_to? :manage, Contest.new %>
-                    <li><a href="<%= contests_path %>">contests</a></li>
-                  <% end %>
-                  <% if permitted_to? :manage, Group.new %>
-                    <li><a href="<%= groups_path %>">groups</a></li>
-                  <% end %>
-                  <% if permitted_to? :index, :evaluators %>
-                    <li><a href="<%= evaluators_path %>">evaluators</a></li>
-                  <% end %>
-                  <% if permitted_to? :manage, FileAttachment.new %>
-                    <li><a href="<%= file_attachments_path %>">file attachments</a></li>
-                  <% end %>
-                </ul>
-              </li>
-            <% end %>
-            <li><a href="<%= users_path %>">users</a>
-              <ul>
-                <li><a href="<%= newest_users_path %>">newest</a></li>
-                <% if permitted_to? :inspect, :users %><li><a href="<%= online_users_path %>">online</a></li><% end %>
-              </ul>
-            </li>
-            <% if current_user && current_user.is_admin? %>
-              <li><a href="#" onClick="return false;">admin</a>
-                <ul>
-                  <% if permitted_to? :index, Role %><li><a href="<%= roles_path %>">roles</a></li><% end %>
-                  <% if permitted_to? :index, Setting %><li><a href="<%= settings_path %>">settings</a></li><% end %>
-                </ul>
-              </li>
-            <% end %>
-          <% end %>
-        </ul>
-      </td>
-      <td>
-        <ul id="right-menu" class="sf-menu nav-theme">
-          <li<%= raw ' class="masknav"' if in_su? %>>
-          <% if user_signed_in? %>
-            <span id="current_user_username"><a href="<%= user_path(current_user) %>"><%= current_user.username %></a></span>
-            <ul>
-              <table class="invis" style="min-width: 250px">
-                <tr>
-                  <td style="padding: 3px"><img src="<%= current_user.avatar.small.url %>" style="background: #a1cca1; padding: 3px;"></td>
-                  <td style="padding: 3px; padding-left: 0; width: 100%">
-                    <% if in_su? %>
-                      <li><%= link_to "exit su", suexit_users_path, :method => 'post' %></li>
+    <nav id="main-menu">
+      <table class="invis">
+        <tr>
+          <td style="width:100%">
+            <ul id="left-menu" class="sf-menu nav-theme">
+              <li><a href="<%= root_path %>">dashboard</a></li>
+              <% if user_signed_in? %>
+                <li><a href="#" onClick="return false;">contests</a>
+                  <ul>
+                    <li><a href="<%= active_contests_path %>">active</a></li>
+                    <li><a href="<%= current_contests_path %>">current</a></li>
+                    <li><a href="<%= upcoming_contests_path %>">upcoming</a></li>
+                    <li><a href="<%= past_contests_path %>">past</a></li>
+                  </ul>
+                </li>
+                <li><a href="<%= browse_groups_path %>">groups</a>
+                </li>
+                <li><a href="#" onClick="return false;">my stuff</a>
+                  <ul>
+                    <li><a href="<%= my_submissions_path %>">submissions</a></li>
+                    <% if permitted_to? :manage, Problem.new(:owner_id => current_user.id) %>
+                      <li><a href="<%= my_problems_path %>">problems</a></li>
                     <% end %>
-                    <li><a href="/accounts/settings/edit">edit profile</a></li>
-                    <li><a href="<%= accounts_requests_path %>">requests</a></li>
-                    <li><%= link_to "sign out", destroy_user_session_path, :method => :delete, :id => 'sign_out' %></li>
-                  </td>
-                </tr>
-              </table>
+                    <% if permitted_to? :manage, ProblemSet.new(:owner_id => current_user.id) %>
+                      <li><a href="<%= my_problem_sets_path %>">problem sets</a></li>
+                    <% end %>
+                    <% if permitted_to? :manage, Contest.new(:owner_id => current_user.id) %>
+                      <li><a href="<%= my_contests_path %>">contests</a></li>
+                    <% end %>
+                    <% if permitted_to? :manage, Group.new(:owner_id => current_user.id) %>
+                      <li><a href="<%= my_groups_path %>">groups</a></li>
+                    <% end %>
+                    <% if permitted_to? :manage, FileAttachment.new(:owner_id => current_user.id) %>
+                      <li><a href="<%= my_file_attachments_path %>">file attachments</a></li>
+                    <% end %>
+                  </ul>
+                </li>
+                <% if permitted_to? :manage, Problem.new %>
+                  <li><a href="#" onClick="return false;">manage</a>
+                    <ul>
+                      <% if permitted_to? :index, Submission.new %>
+                        <li><a href="<%= submissions_path %>">submissions</a></li>
+                      <% end %>
+                      <% if permitted_to? :manage, Problem.new %>
+                        <li><a href="<%= problems_path %>">problems</a></li>
+                      <% end %>
+                      <% if permitted_to? :manage, ProblemSet.new %>
+                        <li><a href="<%= problem_sets_path %>">problem sets</a></li>
+                      <% end %>
+                      <% if permitted_to? :manage, Contest.new %>
+                        <li><a href="<%= contests_path %>">contests</a></li>
+                      <% end %>
+                      <% if permitted_to? :manage, Group.new %>
+                        <li><a href="<%= groups_path %>">groups</a></li>
+                      <% end %>
+                      <% if permitted_to? :index, :evaluators %>
+                        <li><a href="<%= evaluators_path %>">evaluators</a></li>
+                      <% end %>
+                      <% if permitted_to? :manage, FileAttachment.new %>
+                        <li><a href="<%= file_attachments_path %>">file attachments</a></li>
+                      <% end %>
+                    </ul>
+                  </li>
+                <% end %>
+                <li><a href="<%= users_path %>">users</a>
+                  <ul>
+                    <li><a href="<%= newest_users_path %>">newest</a></li>
+                    <% if permitted_to? :inspect, :users %><li><a href="<%= online_users_path %>">online</a></li><% end %>
+                  </ul>
+                </li>
+                <% if current_user && current_user.is_admin? %>
+                  <li><a href="#" onClick="return false;">admin</a>
+                    <ul>
+                      <% if permitted_to? :index, Role %><li><a href="<%= roles_path %>">roles</a></li><% end %>
+                      <% if permitted_to? :index, Setting %><li><a href="<%= settings_path %>">settings</a></li><% end %>
+                      <li><a href="<%= sidekiq_path %>">sidekiq</a></li>
+                    </ul>
+                  </li>
+                <% end %>
+              <% end %>
             </ul>
-          <% else %>
-            <%= link_to "sign in", new_user_session_path, :id => 'sign_in' %>
-          <% end %>
-          </li>
-          <li style="display: none;"><%# patch superfish v1.6 bug %></li>
-        </ul>
-      </td>
-    </tr>
-  </table>
-</nav>
-<div id="fake-menu">
-  <ul class="sf-menu nav-theme">
-    <li><a>&nbsp;<%# placeholder to push #main down %></a></li>
-  </ul>
-</div>
-<div id="main">
-  <% if alert %>
-    <div class="messagebox alert"><%= alert %></div>
-  <% end %>
-  <% if flash[:notice] %>
-    <div class="messagebox notice"><%= flash[:notice] %></div>
-  <% end %>
-  <% if false %><div class="messagebox notification">Notification here</div><% end %>
-  <% if (yield :title).length>0 %>
-    <div id="main-page-title-box">
-      <ul id="main-toolbox"><%= yield :toolbox %></ul>
-      <h1><%= yield :title %></h1>
-    </div>
-  <% end %>
-  <div id="main-container">
-    <%= yield(:content).empty? ? yield : yield(:content) %>
-  </div>
-</div>
-</body>
+          </td>
+          <td>
+            <ul id="right-menu" class="sf-menu nav-theme">
+              <li<%= raw ' class="masknav"' if in_su? %>>
+              <% if user_signed_in? %>
+                <span id="current_user_username"><a href="<%= user_path(current_user) %>"><%= current_user.username %></a></span>
+                <ul>
+                  <table class="invis" style="min-width: 250px">
+                    <tr>
+                      <td style="padding: 3px"><img src="<%= current_user.avatar.small.url %>" style="background: #a1cca1; padding: 3px;"></td>
+                      <td style="padding: 3px; padding-left: 0; width: 100%">
+                        <% if in_su? %>
+                          <li><%= link_to "exit su", suexit_users_path, :method => 'post' %></li>
+                        <% end %>
+                        <li><a href="/accounts/settings/edit">edit profile</a></li>
+                        <li><a href="<%= accounts_requests_path %>">requests</a></li>
+                        <li><%= link_to "sign out", destroy_user_session_path, :method => :delete, :id => 'sign_out' %></li>
+                      </td>
+                    </tr>
+                  </table>
+                </ul>
+              <% else %>
+                <%= link_to "sign in", new_user_session_path, :id => 'sign_in' %>
+              <% end %>
+              </li>
+              <li style="display: none;"><%# patch superfish v1.6 bug %></li>
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </nav>
+    <%= yield(:main).empty? ? yield : yield(:main) %>
+  </body>
 </html>
