@@ -199,7 +199,8 @@ class Judge
   end
 
   def conditioned_output output
-    output.split("\n").map{|s|s.rstrip.chomp}.join("\n").chomp << "\n"
+    # canonicalize based on how it looks - remove trailing whitespace, keep leading whitespace
+    output.split("\n").map{|s|s.rstrip}.join("\n").rstrip << "\n"
   end
   
   def truncate_output output
