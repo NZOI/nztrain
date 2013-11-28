@@ -101,7 +101,7 @@ EOF
     stdout, boxlog, status = capture3(command, options, &block)
     metafile.open
     meta = self.class.parse_meta(metafile.read)
-    stderr = File.open(expand_path(logfile)) { |f| to_utf8(f.read) }
+    stderr = File.open(expand_path(logfile)) { |f| clean_utf8(f.read) }
     return stdout, stderr, boxlog, meta, status
   ensure
     metafile.close! unless metafile.nil?
@@ -153,6 +153,10 @@ EOF
 
   def expand_path filename
     File.expand_path(filename,"/tmp/box/#{@box_id}/box")
+  end
+
+  def clean_utf8 string
+    string.force_encoding('UTF-8').encode('UTF-16', :invalid => :replace, :undef => :replace).encode('UTF-8')
   end
 
   protected
@@ -242,10 +246,6 @@ EOF
     result = yield *ws
     ws.each(&:close)
     readers.map(&:value)+Array(result)
-  end
-
-  def to_utf8 string
-    string.encode("UTF-8", invalid: :replace, undef: :replace)
   end
 
   class << self
