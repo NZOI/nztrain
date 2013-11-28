@@ -134,6 +134,7 @@ class Judge
         result['message'] = truncate_output(eval_output[1])
         result.delete('evaluation') if result['meta']['status'] != 'OK'
       end
+      result['message'] = "No output.\n#{result['message']}" if output == ""
       result
     end
   ensure
