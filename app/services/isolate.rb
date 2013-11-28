@@ -101,7 +101,7 @@ EOF
     stdout, boxlog, status = capture3(command, options, &block)
     metafile.open
     meta = self.class.parse_meta(metafile.read)
-    stderr = File.open(expand_path(logfile)) { |f| f.read }
+    stderr = File.open(expand_path(logfile)) { |f| to_utf8(f.read) }
     return stdout, stderr, boxlog, meta, status
   ensure
     metafile.close! unless metafile.nil?
@@ -242,6 +242,10 @@ EOF
     result = yield *ws
     ws.each(&:close)
     readers.map(&:value)+Array(result)
+  end
+
+  def to_utf8 string
+    string.encode("UTF-8", invalid: :replace, undef: :replace)
   end
 
   class << self

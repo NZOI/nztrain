@@ -67,6 +67,7 @@ class Judge
   def judge_test_case(test_case, run_command)
     result = run_test_case(test_case, run_command)
     result['evaluator'] = evaluate_output(test_case, result['output'], problem.evaluator)
+    result['log'] = truncate_output(result['log']) # log only a small portion
     result['output'] = truncate_output(result['output']) # store only a small portion
     result
   end
@@ -95,6 +96,9 @@ class Judge
   end
 
   def evaluate_output(test_case, output, evaluator)
+    if !actual.force_encoding("UTF-8").valid_encoding?
+      return {'evaluation' => 0, 'log' => 'Output was not a valid UTF-8 encoding.', 'meta' => {'status' => 'OK'}}
+    end
     expected = conditioned_output(test_case.output)
     actual = conditioned_output(output)
     if evaluator.nil?
@@ -115,6 +119,7 @@ class Judge
         run_opts = resource_limits.reverse_merge(:processes => true, 3 => input_stream, 4 => output_stream, :stdin_data => actual)
         output, result['log'], result['box'], result['meta'], status = box.capture5("./#{EvalFileName} #{deprecated_args}", run_opts )
         eval_output = output.strip.split(nil,2)
+        result['log'] = truncate_output(result['log'])
         result['stat'] = status.exitstatus
       end
       if eval_output.empty? # DEPRECATED
@@ -122,7 +127,7 @@ class Judge
         result['evaluation'] = 1 if result['stat'] == 0 # DEPRECATED
       else
         result['evaluation'] = eval_output[0].to_f
-        result['message'] = eval_output[1]
+        result['message'] = truncate_output(eval_output[1])
         result.delete('evaluation') if result['meta']['status'] != 'OK'
       end
       result
@@ -204,6 +209,6 @@ class Judge
   end
   
   def truncate_output output
-    output.slice(0,100).split("\n").take(5).join("\n")
+    output.slice(0,100).split("\n").take(10).join("\n")
   end
 end
