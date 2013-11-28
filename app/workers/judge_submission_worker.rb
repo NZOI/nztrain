@@ -11,5 +11,10 @@ class JudgeSubmissionWorker
       submission.judged_at = DateTime.now
       submission.save
     end
+  rescue StandardError => e
+    submission.reload
+    submission.judge_log = {'error' => {'message' => e.message, 'backtrace' => e.backtrace}}.to_json
+    submission.save
+    raise
   end
 end
