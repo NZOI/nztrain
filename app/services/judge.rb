@@ -68,7 +68,7 @@ class Judge
     result = run_test_case(test_case, run_command)
     result['evaluator'] = evaluate_output(test_case, result['output'], problem.evaluator)
     result['log'] = truncate_output(result['log']) # log only a small portion
-    result['output'] = truncate_output(box.to_utf8(result['output'])) # store only a small portion ####
+    result['output'] = truncate_output(result['output'].encode("UTF-8", invalid: :replace, undef: :replace)) # store only a small portion
     result
   end
 
