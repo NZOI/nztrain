@@ -26,17 +26,3 @@ bash $RAILS_ROOT/script/template.bash < $RAILS_ROOT/script/install/nginx.app.con
   foreman export upstart /etc/init
 )
 
-#if [ ! -f /etc/init.d/$APP_NAME ] ; then
-#  # setup unicorn init.d
-#  bash script/template.bash < script/install/app-init-script | cat > /etc/init.d/$APP_NAME
-#
-#  chmod +x /etc/init.d/$APP_NAME
-#
-#  # automatically startup service on boot
-#  update-rc.d -f $APP_NAME defaults
-#else # update the init.d script, but don't add service to startup
-#  bash script/template.bash < script/install/app-init-script | cat > /etc/init.d/$APP_NAME
-#
-#  chmod +x /etc/init.d/$APP_NAME
-#fi
-
