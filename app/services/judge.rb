@@ -96,7 +96,7 @@ class Judge
   end
 
   def evaluate_output(test_case, output, evaluator)
-    if !actual.force_encoding("UTF-8").valid_encoding?
+    if !output.force_encoding("UTF-8").valid_encoding?
       return {'evaluation' => 0, 'log' => 'Output was not a valid UTF-8 encoding.', 'meta' => {'status' => 'OK'}}
     end
     expected = conditioned_output(test_case.output)
@@ -118,12 +118,16 @@ class Judge
       str_to_pipe(test_case.input, expected) do |input_stream, output_stream|
         run_opts = resource_limits.reverse_merge(:processes => true, 3 => input_stream, 4 => output_stream, :stdin_data => actual)
         output, result['log'], result['box'], result['meta'], status = box.capture5("./#{EvalFileName} #{deprecated_args}", run_opts )
-        eval_output = output.strip.split(nil,2)
         result['log'] = truncate_output(result['log'])
+        return result.merge('stat' => 2, 'box' => 'Output was not a valid UTF-8 encoding\n'+result['box']) if !output.force_encoding("UTF-8").valid_encoding?
+        eval_output = output.strip.split(nil,2)
         result['stat'] = status.exitstatus
       end
       if eval_output.empty? # DEPRECATED
-        result['evaluation'] = 0 if result['stat'] == 1 && result['meta']['status'] == 'RE' && result['meta']['exitcode'] == 1 # DEPRECATED
+        if result['stat'] == 1 && result['meta']['status'] == 'RE' && result['meta']['exitcode'] == 1 # DEPRECATED
+          result['evaluation'] = 0 
+          result['meta']['status'] = 'OK'
+        end
         result['evaluation'] = 1 if result['stat'] == 0 # DEPRECATED
       else
         result['evaluation'] = eval_output[0].to_f
@@ -143,7 +147,7 @@ class Judge
       id = relation.test_case_id
       next pending = true unless evaluated_test_cases.has_key?(id)
       test = evaluated_test_cases[id]
-      break error = true if test['stat'] == 2 || !test['evaluator'].has_key?('evaluation')
+      break error = true if test['meta']['status'] != 'OK' || !test['evaluator'].has_key?('evaluation')
       sig = true if test['stat'] != 0
       test['evaluator'].fetch('evaluation', 0)
     end
