@@ -67,8 +67,8 @@ before_fork do |server, worker|
   defined?(ActiveRecord::Base) and
     ActiveRecord::Base.connection.disconnect!
 
-  $redis.client.disconnect
-  $qless = $qless.redis.client.disconnect
+  $redis.client.disconnect unless $redis.nil?
+  $qless.redis.client.disconnect unless $qless.nil?
 
   # The following is only recommended for memory/DB-constrained
   # installations.  It is not needed if your system can house
