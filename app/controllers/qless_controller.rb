@@ -1,4 +1,4 @@
-class SidekiqController < ApplicationController
+class QlessController < ApplicationController
   layout "application"
 
   def default

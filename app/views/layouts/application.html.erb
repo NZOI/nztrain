@@ -115,7 +115,7 @@
                     <ul>
                       <% if permitted_to? :index, Role %><li><a href="<%= roles_path %>">roles</a></li><% end %>
                       <% if permitted_to? :index, Setting %><li><a href="<%= settings_path %>">settings</a></li><% end %>
-                      <li><a href="<%= sidekiq_path %>">sidekiq</a></li>
+                      <li><a href="<%= qless_path %>">qless</a></li>
                     </ul>
                   </li>
                 <% end %>

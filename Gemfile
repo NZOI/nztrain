@@ -40,7 +40,8 @@ gem 'unicorn'
 
 # Redis and Background Processing
 gem 'redis'
-gem 'sidekiq'
+gem 'qless', :github => 'ronalchn/qless', :branch => 'nztrain'
+gem 'connection_pool'
 gem 'sinatra'
 
 # Deploy with Capistrano

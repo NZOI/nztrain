@@ -52,7 +52,7 @@ class Submission < ActiveRecord::Base
     Rails.env == 'test' ? self.old_judge : spawn { self.old_judge } # for now
 
     # new judge
-    JudgeSubmissionWorker.perform_async(self.id)
+    $qless.queues['judge'].put(JudgeSubmissionWorker, :id => self.id)
   end
 
   def old_judge

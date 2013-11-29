@@ -6,3 +6,15 @@ require 'rake/dsl_definition'
 require 'rake'
 
 NZTrain::Application.load_tasks
+
+namespace :qless do
+  task :work => :environment do
+    require 'qless/job_reservers/ordered'
+    require 'qless/worker'
+    # The only required option is QUEUES; the
+    # rest have reasonable defaults.
+    queues = %w[judge].map { |name| $qless.queues[name] }
+    job_reserver = Qless::JobReservers::Ordered.new(queues)
+    worker = Qless::Workers::ForkingWorker.new(job_reserver, :num_workers => 2, :interval => 2).run
+  end
+end

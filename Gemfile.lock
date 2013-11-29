@@ -1,3 +1,11 @@
+GIT
+  remote: git://github.com/ronalchn/qless.git
+  revision: 930b3f30f93d1df2b2916c40eef9ad8dee96f8cc
+  branch: nztrain
+  specs:
+    qless (0.10.0.pre)
+      redis (>= 2.2)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -51,8 +59,6 @@ GEM
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
       json (>= 1.7)
-    celluloid (0.15.2)
-      timers (~> 1.1.0)
     chronic (0.10.2)
     coderay (1.1.0)
     coffee-rails (3.2.2)
@@ -164,8 +170,6 @@ GEM
       json (~> 1.4)
     recaptcha (0.3.5)
     redis (3.0.6)
-    redis-namespace (1.3.2)
-      redis (~> 3.0.4)
     ref (1.0.5)
     request_store (1.0.5)
     rest-client (1.6.7)
@@ -191,12 +195,6 @@ GEM
       sass (>= 3.1.10)
       tilt (~> 1.3)
     sexp_processor (4.4.0)
-    sidekiq (2.16.1)
-      celluloid (>= 0.15.2)
-      connection_pool (>= 1.0.0)
-      json
-      redis (>= 3.0.4)
-      redis-namespace (>= 1.3.1)
     simple-navigation (3.11.0)
       activesupport (>= 2.3.2)
     simple_form (2.1.0)
@@ -240,7 +238,6 @@ GEM
       ref
     thor (0.18.1)
     tilt (1.4.1)
-    timers (1.1.0)
     tins (0.11.0)
     treetop (1.4.15)
       polyglot
@@ -274,6 +271,7 @@ DEPENDENCIES
   capybara
   carrierwave
   coffee-rails (~> 3.2)
+  connection_pool
   coveralls
   debugger
   declarative_authorization
@@ -292,6 +290,7 @@ DEPENDENCIES
   newrelic_rpm
   nokogiri
   pg
+  qless!
   rails (~> 3.2.0)
   recaptcha
   redis
@@ -301,7 +300,6 @@ DEPENDENCIES
   rubyzip
   sass
   sass-rails (~> 3.2)
-  sidekiq
   simple-navigation
   simple_form
   sinatra

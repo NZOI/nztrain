@@ -26,6 +26,8 @@ $redis = Redis.new(REDIS_CONFIG)
 # To clear out the db before each test
 $redis.flushdb if Rails.env == "test"
 
+$qless = Qless::Client.new(REDIS_CONFIG.merge(:redis => $redis))
+$qless.config['heartbeat'] = 1800
 # To use Redis::Objects
 #require 'redis/objects'
 #Redis::Objects.redis = $redis

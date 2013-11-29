@@ -1,15 +1,15 @@
 NZTrain::Application.routes.draw do
   root :to => "home#home"
 
-  require 'sidekiq/web'
+  require 'qless/server'
   authenticate :user, ->(current_user) {current_user.is_admin?} do
-    get 'sidekiq', :to => 'sidekiq#default', :as => 'sidekiq'
+    get 'qless', :to => 'qless#default', :as => 'qless'
     constraints ->(request) {request.get?} do
-      mount Sidekiq::Web => '/sidekiq/web', :as => 'sidekiq_web'
+      mount Qless::Server.new($qless) => '/qless/server', :as => 'qless_server'
     end
   end
   authenticate :user, ->(current_user){current_user.has_role?(:superadmin)} do
-    mount Sidekiq::Web => '/sidekiq/web', :as => 'sidekiq_web'
+    mount Qless::Server.new($qless) => '/qless/server', :as => 'qless_server'
   end
 
   resources :ai_contests do

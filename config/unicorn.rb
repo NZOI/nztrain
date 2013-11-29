@@ -67,6 +67,8 @@ before_fork do |server, worker|
   defined?(ActiveRecord::Base) and
     ActiveRecord::Base.connection.disconnect!
 
+  $redis.disconnect
+
   # The following is only recommended for memory/DB-constrained
   # installations.  It is not needed if your system can house
   # twice as many worker_processes as you have configured.

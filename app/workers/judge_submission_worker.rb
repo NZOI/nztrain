@@ -1,5 +1,9 @@
 class JudgeSubmissionWorker
-  include Sidekiq::Worker
+  def self.perform(job)
+    self.new.perform(job.data['id'])
+    job.complete
+  end
+
   def perform(submission_id)
     submission = Submission.find(submission_id)
     result = Judge.new(submission).judge
