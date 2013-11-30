@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131123054446) do
+ActiveRecord::Schema.define(:version => 20131130104622) do
 
   create_table "ai_contest_games", :force => true do |t|
     t.integer  "ai_contest_id"
@@ -253,6 +253,9 @@ ActiveRecord::Schema.define(:version => 20131123054446) do
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
   end
+
+  add_index "test_case_relations", ["test_case_id"], :name => "index_test_case_relations_on_test_case_id"
+  add_index "test_case_relations", ["test_set_id"], :name => "index_test_case_relations_on_test_set_id"
 
   create_table "test_cases", :force => true do |t|
     t.text     "input"
