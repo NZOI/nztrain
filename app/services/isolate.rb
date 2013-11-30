@@ -73,18 +73,22 @@ class Isolate
       def capture#{suffix} command, options = {}, &block
         stdin_data = options.delete(:stdin_data) || ''
         binmode = options.delete(:binmode)
+        opts = options.extract!(:output_limit, :clean_utf8)
         popen#{suffix} command, options do |i, *p, t|
           if binmode
             i.binmode
             p.each(&:binmode)
           end
-          pipe_reader = p.map { |p| Thread.new { p.read } }
+          count = opts.fetch(:output_limit, nil)
+          pipe_reader = p.map { |p| Thread.new { count ? read_pipe_limited(p, count) : p.read } }
           begin
             i.write stdin_data
           rescue Errno::EPIPE
           end
           i.close
-          [*pipe_reader.map(&:value), t.value]
+          values = pipe_reader.map(&:value)
+          values.map!{|v|clean_utf8(v)} if opts.fetch(:clean_utf8, false)
+          [*values, t.value]
         end
       end
 EOF
@@ -95,13 +99,16 @@ EOF
   # meta is the key-value list of information isolate outputs related to resource usage, signals and how the program exited
   def capture5 command, options = {}, &block
     # if isolate adds functionality to close file descriptors box_inside before execve, these files can be converted to pipes without security implications
+    opts = options.slice(:output_limit, :clean_utf8)
     metafile = Tempfile.new('metafile')
     logfile = tmpfile
     options.reverse_merge!(:stderr => logfile, :meta => metafile.path)
     stdout, boxlog, status = capture3(command, options, &block)
     metafile.open
     meta = self.class.parse_meta(metafile.read)
-    stderr = File.open(expand_path(logfile)) { |f| clean_utf8(f.read) }
+    count = opts.fetch(:output_limit, nil)
+    stderr = File.open(expand_path(logfile)) { |f| count ? read_pipe_limited(f, count) : f.read }
+    stderr = clean_utf8(stderr) if opts.fetch(:clean_utf8, false)
     return stdout, stderr, boxlog, meta, status
   ensure
     metafile.close! unless metafile.nil?
@@ -156,7 +163,13 @@ EOF
   end
 
   def clean_utf8 string
-    string.force_encoding('UTF-8').encode('UTF-16', :invalid => :replace, :undef => :replace).encode('UTF-8')
+    return clean_utf8(string[0]), *string.drop(1) if string.is_a?(Array)
+    string.encode('UTF-8', 'binary', :invalid => :replace, :undef => :replace)
+  end
+
+  def read_pipe_limited(pipe, count)
+    string = (pipe.read(count) || "")
+    [string, File.open(File::NULL, "w") { |nul| string.bytesize + IO.copy_stream(pipe, nul) }]
   end
 
   protected

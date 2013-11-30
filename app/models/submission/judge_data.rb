@@ -57,6 +57,10 @@ class Submission
         data['output']
       end
 
+      def output_size
+        data['output_size']
+      end
+
       def log
         data['log']
       end

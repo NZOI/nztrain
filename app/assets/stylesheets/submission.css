@@ -146,3 +146,10 @@ table.results {
 .results tr.test_case:hover + tr.inspect_test, .results tr.inspect_test:hover {
   display: table-row;
 }
+
+.results th.output_stats {
+  font-weight: normal;
+  font-style: italic;
+  text-align: right;
+  padding-right: 0;
+}

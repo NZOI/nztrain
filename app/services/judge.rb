@@ -5,6 +5,7 @@ class Judge
   ExpectedFileName = "expect.out"
   CompileSandboxOptions ='-m262144 -w60 -e -i/dev/null'
   StackLimit = 1024 * 4 # 4 MB
+  OutputBaseLimit = 1024 * 1024 * 2
 
   attr_accessor :program
 
@@ -67,29 +68,32 @@ class Judge
 
   def judge_test_case(test_case, run_command)
     result = run_test_case(test_case, run_command)
-    result['evaluator'] = evaluate_output(test_case, result['output'], problem.evaluator)
+    result['evaluator'] = evaluate_output(test_case, result['output'], result['output_size'], problem.evaluator)
     result['log'] = truncate_output(result['log']) # log only a small portion
-    result['output'] = truncate_output(box.clean_utf8(result['output'].slice(0,100))) # store only a small portion
+    result['output'] = truncate_output(result['output'].slice(0,100)) # store only a small portion
     result
   end
 
   def run_test_case(test_case, run_command)
-    result = {}
     resource_limits = { :mem => problem.memory_limit*1024, :time => problem.time_limit, :wall_time => problem.time_limit*3+5, :stack => StackLimit }
-    run_opts = resource_limits.reverse_merge(:processes => false)
+    stream_limit = OutputBaseLimit + test_case.output.bytesize*2
+    run_opts = resource_limits.reverse_merge(:processes => false, :output_limit => stream_limit, :clean_utf8 => true)
     if program.input.nil?
       run_opts[:stdin_data] = test_case.input
     else
       box.fopen(program.input,"w") { |f| f.write(test_case.input) }
     end
-    result.merge!(Hash[%w[output log box meta stat].zip(box.capture5(run_command, run_opts))])
+    r={}
+    (r['output'], r['output_size']), (r['log'], r['log_size']), (r['box'],), r['meta'], r['stat'] = box.capture5(run_command, run_opts)
+    result = r
     result['stat'] = result['stat'].exitstatus
     result['time'] = [result['meta']['time'],problem.time_limit.to_f].min
     unless program.output.nil?
       if box.exist?(program.output)
-        box.fopen(program.output) { |f| result['output'] = f.read }
+        box.fopen(program.output) { |f| result['output'], result['output_size'] = box.read_pipe_limited(f, stream_limit) }
       else
         result['output'] = ""
+        result['output_size'] = 0
       end
     end
     return result
@@ -97,16 +101,17 @@ class Judge
     box.clean!
   end
 
-  def evaluate_output(test_case, output, evaluator)
-    if !output.force_encoding("UTF-8").valid_encoding?
-      return {'evaluation' => 0, 'log' => 'Output was not a valid UTF-8 encoding.', 'meta' => {'status' => 'OK'}}
+  def evaluate_output(test_case, output, output_size, evaluator)
+    stream_limit = OutputBaseLimit + test_case.output.bytesize*2
+    if output_size > stream_limit
+      return {'evaluation' => 0, 'log' => "Output exceeded the streamsize limit of #{stream_limit}.", 'meta' => {'status' => 'OK'}}
     end
     expected = conditioned_output(test_case.output)
     actual = conditioned_output(output)
     if evaluator.nil?
       {'evaluation' => (actual == expected ? 1 : 0), 'meta' => {'status' => 'OK'}}
     else
-      result = {}
+      r = {}
       box.fopen(EvalFileName,"w") do |file|
         file.chmod(0700)
         file.write(problem.evaluator.source.gsub(/\r\n?/, "\n"))
@@ -118,9 +123,10 @@ class Judge
       deprecated_args = "input actual expected" # DEPRECATED
       eval_output = nil
       str_to_pipe(test_case.input, expected) do |input_stream, output_stream|
-        run_opts = resource_limits.reverse_merge(:processes => true, 3 => input_stream, 4 => output_stream, :stdin_data => actual)
-        output, result['log'], result['box'], result['meta'], status = box.capture5("./#{EvalFileName} #{deprecated_args}", run_opts )
-        result['log'] = truncate_output(result['log'])
+        run_opts = resource_limits.reverse_merge(:processes => true, 3 => input_stream, 4 => output_stream, :stdin_data => actual, :output_limit => OutputBaseLimit + test_case.output.bytesize*4, :clean_utf8 => true)
+        (output,), (r['log'],r['log_size']), (r['box'],), result['meta'], status = box.capture5("./#{EvalFileName} #{deprecated_args}", run_opts )
+        result = r
+        result['log'] = truncate_output(r['log'])
         return result.merge('stat' => 2, 'box' => 'Output was not a valid UTF-8 encoding\n'+result['box']) if !output.force_encoding("UTF-8").valid_encoding?
         eval_output = output.strip.split(nil,2)
         result['stat'] = status.exitstatus
