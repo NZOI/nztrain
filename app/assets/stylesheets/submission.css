@@ -1,6 +1,7 @@
 table.results {
   border-spacing: 0;
   border-collapse: collapse;
+  width: 100%;
 }
 
 .results th {
@@ -84,7 +85,7 @@ table.results {
   background-color: rgba(255,255,255,0.3);
 }
 
-.results tr.inspect_test td {
+.results tr.inspect_test > td {
   background-color: rgba(255,255,255,0.6);
 }
 
@@ -121,15 +122,21 @@ table.results {
   width: 100%;
 }
 
-.results .inspect_test table {
+.results .inspect_test table.inspect_output {
   width: 100%;
   border-spacing: 5px;
+  table-layout: fixed;
+}
+
+.results .inspect_test table.inspect_output td {
+  padding: 2px;
+  border: 1px solid black;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .results .inspect_test table td {
-  padding: 2px;
   background-color: rgba(255,255,255,0.3);
-  border: 1px solid black;
 }
 
 .results tr.inspect_test {

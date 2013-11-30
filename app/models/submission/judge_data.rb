@@ -169,6 +169,10 @@ class Submission
         return "" if data['time'].nil?
         "#{meta.disp(data['time'])} seconds"
       end
+
+      def killed?
+        meta.data['killed'] == 1
+      end
     end
 
     module Evaluable

@@ -89,6 +89,17 @@
               <tr class="inspect_test">
                 <td colspan="5">
                   <table>
+                    <tr>
+                      <% if case_data.status == :timeout %>
+                        <th>Time (<%= case_data.killed? ? "killed" : "exited" %>):</th><td><%= case_data.meta.time %></td>
+                      <% end %>
+                      <th>Wall time:</th><td><%= case_data.meta.walltime %></td>
+                      <% if [:signal, :runtime, :timeout].include? case_data.status %>
+                        <th>Sandbox message:</th><td><%= case_data.meta.status + ": " + case_data.meta.message %></td>
+                      <% end %>
+                    </tr>
+                  </table>
+                  <table class="inspect_output">
                     <tr><th>Actual Output</th><th>Expected Output</th><th>Evaluator Log</th></tr>
                     <tr>
                       <td><span class="code"><%= case_data.output %></span></td>
