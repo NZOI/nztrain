@@ -20,7 +20,7 @@ class Isolate
   rescue LockError => e
     false
   ensure
-    isolate.send(:destroy, options)
+    isolate.send(:destroy, options) if !isolate.nil?
   end
   
   class LockError < StandardError; end
