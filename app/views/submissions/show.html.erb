@@ -136,7 +136,7 @@
 
 
   <% if current_user.is_admin? %>
-  <%= simple_format(@submission.debug_output) %>
+  <%= simple_format(@submission.debug_output).slice(0...2000) %>
   <% end %>
 
 <% end %>
