@@ -11,6 +11,7 @@ namespace :qless do
   task :work => :environment do
     defined?(ActiveRecord::Base) and
       ActiveRecord::Base.connection.disconnect!
+    $activerecord_connection = false
     require 'qless/job_reservers/ordered'
     require 'qless/worker'
     # The only required option is QUEUES; the

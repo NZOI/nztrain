@@ -1,8 +1,8 @@
 class JudgeSubmissionWorker
   def self.perform(job)
-    unless Thread.current['active_record.establish_connection']
+    unless $activerecord_connection
       ActiveRecord::Base.establish_connection
-      Thread.current['active_record.establish_connection'] = true # might avoid memory leaks
+      $activerecord_connection = true # might avoid memory leaks
     end
 
     self.new.perform(job.data['id'])
