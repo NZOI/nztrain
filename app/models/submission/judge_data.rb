@@ -125,7 +125,7 @@ class Submission
 
       def info
         return "" if data.empty?
-        [data['box'],*data['meta'].map{|k,v|"#{k}:#{v}"},data['log']].join("\n")
+        [data['box'],*data['meta'].map{|k,v|"#{k}:#{v}"},data['log']].compact.join("\n")
       end
     end
 
