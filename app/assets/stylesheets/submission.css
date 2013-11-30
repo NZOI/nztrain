@@ -46,7 +46,7 @@ table.results {
   border: 2px solid #805000;
 }
 
-.results tbody.compilation.status_signal {
+.results tbody.compilation.status_signal, .results tbody.compilation.status_runtime {
   background-color: #A00000; /* dark red */
   border: 2px solid #500000;
 }
