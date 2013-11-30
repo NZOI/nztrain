@@ -1,0 +1,141 @@
+table.results {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+.results th {
+  text-align: left;
+}
+
+.results td, .results th {
+  padding: 2px 20px 2px 20px;
+  vertical-align: top;
+}
+
+.results tbody.headings {
+  border: 2px solid black;
+  border-bottom: 0px;
+}
+
+.results tbody.summary {
+  border: 2px solid black;
+  font-size: larger;
+}
+
+.results tbody th.judgement {
+  text-align: right;
+}
+
+.results tbody.compilation.status_success, .results tbody.test_set.status_correct, .results tbody.summary.status_correct {
+  background-color: #60C040; /* green */
+  border: 2px solid #306020;
+}
+
+.results tbody.compilation.status_pending, .results tbody.test_set.status_pending, .results tbody.summary.status_pending {
+  background-color: #6060FF; /* blue */
+  border: 2px solid #303080;
+}
+
+.results tbody.test_set.status_partial, .results tbody.summary.status_partial {
+  background-color: #C0C000; /* yellow */
+  border: 2px solid #606000;
+}
+
+.results tbody.compilation.status_error, .results tbody.test_set.status_error, .results tbody.summary.status_error {
+  background-color: #FFA000; /* orange */
+  border: 2px solid #805000;
+}
+
+.results tbody.compilation.status_signal {
+  background-color: #A00000; /* dark red */
+  border: 2px solid #500000;
+}
+
+.results tbody.test_set.status_wrong, .results tbody.compilation.status_timeout, .results tbody.compilation.status_walltime, .results tbody.summary.status_wrong {
+  background-color: #E03030; /* red */
+  border: 2px solid #681818;
+}
+
+.results tr.test_case.status_correct {
+  background-color: #60C040; /* green */
+}
+
+.results tr.test_case.status_pending {
+  background-color: #6060FF; /* blue */
+}
+
+.results tr.test_case.status_partial {
+  background-color: #C0C000; /* yellow */
+}
+
+.results tr.test_case.status_error {
+  background-color: #FFA000; /* orange */
+}
+
+.results tr.test_case.status_runtime, .results tr.test_case.status_signal {
+  background-color: #A00000; /* dark red */
+}
+
+.results tr.test_case.status_wrong, .results tr.test_case.status_timeout, .results tr.test_case.status_walltime {
+  background-color: #E03030; /* red */
+}
+
+.results tr.test_case td {
+  background-color: rgba(255,255,255,0.3);
+}
+
+.results tr.inspect_test td {
+  background-color: rgba(255,255,255,0.6);
+}
+
+.results .compilation td {
+  background-color: rgba(255,255,255,0.5);
+}
+
+.score_10x { background-color: #60C040; }
+.score_9x { background-color: #73C033; }
+.score_8x { background-color: #86C026; }
+.score_7x { background-color: #99C019; }
+.score_6x { background-color: #ACC00C; }
+.score_5x { background-color: #C0C000; }
+.score_4x { background-color: #E0B000; }
+.score_3x { background-color: #FFA000; }
+.score_2x { background-color: #F58010; }
+.score_1x { background-color: #EA5820; }
+.score_0x { background-color: #E03030; }
+
+.results .code {
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+
+.results tbody.compilation td {
+  padding: 10px;
+}
+
+.results .test_time, .results .test_memory, .results .judgement {
+  white-space: nowrap;
+}
+
+.results .test_name {
+  width: 100%;
+}
+
+.results .inspect_test table {
+  width: 100%;
+  border-spacing: 5px;
+}
+
+.results .inspect_test table td {
+  padding: 2px;
+  background-color: rgba(255,255,255,0.3);
+  border: 1px solid black;
+}
+
+.results tr.inspect_test {
+  display: none;
+}
+
+.results tr.test_case:hover + tr.inspect_test, .results tr.inspect_test:hover {
+  display: table-row;
+}

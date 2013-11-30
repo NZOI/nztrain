@@ -4,7 +4,7 @@ class Judge
   EvalFileName = "eval.sh"
   ExpectedFileName = "expect.out"
   CompileSandboxOptions ='-m262144 -w60 -e -i/dev/null'
-  StackLimitBytes = 1024 * 4
+  StackLimit = 1024 * 4 # 4 MB
 
   attr_accessor :program
 
@@ -33,12 +33,13 @@ class Judge
       end
 
       # test sets
+      denominator = problem.test_sets.map(&:points).inject(&:+).to_f
       result['test_sets'] = {}
       problem.test_sets.each do |test_set|
-        result['test_sets'][test_set.id] = grade_test_set(test_set, result['test_cases'])
+        result['test_sets'][test_set.id] = grade_test_set(test_set, result['test_cases'], denominator)
       end
-
-      result.merge!(grade_program(result['test_sets']))
+      
+      result.merge!(grade_program(result['test_sets'], denominator))
     end
     result
   end
@@ -74,7 +75,7 @@ class Judge
 
   def run_test_case(test_case, run_command)
     result = {}
-    resource_limits = { :mem => problem.memory_limit*1024, :time => problem.time_limit, :wall_time => problem.time_limit*3+5 }
+    resource_limits = { :mem => problem.memory_limit*1024, :time => problem.time_limit, :wall_time => problem.time_limit*3+5, :stack => StackLimit }
     run_opts = resource_limits.reverse_merge(:processes => false)
     if program.input.nil?
       run_opts[:stdin_data] = test_case.input
@@ -83,6 +84,7 @@ class Judge
     end
     result.merge!(Hash[%w[output log box meta stat].zip(box.capture5(run_command, run_opts))])
     result['stat'] = result['stat'].exitstatus
+    result['time'] = [result['meta']['time'],problem.time_limit.to_f].min
     unless program.output.nil?
       if box.exist?(program.output)
         box.fopen(program.output) { |f| result['output'] = f.read }
@@ -141,14 +143,15 @@ class Judge
     box.clean!
   end
 
-  def grade_test_set test_set, evaluated_test_cases
-    result = {}
+  def grade_test_set test_set, evaluated_test_cases, denominator
+    result = {'cases' => []}
     pending, error, sig = false, false, false
     evaluations = test_set.test_case_relations.map do |relation|
       id = relation.test_case_id
+      result['cases'] << id
       next pending = true unless evaluated_test_cases.has_key?(id)
       test = evaluated_test_cases[id]
-      break error = true if test['meta']['status'] != 'OK' || !test['evaluator'].has_key?('evaluation')
+      break error = true if ((test['evaluator']||{})['meta']||{})['status'] != 'OK' || !test['evaluator'].has_key?('evaluation')
       sig = true if test['stat'] != 0
       test['evaluator'].fetch('evaluation', 0)
     end
@@ -160,18 +163,18 @@ class Judge
       # test set = min case score
       result['evaluation'] = evaluations.push(1).min
       result['evaluation'] = 0 if sig # any signal/runtime error/timeout fails the test set
+      result['score'] = (test_set.points * result['evaluation']).to_f*100/denominator
     end
     result
   end
 
-  def grade_program(graded_sets)
+  def grade_program(graded_sets, denominator)
     test_sets = problem.test_sets
     sets = graded_sets.values_at(*test_sets.map(&:id))
     result = {}
     result['status'] = [*sets.map{ |s| s['status'] }, (sets.compact.count<sets.count) ? 1 : 0].max
     if result['status'] == 0
-      denominator = test_sets.map(&:points).inject(&:+).to_f
-      numerator = test_sets.map{ |s| (graded_sets[s.id]['evaluation'] * s.points).floor }.inject(&:+).to_f
+      numerator = test_sets.map{ |s| (graded_sets[s.id]['evaluation'] * s.points)}.inject(&:+).to_f
       result['evaluation'] = numerator/denominator
       result['score'] = (result['evaluation']*100).floor
     end
@@ -214,6 +217,12 @@ class Judge
   end
   
   def truncate_output output
-    output.slice(0,100).split("\n").take(10).join("\n")
+    self.class.truncate_output(output)
+  end
+
+  def self.truncate_output output
+    output.slice(0,100).split("\n",-1).take(10).join("\n").tap do |out|
+      out << "..." if out.size < output.size
+    end
   end
 end

@@ -14,9 +14,8 @@ class Language < ActiveRecord::Base
     result = {}
     box.tmpfile(["program", self.extension]) do |source_file|
       box.fopen(source_file, 'w') { |f| f.write(source) }
-      compile_command = self.compile_command(:source => source_file, :output => output)
-      result.merge!(Hash[%w[output log box meta stat].zip(box.capture5(compile_command, options.reverse_merge(:processes => true)))])
-      result['output'] = "No output." if result['output'].empty?
+      result['command'] = self.compile_command(:source => source_file, :output => output)
+      result.merge!(Hash[%w[output log box meta stat].zip(box.capture5(result['command'], options.reverse_merge(:processes => true)))])
       result['stat'] = result['stat'].exitstatus
     end
     return result

@@ -39,6 +39,10 @@ class Submission < ActiveRecord::Base
     self.source = IO.read(file.path)
   end
 
+  def judge_data
+    JudgeData.new(judge_log, Hash[problem.test_sets.map{|s|[s.id,s.test_case_ids]}], problem.test_case_ids)
+  end
+
   before_save do
     if source_was.nil?
       problem = Problem.find(self.problem_id)
