@@ -1,6 +1,6 @@
 class JudgeSubmissionWorker
   def self.perform(job)
-    ActiveRecord::Base.establish_connection unless ActiveRecord::Base.connected?
+    ActiveRecord::Base.connection.reconnect! # might avoid memory leaks
 
     self.new.perform(job.data['id'])
     job.complete
