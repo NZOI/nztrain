@@ -1,7 +1,6 @@
 class JudgeSubmissionWorker
   def self.perform(job)
-    defined?(ActiveRecord::Base) and
-      ActiveRecord::Base.establish_connection
+    ActiveRecord::Base.establish_connection unless ActiveRecord::Base.connected?
 
     self.new.perform(job.data['id'])
     job.complete
@@ -24,6 +23,7 @@ class JudgeSubmissionWorker
       submission.judge_log = {'error' => {'message' => e.message, 'backtrace' => e.backtrace}}.to_json
       submission.save
     end
+    #retry if e.is_a?(Errno::ENOMEM)
     raise
   end
 end
