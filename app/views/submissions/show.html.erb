@@ -85,7 +85,7 @@
               <td class="judgement"><%= case_data.judgement %></td>
               <td></td>
             </tr>
-            <% if case_data.status != :pending && permitted_to? :inspect, @submission %>
+            <% if case_data.status != :pending && permitted_to?(:inspect, @submission) %>
               <tr class="inspect_test">
                 <td colspan="5">
                   <table>
