@@ -9,6 +9,8 @@ NZTrain::Application.load_tasks
 
 namespace :qless do
   task :work => :environment do
+    defined?(ActiveRecord::Base) and
+      ActiveRecord::Base.connection.disconnect!
     require 'qless/job_reservers/ordered'
     require 'qless/worker'
     # The only required option is QUEUES; the

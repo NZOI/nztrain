@@ -1,5 +1,8 @@
 class JudgeSubmissionWorker
   def self.perform(job)
+    defined?(ActiveRecord::Base) and
+      ActiveRecord::Base.establish_connection
+
     self.new.perform(job.data['id'])
     job.complete
   end

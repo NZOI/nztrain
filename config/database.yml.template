@@ -22,7 +22,7 @@ production:
   adapter: postgresql
   encoding: unicode
   database: ${DATABASE}
-  pool: 25
+  pool: 5
   username: ${DATABASE_USERNAME}
   password:
 
