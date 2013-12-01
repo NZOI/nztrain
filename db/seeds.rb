@@ -68,7 +68,7 @@ languages = {
                 :interpreted => true,   :extension => '.py'},
   "Haskell" => {:compiler => '/usr/bin/ghc',     :flags => '--make -O2 -o %{output} %{source} -lm',
                 :interpreted => false,  :extension => '.hs'},
-  "C" =>       {:compiler => '/usr/bin/gcc',     :flags => '-O2 -o %{output} -lm',
+  "C" =>       {:compiler => '/usr/bin/gcc',     :flags => '-O2 -o %{output} %{source} -lm',
                 :interpreted => false,  :extension => '.c'}
 }
 
