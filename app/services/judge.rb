@@ -124,7 +124,7 @@ class Judge
       eval_output = nil
       str_to_pipe(test_case.input, expected) do |input_stream, output_stream|
         run_opts = resource_limits.reverse_merge(:processes => true, 3 => input_stream, 4 => output_stream, :stdin_data => actual, :output_limit => OutputBaseLimit + test_case.output.bytesize*4, :clean_utf8 => true)
-        (output,), (r['log'],r['log_size']), (r['box'],), result['meta'], status = box.capture5("./#{EvalFileName} #{deprecated_args}", run_opts )
+        (output,), (r['log'],r['log_size']), (r['box'],), r['meta'], status = box.capture5("./#{EvalFileName} #{deprecated_args}", run_opts )
         result = r
         result['log'] = truncate_output(r['log'])
         return result.merge('stat' => 2, 'box' => 'Output was not a valid UTF-8 encoding\n'+result['box']) if !output.force_encoding("UTF-8").valid_encoding?
