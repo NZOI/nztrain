@@ -14,5 +14,5 @@ chdir <%= engine.root %>
 kill timeout <%= engine.options[:timeout] %>
 <% end %>
 
-exec bash -lc '<%= process.command %> >> <%= log %>/<%= name %>-<%= num %>.log 2>&1'
+exec bash -lc exec '<%= process.command %> >> <%= log %>/<%= name %>-<%= num %>.log 2>&1'
 
