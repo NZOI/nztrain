@@ -64,7 +64,7 @@ end
 languages = {
   "C++" =>     {:compiler => '/usr/bin/g++',     :flags => '-O2 -o %{output} %{source} -lm',
                 :interpreted => false,  :extension => '.cpp'},
-  "Python" =>  {:compiler => '/usr/bin/python',  :flags => '%{source}'
+  "Python" =>  {:compiler => '/usr/bin/python',  :flags => '%{source}',
                 :interpreted => true,   :extension => '.py'},
   "Haskell" => {:compiler => '/usr/bin/ghc',     :flags => '--make -O2 -o %{output} %{source} -lm',
                 :interpreted => false,  :extension => '.hs'},
