@@ -85,18 +85,17 @@ class Judge
     end
     r={}
     (r['output'], r['output_size']), (r['log'], r['log_size']), (r['box'],), r['meta'], r['stat'] = box.capture5(run_command, run_opts)
-    result = r
-    result['stat'] = result['stat'].exitstatus
-    result['time'] = [result['meta']['time'],problem.time_limit.to_f].min
+    r['stat'] = r['stat'].exitstatus
+    r['time'] = [r['meta']['time'],problem.time_limit.to_f].min
     unless program.output.nil?
       if box.exist?(program.output)
-        box.fopen(program.output) { |f| result['output'], result['output_size'] = box.read_pipe_limited(f, stream_limit) }
+        box.fopen(program.output) { |f| r['output'], r['output_size'] = box.read_pipe_limited(f, stream_limit) }
       else
-        result['output'] = ""
-        result['output_size'] = 0
+        r['output'] = ""
+        r['output_size'] = 0
       end
     end
-    return result
+    return r
   ensure
     box.clean!
   end
@@ -125,25 +124,24 @@ class Judge
       str_to_pipe(test_case.input, expected) do |input_stream, output_stream|
         run_opts = resource_limits.reverse_merge(:processes => true, 3 => input_stream, 4 => output_stream, :stdin_data => actual, :output_limit => OutputBaseLimit + test_case.output.bytesize*4, :clean_utf8 => true)
         (output,), (r['log'],r['log_size']), (r['box'],), r['meta'], status = box.capture5("./#{EvalFileName} #{deprecated_args}", run_opts )
-        result = r
-        result['log'] = truncate_output(r['log'])
-        return result.merge('stat' => 2, 'box' => 'Output was not a valid UTF-8 encoding\n'+result['box']) if !output.force_encoding("UTF-8").valid_encoding?
+        r['log'] = truncate_output(r['log'])
+        return r.merge('stat' => 2, 'box' => 'Output was not a valid UTF-8 encoding\n'+r['box']) if !output.force_encoding("UTF-8").valid_encoding?
         eval_output = output.strip.split(nil,2)
-        result['stat'] = status.exitstatus
+        r['stat'] = status.exitstatus
       end
       if eval_output.empty? # DEPRECATED
-        if result['stat'] == 1 && result['meta']['status'] == 'RE' && result['meta']['exitcode'] == 1 # DEPRECATED
-          result['evaluation'] = 0 
-          result['meta']['status'] = 'OK'
+        if r['stat'] == 1 && r['meta']['status'] == 'RE' && r['meta']['exitcode'] == 1 # DEPRECATED
+          r['evaluation'] = 0 
+          r['meta']['status'] = 'OK'
         end
-        result['evaluation'] = 1 if result['stat'] == 0 # DEPRECATED
+        r['evaluation'] = 1 if r['stat'] == 0 # DEPRECATED
       else
-        result['evaluation'] = eval_output[0].to_f
-        result['message'] = truncate_output(eval_output[1])
-        result.delete('evaluation') if result['meta']['status'] != 'OK'
+        r['evaluation'] = eval_output[0].to_f
+        r['message'] = truncate_output(eval_output[1])
+        r.delete('evaluation') if r['meta']['status'] != 'OK'
       end
-      result['message'] = "No output.\n#{result['message']}" if output == ""
-      result
+      r['message'] = "No output.\n#{r['message']}" if output == ""
+      r
     end
   ensure
     box.clean!
