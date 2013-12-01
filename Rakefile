@@ -11,13 +11,22 @@ namespace :qless do
   task :work => :environment do
     defined?(ActiveRecord::Base) and
       ActiveRecord::Base.connection.disconnect!
-    $activerecord_connection = false
+
+    module ActiveRecordReconnect
+      def after_fork
+        ActiveRecord::Base.establish_connection
+      end
+    end
+
+    Qless::Workers::ForkingWorker.send(:include, ActiveRecordReconnect)
+
     require 'qless/job_reservers/ordered'
     require 'qless/worker'
     # The only required option is QUEUES; the
     # rest have reasonable defaults.
     queues = %w[judge].map { |name| $qless.queues[name] }
     job_reserver = Qless::JobReservers::Ordered.new(queues)
+
     worker = Qless::Workers::ForkingWorker.new(job_reserver, :num_workers => 2, :interval => 2).run
   end
 end

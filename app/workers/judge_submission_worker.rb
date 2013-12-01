@@ -1,12 +1,8 @@
 class JudgeSubmissionWorker
   def self.perform(job)
-    unless $activerecord_connection
-      ActiveRecord::Base.establish_connection
-      $activerecord_connection = true # might avoid memory leaks
-    end
-
     self.new.perform(job.data['id'])
     job.complete
+    GC.start # garbage collect
   end
 
   def perform(submission_id)
