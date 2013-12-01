@@ -8,7 +8,11 @@ require 'rake'
 NZTrain::Application.load_tasks
 
 namespace :qless do
-  task :work => :environment do
+  task :setup do
+    Rails.env = ARGV[1] if ARGV[1]
+  end
+
+  task :work => [:setup, :environment] do
     require 'qless/job_reservers/ordered'
     require 'qless/worker'
 
