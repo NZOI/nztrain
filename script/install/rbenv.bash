@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-ruby_version=1.9.3-p448
+ruby_version=2.0.0-p353
 
 # detect rbenv
 rbenv --version &> /dev/null && {

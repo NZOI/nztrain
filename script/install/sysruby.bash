@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Installs the latest stable Ruby 1.9.x from source
-branch="ruby-1.9-stable"
+# Installs the latest stable Ruby 2.0.x from source
+branch="ruby-2.0-stable"
 tmpdir="ruby_install"
 
 # remember current directory
@@ -33,7 +33,7 @@ $cmd && $cmd2 && $cmd3 && $cmd4 && $cmd5 && {
   cd $pdir
   cmd="sudo update-alternatives --remove-all gem"
   echo "$ $cmd" ; $cmd
-  cmd="sudo update-alternatives --install /usr/bin/ruby ruby /opt/ruby/$version/bin/ruby 400 \
+  cmd="sudo update-alternatives --install /usr/bin/ruby ruby /opt/ruby/$version/bin/ruby 600 \
         --slave   /usr/bin/gem gem /opt/ruby/$version/bin/gem \
         --slave   /usr/bin/gems_bin gems_bin /opt/ruby/$version/bin/"
   echo "$ $cmd" ; $cmd
