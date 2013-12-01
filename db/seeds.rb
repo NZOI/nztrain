@@ -61,10 +61,17 @@ if !(User.exists?(0))
 end
 
 
-languages = {"C++" => {:compiler => '/usr/bin/g++', :flags => '-O2 -lm -o %{output}', :interpreted => false, :extension => '.cpp'},
-             "Python" => {:compiler => '/usr/bin/python', :interpreted => true, :extension => '.py'},
-             "Haskell" => {:compiler => '/usr/bin/ghc', :flags => '--make -O2 -lm -o %{output}', :interpreted => false, :extension => '.hs'},
-             "C" => {:compiler => '/usr/bin/gcc', :flags => '-O2 -lm -o %{output}', :interpreted => false, :extension => '.c'}}
+languages = {
+  "C++" =>     {:compiler => '/usr/bin/g++',     :flags => '-O2 -o %{output} %{source} -lm',
+                :interpreted => false,  :extension => '.cpp'},
+  "Python" =>  {:compiler => '/usr/bin/python',  :flags => '%{source}'
+                :interpreted => true,   :extension => '.py'},
+  "Haskell" => {:compiler => '/usr/bin/ghc',     :flags => '--make -O2 -o %{output} %{source} -lm',
+                :interpreted => false,  :extension => '.hs'},
+  "C" =>       {:compiler => '/usr/bin/gcc',     :flags => '-O2 -o %{output} -lm',
+                :interpreted => false,  :extension => '.c'}
+}
+
 languages.each do |name, configuration|
   Language.where(:name => name).first_or_create!(configuration);
   Language.find_by_name(name).update_attributes(configuration); # update if not the same

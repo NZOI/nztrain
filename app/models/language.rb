@@ -6,7 +6,7 @@ class Language < ActiveRecord::Base
     parameters.fetch(:source)
     parameters.reverse_merge! :output => 'a.out'
     parameters.merge! :compiler => compiler
-    sprintf("%{compiler} #{flags} %{source}", parameters)
+    sprintf("%{compiler} #{flags}", parameters)
   end
 
   # compiles source to output in box
