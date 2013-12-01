@@ -237,7 +237,7 @@ EOF
   def environment
     Shellwords.split(`cat #{isolate_root}/etc/environment`).map do |pair|
       "--env=#{pair}"
-    end
+    end + ["--env=HOME=/box"]
   end
 
   def process_command command

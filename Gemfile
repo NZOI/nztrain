@@ -68,7 +68,7 @@ group :development, :test do
 
   gem 'factory_girl_rails'
 
-  #gem 'debugger'
+  gem 'byebug'
   gem 'factory_girl'#, '~> 4.0'
 
   gem 'ruby_parser' # for declarative_authorization
