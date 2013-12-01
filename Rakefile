@@ -9,6 +9,9 @@ NZTrain::Application.load_tasks
 
 namespace :qless do
   task :work => :environment do
+    require 'qless/job_reservers/ordered'
+    require 'qless/worker'
+
     defined?(ActiveRecord::Base) and
       ActiveRecord::Base.connection.disconnect!
 
@@ -20,8 +23,6 @@ namespace :qless do
 
     Qless::Workers::ForkingWorker.send(:include, ActiveRecordReconnect)
 
-    require 'qless/job_reservers/ordered'
-    require 'qless/worker'
     # The only required option is QUEUES; the
     # rest have reasonable defaults.
     queues = %w[judge].map { |name| $qless.queues[name] }
