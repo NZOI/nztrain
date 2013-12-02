@@ -1,9 +1,11 @@
 class ApplicationWorker
 
   def self.put(options = {})
-    $qless.queues[default_queue].put(self, options)
+    job = $qless.queues[default_queue].put(self, options)
 
     $qless.queues[default_queue].pop.perform if Rails.env.test?
+
+    job
   end
 
   protected
