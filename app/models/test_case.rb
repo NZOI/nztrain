@@ -13,4 +13,8 @@ class TestCase < ActiveRecord::Base
   def problem
     self.test_set.problem
   end
+
+  def truncated_output
+    JudgeSubmissionWorker.truncate_output(output)
+  end
 end

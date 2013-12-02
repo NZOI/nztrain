@@ -92,19 +92,19 @@
                     <% end %>
                   </tr>
                 </table>
-                <% expected_output = @submission.problem.test_cases.find(case_id).output %>
+                <% test_case = @submission.problem.test_cases.find(case_id) %>
                 <table class="inspect_output">
                   <tr>
                     <th>Actual Output</th>
                     <th class="output_stats">
                       <%= "Size: #{number_to_human_size(case_data.output_size)}" unless case_data.output_size.nil? %>
                     </th>
-                    <th>Expected Output</th><th class="output_stats">Size: <%= number_to_human_size(expected_output.bytesize) %></th>
+                    <th>Expected Output</th><th class="output_stats">Size: <%= number_to_human_size(test_case.output.bytesize) %></th>
                     <th>Evaluator Log</th><th class="output_stats"><%= "Evaluation: #{sprintf("%.2f",case_data.evaluator.evaluation)}/1.00" %></th>
                   </tr>
                   <tr>
                     <td colspan="2"><span class="code"><%= case_data.output %></span></td>
-                    <td colspan="2"><span class="code"><%= Judge.truncate_output(expected_output) %></span></td>
+                    <td colspan="2"><span class="code"><%= test_case.truncated_output %></span></td>
                     <td colspan="2"><span class="code"><%= case_data.evaluator.info %></span></td>
                   </tr>
                 </table>

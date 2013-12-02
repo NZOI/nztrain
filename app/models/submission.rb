@@ -53,8 +53,7 @@ class Submission < ActiveRecord::Base
   end
 
   def judge
-    # new judge
-    $qless.queues['judge'].put(JudgeSubmissionWorker, :id => self.id)
+    JudgeSubmissionWorker.put(:id => self.id)
   end
 
 end

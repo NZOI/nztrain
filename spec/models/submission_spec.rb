@@ -16,6 +16,7 @@ describe Submission do
     it 'judges submission' do
       @submission.score.should be_nil
       @submission.judge
+      @submission.reload
       @submission.score.should == 100
     end
     it 'judges submission on stdio problem' do
@@ -23,15 +24,18 @@ describe Submission do
       submission = FactoryGirl.create(:adding_submission_stdio, :problem => problem, :user => @user)
       submission.score.should be_nil
       submission.judge
+      submission.reload
       submission.score.should == 100
     end
     it 'judges partially correct submissions correctly' do
       @char_submission.score.should be_nil
       @char_submission.judge
+      @char_submission.reload
       @char_submission.score.should == 50
 
       @unsigned_submission.score.should be_nil
       @unsigned_submission.judge
+      @unsigned_submission.reload
       @unsigned_submission.score.should == 75
     end
   end

@@ -151,5 +151,5 @@ table.results {
   font-weight: normal;
   font-style: italic;
   text-align: right;
-  padding-right: 0;
+  padding-right: 10px;
 }
