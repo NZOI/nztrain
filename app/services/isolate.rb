@@ -156,6 +156,7 @@ EOF
   # cleans the box directory of any files by re-initializing
   def clean!
     system "isolate -b#{@box_id} --init #{"--cg" if has_cgroup?}", :out => '/dev/null'
+    init_boxdir()
   end
 
   def expand_path filename
@@ -176,17 +177,19 @@ EOF
 
   def initialize(options = {})
     @has_cgroup = !!options[:cg]
-    response = Kernel.send :`, "isolock --lock -- #{"--cg" if has_cgroup?}"
-    if $?.success?
-      @box_id = response.to_i
-    else
-      raise LockError
-    end
+    @box_id = Kernel.send(:`, "isolock --lock -- #{"--cg" if has_cgroup?}").to_i
+    raise LockError unless $?.success?
+    init_boxdir()
+    @box_id
+  end
+
+  def init_boxdir
+    FileUtils.mkdir(expand_path('tmp')) # make tmp directory in box
   end
 
   def destroy(options = {})
     return if @box_id.nil?
-    system "isolock --free -- #{@box_id} #{"--cg" if has_cgroup?}"
+    system "isolock --free -- #{@box_id} #{"--cg" if has_cgroup?}", :out => '/dev/null'
     raise UnlockError unless $?.success?
   end
 
@@ -219,14 +222,23 @@ EOF
 
   def directory_bindings options = {}
     options.reverse_merge!({:noexec => false}).assert_valid_keys(:noexec)
-    {'bin' => [], 'dev' => ['dev'], 'lib' => [], 'lib64' => [], 'usr' => [], 'etc/alternatives' => []}.map do |dir, opt|
+    {
+      'bin' => [], # core executables
+      'dev' => ['dev'], # device files
+      'lib' => [], # core libraries
+      'lib64' => [], # 64-bit libraries
+      'usr' => [], # general binaries, includes and libraries
+      'etc/alternatives' => [], # required for many symbolic links to work
+      'var/lib' => [] # /var/lib/ghc required by ghc (Haskell compiler)
+    }.map do |dir, opt|
       fullpath = File.expand_path(dir, isolate_root)
       boxpath = File.expand_path(dir, "/")
       opt << 'noexec' if options[:noexec]
       binding = opt.unshift(fullpath).join(':')
       next "--dir=#{boxpath}=" unless File.exist?(fullpath)
       "--dir=#{boxpath}=#{binding}"
-    end.compact
+    end.compact +
+      ["--dir=/tmp=#{expand_path('tmp')}:rw:noexec"] # link /tmp to /box/tmp (ghc expects a temporary directory)
   end
 
   # returns root if debootstrap enabled
