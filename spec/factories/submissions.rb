@@ -5,12 +5,11 @@ FactoryGirl.define do
     source "sauce"
     language { Language.find_by_name("C++") }
     score nil
+    judge_log nil
     user_id 0
     problem_id 0
     created_at { Time.now }
     updated_at { created_at }
-    judge_output "Judge"
-    debug_output "Debug"
     factory :adding_submission do
       language { Language.find_by_name("C++") }
       source <<sourcecode

@@ -12,7 +12,7 @@ class JudgeSubmissionWorker
     submission.with_lock do # This block is called within a transaction,
       submission.reload # todo: fetch only columns needed
       submission.judge_log = result.to_json
-      submission.isolate_score = result['score']
+      submission.score = result['score']
       submission.judged_at = DateTime.now
       submission.save
     end

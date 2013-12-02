@@ -63,7 +63,7 @@ class SubmissionsController < ApplicationController
   end
 
   def rejudge
-    @submission.judge_output = nil
+    @submission.judge_log = nil # TODO: move successful log to another column
     if @submission.save
       logger.debug "rejudging submission id #{@submission.id}"
       @submission.judge
