@@ -53,7 +53,7 @@ class Submission < ActiveRecord::Base
   end
 
   def judge
-    JudgeSubmissionWorker.put(:id => self.id)
+    JudgeSubmissionWorker.judge(self)
   end
 
 end

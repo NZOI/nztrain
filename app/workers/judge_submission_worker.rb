@@ -1,14 +1,20 @@
 class JudgeSubmissionWorker < ApplicationWorker
+  extend GCWorkerMiddleware
+
   default_queue :judge
 
+  def self.judge(submission)
+    self.put(:id => submission.id)
+  end
+
+
   def self.perform(job)
-    submission = Submission.find(job.data['id'])
-    result = self.new(submission).perform
+    result = self.new(job).perform
     job.complete
-    GC.start # garbage collect
   end
 
   def perform
+    self.submission = Submission.find(job.data['id'])
     result = judge
 
     submission.with_lock do # This block is called within a transaction,
@@ -32,10 +38,10 @@ class JudgeSubmissionWorker < ApplicationWorker
   StackLimit = 1024 * 4 # 4 MB
   OutputBaseLimit = 1024 * 1024 * 2
 
-  attr_accessor :submission
+  attr_accessor :submission, :job
 
-  def initialize(submission)
-    self.submission = submission
+  def initialize(job)
+    self.job = job
   end
 
   def judge

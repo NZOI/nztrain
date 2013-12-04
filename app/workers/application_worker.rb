@@ -1,4 +1,5 @@
 class ApplicationWorker
+  extend Qless::Job::SupportsMiddleware
 
   def self.put(options = {})
     job = $qless.queues[default_queue].put(self, options)
