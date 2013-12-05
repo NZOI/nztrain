@@ -53,7 +53,8 @@ class Submission < ActiveRecord::Base
   end
 
   def judge
-    JudgeSubmissionWorker.judge(self)
+    self.job = JudgeSubmissionWorker.judge(self)
+    self.save
   end
 
 end
