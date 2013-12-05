@@ -20,7 +20,7 @@ class AiSubmissionsController < ApplicationController
     game.score_2 = nil
     game.record = nil
     game.save
-    Rails.env == 'test' ? game.judge : spawn { game.judge }
+    # Rails.env == 'test' ? game.judge : spawn { game.judge } # queue for background processing
     redirect_to ai_submission_path(@ai_submission), :notice => "Submission will be rejudged"
   end
 

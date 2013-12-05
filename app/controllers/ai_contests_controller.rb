@@ -40,7 +40,7 @@ class AiContestsController < ApplicationController
       @ai_submission = AiSubmission.new(submit_params) # create submission
       respond_to do |format|
         if @ai_submission.submit
-          Rails.env == 'test' ? @submission.judge : spawn { @submission.judge }
+          # Rails.env == 'test' ? @submission.judge : spawn { @submission.judge } # Use background queue
           format.html { redirect_to(@ai_contest, :notice => 'Submission was successfully created.') }
           #format.xml  { render :xml => @submission, :status => :created, :location => @submission }
         else

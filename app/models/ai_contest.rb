@@ -5,20 +5,22 @@ class AiContest < ActiveRecord::Base
   has_many :submissions, :class_name => :AiSubmission
 
   def rejudge
-    spawn(:nice => 10) do
-      submissions.active.each do |sub|
-        sub.rejudge
-      end
-    end
+    # Use background processing
+    #spawn(:nice => 10) do
+    #  submissions.active.each do |sub|
+    #    sub.rejudge
+    #  end
+    #end
   end
   
   def prod_judge
-    #submissions.each_slice(submissions.length/4).to_a.each do |subs|
-    spawn(:nice => 12) do
-      submissions.active.each do |sub|
-          sub.judge
-      end
-    end
+    ##submissions.each_slice(submissions.length/4).to_a.each do |subs|
+    # Use background processing
+    #spawn(:nice => 12) do
+    #  submissions.active.each do |sub|
+    #      sub.judge
+    #  end
+    #end
     #end
   end
 
