@@ -18,7 +18,7 @@ module Problems
           problem.test_cases << kase
           setopts = {:name => name, :points => 1, :test_cases => [kase]}
           if name =~ /\.(dummy|sample)(\.|\z)/
-            setopts.merge(:points => 0, :visibility => 0)
+            setopts.merge(:points => 0, :visibility => :sample)
           end
           problem.test_sets << TestSet.new(setopts)
         end

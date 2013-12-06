@@ -35,7 +35,7 @@ module Problems
       data['test_sets'].each do |name, attributes|
         setopts = {}
         setopts[:points] = attributes.fetch('points', 1)
-        setopts[:visibility] = attributes.fetch('visibility', 2)
+        setopts[:visibility] = attributes.fetch('visibility', :private)
         cases = attributes['test_cases'] || []
         if cases.is_a?(Array)
           setopts[:test_cases] = cases.map{ |name| casemap[name] }

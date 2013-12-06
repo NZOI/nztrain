@@ -23,7 +23,7 @@ module Problems
         problem.test_sets.each do |set|
           f.puts "  #{escape_key(set.name)}:"
           f.puts "    points: #{set.points}"
-          f.puts "    visibility: #{set.visibility}" if set.visibility != 2
+          f.puts "    visibility: '#{TestSet::VISIBILITY[set.visibility]}'" if set.visibility != TestSet::VISIBILITY[:private]
           f.puts "    test_cases: [#{set.test_cases.map{ |kase| escape_key(kase.name) }.join(",")}]"
           tempfiles << f
         end

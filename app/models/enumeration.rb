@@ -44,6 +44,10 @@ class Enumeration
     @description[value]
   end
 
+  def to_i(value)
+    value.is_a?(Integer) ? value : self[value]
+  end
+
   def entries
     @entries
   end
