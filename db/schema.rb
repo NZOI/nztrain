@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131205201359) do
+ActiveRecord::Schema.define(:version => 20131206074948) do
 
   create_table "ai_contest_games", :force => true do |t|
     t.integer  "ai_contest_id"
@@ -264,6 +264,8 @@ ActiveRecord::Schema.define(:version => 20131205201359) do
     t.integer  "problem_id"
   end
 
+  add_index "test_cases", ["problem_id", "name"], :name => "index_test_cases_on_problem_id_and_name", :unique => true
+
   create_table "test_sets", :force => true do |t|
     t.integer  "problem_id"
     t.integer  "points"
@@ -272,6 +274,8 @@ ActiveRecord::Schema.define(:version => 20131205201359) do
     t.datetime "updated_at"
     t.integer  "visibility", :limit => 2, :default => 2, :null => false
   end
+
+  add_index "test_sets", ["problem_id", "name"], :name => "index_test_sets_on_problem_id_and_name", :unique => true
 
   create_table "users", :force => true do |t|
     t.string   "email",                                 :default => "",    :null => false

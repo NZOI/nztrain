@@ -3,6 +3,8 @@ source 'http://rubygems.org'
 gem 'devise', '~> 2.2.3'
 gem 'rails', '~> 3.2.0'
 
+gem 'psych', '~> 2.0.2' # part of stdlib, need newer version for safe_load
+
 # delete when upgrading to rails 4.x
 gem 'strong_parameters'
 

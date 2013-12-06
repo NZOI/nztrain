@@ -138,6 +138,7 @@ GEM
     polyamorous (0.6.4)
       activerecord (>= 3.0)
     polyglot (0.3.3)
+    psych (2.0.2)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -288,6 +289,7 @@ DEPENDENCIES
   newrelic_rpm
   nokogiri
   pg
+  psych (~> 2.0.2)
   qless!
   rails (~> 3.2.0)
   recaptcha
