@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe TestCasesController do
   before(:all) do
-    @test_case = FactoryGirl.create(:test_case, :test_sets => [test_sets(:test_set)])
+    @test_case = FactoryGirl.create(:test_case, :test_sets => [test_sets(:test_set)], :problem_id => test_sets(:test_set).problem_id)
   end
   after(:all) do
     @test_case.destroy
