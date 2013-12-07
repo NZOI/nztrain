@@ -226,25 +226,6 @@ a.progress_link:hover {
   vertical-align: middle;
 }
 
-#main-container pre {
-  padding: 4px;
-  border: 1px solid #D2D2D2;
-  background-color: #EEE;
-  font-family: monospace;
-  overflow-x: auto;
-  margin-bottom: 10px;
-}
-
-#main-container code {
-  background-color: #EEE;
-  font-family: monospace;
-  border: 1px solid #D2D2D2;
-}
-
-#main-container pre code {
-  border: 0px;
-}
-
 h1, h2, h3, h4, h5, h6 {
   margin-left: -2px;
   margin-top: 14px;

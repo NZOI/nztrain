@@ -1,0 +1,39 @@
+pre {
+  background-color: #DDD;
+  padding: 5px;
+  font-size: 12px;
+  border: 1px solid #D2D2D2;
+  font-family: monospace;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  counter-reset: line-numbering;
+}
+pre ol {
+  margin-top: -5px;
+  margin-right: -5px;
+  margin-bottom: -5px;
+}
+pre li {
+  padding: 1px 0.5em 1px 0.5em;
+  list-style: decimal-leading-zero;
+  list-style-position: outside;
+  background-color: #FFFFFF;
+}
+
+pre li:nth-child(even) {
+  background-color: rgba(255,255,255,0.5);
+}
+
+/*
+pre li {
+  list-style: none;
+}
+
+pre li::before {
+  content: counter(line-numbering);
+  counter-increment: line-numbering;
+  padding-right: 1em;
+  width: 1.5em;
+  text-align: right;
+  opacity: 0.5;
+}*/

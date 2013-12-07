@@ -103,8 +103,8 @@
                     <th>Evaluator Log</th><th class="output_stats"><%= "Evaluation: #{sprintf("%.2f",case_data.evaluator.evaluation)}/1.00" %></th>
                   </tr>
                   <tr>
-                    <td colspan="2"><span class="code"><%= case_data.output %></span></td>
-                    <td colspan="2"><span class="code"><%= test_case.truncated_output %></span></td>
+                    <td colspan="2"><%= numbered_pre case_data.output, tag: :samp %></td>
+                    <td colspan="2"><%= numbered_pre test_case.truncated_output, tag: :samp %></td>
                     <td colspan="2"><span class="code"><%= case_data.evaluator.info %></span></td>
                   </tr>
                 </table>
@@ -123,10 +123,11 @@
     </tr>
   </tbody>
 </table>
-
+<br>
+<br>
 <p>
 <b>Source:</b>
-<pre><%= @submission.source %></pre>
+<%= numbered_pre(@submission.source, tag: :code) %>
 </p>
 
 <%= link_to 'Edit', edit_submission_path(@submission) if permitted_to? :edit, @submission %> 

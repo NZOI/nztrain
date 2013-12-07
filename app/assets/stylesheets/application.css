@@ -5,6 +5,7 @@
 *= require jquery.ui.datepicker
 *= require jquery.ui.slider
 *= require scaffold
+*= require code
 *= require jquery.facebox
 *= require style
 *= require superfish

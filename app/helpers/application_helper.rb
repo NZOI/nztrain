@@ -1,4 +1,28 @@
 module ApplicationHelper
+
+  def numbered_pre(string, tag: nil, **options)
+    lines = Code.limitlines(string, **options.slice(:linelimit, :charlimit))
+    if lines.last.nil?
+      lines.pop
+      continuation = content_tag :div, "...", :class => "continuation"
+    else
+      continuation = ""
+    end
+    content_tag :pre, :class => 'numbered' do
+      if tag
+        content_tag(tag){ ordered_list(lines) }
+      else
+        ordered_list(lines)
+      end
+    end
+  end
+
+  def ordered_list(items)
+    content_tag :ol do
+      items.map{ |item| content_tag :li, item }.inject(:+)
+    end
+  end
+
   def y(string)
     return string if !%w{yes no}.include?(string) && string =~ (/\A[[:alpha:]\.][[:alnum:]\.]*\z/) # safe for unquoted use
     string.to_json # JSON is a subset of YAML
