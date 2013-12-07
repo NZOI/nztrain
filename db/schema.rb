@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131206074948) do
+ActiveRecord::Schema.define(:version => 20131207080120) do
 
   create_table "ai_contest_games", :force => true do |t|
     t.integer  "ai_contest_id"
@@ -272,7 +272,7 @@ ActiveRecord::Schema.define(:version => 20131206074948) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "visibility", :limit => 2, :default => 2, :null => false
+    t.integer  "visibility", :limit => 2, :default => 0, :null => false
   end
 
   add_index "test_sets", ["problem_id", "name"], :name => "index_test_sets_on_problem_id_and_name", :unique => true
