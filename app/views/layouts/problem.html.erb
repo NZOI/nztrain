@@ -23,6 +23,7 @@
     menu.item :statement, "problem statement", problem_path(@problem)
     menu.item :submit, "submit", submit_problem_path(@problem), :highlights_on => :subpath if permitted_to? :submit, @problem
     menu.item :submissions, "submissions", submissions_problem_path(@problem)
+    menu.item :test_cases, "test cases", test_cases_problem_path(@problem)
 #  end.render
   end
   %>

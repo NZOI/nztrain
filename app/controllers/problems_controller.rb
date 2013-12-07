@@ -1,5 +1,5 @@
 class ProblemsController < ApplicationController
-  filter_resource_access :additional_member => {:submit => :submit, :submissions => :submit}
+  filter_resource_access :additional_member => {:submit => :submit, :submissions => :submit, :test_cases => :inspect, :import => :update, :export => :inspect }
 
   def permitted_params
     @_permitted_attributes ||= begin
@@ -54,7 +54,6 @@ class ProblemsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @problems }
     end
   end
 
@@ -76,7 +75,6 @@ class ProblemsController < ApplicationController
 
     respond_to do |format|
       format.html { render :layout => "problem" }
-      format.xml  { render :xml => @problem }
     end
   end
 
@@ -99,7 +97,6 @@ class ProblemsController < ApplicationController
       @submission = Submission.new
       respond_to do |format|
         format.html { render :layout => "problem" }
-        format.xml  { render :xml => @problem }
       end
     end
   end
@@ -115,16 +112,45 @@ class ProblemsController < ApplicationController
     
     respond_to do |format|
       format.html { render :layout => "problem" }
-      format.xml  { render :xml => @problem }
     end
   end
 
+  def test_cases
+    respond_to do |format|
+      format.html { render :layout => "problem" }
+    end
+  end
+
+  def import
+    redirect_to(test_cases_problem_path(@problem), :alert => 'No zip file uploaded') and return if params[:import_file].nil?
+    redirect_to(test_cases_problem_path(@problem), :alert => 'Invalid importer specified') and return if !Problems::Importers.has_key?(params[:importer])
+    begin
+      if Problems::Importers[params[:importer]].import(@problem, params[:import_file].path, :extension => '.zip', :merge => params[:upload] == 'merge')
+        redirect_to(test_cases_problem_path(@problem), :notice => "Successfully uploaded. New counts for the problem are: # Test Sets: #{ @problem.test_sets.count }, # Test Cases: #{ @problem.test_cases.count }") and return
+      else
+        redirect_to(test_cases_problem_path(@problem), :alert => 'No test cases or test sets detected.')
+      end
+    rescue StandardError => e
+      redirect_to(test_cases_problem_path(@problem), :alert => 'An error has occurred - was the right importer selected?')
+    end
+
+  end
+
+  def export
+    name = @problem.title.gsub(/[\W]/,"")
+    name = "testcases" if name.empty?
+    filename = name + ".zip"
+
+    dir = Dir.mktmpdir("zip-testcases-#{@problem.id}-#{current_user.id}-#{Time.now}")
+    zipfile = Problems::TestCaseExporter.export(@problem, File.expand_path(filename, dir))
+
+    send_file zipfile, :type => 'application/zip', :disposition => 'attachment', :filename => filename
+  end
+
   # GET /problems/new
-  # GET /problems/new.xml
   def new
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @problem }
     end
   end
 
@@ -133,7 +159,6 @@ class ProblemsController < ApplicationController
   end
 
   # POST /problems
-  # POST /problems.xml
   def create
     respond_to do |format|
       if @problem.update_attributes(permitted_params)

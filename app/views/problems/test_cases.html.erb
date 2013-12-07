@@ -1,0 +1,45 @@
+<p>
+<%= form_tag( import_problem_path(@problem), :multipart => true) do %>
+  <%= radio_button_tag(:upload, "merge", :checked => 'yes') %>
+  <%= label_tag(:upload_merge, "Merge with existing test cases") %><br />
+  <span style="margin-left: 8em;">or</span><br />
+  <%= radio_button_tag(:upload, "replace") %>
+  <%= label_tag(:upload_replace, "Replace existing test cases with upload") %><br />
+
+  <%= label_tag(:importer) %>
+  <%= select_tag(:importer, options_for_select(Problems::TestCaseImportOptions)) %><br />
+
+  <%= file_field_tag 'import_file', :id => "file-form"%>
+  <%= submit_tag 'Upload zipped test cases' %>
+<% end %>
+</p>
+
+<%= link_to 'Download test cases', export_problem_path(@problem) %> |
+<%= link_to 'Show test cases', test_sets_path(:problem_id => @problem.id) %>
+<%#= link_to 'Add test case', new_test_case_path(:problem_id => @problem.id) %>
+<br>
+<br>
+
+<b>Test Cases:</b><br>
+<table style="width: 100%;">
+  <tr><th>Name</th><th>Input</th><th>Output</th></tr>
+<% @problem.test_cases.each do |kase| %>
+  <tr>
+    <td><%= kase.name %></td>
+    <td><pre><%= kase.input.slice(0...200).split("\n").take(10).join("\n") %></pre></td>
+    <td><pre><%= kase.output.slice(0...200).split("\n").take(10).join("\n") %></pre></td>
+  </tr>
+<% end %>
+</table>
+
+<b>Test Sets:</b><br>
+<table style="width: 100%;">
+  <tr><th>Name</th><th>Points</th><th>Cases</th></tr>
+<% @problem.test_sets.each do |set| %>
+  <tr>
+    <td><%= set.name %></td>
+    <td><%= set.points %></td>
+    <td><%= set.test_cases.pluck(:name).to_json %></td>
+  </tr>
+<% end %>
+</table>

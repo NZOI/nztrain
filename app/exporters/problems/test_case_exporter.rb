@@ -1,5 +1,6 @@
 module Problems
   class TestCaseExporter < BaseExporter
+    include RenderAnywhere
     # Problems::TestCaseExporter.export(Problem.find(1), '/home/ronald/sample/sample.zip')
     def export(path, options = {})
       inpath = File.expand_path('inputs', path)
@@ -19,14 +20,8 @@ module Problems
       end
       # export the test sets
       file.open(File.expand_path('specification.yaml', path), 'w') do |f|
-        f.puts 'test_sets:'
-        problem.test_sets.each do |set|
-          f.puts "  #{escape_key(set.name)}:"
-          f.puts "    points: #{set.points}"
-          f.puts "    visibility: '#{TestSet::VISIBILITY[set.visibility]}'" if set.visibility != TestSet::VISIBILITY[:private]
-          f.puts "    test_cases: [#{set.test_cases.map{ |kase| escape_key(kase.name) }.join(",")}]"
-          tempfiles << f
-        end
+        f.write render :template => 'problems/specification', :format => 'yaml', :locals => { :problem => problem }
+        tempfiles << f
       end
       path
     end
@@ -35,12 +30,6 @@ module Problems
       super
     end
 
-    private
-    def escape_key(string)
-      return string if string =~ /\A[[:alpha:]][[:alnum:]]*\z/
-      return "\"#{string.gsub(/(\\|")/,'\\\1')}\"" if string =~ /\A[[:graph:][:blank:]]+\z/
-      string.gsub(/[^[:graph:][:blank:]]/,"").gsub(/(\\|")/,'\\\1')
-    end
   end
 end
 

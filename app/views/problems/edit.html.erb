@@ -3,18 +3,3 @@
 
 <%= render 'form' %>
 
-<p>
-<%= form_tag( upload_zipped_test_case_path(:problem_id => @problem), :multipart => true) do %>
-  <%= radio_button_tag(:upload, "add", :checked => 'yes') %>
-  <%= label_tag(:upload_add, "Add upload to existing test cases") %><br />
-  <span style="margin-left: 8em;">or</span><br />
-  <%= radio_button_tag(:upload, "replace") %>
-  <%= label_tag(:upload_replace, "Replace existing test cases with upload") %><br />
-  <%= file_field_tag 'test_cases_zip', :id => "file-form"%>
-  <%= submit_tag 'Upload zipped test cases' %>
-<% end %>
-</p>
-
-<%= link_to 'Download test cases', download_zipped_test_case_path(:problem_id => @problem) %> |
-<%= link_to 'Show test cases', test_sets_path(:problem_id => @problem.id) %> |
-<%#= link_to 'Add test case', new_test_case_path(:problem_id => @problem.id) %>

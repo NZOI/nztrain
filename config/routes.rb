@@ -78,6 +78,10 @@ NZTrain::Application.routes.draw do
       post 'submit'
       get 'submit'
       get 'submissions'
+
+      get 'test_cases'
+      get 'export'
+      post 'import'
     end
   end
 
@@ -172,13 +176,6 @@ NZTrain::Application.routes.draw do
       get 'my', :to => 'file_attachments#index', :defaults => { :filter => 'my' }
     end
     member do
-      get 'download'
-    end
-  end
-
-  resources :zipped_test_cases do
-    member do
-      post 'upload'
       get 'download'
     end
   end

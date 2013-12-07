@@ -1,4 +1,9 @@
 module ApplicationHelper
+  def y(string)
+    return string if !%w{yes no}.include?(string) && string =~ (/\A[[:alpha:]\.][[:alnum:]\.]*\z/) # safe for unquoted use
+    string.to_json # JSON is a subset of YAML
+  end
+
   def progress_bar(percent, link = nil)
     unless percent.nil?
       percent = percent.to_i

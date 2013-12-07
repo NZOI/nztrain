@@ -62,5 +62,11 @@ module Problems
     def import(path, options)
       raise "Not implemented"
     end
+
+    protected
+    def casemap
+      @casemap ||= Hash[problem.test_cases.select([:id, :name]).map{ |kase| [kase.name, kase] }]
+    end
+
   end
 end

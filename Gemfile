@@ -33,6 +33,7 @@ gem 'simple-navigation'
 gem 'simple_form'
 gem 'facebox-rails'
 gem 'strong_presenter', '~> 0.2.2'
+gem 'render_anywhere'
 
 gem 'pg'
 gem 'backup'

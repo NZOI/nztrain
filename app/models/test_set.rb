@@ -13,5 +13,4 @@ class TestSet < ActiveRecord::Base
   def visibility=(value)
     super(VISIBILITY.to_i(value))
   end
-
 end

@@ -1,6 +1,5 @@
 module Problems
   class FlatCaseImporter < BaseImporter
-    # Problems::FlatCaseImporter.import(Problem.new, '/home/ronald/test_cases.zip')
     def import(path, options = {})
       dir.foreach(path) do |entry|
         outputname = case entry
@@ -14,21 +13,27 @@ module Problems
           nil
         end
         if outputname && file.exist?(ofile = File.expand_path(outputname, path))
-          kase = TestCase.new(:name => name, :input => file.read(File.expand_path(entry, path)), :output => file.read(ofile))
-          problem.test_cases << kase
-          setopts = {:name => name, :points => 1, :test_cases => [kase]}
-          if name =~ /\.(dummy|sample)(\.|\z)/
-            setopts.merge(:points => 0, :visibility => :sample)
+          caseopts = {:input => file.read(File.expand_path(entry, path)), :output => file.read(ofile)}
+          if casemap.has_key?(name)
+            casemap[name].update_attributes(caseopts)
+          else
+            kase = TestCase.new(caseopts.merge(:name => name))
+            problem.test_cases << kase
+            setopts = {:name => name, :points => 1, :test_cases => [kase]}
+            if name =~ /\.(dummy|sample)(\.|\z)/
+              setopts.merge(:points => 0, :visibility => :sample)
+            end
+            problem.test_sets << TestSet.new(setopts)
+            casemap[name] = kase
           end
-          problem.test_sets << TestSet.new(setopts)
         end
       end
       problem
     end
 
     def around_import(path, options = {})
-      options.reverse_merge!(:append => false)
-      clear! unless options[:append]
+      options.reverse_merge!(:merge => false)
+      clear! unless options[:merge]
       super
     end
 

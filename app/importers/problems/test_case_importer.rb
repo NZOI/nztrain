@@ -1,12 +1,43 @@
 module Problems
   class TestCaseImporter < BaseImporter
     def import(path, options = {})
+      assert_files(path)
+      import_files()
+
+      problem
+    end
+
+    def around_import(path, options = {})
+      options.reverse_merge!(:merge => false)
+      clear! unless options[:merge]
+      super
+    end
+
+    def clear!()
+      problem.test_cases.clear
+      problem.test_sets.clear
+    end
+
+    protected
+    def import_specification(spec)
+      import_sets(spec['test_sets'] || {})
+    end
+
+    def import_files
+      import_cases(indir, outdir)
+      import_specification(Psych.safe_load(file.read(specfile)))
+    end
+
+    attr_accessor :outdir, :indir, :specfile
+    def assert_files(path)
       # we expect an inputs and outputs
-      outdir = File.expand_path('outputs', path)
-      indir = File.expand_path('inputs', path)
-      specfile = File.expand_path('specification.yaml', path)
+      self.outdir = File.expand_path('outputs', path)
+      self.indir = File.expand_path('inputs', path)
+      self.specfile = File.expand_path('specification.yaml', path)
       raise "Missing specification.yaml file or inputs or outputs directory" unless file.exist?(specfile) && file.exist?(outdir) && file.exist?(indir)
-      casemap = Hash[problem.test_cases.select([:id, :name]).map{ |kase| [kase.name, kase] }]
+    end
+
+    def import_cases(indir, outdir)
       initialcases = casemap.keys
       dir.foreach(indir) do |entry|
         ext = File.extname(entry)
@@ -28,11 +59,11 @@ module Problems
           end
         end
       end
+    end
 
+    def import_sets(setdata)
       setmap = Hash[problem.test_sets.select([:id, :name]).map{ |set| [set.name, set] }]
-      data = Psych.safe_load(file.read(specfile))
-      raise "Missing test set yaml map" unless data.has_key?('test_sets')
-      data['test_sets'].each do |name, attributes|
+      setdata.each do |name, attributes|
         setopts = {}
         setopts[:points] = attributes.fetch('points', 1)
         setopts[:visibility] = attributes.fetch('visibility', :private)
@@ -47,19 +78,6 @@ module Problems
           problem.test_sets << TestSet.new(setopts.merge(:name => name))
         end
       end
-
-      problem
-    end
-
-    def around_import(path, options = {})
-      options.reverse_merge!(:append => false)
-      clear! unless options[:append]
-      super
-    end
-
-    def clear!()
-      problem.test_cases.clear
-      problem.test_sets.clear
     end
   end
 end
