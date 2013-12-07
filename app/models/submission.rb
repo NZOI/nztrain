@@ -40,7 +40,7 @@ class Submission < ActiveRecord::Base
   end
 
   def judge_data
-    JudgeData.new(judge_log, Hash[problem.test_sets.map{|s|[s.id,s.test_case_ids]}], problem.test_case_ids)
+    JudgeData.new(judge_log, Hash[problem.test_sets.map{|s|[s.id,s.test_case_ids]}], problem.test_case_ids, problem.prerequisite_set_ids)
   end
 
   before_save do
@@ -55,6 +55,11 @@ class Submission < ActiveRecord::Base
   def judge
     self.job = JudgeSubmissionWorker.judge(self)
     self.save
+  end
+
+  def rejudge
+    self.judge_log = nil # TODO: move successful log to another column
+    save and judge
   end
 
 end

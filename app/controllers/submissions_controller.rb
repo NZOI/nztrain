@@ -63,11 +63,10 @@ class SubmissionsController < ApplicationController
   end
 
   def rejudge
-    @submission.judge_log = nil # TODO: move successful log to another column
-    if @submission.save
-      logger.debug "rejudging submission id #{@submission.id}"
-      @submission.judge
+    if @submission.rejudge
       redirect_to @submission, :notice => "Rejudge request queued."
+    else
+      redirect_to @submission, :alert => "Rejudge request failed."
     end
   end
 

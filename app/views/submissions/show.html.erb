@@ -66,7 +66,7 @@
     <% @judge_data.test_sets.each_with_index do |(id, set_data), i| %>
       <tbody class="test_set status_<%= set_data.status %>">
         <tr>
-          <th class="test_name">Test Set #<%= i+1 %></th>
+          <th class="test_name">Test Set #<%= i+1 %><%= ' - Prerequisite' if set_data.prerequisite? %></th>
           <th colspan="3">&nbsp;</th>
           <th class="judgement"><%= set_data.judgement %></th>
         </tr>
@@ -78,7 +78,7 @@
             <td class="judgement"><%= case_data.judgement %></td>
             <td></td>
           </tr>
-          <% if case_data.status != :pending && permitted_to?(:inspect, @submission) %>
+          <% if ![:pending,:cancelled].include?(case_data.status) && permitted_to?(:inspect, @submission) %>
             <tr class="inspect_test">
               <td colspan="5">
                 <table>

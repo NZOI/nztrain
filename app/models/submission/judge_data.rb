@@ -1,3 +1,5 @@
+require 'set'
+
 class Submission
   class Data
     def initialize(data)
@@ -132,6 +134,11 @@ class Submission
     class CaseData < Data
       include Runnable
 
+      def initialize(data, cancel: false)
+        super(data)
+        @cancelled = true if cancel
+      end
+
       def judgement
         case status
         when :correct; "Correct!"
@@ -143,10 +150,12 @@ class Submission
         when :runtime; "Runtime Error"
         when :signal; "Fatal Signal"
         when :pending; "Pending"
+        when :cancelled; "Cancelled"
         end + ( evaluator.message.empty? ? "" : " - " + evaluator.message)
       end
 
       def status
+        return :cancelled if @cancelled
         return :pending if data.nil?
         return :error if evalerrored?
         return meta.result if data['stat'] == 1
@@ -181,6 +190,7 @@ class Submission
 
     module Evaluable
       def status
+        return :cancelled if @cancelled
         return :pending if data.nil? || data['status'].nil?
         case data['status']
         when 0;
@@ -202,6 +212,7 @@ class Submission
 
       def judgement
         case status
+        when :cancelled; "Cancelled"
         when :pending; "Pending"
         when :error; "Errored"
         else; print_score
@@ -219,10 +230,16 @@ class Submission
 
       attr_accessor :id
 
-      def initialize(data, cases, caseset)
+      def initialize(data, cases, caseset, prerequisite: false, cancel: false)
         super(data)
         self.data.delete(:status) if !self.data.has_key?('cases') || self.data['cases'].size != cases.size || (self.data['cases']&cases).size < cases.size # missing test cases
         @test_cases = caseset.slice(*cases)
+        @cancelled = true if cancel
+        @prerequisite = prerequisite
+      end
+
+      def prerequisite?
+        @prerequisite
       end
 
       def test_cases
@@ -234,8 +251,12 @@ class Submission
       end
     end
 
-    def initialize(log, test_sets, test_cases)
-
+    def initialize(log, test_sets, test_cases, prerequisite_sets = [])
+      @presets = @precase = []
+      unless prerequisite_sets.empty?
+        @presets = Set[*prerequisite_sets]
+        @precase = Set[*test_sets.values_at(*prerequisite_sets).compact.inject(&:|)]
+      end
       super(log.nil? ? {} : JSON.parse(log))
       @_test_sets = test_sets
       @_test_cases = test_cases
@@ -257,12 +278,26 @@ class Submission
       @compilation ||= Compilation.new(data['compile'])
     end
 
+    def prerequisite_sets
+      test_sets.slice(@presets)
+    end
+
+    def prefail?
+      !@presets.empty? and prerequisites and (prerequisites['status'] != 0 or prerequisites['evaluation'] != 1)
+    end
+
+    def prerequisites
+      data['prerequisites']
+    end
+
     def test_sets
-      @test_sets ||= Hash[@_test_sets.map { |id, cases| [id, SetData.new(test_set_data[id.to_s], cases, test_cases)] }]
+      cancel = (prefail? ? Set[*@_test_sets.keys] - @presets : [])
+      @test_sets ||= Hash[@_test_sets.map { |id, cases| [id, SetData.new(test_set_data[id.to_s], cases, test_cases, :prerequisite => @presets.include?(id), :cancel => cancel.include?(id))] }]
     end
 
     def test_cases
-      @test_cases ||= Hash[@_test_cases.map { |id| [id, CaseData.new(test_case_data[id.to_s])] }]
+      cancel = (prefail? ? Set[*@_test_cases] - @precase : [])
+      @test_cases ||= Hash[@_test_cases.map { |id| [id, CaseData.new(test_case_data[id.to_s], :cancel => cancel.include?(id))] }]
     end
     
     include Evaluable

@@ -57,21 +57,38 @@ class JudgeSubmissionWorker < ApplicationWorker
         run_command = "./#{ExeFileName}"
       end
 
-      # test cases
       result['test_cases'] = {}
-      problem.test_cases.each do |test_case|
-        FileUtils.copy(File.expand_path(ExeFileName, tmpdir), box.expand_path(ExeFileName))
+      result['test_sets'] = {}
+      denominator = problem.test_sets.map(&:points).inject(&:+).to_f
+
+      # prerequisites
+      prereqs = problem.test_cases.where(:id => problem.prerequisite_sets.joins(:test_case_relations).select(:test_case_relations => :test_case_id))
+
+      prereqs.each do |test_case|
+        result['test_cases'][test_case.id] = judge_test_case(test_case, run_command) unless result['test_cases'].has_key?(test_case.id)
+      end
+
+      problem.prerequisite_sets.each do |test_set|
+        result['test_sets'][test_set.id] = grade_test_set(test_set, result['test_cases'], denominator)
+      end
+
+      unless problem.prerequisite_sets.empty?
+        result['prerequisites'] = preres = grade_prerequisites(result['test_sets'])
+        return result.merge('status' => preres['status']) if preres['status'] != 0
+        return result.merge('status' => 0, 'evaluation' => 0, 'score' => 0) if preres['evaluation'] != 1
+      end
+
+      # test cases
+      (problem.test_cases - prereqs).each do |test_case|
         result['test_cases'][test_case.id] = judge_test_case(test_case, run_command) unless result['test_cases'].has_key?(test_case.id)
       end
 
       # test sets
-      denominator = problem.test_sets.map(&:points).inject(&:+).to_f
-      result['test_sets'] = {}
       problem.test_sets.each do |test_set|
-        result['test_sets'][test_set.id] = grade_test_set(test_set, result['test_cases'], denominator)
+        result['test_sets'][test_set.id] = grade_test_set(test_set, result['test_cases'], denominator) unless result['test_sets'].has_key?(test_set.id)
       end
       
-      result.merge!(grade_submission(result['test_sets'], denominator))
+      result.merge!(grade_submission(result['test_sets'], denominator, preres))
     end
     result
   end
@@ -98,6 +115,7 @@ class JudgeSubmissionWorker < ApplicationWorker
   end
 
   def judge_test_case(test_case, run_command)
+    FileUtils.copy(File.expand_path(ExeFileName, tmpdir), box.expand_path(ExeFileName))
     result = run_test_case(test_case, run_command)
     result['evaluator'] = evaluate_output(test_case, result['output'], result['output_size'], problem.evaluator)
     result['log'] = truncate_output(result['log']) # log only a small portion
@@ -203,17 +221,30 @@ class JudgeSubmissionWorker < ApplicationWorker
     result
   end
 
-  def grade_submission(graded_sets, denominator)
+  def grade_prerequisites(graded_sets)
+    sets = graded_sets.values_at(*problem.prerequisite_set_ids)
+    r = {}
+    r['status'] = combined_status(sets)
+    r['evaluation'] = sets.map{ |s| s['evaluation'] }.sum.to_f/sets.size if r['status'] == 0
+    r
+  end
+
+  def grade_submission(graded_sets, denominator, preres = nil)
+    result = {}
+    result['prerequisites'] = preres = grade_prerequisites(graded_sets) if preres.nil? && !problem.prerequisite_set_ids.empty?
     test_sets = problem.test_sets
     sets = graded_sets.values_at(*test_sets.map(&:id))
-    result = {}
-    result['status'] = [*sets.map{ |s| s['status'] }, (sets.compact.count<sets.count) ? 1 : 0].max
+    result['status'] = combined_status(sets)
     if result['status'] == 0
       numerator = test_sets.map{ |s| (graded_sets[s.id]['evaluation'] * s.points)}.inject(&:+).to_f
       result['evaluation'] = numerator/denominator
-      result['score'] = (result['evaluation']*100).floor
+      result['score'] = (preres.nil? || preres['evaluation'] == 1) ? (result['evaluation']*100).floor : 0
     end
     result
+  end
+
+  def combined_status(sets)
+    [*sets.map{ |s| s['status'] }, (sets.compact.count<sets.count) ? 1 : 0].max
   end
 
   def grade_compile_error(compiled)

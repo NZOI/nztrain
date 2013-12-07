@@ -37,6 +37,11 @@ table.results {
   border: 2px solid #303080;
 }
 
+.results tbody.test_set.status_cancelled, .results tbody.summary.status_cancelled {
+  background-color: #B0B0C0; /* grey/blue */
+  border: 2px solid #555560;
+}
+
 .results tbody.test_set.status_partial, .results tbody.summary.status_partial {
   background-color: #C0C000; /* yellow */
   border: 2px solid #606000;
