@@ -11,7 +11,7 @@
 <%= form_for @submission, :html => {:multipart => true}, :url => submit_problem_path(@problem) do |f| %>
   <div class="field">
     Language: 
-    <%= f.select :language, ['C++', 'C', 'Haskell', 'Python']%>
+    <%= f.select :language_id, Language.submission_options %>
   </div>
   <div class="field">
     Source file: 
@@ -26,7 +26,7 @@
   <%= form_for @submission, :url => submit_problem_path(@problem) do |f| %>
     <div class="field">
       Language: 
-      <%= f.select :language, ['C++', 'C', 'Haskell', 'Python']%>
+      <%= f.select :language_id, Language.submission_options %>
     </div>
     <div class="field">
       <%= f.label :source %><br />

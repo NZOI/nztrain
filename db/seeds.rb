@@ -60,20 +60,19 @@ if !(User.exists?(0))
   user.save
 end
 
+languages = YAML.load(File.read(File.expand_path('db/languages.yml', Rails.root)))
+langfields = %i[name compiler flags lexer interpreted compiled extension]
+languages.each do |grpid, grpcfg|
+  groupopts = grpcfg.slice(:name)
+  group = LanguageGroup.where(:identifier => grpid).first_or_create!
+  group.update_attributes(groupopts)
 
-languages = {
-  "C++" =>     {:compiler => '/usr/bin/g++',     :flags => '-O2 -o %{output} %{source} -lm',
-                :interpreted => false,  :extension => '.cpp'},
-  "Python" =>  {:compiler => '/usr/bin/python',  :flags => '%{source}',
-                :interpreted => true,   :extension => '.py'},
-  "Haskell" => {:compiler => '/usr/bin/ghc',     :flags => '--make -O2 -o %{output} %{source} -lm',
-                :interpreted => false,  :extension => '.hs'},
-  "C" =>       {:compiler => '/usr/bin/gcc',     :flags => '-O2 -o %{output} %{source} -lm',
-                :interpreted => false,  :extension => '.c'}
-}
+  grpcfg[:variants].each do |langid, langcfg|
+    langopts = langcfg.reverse_merge(grpcfg).slice(*langfields).merge(:group_id => group.id)
+    language = Language.where(:identifier => langid).first_or_create!
+    language.update_attributes(langopts)
+  end
 
-languages.each do |name, configuration|
-  Language.where(:name => name).first_or_create!(configuration);
-  Language.find_by_name(name).update_attributes(configuration); # update if not the same
+  group.update_attributes(:current_language_id => group.languages.find_by_identifier(grpcfg[:current]).id)
 end
 

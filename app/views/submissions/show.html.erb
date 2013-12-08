@@ -127,7 +127,7 @@
 <br>
 <p>
 <b>Source:</b>
-<%= predisplay(@submission.source, language: 'c++') %>
+<%= predisplay(@submission.source, language: @submission.language.lexer) %>
 </p>
 
 <%= link_to 'Edit', edit_submission_path(@submission) if permitted_to? :edit, @submission %> 

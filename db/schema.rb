@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131207091535) do
+ActiveRecord::Schema.define(:version => 20131208015044) do
 
   create_table "ai_contest_games", :force => true do |t|
     t.integer  "ai_contest_id"
@@ -146,15 +146,31 @@ ActiveRecord::Schema.define(:version => 20131207091535) do
     t.integer "problem_set_id"
   end
 
-  create_table "languages", :force => true do |t|
+  create_table "language_groups", :force => true do |t|
+    t.string   "identifier"
     t.string   "name"
+    t.integer  "current_language_id"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
+  add_index "language_groups", ["identifier"], :name => "index_language_groups_on_identifier", :unique => true
+
+  create_table "languages", :force => true do |t|
+    t.string   "identifier"
     t.string   "compiler"
     t.boolean  "interpreted"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.string   "flags"
     t.string   "extension"
+    t.boolean  "compiled"
+    t.string   "name"
+    t.string   "lexer"
+    t.integer  "group_id"
   end
+
+  add_index "languages", ["identifier"], :name => "index_languages_on_identifier", :unique => true
 
   create_table "problem_file_attachments", :force => true do |t|
     t.integer "problem_id"

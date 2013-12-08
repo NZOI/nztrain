@@ -1,5 +1,5 @@
 class Language < ActiveRecord::Base
-  #attr_accessible :compiler, :is_interpreted, :name
+  belongs_to :group, :class_name => LanguageGroup
 
   def compile_command parameters = {}
     parameters.assert_valid_keys(:source, :output)
@@ -19,5 +19,10 @@ class Language < ActiveRecord::Base
       result['stat'] = result['stat'].exitstatus
     end
     return result
+  end
+
+  def self.submission_options
+    languages = Language.where(:id => LanguageGroup.where(identifier: %w[c++ c python haskell]).select(:current_language_id))
+    Hash[languages.map{ |language| ["#{language.group.name} (#{language.name})", language.id] }]
   end
 end

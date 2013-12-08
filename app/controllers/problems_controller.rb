@@ -14,13 +14,11 @@ class ProblemsController < ApplicationController
 
   def submit_params # attributes allowed to be included in submissions
     @_submit_attributes ||= begin
-      submit_attributes = [:language, :source_file]
+      submit_attributes = [:language_id, :source_file]
       submit_attributes << :source if permitted_to? :submit_source, @problem
       submit_attributes
     end
     p = params.require(:submission).permit(*@_submit_attributes).merge(:user_id => current_user.id, :problem_id => params[:id])
-    p[:language] = Language.find_by_name(p[:language]) # temporary measure
-    raise if p[:language].nil?
     p
   end
 

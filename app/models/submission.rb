@@ -7,6 +7,10 @@ class Submission < ActiveRecord::Base
   belongs_to :language
   
   validates :source, :presence => true
+  validate do |submission|
+    errors.add :language_id, "Invalid language specified" if submission.language.nil?
+    errors.add :language_id, "Cannot use protected language" unless Language.submission_options.values.include?(submission.language_id)
+  end
 
   after_save do
     if self.score_changed? # only update if score changed

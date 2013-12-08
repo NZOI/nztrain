@@ -1,0 +1,54 @@
+--- # language models
+# database stores the variants and their language group
+# programs will reference a language variant, and will be upgraded if their behaviour is the same across multiple versions
+
+c++:
+  :name: "C++"
+  :lexer: c++
+  :compiled: yes
+  :interpreted: no
+  :current: c++03
+  :extension: .cpp
+  :variants:
+    c++03:
+      :name: "C++03"
+      :compiler: /usr/bin/g++
+      :flags: "-O2 -o %{output} %{source} -lm"
+#      upgrade: c++11 # submissions will be upgraded if possible, if support is removed, it will be force-upgraded
+c:
+  :name: C
+  :lexer: c
+  :compiled: yes
+  :interpreted: no
+  :current: c99
+  :extension: .c
+  :variants:
+    c99:
+      :name: C99
+      :compiler: /usr/bin/gcc
+      :flags: '-O2 -o %{output} %{source} -lm'
+python:
+  :name: Python
+  :lexer: python
+  :compiled: no
+  :interpreted: yes
+  :current: python2
+  :extension: .py
+  :variants:
+    python2:
+      :name: "Python 2.7"
+      :compiler: /usr/bin/python
+      :flags: '%{source}'
+haskell:
+  :name: Haskell
+  :lexer: haskell
+  :compiled: yes
+  :interpreted: no
+  :current: haskell2010
+  :extension: .hs
+  :variants:
+    haskell2010:
+      :name: "Haskell 2010"
+      :compiler: /usr/bin/ghc
+      :flags: '--make -O2 -o %{output} %{source} -lm'
+
