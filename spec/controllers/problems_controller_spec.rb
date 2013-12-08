@@ -53,11 +53,11 @@ describe ProblemsController do
     it 'can post submit for group problem' do
       Submission.any_instance.should_receive(:judge)
       # post multi-part form
-      post :submit, :id => @group_problem.id, :submission => { :language => 'C++', :source_file => fixture_file_upload('/files/adding.cpp', 'text/plain') }
+      post :submit, :id => @group_problem.id, :submission => { :language_id => LanguageGroup.find_by_identifier("c++").current_language, :source_file => fixture_file_upload('/files/adding.cpp', 'text/plain') }
       response.should redirect_to submission_path(assigns(:submission))
       assigns(:submission).problem_id.should == @group_problem.id
       assigns(:submission).user_id.should == users(:user).id
-      assigns(:submission).language.name.should == 'C++'
+      assigns(:submission).language.group.identifier.should == 'c++'
       assigns(:submission).source.should_not be_empty
     end
   end
