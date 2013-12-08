@@ -36,9 +36,11 @@ module Problems
 
     def enter_zip(path, options = {})
       zippath = path
+      basedir = File.expand_path(File.basename(path,'.zip'),'/')
       Zip::File.open(zippath, Zip::File::CREATE) do |zfs|
         chfs(zfs.dir, zfs.file) do
-          yield '/', options
+          zfs.dir.mkdir(basedir)
+          yield basedir, options
         end
       end
       tempfiles.each { |f| f.unlink }

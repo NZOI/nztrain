@@ -3,7 +3,8 @@
 # test_set:
 #   points: number of points allocated (relative to all other sets)
 #   visibility: (optional, default=private)
-#     sample: displayed as a sample test case
+#     public: displayed as a sample test case, but feedback may be hidden
+#     sample: equivalent to public + prerequisite
 #     prerequisite: a prerequisite for scoring any points - feedback always given
 #     private: feedback may be hidden in contests
 #   test_cases: array of test case names
@@ -28,7 +29,7 @@ test_sets:
 <% problem.test_sets.each do |set| %>
   <%= raw y set.name %>:
     points: <%= set.points %>
-    <%= "visibility: #{TestSet::VISIBILITY[set.visibility]}\n" if set.visibility != TestSet::VISIBILITY[:private] -%>
+<%= "    visibility: #{TestSet::VISIBILITY[set.visibility]}\n" if set.visibility != TestSet::VISIBILITY[:private] -%>
     test_cases: [<%= raw set.test_cases.map{ |kase| y kase.name }.join(",") %>]
 <% end %>
 
