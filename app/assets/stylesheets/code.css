@@ -1,13 +1,13 @@
 pre {
   padding: 0px;
-  font-size: 12px;
+  font-size: 14px;
   border: 1px solid #D2D2D2;
   font-family: Consolas, "Liberation Mono", Courier, monospace;
   white-space: pre-wrap;
   word-wrap: break-word;
   counter-reset: line-numbering;
   position: relative;
-  margin-left: 5ex;
+  margin-left: 4.5ex;
 }
 pre > span {
   padding: 1px 0.5em 1px 0.5em;
@@ -27,7 +27,7 @@ pre > span:nth-child(even) {
 pre > span::before {
   content: counter(line-numbering);
   counter-increment: line-numbering;
-  font-size: .9em;
+  font-size: .75em;
   opacity: 0.7;
   left: -5.2ex;
   position: absolute;
@@ -41,16 +41,3 @@ pre > span::before {
   user-select: none;
 }
 
-/*
-pre li {
-  list-style: none;
-}
-
-pre li::before {
-  content: counter(line-numbering);
-  counter-increment: line-numbering;
-  padding-right: 1em;
-  width: 1.5em;
-  text-align: right;
-  opacity: 0.5;
-}*/
