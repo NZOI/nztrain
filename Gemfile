@@ -34,6 +34,7 @@ gem 'simple_form'
 gem 'facebox-rails'
 gem 'strong_presenter', '~> 0.2.2'
 gem 'render_anywhere'
+gem 'pygments.rb'
 
 gem 'pg'
 gem 'backup'

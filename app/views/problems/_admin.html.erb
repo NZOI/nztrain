@@ -31,7 +31,7 @@
   <% if @problem.evaluator %>
     <%= link_to @problem.evaluator.name, @problem.evaluator %>
     <% if permitted_to? :inspect, @problem.evaluator # privilege required to see evaluator source %>
-      <%= numbered_pre @problem.evaluator.source, tag: :code %>
+      <%= predisplay @problem.evaluator.source, language: :sh %>
     <% end %>
   <% else %>
     Default evaluator

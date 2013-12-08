@@ -1,26 +1,15 @@
 module ApplicationHelper
 
-  def numbered_pre(string, tag: nil, **options)
-    lines = Code.limitlines(string, **options.slice(:linelimit, :charlimit))
-    if lines.last.nil?
-      lines.pop
-      continuation = content_tag :div, "...", :class => "continuation"
-    else
-      continuation = ""
-    end
-    content_tag :pre, :class => 'numbered' do
-      if tag
-        content_tag(tag){ ordered_list(lines) }
-      else
-        ordered_list(lines)
-      end
-    end
-  end
+  def predisplay(string, type: :code, language: nil, **options)
+    truncated_string = Code.limitstring(string, **options.extract!(:linelimit, :charlimit))
+    continuation = (truncated_string.length < string.length) ? content_tag(:div, "...", :class => "continuation") : ""
 
-  def ordered_list(items)
-    content_tag :ol do
-      items.map{ |item| content_tag :li, item }.inject(:+)
-    end
+    options.merge!(lexer: :text) if %i[samp kbd].include?(type)
+    options.merge!(lexer: language) unless language.nil?
+    contents = Pygments.highlight(truncated_string, :options => options.merge(encoding: 'utf-8', linespans: 'line', cssclass: :highlight)).html_safe
+    contents += continuation
+    #contents = content_tag(type, contents) if %i[samp kbd code].include?(type) # <code><pre></pre></code> is invalid html
+    contents
   end
 
   def y(string)
