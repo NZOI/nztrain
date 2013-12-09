@@ -33,7 +33,7 @@ end
 
 if backup["schedule"]==1
   every 1.day do
-    cmd "backup perform -t latest -c config/backup.rb"
+    cmd "bundle exec backup perform -t latest -c config/backup.rb"
   end
 end
 
