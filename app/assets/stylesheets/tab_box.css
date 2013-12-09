@@ -75,3 +75,16 @@ ul.tab_menu li a:hover {
   font-style: italic;
 }
 
+.tab_box table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.tab_box th, .tab_box td {
+  border: 1px solid black;
+  vertical-align: top;
+  padding: 5px 10px 5px 10px;
+}
+
+
+

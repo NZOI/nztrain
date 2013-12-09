@@ -2,6 +2,7 @@ pre {
   padding: 0px;
   font-size: 14px;
   border: 1px solid #D2D2D2;
+  background-color: #EEE;
   font-family: Consolas, "Liberation Mono", Courier, monospace;
   white-space: pre-wrap;
   word-wrap: break-word;
