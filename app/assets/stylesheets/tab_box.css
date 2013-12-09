@@ -45,3 +45,33 @@ ul.tab_menu li a:hover {
   border-radius: 5px;
 }
 
+.tab_box h1, .tab_box h2, .tab_box h3, .tab_box h4, .tab_box h5 {
+  margin-bottom: 5px;
+  margin-top: 5px;
+  font-weight: bold;
+  font-family: Helvetica, Arial;
+}
+
+.tab_box h1 {
+  font-size: 15pt;
+  text-decoration: underline;
+}
+
+.tab_box h2 {
+  font-size: 14pt;
+}
+
+.tab_box h3 {
+  font-size: 12pt;
+}
+
+.tab_box h4 {
+  font-size: 11pt;
+  font-style: italic;
+}
+
+.tab_box h5 {
+  font-size: 10pt;
+  font-style: italic;
+}
+

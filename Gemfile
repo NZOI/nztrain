@@ -16,10 +16,8 @@ gem 'jquery-ui-rails'
 gem 'jquery-historyjs'
 gem 'superfish-rails'
 
-gem "bluecloth"
-#gem "albino" # library is deprecated
 gem "nokogiri"
-gem 'markitup_rails'
+gem 'redcarpet'
 gem 'rmagick'
 gem 'carrierwave'
 gem 'will_paginate'

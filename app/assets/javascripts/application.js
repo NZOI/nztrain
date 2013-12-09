@@ -5,9 +5,7 @@
 //= require jquery-ui-timepicker-addon
 //= require jquery.event.hover-1.0
 //= require jquery.countdown
-//= require jquery.markitup
 //= require jquery.url
-//= require sets/markdown/set
 //= require superfish
 //= require history
 //= require jquery.facebox

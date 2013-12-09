@@ -1,5 +1,5 @@
 <div class="statement">
-  <%= raw Loofah.fragment(markdown_parse(@problem.statement)).scrub!(:escape).scrub!(Loofah::Scrubbers::NoForm.new).scrub!(Loofah::Scrubbers::MathJax.new) %>
+  <%= markdown_parse(@problem.statement) %>
 </div>
 <ul class="samples">
   <% public_cases = @problem.test_cases.where( :id => @problem.test_sets.joins(:test_case_relations).where( :visibility => [TestSet::VISIBILITY[:public], TestSet::VISIBILITY[:sample]] ).select(:test_case_relations => :test_case_id)).order(:id) %>
