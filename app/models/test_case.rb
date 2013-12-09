@@ -9,7 +9,7 @@ class TestCase < ActiveRecord::Base
   validates :input, :presence => true
   validates :output, :presence => true
 
-  scope :distinct, select("distinct(test_cases.id), test_cases.*")
+  scope :distinct, -> { select("distinct(test_cases.id), test_cases.*") }
 
   def problem
     self.test_set.problem

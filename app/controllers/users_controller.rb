@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   filter_resource_access :member => [], :new => [], :additional_collection => {:online => :inspect, :newest => :index, :suexit => :suexit}
 
   def index
-    @users = User.select('*').num_solved.order(:email)
+    @users = User.num_solved.order(:email)
     render
   end
 

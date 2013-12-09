@@ -25,14 +25,13 @@ class Problem < ActiveRecord::Base
   end
 
   # Scopes
-  scope :distinct, select("distinct(problems.id), problems.*")
+  scope :distinct, -> { select("distinct(problems.id), problems.*") }
 
-  def self.score_by_user(user_id)
-    select("(SELECT MAX(submissions.score) FROM submissions WHERE submissions.problem_id = problems.id AND submissions.user_id = #{user_id.to_i}) AS score")
-  end
-  def self.by_group(group_id)
-    joins(:problem_sets => :groups).where(:groups => {:id => group_id}).distinct
-  end
+  scope :score_by_user, ->(user_id) {
+    select("problems.*, (SELECT MAX(submissions.score) FROM submissions WHERE submissions.problem_id = problems.id AND submissions.user_id = #{user_id.to_i}) AS score")
+  }
+
+  scope :by_group, ->(group_id) { joins(:problem_sets => :groups).where(:groups => {:id => group_id}).distinct }
 
   # methods
 

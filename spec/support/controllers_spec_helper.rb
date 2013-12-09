@@ -39,8 +39,9 @@ module ControllersSpecHelper
       options = process_plural_options resource, {:action => :index}.merge(options)
       it "can #{options[:action]} #{resource}" do
         get options[:action], (process_hash options[:params])
-        response.should be_success
-        [ActiveRecord::Relation, Array].should include assigns(options[:resources_name]).class
+        expect(response).to be_success
+        collection = assigns(options[:resources_name])
+        expect(collection.is_a?(ActiveRecord::Relation) || collection.is_a?(Array)).to be_true
       end
     end
     def can_browse resource, options ={}

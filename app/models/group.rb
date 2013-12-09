@@ -22,7 +22,7 @@ class Group < ActiveRecord::Base
   has_many :file_attachments, :through => :group_file_attachments
 
   # Scopes
-  scope :distinct, select("distinct(groups.id), groups.*")
+  scope :distinct, -> { select("distinct(groups.id), groups.*") }
 
   VISIBILITY = Enumeration.new 0 => :public, 1 => :unlisted, 2 => :private
   MEMBERSHIP = Enumeration.new 0 => [:open,'Membership is open to the public'],

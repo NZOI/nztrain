@@ -3,7 +3,7 @@ class AiSubmission < ActiveRecord::Base
   belongs_to :ai_contest
   belongs_to :user
 
-  scope :active, where(:active => true)
+  scope :active, -> { where(:active => true) }
 
   def submit
     return false unless activate

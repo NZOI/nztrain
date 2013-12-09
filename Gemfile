@@ -1,13 +1,13 @@
 source 'http://rubygems.org'
 
 gem 'devise', '~> 3.2.2'
-gem 'rails', '~> 3.2.0'
+gem 'rails', '~> 4.0.0'
 gem 'rails4_upgrade', github: 'alindeman/rails4_upgrade'
 
 gem 'psych', '~> 2.0.2' # part of stdlib, need newer version for safe_load
 
-# delete when upgrading to rails 4.x
-gem 'strong_parameters'
+# change back to cookie-based store (encrypted)
+gem 'activerecord-session_store'
 
 gem 'rubyzip'
 
@@ -23,6 +23,7 @@ gem 'carrierwave'
 gem 'will_paginate'
 gem 'has_scope'
 gem 'declarative_authorization'
+gem 'pundit'
 gem 'recaptcha', :require => 'recaptcha/rails'
 gem 'loofah'
 gem 'whenever', :require => false # for cron jobs
@@ -81,15 +82,15 @@ end
 
 # Gems used only for assets and not required  
 # in production environments by default.  
-group :assets do  
-  gem 'sass'
-  gem 'sass-rails', "  ~> 3.2"
-  gem 'coffee-rails', "~> 3.2"
-  gem 'uglifier', '>=1.0.3'
-  gem 'libv8', '~> 3.3'
-  gem 'therubyracer', '~> 0.11' # required for the execjs gem (dependency)
-  gem 'yui-compressor'
-end
+#group :assets do  
+gem 'sass'
+gem 'sass-rails'
+gem 'coffee-rails'
+gem 'uglifier', '>=1.0.3'
+gem 'libv8', '~> 3.3'
+gem 'therubyracer', '~> 0.11' # required for the execjs gem (dependency)
+gem 'yui-compressor'
+#end
 
 
 

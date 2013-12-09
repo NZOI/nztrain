@@ -9,6 +9,11 @@ module AbilitySpecHelper
     testhelper.with_user self do
       Array(actions).each do |action|
         Array(subjects).each do |subject|
+          begin
+            testhelper.should_be_allowed_to action, subject
+          rescue Exception => e
+            byebug
+          end
           testhelper.should_be_allowed_to action, subject
         end
       end
