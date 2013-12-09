@@ -8,6 +8,9 @@
   <% elsif params[:type] == 'email' %>
     <p><%= f.label :email %><br />
     <%= f.email_field :email %></p>
+    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+      <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
+    <% end %>
   <% elsif params[:type] == 'password' %>
     <p><%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
     <%= f.password_field :password %></p>
@@ -19,13 +22,6 @@
   <%= f.password_field :current_password %></p>
 
   <p><%= f.submit "Update" %></p>
-<% end %>
-<% if (!resource.unconfirmed_email.nil?) || !resource.confirmed? %>
-  <h3>Confirm email</h3>
-  <%= form_for(resource, :as => resource_name, :url => confirmation_path(resource_name), :html => { :method => :post }) do |f| %>
-    <%= f.email_field :email, :style => "display:none;" %>
-    <div><%= f.submit "Resend confirmation instructions to #{resource.unconfirmed_email || resource.email}" %></div>
-  <% end %>
 <% end %>
 
 <%= link_to "Back", :back %>

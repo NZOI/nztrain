@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/alindeman/rails4_upgrade.git
+  revision: 6d71d4418891ef11243451481f28cbb3072c6019
+  specs:
+    rails4_upgrade (0.5.0)
+      bundler (>= 1.2.2)
+      terminal-table (>= 1.4.5)
+
+GIT
   remote: git://github.com/ronalchn/qless.git
   revision: 930b3f30f93d1df2b2916c40eef9ad8dee96f8cc
   branch: nztrain
@@ -37,11 +45,12 @@ GEM
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
     arel (3.0.2)
+    atomic (1.1.14)
     backup (3.4.0)
       open4 (~> 1.3.0)
       thor (>= 0.15.4, < 2)
     bb-ruby (1.0.2)
-    bcrypt-ruby (3.0.1)
+    bcrypt-ruby (3.1.2)
     better_errors (0.7.2)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
@@ -58,6 +67,9 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    capybara-email (2.2.0)
+      capybara (~> 2.1.0)
+      mail
     carrierwave (0.9.0)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
@@ -82,11 +94,12 @@ GEM
     debug_inspector (0.0.2)
     debugger-linecache (1.2.0)
     declarative_authorization (0.5.7)
-    devise (2.2.3)
+    devise (3.2.2)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
-      railties (~> 3.1)
-      warden (~> 1.2.1)
+      railties (>= 3.2.6, < 5)
+      thread_safe (~> 0.1)
+      warden (~> 1.2.3)
     diff-lcs (1.2.4)
     dotenv (0.9.0)
     erubis (2.7.0)
@@ -133,7 +146,7 @@ GEM
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
     open4 (1.3.0)
-    orm_adapter (0.4.0)
+    orm_adapter (0.5.0)
     pg (0.17.0)
     polyamorous (0.6.4)
       activerecord (>= 3.0)
@@ -238,10 +251,13 @@ GEM
     superfish-rails (1.6.0.1)
     term-ansicolor (1.2.2)
       tins (~> 0.8)
+    terminal-table (1.4.5)
     therubyracer (0.12.0)
       libv8 (~> 3.16.14.0)
       ref
     thor (0.18.1)
+    thread_safe (0.1.3)
+      atomic
     tilt (1.4.1)
     tins (0.11.0)
     treetop (1.4.15)
@@ -255,7 +271,7 @@ GEM
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
-    warden (1.2.1)
+    warden (1.2.3)
       rack (>= 1.0)
     whenever (0.8.2)
       activesupport (>= 2.3.4)
@@ -276,12 +292,13 @@ DEPENDENCIES
   bluecloth
   byebug
   capybara
+  capybara-email
   carrierwave
   coffee-rails (~> 3.2)
   connection_pool
   coveralls
   declarative_authorization
-  devise (~> 2.2.3)
+  devise (~> 3.2.2)
   facebox-rails
   factory_girl
   factory_girl_rails
@@ -300,6 +317,7 @@ DEPENDENCIES
   pygments.rb
   qless!
   rails (~> 3.2.0)
+  rails4_upgrade!
   recaptcha
   redis
   render_anywhere

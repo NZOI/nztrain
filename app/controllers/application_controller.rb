@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
   before_filter :check_su_loss
   before_filter :set_leader
   before_filter :wrong_site
+  before_filter :configure_permitted_parameters, if: :devise_controller?
   protect_from_forgery
 
   def redirect(message)
@@ -73,6 +74,10 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.for(:sign_up) << :username << :name << :email
+  end
+
   def set_current_user
     Authorization.current_user = current_user
   end

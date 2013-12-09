@@ -12,15 +12,24 @@ feature 'registration' do
       fill_in 'Password confirmation', :with => 'registration password'
       click_on 'Sign up'
     end
-    (mail = ActionMailer::Base.deliveries.last).should_not be_nil
-    mail.to.should == ['registration@integration.spec'] # confirmation email sent to right place
+    mail = open_email('registration@integration.spec')
+    expect(mail.to).to eq(['registration@integration.spec'])
+    expect(mail).to have_link("Confirm")
 
     @user = User.find_by_username('registration_username')
-    @user.confirmed?.should be_false
+    expect(@user.confirmed?).to be_false
+    mail.click_link("Confirm")
     visit "/accounts/confirmation?confirmation_token=#{@user.confirmation_token}"
     @user.reload.confirmed?.should be_true # make sure new user account is confirmed
 
-    visit '/'
+    visit '/accounts/sign_in'
+    # sign in
+    within 'form#new_user' do
+      fill_in :user_email, :with => 'registration@integration.spec'
+      fill_in :user_password, :with => 'registration password'
+      click_on 'Sign in'
+    end
+
     # we should be signed in
     find('#current_user_username').text.should == 'registration_username'
 

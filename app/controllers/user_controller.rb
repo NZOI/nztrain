@@ -1,9 +1,10 @@
 class UserController < ApplicationController
   filter_resource_access :collection => [], :new => [], :additional_member => {:add_role => :update, :remove_role => :update, :add_brownie => :add_brownie, :admin_email => :email, :send_admin_email => :email, :su => :su}, :context => :users
 
+  # this is for admins, users edit their own accounts using the accounts/ scope
   def permitted_params
     @_permitted_attributes ||= begin
-      permitted_attributes = [:name, :avatar, :remove_avatar, :avatar_cache]
+      permitted_attributes = [:name, :avatar, :remove_avatar, :avatar_cache, :email]
       permitted_attributes << :brownie_points if permitted_to? :add_brownie, @user
       permitted_attributes
     end

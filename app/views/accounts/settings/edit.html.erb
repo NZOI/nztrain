@@ -10,6 +10,9 @@
 
   <p><%= f.label :email %><br />
   <div style="display: inline-block; min-width: 20em;"><%= @user[:email] %></div> <%= link_to "change", edit_user_registration_path + '/email' %></p>
+  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+    <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
+  <% end %>
 
   <p><%= f.label :password %><br />
   <div style="display: inline-block; min-width: 20em;">********</div> <%= link_to "change", edit_user_registration_path + '/password' %></p>

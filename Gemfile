@@ -1,7 +1,8 @@
 source 'http://rubygems.org'
 
-gem 'devise', '~> 2.2.3'
+gem 'devise', '~> 3.2.2'
 gem 'rails', '~> 3.2.0'
+gem 'rails4_upgrade', github: 'alindeman/rails4_upgrade'
 
 gem 'psych', '~> 2.0.2' # part of stdlib, need newer version for safe_load
 
@@ -69,6 +70,7 @@ end
 group :development, :test do
   gem 'rspec-rails', '~> 2.0'
   gem 'capybara'
+  gem 'capybara-email'
 
   gem 'factory_girl_rails'
 
