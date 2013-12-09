@@ -13,12 +13,12 @@ describe Accounts::PasswordsController do
   it "can send password reset email" do
     post :create, :user => {:email => @user.email}
 
-    (mail = ActionMailer::Base.deliveries.last).should_not be_nil
+    expect(mail = ActionMailer::Base.deliveries.last).to_not be_nil
 
     host = ActionMailer::Base.default_url_options[:host]
-    reset_url_regexp = Regexp.escape "<a href=\"http://#{host}#{edit_user_password_path :reset_password_token => @user.reload.reset_password_token}\">"
-    mail.body.encoded.should match reset_url_regexp
+    expect(mail).to have_link('Change my password')
   end
+
   context "using password reset token" do
     before(:all) do
       @resetuser = FactoryGirl.create(:user)
@@ -29,16 +29,19 @@ describe Accounts::PasswordsController do
     before(:each) do
       User.send_reset_password_instructions :email => @resetuser.email
       @resetuser.reload
+      expect(mail = ActionMailer::Base.deliveries.last).to_not be_nil
+      expect(mail.body.encoded =~ %r{<a href=\"http://[[:alnum:]\.\:\/]+/password/edit\?reset_password_token=([^"]+)">}).to_not be_nil
+      @reset_token = $1
     end
 
     it "can edit password" do
-      get :edit, :reset_password_token => @resetuser.reset_password_token
+      get :edit, :reset_password_token => @reset_token
       response.should be_success
     end
 
     it "can update password" do
-      post :update, :user => {:reset_password_token => @resetuser.reset_password_token, :password => "newpassword", :password_confirmation => "newpassword"}
-      @resetuser.reload.valid_password?("newpassword").should be_true
+      post :update, :user => {:reset_password_token => @reset_token, :password => "newpassword", :password_confirmation => "newpassword"}
+      expect(@resetuser.reload.valid_password?("newpassword")).to be_true
     end
   end
 end

@@ -19,7 +19,7 @@ describe Accounts::RegistrationsController do
     # check email confirmation email sent
     (mail = ActionMailer::Base.deliveries.last).should_not be_nil
     mail.to.should == ["signup@nztrain.com"] # email sent to right place
-    mail.body.encoded.should match Regexp.escape newuser.confirmation_token # email includes confirmation token
+    expect(mail).to have_link('Confirm') # email includes confirmation link
   end
 
   context 'when signed in' do
@@ -61,9 +61,10 @@ describe Accounts::RegistrationsController do
     it "can update email" do
       put :update, :type => "email", :user => { :email => "unconfirmed@nztrain.com", :current_password => "registration password" }
       @user.reload.unconfirmed_email.should == "unconfirmed@nztrain.com"
-      (mail = ActionMailer::Base.deliveries.last).should_not be_nil
-      mail.to.should == ["unconfirmed@nztrain.com"] # email sent to right place
-      mail.body.encoded.should match Regexp.escape @user.confirmation_token # email includes confirmation token
+
+      expect(mail = ActionMailer::Base.deliveries.last).to_not be_nil
+      expect(mail.to).to eq ["unconfirmed@nztrain.com"] # email sent to right place
+      expect(mail.body.encoded =~ %r{<a href=\"http://[[:alnum:]\.\:\/]+\?confirmation_token=([^"]+)">}).to_not be_nil
     end
   end
 end
