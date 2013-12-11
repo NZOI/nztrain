@@ -82,6 +82,9 @@ class User < ActiveRecord::Base
   def is_admin?
     self.is_any? [:admin, :superadmin]
   end
+  def is_staff?
+    self.is_any? [:admin, :superadmin, :staff]
+  end
   def is_any?(roles)
     (self.roles.map(&:name) & roles.map(&:to_s)).any?
   end
@@ -90,6 +93,9 @@ class User < ActiveRecord::Base
   end
   def openbook?
     !self.competing?
+  end
+  def owns(object)
+    object.respond_to?(:owner_id) and object.owner_id == self.id
   end
 
   def reload(options = nil)

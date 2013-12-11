@@ -1,10 +1,9 @@
 class ProblemsController < ApplicationController
-  filter_resource_access :additional_member => {:submit => :submit, :submissions => :submit, :test_cases => :inspect, :import => :update, :export => :inspect }
 
   def permitted_params
     @_permitted_attributes ||= begin
       permitted_attributes = [:title, :statement, :input_type, :output_type, :memory_limit, :time_limit, :evaluator_id]
-      permitted_attributes << :owner_id if permitted_to? :transfer, @problem
+      permitted_attributes << :owner_id if policy(@problem).transfer?
       permitted_attributes << :input if params.require(:problem)[:input_type] == 'file'
       permitted_attributes << :output if params.require(:problem)[:output_type] == 'file'
       permitted_attributes
@@ -15,22 +14,18 @@ class ProblemsController < ApplicationController
   def submit_params # attributes allowed to be included in submissions
     @_submit_attributes ||= begin
       submit_attributes = [:language_id, :source_file]
-      submit_attributes << :source if permitted_to? :submit_source, @problem
+      submit_attributes << :source if policy(@problem).submit_source?
       submit_attributes
     end
     p = params.require(:submission).permit(*@_submit_attributes).merge(:user_id => current_user.id, :problem_id => params[:id])
     p
   end
 
-  def new_problem_from_params
-    @problem = Problem.new(:owner => current_user)
-  end
-
   def visible_attributes
     @_visible_attributes ||= begin
       visible_attributes = [:linked_title, :input, :output, :memory_limit, :time_limit, :linked_owner, :progress_bar]
-      visible_attributes << :edit_link if permitted_to? :update, @problem
-      visible_attributes << :destroy_link if permitted_to? :destroy, @problem
+      visible_attributes << :edit_link if policy(@problem).update?
+      visible_attributes << :destroy_link if policy(@problem).destroy?
       visible_attributes
     end
   end
@@ -46,7 +41,7 @@ class ProblemsController < ApplicationController
       @problem = Problem.new
       @problems = Problem.score_by_user(current_user.id).select('*')
     end
-    permitted_to! :manage, @problem
+    authorize @problem, :update?
 
     @problems_presenter = ProblemPresenter::Collection.new(@problems).permit!(*visible_attributes)
 
@@ -59,8 +54,7 @@ class ProblemsController < ApplicationController
   # GET /problems/1.xml
   def show
     #TODO: restrict to problems that current user owns/manages
-    #@problem_sets = ProblemSet.accessible_by(current_ability,:update) # can only add problem to problem sets user can update to
-    @problem_sets = ProblemSet.with_permissions_to(:update) if permitted_to? :update, :problem_sets # can only add problem to problem sets user can update to
+    @problem_sets = ProblemSet.all.select { |set| policy(set).use? } # TODO: fix to be more efficient
     @submissions = @problem.submission_history(current_user)
 
     @all_subs = {};

@@ -3,6 +3,7 @@ require 'declarative_authorization/maintenance'
 class ApplicationController < ActionController::Base
   include Authorization::Maintenance
   include ApplicationHelper
+  include Pundit
   layout "scaffold"
 
   before_filter :update_last_seen_at
@@ -26,7 +27,7 @@ class ApplicationController < ActionController::Base
       redirect_to(redir, :alert => message)
   end
 
-  rescue_from Authorization::AuthorizationError do |exception|
+  rescue_from Pundit::NotAuthorizedError do |exception|
     if !user_signed_in? # not signed in, prompt to sign in
       redirect_to(new_user_session_path, :alert => "Welcome to nztrain. Please log in or sign up to continue.")
     elsif !current_user.confirmed? # user is unconfirmed

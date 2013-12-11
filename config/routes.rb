@@ -9,27 +9,28 @@ NZTrain::Application.routes.draw do
     #end
   end
 
-  resources :ai_contests do
-    member do
-      get 'sample'
-      get 'submit'
-      post 'submit'
-      get 'submissions'
-      get 'scoreboard'
-      post 'rejudge'
-      post 'judge'
-    end
-  end
+  #resources :ai_contests do
+  #  member do
+  #    get 'sample'
+  #    get 'submit'
+  #    post 'submit'
+  #    get 'submissions'
+  #    get 'scoreboard'
+  #    post 'rejudge'
+  #    post 'judge'
+  #  end
+  #end
 
-  resources :ai_submissions, :only => [:show] do
-    member do
-      put 'deactivate'
-      put 'activate'
-      post 'rejudge'
-    end
-  end
+  #resources :ai_submissions, :only => [:show] do
+  #  member do
+  #    put 'deactivate'
+  #    put 'activate'
+  #    post 'rejudge'
+  #  end
+  #end
 
-  resources :test_sets
+  #resources :test_sets
+  #resources :test_cases
 
   resources :evaluators
 
@@ -55,7 +56,7 @@ NZTrain::Application.routes.draw do
     end
   end
 
-  resources :contest_relations
+  # resources :contest_relations
 
   resources :submissions, :except => [:new,:create] do
     collection do
@@ -91,8 +92,6 @@ NZTrain::Application.routes.draw do
       put 'remove_problem'
     end
   end
-
-  resources :test_cases
 
   resources :users, :only => :index do
     collection do

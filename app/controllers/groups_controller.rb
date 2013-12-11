@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  filter_resource_access :additional_collection => { :browse => :index, :add_problem_set => :index, :add_contest => :index }, :additional_member => { :info => :show, :contests => :access }
+  #filter_resource_access :additional_collection => { :browse => :index, :add_problem_set => :index, :add_contest => :index }, :additional_member => { :info => :show, :contests => :access }
 
   def permitted_params
     @_permitted_attributes ||= begin
@@ -10,35 +10,35 @@ class GroupsController < ApplicationController
     params.require(:group).permit(*@_permitted_attributes)
   end
 
-  def new_group_from_params
-    @group = Group.new(:owner => current_user)
-  end
+  #def new_group_from_params
+  #  @group = Group.new(:owner => current_user)
+  #end
 
-  def add_problem_set # not currently used (setup like problem_problem_sets_controller method, other way is to setup like the add_contest method)
-    @group = Group.find(params[:problem_set][:group_ids])
-    permitted_to! :update, @group
-    problem_set = ProblemSet.find(params[:problem_set_id])
-    permitted_to! :use, problem_set # cannot add problem sets without use permission
-    if @group.problem_sets.exists?(problem_set)
-      redirect_to(problem, :alert => "This group already has access to this problem set")
-      return
-    end
-    @group.problem_sets.push(problem_set)
-    redirect_to(problem_set, :notice => "Problem set added.")
-  end
+  #def add_problem_set # not currently used (setup like problem_problem_sets_controller method, other way is to setup like the add_contest method)
+  #  @group = Group.find(params[:problem_set][:group_ids])
+  #  permitted_to! :update, @group
+  #  problem_set = ProblemSet.find(params[:problem_set_id])
+  #  permitted_to! :use, problem_set # cannot add problem sets without use permission
+  #  if @group.problem_sets.exists?(problem_set)
+  #    redirect_to(problem, :alert => "This group already has access to this problem set")
+  #    return
+  #  end
+  #  @group.problem_sets.push(problem_set)
+  #  redirect_to(problem_set, :notice => "Problem set added.")
+  #end
 
-  def remove_problem_set
-    permitted_to! :update, @group
-    problem_set = ProblemSet.find(params[:problem_set_id])
-    @group.problem_sets.delete(problem_set)
-    redirect_to(@group, :notice => "Problem set removed.")
-  end
+  #def remove_problem_set
+  #  permitted_to! :update, @group
+  #  problem_set = ProblemSet.find(params[:problem_set_id])
+  #  @group.problem_sets.delete(problem_set)
+  #  redirect_to(@group, :notice => "Problem set removed.")
+  #end
 
   def add_contest
     @group = Group.find(params[:contest][:group_ids])
-    permitted_to! :update, @group
+    authorize @group, :update?
     contest = Contest.find(params[:contest_id])
-    permitted_to! :use, contest # cannot add contests without use permission
+    authorize @contest, :use?
     if @group.contests.exists?(contest)
       redirect_to(contest, :alert => "This group already has access to this contest")
       return
@@ -48,7 +48,7 @@ class GroupsController < ApplicationController
   end
 
   def remove_contest
-    permitted_to! :update, @group
+    authorize @group, :update?
     contest = Contest.find(params[:contest_id])
     @group.contests.delete(contest)
     redirect_to(@group, :notice => "Contest removed.")
@@ -59,10 +59,10 @@ class GroupsController < ApplicationController
   def index
     case params[:filter].to_s
     when 'my'
-      permitted_to! :manage, Group.new(:owner_id => current_user.id)
+      authorize Group.new(:owner_id => current_user.id), :update?
       @groups = Group.where(:owner_id => current_user.id)
     else
-      permitted_to! :manage, Group.new
+      authorize Group.new, :update?
       @groups = Group.scoped
     end
 
@@ -80,7 +80,8 @@ class GroupsController < ApplicationController
   # GET /groups/1
   # GET /groups/1.xml
   def show
-    if permitted_to? :access_problems, @group
+    @group = Group.find(params[:id])
+    if policy(@group).access?
       @problem_sets = @group.problem_sets
       render :layout => "group"
     else
@@ -89,6 +90,8 @@ class GroupsController < ApplicationController
   end
 
   def contests
+    @group = Group.find(params[:id])
+    authorize @group, :access?
     @contests = @group.contests
     respond_to do |format|
       format.html { render :layout => "group" }
@@ -96,6 +99,8 @@ class GroupsController < ApplicationController
   end
   
   def info 
+    @group = Group.find(params[:id])
+    authorize @group, :show?
     respond_to do |format|
       format.html { render :layout => "group" }
     end
@@ -104,6 +109,8 @@ class GroupsController < ApplicationController
   # GET /groups/new
   # GET /groups/new.xml
   def new
+    @group = Group.new
+    authorize @group, :new?
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @group }
@@ -112,13 +119,17 @@ class GroupsController < ApplicationController
 
   # GET /groups/1/edit
   def edit
+    @group = Group.find(params[:id])
+    authorize @group, :edit?
   end
 
   # POST /groups
   # POST /groups.xml
   def create
+    @group = Group.new(permitted_params.reverse_merge(:owner => current_user))
+    authorize @group, :create?
     respond_to do |format|
-      if @group.update_attributes(permitted_params)
+      if @group.save
         format.html { redirect_to(@group, :notice => 'Group was successfully created.') }
         format.xml  { render :xml => @group, :status => :created, :location => @group }
       else
@@ -131,6 +142,8 @@ class GroupsController < ApplicationController
   # PUT /groups/1
   # PUT /groups/1.xml
   def update
+    @group = Group.find(params[:id])
+    authorize @group, :update?
     respond_to do |format|
       if @group.update_attributes(permitted_params)
         format.html { redirect_to(@group, :notice => 'Group was successfully updated.') }
@@ -145,6 +158,8 @@ class GroupsController < ApplicationController
   # DELETE /groups/1
   # DELETE /groups/1.xml
   def destroy
+    @group = Group.find(params[:id])
+    authorize @group, :destroy?
     @group.destroy
 
     respond_to do |format|

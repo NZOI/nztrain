@@ -5,7 +5,7 @@ class UserController < ApplicationController
   def permitted_params
     @_permitted_attributes ||= begin
       permitted_attributes = [:name, :avatar, :remove_avatar, :avatar_cache, :email]
-      permitted_attributes << :brownie_points if permitted_to? :add_brownie, @user
+      permitted_attributes << :brownie_points if policy(@user).add_brownie?
       permitted_attributes
     end
     params.require(:user).permit(*@_permitted_attributes)
@@ -14,12 +14,14 @@ class UserController < ApplicationController
   def visible_attributes
     @_visible_attributes ||= begin
       visible_attributes = [:username]
-      visible_attributes += [:name, :email] if permitted_to? :inspect, @user
+      visible_attributes += [:name, :email] if policy(@user).inspect?
       visible_attributes
     end
   end
 
   def show
+    @user = User.find(params[:id])
+    authorize @user, :show?
     @solved_problems = @user.get_solved
 
     @user_presenter = UserPresenter.new(@user).permit!(*visible_attributes)
@@ -31,9 +33,13 @@ class UserController < ApplicationController
   end
 
   def edit
+    @user = User.find(params[:id])
+    authorize @user, :edit?
   end
 
   def update
+    @user = User.find(params[:id])
+    authorize @user, :update?
     respond_to do |format|
       if @user.update_attributes(permitted_params)
         format.html { redirect_to(@user, :notice => 'User was successfully updated.') }
@@ -46,8 +52,10 @@ class UserController < ApplicationController
   end
 
   def add_role
+    @user = User.find(params[:id])
+    authorize @user, :update?
     role = Role.find(params[:user][:role_ids])
-    permitted_to! :grant, role
+    authorize role, :grant?
     if @user.roles.exists?(role)
       redirect_to(@user, :alert => "This user already has this role")
       return
@@ -56,13 +64,17 @@ class UserController < ApplicationController
     redirect_to(@user, :notice => "Role #{role.name} added.")
   end
   def remove_role
+    @user = User.find(params[:id])
+    authorize @user, :update?
     role = Role.find(params[:role_id])
-    permitted_to! :revoke, role
+    authorize role, :revoke?
     @user.roles.delete(role)
     redirect_to(@user, :notice => "Role #{role.name} removed.")
   end
 
   def destroy
+    @user = User.find(params[:id])
+    authorize @user, :destroy?
     @user.destroy
 
     respond_to do |format|
@@ -72,6 +84,8 @@ class UserController < ApplicationController
   end
 
   def su
+    @user = User.find(params[:id])
+    authorize @user, :su?
     if request.post?
       if current_user.valid_password?(params[:password])
         session[:su] = (session[:su]||[]).push(current_user.id)
@@ -86,6 +100,8 @@ class UserController < ApplicationController
   end
 
   def add_brownie
+    @user = User.find(params[:id])
+    authorize @user, :add_brownie?
     logger.debug "adding brownie"
     @user.brownie_points += 1
     @user.save
@@ -93,8 +109,13 @@ class UserController < ApplicationController
   end
 
   def admin_email
+    @user = User.find(params[:id])
+    authorize @user, :manage?
   end
+
   def send_admin_email
+    @user = User.find(params[:id])
+    authorize @user, :manage?
     AdminMailer.custom_email(current_user,@user,params[:subject],params[:body]).deliver
     redirect_to user_path(@user), :notice => "Email sent."
   end
