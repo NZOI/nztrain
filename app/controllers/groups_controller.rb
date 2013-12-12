@@ -4,7 +4,7 @@ class GroupsController < ApplicationController
   def permitted_params
     @_permitted_attributes ||= begin
       permitted_attributes = [:name, :visibility, :membership]
-      permitted_attributes << :owner_id if permitted_to? :transfer, @group
+      permitted_attributes << :owner_id if policy(@group).transfer?
       permitted_attributes
     end
     params.require(:group).permit(*@_permitted_attributes)

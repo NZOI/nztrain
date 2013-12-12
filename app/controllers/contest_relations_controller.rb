@@ -52,7 +52,7 @@ class ContestRelationsController < ApplicationController
   # POST /contest_relations.xml
   def create
     @contest_relation = ContestRelation.new(permitted_params)
-    permitted_to! :create, @contest_relation
+    authorize @contest_relation, :create?
 
     respond_to do |format|
       if @contest_relation.save

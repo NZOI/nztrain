@@ -60,45 +60,45 @@
                 <li><a href="#" onClick="return false;">my stuff</a>
                   <ul>
                     <li><a href="<%= my_submissions_path %>">submissions</a></li>
-                    <% if permitted_to? :manage, Problem.new(:owner_id => current_user.id) %>
+                    <% if policy(Problem.new(:owner_id => current_user.id)).manage? %>
                       <li><a href="<%= my_problems_path %>">problems</a></li>
                     <% end %>
-                    <% if permitted_to? :manage, ProblemSet.new(:owner_id => current_user.id) %>
+                    <% if policy(ProblemSet.new(:owner_id => current_user.id)).manage? %>
                       <li><a href="<%= my_problem_sets_path %>">problem sets</a></li>
                     <% end %>
-                    <% if permitted_to? :manage, Contest.new(:owner_id => current_user.id) %>
+                    <% if policy(Contest.new(:owner_id => current_user.id)).manage? %>
                       <li><a href="<%= my_contests_path %>">contests</a></li>
                     <% end %>
-                    <% if permitted_to? :manage, Group.new(:owner_id => current_user.id) %>
+                    <% if policy(Group.new(:owner_id => current_user.id)).manage? %>
                       <li><a href="<%= my_groups_path %>">groups</a></li>
                     <% end %>
-                    <% if permitted_to? :manage, FileAttachment.new(:owner_id => current_user.id) %>
+                    <% if policy(FileAttachment.new(:owner_id => current_user.id)).manage? %>
                       <li><a href="<%= my_file_attachments_path %>">file attachments</a></li>
                     <% end %>
                   </ul>
                 </li>
-                <% if permitted_to? :manage, Problem.new %>
+                <% if policy(Problem.new).manage? %>
                   <li><a href="#" onClick="return false;">manage</a>
                     <ul>
-                      <% if permitted_to? :index, Submission.new %>
+                      <% if policy(Submission.new).index? %>
                         <li><a href="<%= submissions_path %>">submissions</a></li>
                       <% end %>
-                      <% if permitted_to? :manage, Problem.new %>
+                      <% if policy(Problem.new).manage? %>
                         <li><a href="<%= problems_path %>">problems</a></li>
                       <% end %>
-                      <% if permitted_to? :manage, ProblemSet.new %>
+                      <% if policy(ProblemSet.new).manage? %>
                         <li><a href="<%= problem_sets_path %>">problem sets</a></li>
                       <% end %>
-                      <% if permitted_to? :manage, Contest.new %>
+                      <% if policy(Contest.new).manage? %>
                         <li><a href="<%= contests_path %>">contests</a></li>
                       <% end %>
-                      <% if permitted_to? :manage, Group.new %>
+                      <% if policy(Group.new).manage? %>
                         <li><a href="<%= groups_path %>">groups</a></li>
                       <% end %>
-                      <% if permitted_to? :index, :evaluators %>
+                      <% if policy(Evaluator.new).index? %>
                         <li><a href="<%= evaluators_path %>">evaluators</a></li>
                       <% end %>
-                      <% if permitted_to? :manage, FileAttachment.new %>
+                      <% if policy(FileAttachment.new).manage? %>
                         <li><a href="<%= file_attachments_path %>">file attachments</a></li>
                       <% end %>
                     </ul>
@@ -107,14 +107,14 @@
                 <li><a href="<%= users_path %>">users</a>
                   <ul>
                     <li><a href="<%= newest_users_path %>">newest</a></li>
-                    <% if permitted_to? :inspect, :users %><li><a href="<%= online_users_path %>">online</a></li><% end %>
+                    <% if policy(User.new).inspect? %><li><a href="<%= online_users_path %>">online</a></li><% end %>
                   </ul>
                 </li>
                 <% if current_user && current_user.is_admin? %>
                   <li><a href="#" onClick="return false;">admin</a>
                     <ul>
-                      <% if permitted_to? :index, Role %><li><a href="<%= roles_path %>">roles</a></li><% end %>
-                      <% if permitted_to? :index, Setting %><li><a href="<%= settings_path %>">settings</a></li><% end %>
+                      <% if policy(Role).index? %><li><a href="<%= roles_path %>">roles</a></li><% end %>
+                      <% if policy(Setting).index? %><li><a href="<%= settings_path %>">settings</a></li><% end %>
                       <li><a href="<%= qless_path %>">qless</a></li>
                     </ul>
                   </li>

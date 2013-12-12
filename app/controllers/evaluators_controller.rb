@@ -1,10 +1,9 @@
 class EvaluatorsController < ApplicationController
-  filter_resource_access
 
   def permitted_params
     @_permitted_params ||= begin
       permitted_attributes = [:name, :description, :source]
-      permitted_attributes << :owner_id if permitted_to? :transfer, @evaluator
+      permitted_attributes << :owner_id if policy(@evaluator).transfer?
       params.require(:evaluator).permit(*permitted_attributes)
     end
   end
@@ -16,6 +15,7 @@ class EvaluatorsController < ApplicationController
   # GET /evaluators
   # GET /evaluators.xml
   def index
+    authorize Evaluator, :index?
     @evaluators = Evaluator.scoped
 
     respond_to do |format|
@@ -27,6 +27,8 @@ class EvaluatorsController < ApplicationController
   # GET /evaluators/1
   # GET /evaluators/1.xml
   def show
+    @evaluator = Evaluator.find(params[:id])
+    authorize @evaluator, :show?
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @evaluator }
@@ -36,6 +38,8 @@ class EvaluatorsController < ApplicationController
   # GET /evaluators/new
   # GET /evaluators/new.xml
   def new
+    @evaluator = Evaluator.new
+    authorize @evaluator, :new?
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @evaluator }
@@ -44,13 +48,17 @@ class EvaluatorsController < ApplicationController
 
   # GET /evaluators/1/edit
   def edit
+    @evaluator = Evaluator.find(params[:id])
+    authorize @evaluator, :edit?
   end
 
   # POST /evaluators
   # POST /evaluators.xml
   def create
+    @evaluator = Evaluator.new(permitted_params.reverse_merge(:owner_id => current_user))
+    authorize @evaluator, :create?
     respond_to do |format|
-      if @evaluator.update_attributes(permitted_params)
+      if @evaluator.save
         format.html { redirect_to(@evaluator, :notice => 'Evaluator was successfully created.') }
         format.xml  { render :xml => @evaluator, :status => :created, :location => @evaluator }
       else
@@ -63,6 +71,8 @@ class EvaluatorsController < ApplicationController
   # PUT /evaluators/1
   # PUT /evaluators/1.xml
   def update
+    @evaluator = Evaluator.find(params[:id])
+    authorize @evaluator, :update?
     respond_to do |format|
       if @evaluator.update_attributes(permitted_params)
         format.html { redirect_to(@evaluator, :notice => 'Evaluator was successfully updated.') }
@@ -77,6 +87,8 @@ class EvaluatorsController < ApplicationController
   # DELETE /evaluators/1
   # DELETE /evaluators/1.xml
   def destroy
+    @evaluator = Evaluator.find(params[:id])
+    authorize @evaluator, :destroy?
     @evaluator.destroy
 
     respond_to do |format|

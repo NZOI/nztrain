@@ -4,7 +4,7 @@ class ProblemSetsController < ApplicationController
   def permitted_params
     @_permitted_params ||= begin
       permitted_attributes = [:title]
-      permitted_attributes << :owner_id if permitted_to? :transfer, @problem_set
+      permitted_attributes << :owner_id if policy(@problem_set).transfer?
       params.require(:problem_set).permit(*permitted_attributes)
     end
   end
@@ -15,9 +15,9 @@ class ProblemSetsController < ApplicationController
 
   def add_problem # currently unused function
     @problem_set = ProblemSet.find(params[:problem][:problem_set_ids])
-    permitted_to! :update, @problem_set
+    authorize @problem_set, :update?
     problem = Problem.find(params[:problem_id])
-    permitted_to! :use, problem
+    authorize problem, :use?
     if @problem_set.problems.exists?(problem)
       redirect_to(problem, :alert => "This problem set already contains this problem")
       return
@@ -37,10 +37,10 @@ class ProblemSetsController < ApplicationController
   def index
     case params[:filter].to_s
     when 'my'
-      permitted_to! :manage, ProblemSet.new(:owner_id => current_user.id)
+      authorize ProblemSet.new(:owner_id => current_user.id), :manage?
       @problem_sets = ProblemSet.where(:owner_id => current_user.id)
     else
-      permitted_to! :manage, ProblemSet.new
+      authorize ProblemSet.new, :manage?
       @problem_sets = ProblemSet.scoped
     end
 
@@ -53,7 +53,7 @@ class ProblemSetsController < ApplicationController
   # GET /problem_sets/1
   # GET /problem_sets/1.xml
   def show
-    if permitted_to? :update, Group.new
+    if policy(Group.new).update?
       @groups = Group.all
     else
       @groups = Group.where(:owner_id => current_user.id)

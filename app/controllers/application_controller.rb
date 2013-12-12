@@ -44,12 +44,10 @@ class ApplicationController < ActionController::Base
   def check_su_loss
     if user_signed_in? && in_su? # so that a user losing admin status cannot keep using admin privileges if they su-ed into another admin user
       original_user = User.find(session[:su][0])
-      with_user original_user do
-        if permitted_to? :su, current_user # lost privileges to su into the user
-          session[:su] = nil
-          sign_in original_user # kick them back into their actual account
-          redirect_to root_url, :alert => "You lost your su authorization"
-        end
+      if !UserPolicy.new(original_user, current_user).su?
+        session[:su] = nil
+        sign_in original_user # kick them back into their actual account
+        redirect_to root_url, :alert => "You lost your su authorization"
       end
     end
   end
