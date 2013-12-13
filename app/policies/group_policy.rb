@@ -5,7 +5,7 @@ class GroupPolicy < ApplicationPolicy
       if user.is_staff?
         scope.all
       else
-        scope.joins(:memberships).where{ |groups| groups.visibility == Group::VISIBILITY[:public] | groups.memberships.user_id == user.id }
+        scope.joins(:memberships).where{ |groups| (groups.visibility == Group::VISIBILITY[:public]) | (groups.memberships.user_id == user.id) }
       end
     end
   end

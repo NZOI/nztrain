@@ -1,8 +1,8 @@
-class FileAttachmentPolicy < ApplicationPolicy
+class EvaluatorPolicy < ApplicationPolicy
 
   class Scope < ApplicationPolicy::Scope
     def resolve
-      if user.is_a?(User) && user.is_staff?
+      if user.is_staff?
         scope.all
       else
         scope.where(:owner_id => user.id)
@@ -11,7 +11,11 @@ class FileAttachmentPolicy < ApplicationPolicy
   end
 
   def index?
-    user.is_any?([:superadmin, :admin, :staff, :organiser])
+    user.is_staff?
+  end
+
+  def inspect?
+    user.is_staff?
   end
 
   def manage?

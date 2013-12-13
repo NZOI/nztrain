@@ -25,7 +25,7 @@
   </div>
   <div class="field">
     <%= f.label :owner_id %><br />
-    <% if permitted_to? :transfer, @evaluator %>
+    <% if policy(@evaluator).transfer? %>
       <%= f.text_field :owner_id %>
     <% else %>
       <%= @evaluator.owner.handle %>
