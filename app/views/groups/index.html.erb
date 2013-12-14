@@ -1,5 +1,5 @@
 <% content_for :title, "Groups" %>
-<% toolbox_push :new, new_group_path if permitted_to? :create, :groups %>
+<% toolbox_push :new, new_group_path if policy(Group).create? %>
 
 <table class="main_table hoverable selectable">
   <thead>
@@ -7,10 +7,10 @@
       <th>Name</th>
       <th>Membership</th>
       <th></th>
-      <% if permitted_to? :update, Group %>
+      <% if policy(Group).update? %>
         <th></th>
       <% end %>
-      <% if permitted_to? :destroy, Group %>
+      <% if policy(Group).destroy? %>
         <th></th>
       <% end %>
     </tr>
@@ -21,11 +21,11 @@
     <td><%= group.name %></td>
     <td><%= Group::MEMBERSHIP[group.membership].capitalize %></td>
     <td><%= link_to 'Show', group %></td>
-    <% if permitted_to? :update, Group %>
-      <td><%= link_to 'Edit', edit_group_path(group) if permitted_to? :update, group %></td>
+    <% if policy(Group).update? %>
+      <td><%= link_to 'Edit', edit_group_path(group) if policy(group).update? %></td>
     <% end %>
-    <% if permitted_to? :destroy, Group %>
-      <td><%= link_to 'Destroy', group, :data => { :confirm => 'Are you sure?' }, :method => :delete if permitted_to? :destroy, group %></td>
+    <% if policy(Group).destroy? %>
+      <td><%= link_to 'Destroy', group, :data => { :confirm => 'Are you sure?' }, :method => :delete if policy(group).destroy? %></td>
     <% end %>
   </tr>
 <% end %>

@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
   end
 
   def permission_denied
-    raise Authorization::AuthorizationError
+    raise Pundit::NotAuthorizedError
   end
 
   def check_su_loss

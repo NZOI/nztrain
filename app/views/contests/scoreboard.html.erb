@@ -24,13 +24,13 @@
   <% rank = 1 %>
   <% previous_record = @scoreboard.first %>
   <% @scoreboard.each_with_index do |record,index| %>
-    <% if record.user.id != current_user.id and !permitted_to? :inspect, @contest %>
+    <% if record.user.id != current_user.id and !policy(@contest).inspect? %>
       <% next if record.score < median.score || (record.score == median.score && record.time_taken > median.time_taken) # no permission to view %>
     <% end %>
     <tr <% if (record.id==current_user.id) %> class="emphasized"<% end %>>
       <td>
         <% if record.user %>
-          <%= link_to record.user.handle, record.user %>
+          <%= link_to handle(record.user), record.user %>
         <% else %>
           <%= "Deleted User ID #{record[:user_id]}" %>
         <% end %>

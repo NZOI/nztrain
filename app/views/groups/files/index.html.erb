@@ -14,14 +14,14 @@
   <%= f.label :filepath %>
   <%= f.text_field :filepath %>
   <%= f.submit 'Add File' %>
-<% end if permitted_to? :update, @group %>
+<% end if policy(@group).update? %>
 
 <table class="main_table" >
   <thead>
     <tr>
       <th width="30%">Path</th>
       <th width="25%">File</th>
-      <% if permitted_to? :update, @group %>
+      <% if policy(@group).update? %>
         <th width="40%"></th>
         <th></th>
       <% end %>
@@ -32,7 +32,7 @@
       <tr>
         <td><%= File.dirname(file.filepath) %></td>
         <td><%= link_to File.basename(file.filepath), group_file_path(@group, file) %></td>
-        <% if permitted_to? :update, @group %>
+        <% if policy(@group).update? %>
           <td>
             <%= form_for file, :url => group_file_path(@group, file) do |f| %>
               <%= f.text_field :filepath %><%= f.submit 'Move' %>

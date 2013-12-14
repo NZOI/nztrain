@@ -1,5 +1,5 @@
 <% content_for :title, "Contests" %>
-<% toolbox_push :new, new_contest_path if permitted_to? :create, :contests %>
+<% toolbox_push :new, new_contest_path if policy(Contest).create? %>
 
 <%= render 'index' %>
 <br>

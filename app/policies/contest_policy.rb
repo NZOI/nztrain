@@ -4,10 +4,18 @@ class ContestPolicy < ApplicationPolicy
     def resolve
       if user.is_a?(User) && user.is_staff?
         scope.all
-      else
-        scope.where{ |contests| contests.owner_id == user.id | contests.id >> Group.find(0).contests.select(:id) | contests.id >> Contest.joins(:groups).joins(:memberships).where(:groups => {:memberships => {:user_id => user.id}})}
+      elsif user.is_organiser?
+        scope.where( :owner_id => user.id )
       end
     end
+  end
+
+  def contestant?
+    record.contestants.where(:id => user.id).exists?
+  end
+
+  def current_contestant?
+    record.contest_relations.where{ |relation| (relation.user_id == user.id) & (relation.started_at <= DateTime.now) & (relation.finish_at > DateTime.now) }.exists?
   end
 
   def index?
@@ -15,11 +23,11 @@ class ContestPolicy < ApplicationPolicy
   end
 
   def manage?
-    super or user.owns(record)
+    super or user.is_organiser? && (record == Contest || user.owns(record))
   end
 
   def show?
-    scope.where(:id => record.id).exists?
+    contestant? or record.groups.where(:id => 0).exists? or record.groups.joins(:memberships).where(:memberships => {:user_id => user.id}).exists?
   end
 
   def scoreboard?
@@ -39,11 +47,11 @@ class ContestPolicy < ApplicationPolicy
   end
 
   def start?
-    show? and !contest.contestants.where(:user_id => user.id).exists?
+    !contestant? and show? and record.start_time <= DateTime.now and record.end_time > DateTime.now
   end
 
   def access?
-    manage? or contest.contestants.where(:user_id => user.id).exists?
+    manage? or current_contestant?
   end
 end
 

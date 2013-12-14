@@ -43,10 +43,10 @@
   </div>
   <div class="field">
     <%= f.label :owner_id %><br />
-    <% if permitted_to? :transfer, @problem %>
+    <% if policy(@problem).transfer? %>
       <%= f.text_field :owner_id %>
     <% else %>
-      <%= @problem.owner.handle %>
+      <%= handle(@problem.owner) %>
     <% end %>
   </div>
   <div class="actions">

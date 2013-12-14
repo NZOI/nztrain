@@ -17,7 +17,7 @@ class TestCasesController < ApplicationController
       logger.debug "problem is " + params[:problem_id]
       @test_cases = @problem.test_cases
     else
-      raise Authorization::AuthorizationError
+      raise Pundit::NotAuthorizedError
       @test_cases = @test_cases.distinct
     end
     

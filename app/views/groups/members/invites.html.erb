@@ -18,9 +18,9 @@
     <% requests.each do |request| %>
       <tr>
         <td><%= request.created_at %></td>
-        <td><%= request.target.handle %></td>
+        <td><%= handle(request.target) %></td>
         <td><%= Request::STATUS[request.status].capitalize %></td>
-        <td><%= link_to 'Cancel', cancel_members_group_path(@group, request), :method => :put if request.pending? and permitted_to?(:reject, @group) || permitted_to?(:cancel, request) %></td>
+        <td><%= link_to 'Cancel', cancel_members_group_path(@group, request), :method => :put if request.pending? and policy(@group).reject? || policy(request).cancel? %></td>
       </tr>
     <% end %>
   <% end %>

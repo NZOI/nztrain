@@ -1,5 +1,5 @@
 <% content_for :title, "Problems" %>
-<% toolbox_push :new, new_problem_path if permitted_to? :create, :problems %>
+<% toolbox_push :new, new_problem_path if policy(Problem).create? %>
 
 <% columns = {:linked_title => "Title",
               :input => "Input",

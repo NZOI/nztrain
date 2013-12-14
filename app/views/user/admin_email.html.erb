@@ -1,4 +1,4 @@
-<% content_for :title, "Email " + @user.handle + " as admin" %>
+<% content_for :title, "Email " + handle(@user) + " as admin" %>
 
 <%= form_tag do |f| %>
   <p>From: <%= ActionMailer::Base.smtp_settings[:user_name] %></p>

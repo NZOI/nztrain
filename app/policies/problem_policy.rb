@@ -2,18 +2,15 @@ class ProblemPolicy < ApplicationPolicy
 
   class Scope < ApplicationPolicy::Scope
     def resolve
-      if user.is_a?(User) && user.is_staff?
+      if user.is_staff?
         scope.all
+      elsif user.competing? # TODO: contest problems
+        scope.none
+        #problem_set_ids = ContestRelations.where{ |contest_relations| contest_relations.user_id == user.id & contest_relations.started_at <= DateTime.now & contest_relations.finish_at > DateTime.now }.joins(:contest).select(:problem_set_id)
+        #return scope.joins(:problem_sets).where(:problem_sets => {:id => problem_set_ids })
       else
-        if user.is_a?(User)
-          if user.competing? # TODO: contest problems
-            problem_set_ids = ContestRelations.where{ |contest_relations| contest_relations.user_id == user.id & contest_relations.started_at <= DateTime.now & contest_relations.finish_at > DateTime.now }.joins(:contest).select(:problem_set_id)
-            return scope.joins(:problem_sets).where(:problem_sets => {:id => problem_set_ids })
-          else
-            return scope.where(:owner_id => user.id)
-          end
-        end
-        return user.problems if user.is_a?(Group) or user.is_a?(Contest)
+        scope.where(:owner_id => user.id)
+      end
       end
     end
   end
@@ -22,12 +19,18 @@ class ProblemPolicy < ApplicationPolicy
     true
   end
 
+  def inspect?
+    user.is_staff? or user.owns(record) && !user.competing?
+  end
+
   def manage?
-    super or user.owns(record) && !user.competing?
+    super or user.owns(record) && (user.is_staff? || !user.competing?)
   end
 
   def show?
-    scope.where(:id => record.id).exists? or !user.competing? and ProblemSet.joins(:problems).joins(:groups).where(:problems => {:id => record.id}, :groups => {:id => user.groups.select(:id)}).exists?
+    return true if user.is_staff?
+    return record.contest_relations.where{|relation|(relation.user_id == user.id) & (relation.started_at <= DateTime.now) & (relation.finish_at > DateTime.now)}.exists? if user.competing?
+    user.owns(record) or record.groups.where(:id => 0).exists? or record.group_members.where{|member|(member.user_id == user.id)}.exists?
   end
 
   def submit?
@@ -39,7 +42,7 @@ class ProblemPolicy < ApplicationPolicy
   end
 
   def create?
-    super or user.is_any?([:staff, :organiser, :author])
+    !!user
   end
 end
 

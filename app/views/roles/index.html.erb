@@ -5,10 +5,10 @@
     <tr>
       <th>Name</th>
       <th></th>
-      <% if permitted_to? :update, Role %>
+      <% if policy(Role).update? %>
         <th></th>
       <% end %>
-      <% if permitted_to? :destroy, Role %>
+      <% if policy(Role).destroy? %>
         <th></th>
       <% end %>
     </tr>
@@ -18,11 +18,11 @@
       <tr>
         <td><%= role.name %></td>
         <td><%= link_to 'Show', role %></td>
-        <% if permitted_to? :update, Role %>
-          <td><%= link_to 'Edit', edit_role_path(role) if permitted_to? :update, role %></td>
+        <% if policy(Role).update? %>
+          <td><%= link_to 'Edit', edit_role_path(role) if policy(role).update? %></td>
         <% end %>
-        <% if permitted_to? :destroy, Role %>
-          <td><%= link_to 'Destroy', role, :data => { :confirm => 'Are you sure?' }, :method => :delete if permitted_to? :destroy, role %></td>
+        <% if policy(Role).destroy? %>
+          <td><%= link_to 'Destroy', role, :data => { :confirm => 'Are you sure?' }, :method => :delete if policy(role).destroy? %></td>
         <% end %>
       </tr>
     <% end %>

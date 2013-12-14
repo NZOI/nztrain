@@ -2,7 +2,7 @@
   <thead>
     <tr>
       <th>Username</th>
-      <% if permitted_to? :inspect, User %>
+      <% if policy(user).inspect? %>
         <th>Name</th>
       <% end %>
     </tr>
@@ -11,8 +11,8 @@
     <% @users.each do |user| %>
       <tr>
         <td><%= link_to user.username, user %></td>
-        <% if permitted_to? :inspect, User %>
-          <td><%= user.name if permitted_to? :inspect, user %></td>
+        <% if policy(User).inspect? %>
+          <td><%= user.name if policy(user).inspect? %></td>
         <% end %>
       </tr>
     <% end %>

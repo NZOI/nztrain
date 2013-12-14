@@ -2,8 +2,8 @@
 render_navigation do |menu|
   menu.dom_class = :flip_menu
   menu.item :members, "member list", members_group_path(@group)
-  menu.item :invites, "invites", invites_members_group_path(@group) if permitted_to? :invite, @group
-  menu.item :join_requests, "join requests", join_requests_members_group_path(@group) if permitted_to? :invite, @group
+  menu.item :invites, "invites", invites_members_group_path(@group) if policy(@group).invite?
+  menu.item :join_requests, "join requests", join_requests_members_group_path(@group) if policy(@group).invite?
 end
 %>
 

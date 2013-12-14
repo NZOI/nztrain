@@ -33,7 +33,7 @@ class TestSetsController < ApplicationController
   # GET /test_sets/new
   # GET /test_sets/new.json
   def new
-    raise Authorization::AuthorizationError
+    raise Pundit::NotAuthorizedError
     respond_to do |format|
       format.html # new.html.erb
       format.json { render :json => @test_set }
@@ -47,7 +47,7 @@ class TestSetsController < ApplicationController
   # POST /test_sets
   # POST /test_sets.json
   def create
-    raise Authorization::AuthorizationError
+    raise Pundit::NotAuthorizedError
     @test_set = TestSet.new(permitted_params)
     permitted_to! :create, @test_set
 

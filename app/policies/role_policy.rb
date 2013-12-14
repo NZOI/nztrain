@@ -19,7 +19,7 @@ class RolePolicy < ApplicationPolicy
   end
 
   def inspect?
-    manage?
+    user.is_any?([:superadmin, :admin])
   end
 
   def show?
@@ -29,8 +29,8 @@ class RolePolicy < ApplicationPolicy
   def grant?
     case
     when user.has_role?(:superadmin); true
-    when user.has_role?(:admin); record.name != 'superadmin'
-    when user.has_role?(:staff); !['superadmin','admin','staff'].include?(record.name)
+    when user.has_role?(:admin); record == Role || record.name != 'superadmin'
+    when user.has_role?(:staff); record == Role || !['superadmin','admin','staff'].include?(record.name)
     else; false
     end
   end

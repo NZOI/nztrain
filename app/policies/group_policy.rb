@@ -5,8 +5,17 @@ class GroupPolicy < ApplicationPolicy
       if user.is_staff?
         scope.all
       else
-        scope.joins(:memberships).where{ |groups| (groups.visibility == Group::VISIBILITY[:public]) | (groups.memberships.user_id == user.id) }
+        scope.where{ |groups| (groups.id == 0) | (groups.visibility == Group::VISIBILITY[:public]) | (groups.owner_id == user.id) }
       end
+  end
+
+  def manage?
+    return user.is_organiser? if record == Group
+    case
+    when user.is_superadmin?; true
+    when user.is_admin?; record.id != 0
+    when user.is_organiser?; record.owner_id == user.id
+    else; false
     end
   end
 
@@ -19,11 +28,27 @@ class GroupPolicy < ApplicationPolicy
   end
 
   def show?
-    scope.where(:id => record.id).exists? or record.visibility == Group::VISIBILITY[:unlisted]
+    user.is_staff? or [Group::VISIBILITY[:public], Group::VISIBILITY[:unlisted]].include?(record.visibility) or member?
   end
 
   def access?
-    super or record.memberships.where(:user_id => user.id).exists?
+    user.is_staff? or record.id == 0 or member? or user.owns(record)
+  end
+
+  def join?
+    record.id != 0 && (user.is_admin? || user.owns(record) || record.membership == Group::MEMBERSHIP[:open]) && !member?
+  end
+
+  def leave?
+    member?
+  end
+
+  def invite?
+    user.is_admin? or user.owns(record) or member? && [Group::MEMBERSHIP[:open], Group::MEMBERSHIP[:invitation]].include?(record.membership)
+  end
+
+  def apply?
+    record.id != 0 && !member && [Group::MEMBERSHIP[:application], Group::MEMBERSHIP[:invitation]].include?(record.membership) && record.visibility != Group::VISIBILITY[:private]
   end
 
   def create?
@@ -38,6 +63,10 @@ class GroupPolicy < ApplicationPolicy
   def destroy?
     return false if record.id == 0 && !user.has_role?(:superadmin)
     super or show? and user.owns(record)
+  end
+
+  def member?
+    record.memberships.where(:user_id => user.id).exists?
   end
 end
 

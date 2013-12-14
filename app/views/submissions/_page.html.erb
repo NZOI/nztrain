@@ -25,12 +25,12 @@
           <th>Problem</th>
         <% end %>
         <th></th>
-        <% if permitted_to? :update, :submissions
+        <% if policy(Submission).update?
              @table_columns += 1
         %>
           <th></th>
         <% end %>
-        <% if permitted_to? :destroy, :submissions
+        <% if policy(Submission).destroy?
              @table_columns += 1
         %>
           <th></th>
@@ -44,16 +44,16 @@
         <td><%= submission.language.name %></td>
       <td><%= submission.score %></td>
       <% if params[:by_user].nil? %>
-        <td><% if submission.user %><%= submission.user.handle %><% end %></td>
+        <td><% if submission.user %><%= handle(submission.user) %><% end %></td>
       <% end %>
       <% if params[:by_problem].nil? %>
         <td><%= submission.problem.title %></td>
       <% end %>
       <td><%= link_to 'Show', submission %></td>
-      <% if permitted_to? :update, submission %>
+      <% if policy(submission).update? %>
         <td><%= link_to 'Edit', edit_submission_path(submission) %></td>
       <% end %>
-      <% if permitted_to? :destroy, submission %>
+      <% if policy(submission).destroy? %>
         <td><%= link_to 'Destroy', submission, :data => { :confirm => 'Are you sure?' }, :method => :delete %></td>
       <% end %>
     </tr>

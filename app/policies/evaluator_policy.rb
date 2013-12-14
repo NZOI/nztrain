@@ -5,7 +5,7 @@ class EvaluatorPolicy < ApplicationPolicy
       if user.is_staff?
         scope.all
       else
-        scope.where(:owner_id => user.id)
+        scope.none
       end
     end
   end
@@ -19,7 +19,7 @@ class EvaluatorPolicy < ApplicationPolicy
   end
 
   def manage?
-    super or user.owns(record)
+    super or user.is_staff? && (record == Evaluator || user.owns(record))
   end
 
   def show?

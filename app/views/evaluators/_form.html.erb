@@ -28,7 +28,7 @@
     <% if policy(@evaluator).transfer? %>
       <%= f.text_field :owner_id %>
     <% else %>
-      <%= @evaluator.owner.handle %>
+      <%= handle(@evaluator.owner) %>
     <% end %>
 
   </div>

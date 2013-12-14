@@ -45,18 +45,6 @@ class User < ActiveRecord::Base
     self.where("email = ?", conditions[:email]).limit(1).first
   end
 
-  def handle
-    if permitted_to? :inspect
-      if self.name && !self.name.empty?
-        return "#{self.username} \"#{self.name}\""
-      else
-        return "#{self.username} <#{self.email}>"
-      end
-    else
-      return "#{self.username}"
-    end
-  end
-
   def get_solved
     solved = []
     @solved_problems = Problem.select("problems.*, (SELECT MAX(score) FROM submissions WHERE problem_id = problems.id AND user_id = #{self.id}) as score")
@@ -84,6 +72,9 @@ class User < ActiveRecord::Base
   end
   def is_staff?
     self.is_any? [:admin, :superadmin, :staff]
+  end
+  def is_organiser?
+    self.is_any? [:admin, :superadmin, :staff, :organiser]
   end
   def is_any?(roles)
     (self.roles.map(&:name) & roles.map(&:to_s)).any?

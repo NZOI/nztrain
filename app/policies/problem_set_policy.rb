@@ -2,13 +2,10 @@ class ProblemSetPolicy < ApplicationPolicy
 
   class Scope < ApplicationPolicy::Scope
     def resolve
-      if user.is_a?(User) && user.is_staff?
+      if user.is_staff?
         scope.all
       else
-        if user.is_a?(User)
-          return scope.where(:owner_id => user.id)
-        end
-        return user.problem_sets if user.is_a?(Group) or user.is_a?(Contest)
+        return scope.where(:owner_id => user.id)
       end
     end
   end
@@ -18,7 +15,7 @@ class ProblemSetPolicy < ApplicationPolicy
   end
 
   def manage?
-    super or user.owns(record)
+    super or (user.is_any?([:staff, :organiser, :author]) and (record == ProblemSet || user.owns(record)))
   end
 
   def show?

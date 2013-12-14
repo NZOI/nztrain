@@ -22,5 +22,5 @@
 <br>
 <%= render 'admin' %>
 
-<%= link_to 'Edit', edit_user_path(@user) if permitted_to? :update, @user %>
+<%= link_to 'Edit', edit_user_path(@user) if policy(@user).update? %>
 <%= link_to 'Back', users_path %>
