@@ -2,7 +2,7 @@ class FileAttachmentsController < ApplicationController
   def permitted_params
     @_permitted_params ||= begin
       permitted_attributes = [:name_type, :file_attachment, :file_attachment_cache]
-      permitted_attributes << :owner_id if policy(@file_attachment).transfer?
+      permitted_attributes << :owner_id if policy(@file_attachment || FileAttachment).transfer?
       permitted_attributes << :name if params.require(:file_attachment)[:name_type] == 'other'
       params.require(:file_attachment).permit(*permitted_attributes)
     end
@@ -35,7 +35,7 @@ class FileAttachmentsController < ApplicationController
 
   # GET /file_attachments/new
   def new
-    @file_attachment = FileAttachment.new
+    @file_attachment = FileAttachment.new(:owner => current_user)
     authorize @file_attachment, :new?
   end
 
@@ -47,7 +47,8 @@ class FileAttachmentsController < ApplicationController
 
   # POST /file_attachments
   def create
-    @file_attachment = FileAttachment.new(permitted_params.reverse_merge(:owner_id => user.id))
+    @file_attachment = FileAttachment.new(permitted_params)
+    @file_attachment.owner ||= current_user
     authorize @file_attachment, :create?
     respond_to do |format|
       if @file_attachment.save

@@ -1,5 +1,4 @@
 class SubmissionsController < ApplicationController
-  filter_resource_access :additional_member => [:rejudge], :new => []
 
   def permitted_params
     @_permitted_params ||= begin

@@ -1,16 +1,11 @@
 class ProblemSetsController < ApplicationController
-  filter_resource_access :collection => {:index => :browse}, :additional_member => {:remove_problem => :update}
 
   def permitted_params
     @_permitted_params ||= begin
       permitted_attributes = [:title]
-      permitted_attributes << :owner_id if policy(@problem_set).transfer?
+      permitted_attributes << :owner_id if policy(@problem_set || ProblemSet).transfer?
       params.require(:problem_set).permit(*permitted_attributes)
     end
-  end
-
-  def new_problem_set_from_params
-    @problem_set = ProblemSet.new(:owner => current_user)
   end
 
   def add_problem # currently unused function
@@ -27,6 +22,7 @@ class ProblemSetsController < ApplicationController
   end
 
   def remove_problem
+    @problem_set = ProblemSet.find(params[:id])
     problem = Problem.find(params[:problem_id])
     @problem_set.problems.delete(problem)
     redirect_to(@problem_set, :notice => "Problem removed.")
@@ -53,6 +49,8 @@ class ProblemSetsController < ApplicationController
   # GET /problem_sets/1
   # GET /problem_sets/1.xml
   def show
+    @problem_set = ProblemSet.find(params[:id])
+    authorize @problem_set, :show?
     if policy(Group.new).update?
       @groups = Group.all
     else
@@ -67,6 +65,8 @@ class ProblemSetsController < ApplicationController
   # GET /problem_sets/new
   # GET /problem_sets/new.xml
   def new
+    @problem_set = ProblemSet.new(:owner => current_user)
+    authorize @problem_set, :new?
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @problem_set }
@@ -75,13 +75,18 @@ class ProblemSetsController < ApplicationController
 
   # GET /problem_sets/1/edit
   def edit
+    @problem_set = ProblemSet.find(params[:id])
+    authorize @problem_set, :edit?
   end
 
   # POST /problem_sets
   # POST /problem_sets.xml
   def create
+    @problem_set = ProblemSet.new(permitted_params)
+    @problem_set.owner ||= current_user
+    authorize @problem_set, :create?
     respond_to do |format|
-      if @problem_set.update_attributes(permitted_params)
+      if @problem_set.save
         format.html { redirect_to(@problem_set, :notice => 'Problem set was successfully created.') }
         format.xml  { render :xml => @problem_set, :status => :created, :location => @problem_set }
       else
@@ -94,6 +99,8 @@ class ProblemSetsController < ApplicationController
   # PUT /problem_sets/1
   # PUT /problem_sets/1.xml
   def update
+    @problem_set = ProblemSet.find(params[:id])
+    authorize @problem_set, :update?
     respond_to do |format|
       if @problem_set.update_attributes(permitted_params)
         format.html { redirect_to(@problem_set, :notice => 'Problem set was successfully updated.') }
@@ -108,6 +115,8 @@ class ProblemSetsController < ApplicationController
   # DELETE /problem_sets/1
   # DELETE /problem_sets/1.xml
   def destroy
+    @problem_set = ProblemSet.find(params[:id])
+    authorize @problem_set, :destroy?
     @problem_set.destroy
 
     respond_to do |format|

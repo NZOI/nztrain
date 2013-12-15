@@ -7,6 +7,7 @@ class GroupPolicy < ApplicationPolicy
       else
         scope.where{ |groups| (groups.id == 0) | (groups.visibility == Group::VISIBILITY[:public]) | (groups.owner_id == user.id) }
       end
+    end
   end
 
   def manage?
@@ -47,26 +48,30 @@ class GroupPolicy < ApplicationPolicy
     user.is_admin? or user.owns(record) or member? && [Group::MEMBERSHIP[:open], Group::MEMBERSHIP[:invitation]].include?(record.membership)
   end
 
+  def reject?
+    user.is_admin? or user.owns(record)
+  end
+
   def apply?
-    record.id != 0 && !member && [Group::MEMBERSHIP[:application], Group::MEMBERSHIP[:invitation]].include?(record.membership) && record.visibility != Group::VISIBILITY[:private]
+    record.id != 0 && !member? && [Group::MEMBERSHIP[:application], Group::MEMBERSHIP[:invitation]].include?(record.membership) && record.visibility != Group::VISIBILITY[:private]
   end
 
   def create?
-    super or user.is_any?[:staff, :organizer]
+    super or user.is_any?([:staff, :organizer])
   end
 
   def update?
-    return false if record.id == 0 && !user.has_role?(:superadmin)
     super
   end
 
   def destroy?
-    return false if record.id == 0 && !user.has_role?(:superadmin)
-    super or show? and user.owns(record)
+    return false if record != Group && record.id == 0 && !user.has_role?(:superadmin)
+    return false unless user.is_organiser?
+    super or record == Group or show? and user.owns(record)
   end
 
   def member?
-    record.memberships.where(:user_id => user.id).exists?
+    record.memberships.where(:member_id => user.id).exists?
   end
 end
 

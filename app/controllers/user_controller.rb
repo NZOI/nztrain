@@ -1,5 +1,4 @@
 class UserController < ApplicationController
-  filter_resource_access :collection => [], :new => [], :additional_member => {:add_role => :update, :remove_role => :update, :add_brownie => :add_brownie, :admin_email => :email, :send_admin_email => :email, :su => :su}, :context => :users
 
   # this is for admins, users edit their own accounts using the accounts/ scope
   def permitted_params
@@ -63,6 +62,7 @@ class UserController < ApplicationController
     @user.roles.push(role)
     redirect_to(@user, :notice => "Role #{role.name} added.")
   end
+
   def remove_role
     @user = User.find(params[:id])
     authorize @user, :update?
@@ -110,12 +110,12 @@ class UserController < ApplicationController
 
   def admin_email
     @user = User.find(params[:id])
-    authorize @user, :manage?
+    authorize @user, :email?
   end
 
   def send_admin_email
     @user = User.find(params[:id])
-    authorize @user, :manage?
+    authorize @user, :email?
     AdminMailer.custom_email(current_user,@user,params[:subject],params[:body]).deliver
     redirect_to user_path(@user), :notice => "Email sent."
   end

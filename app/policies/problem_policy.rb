@@ -11,7 +11,6 @@ class ProblemPolicy < ApplicationPolicy
       else
         scope.where(:owner_id => user.id)
       end
-      end
     end
   end
 

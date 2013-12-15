@@ -14,20 +14,18 @@
 <% end %>
 </p>
 
-<%= link_to 'Download test cases', export_problem_path(@problem) %> |
-<%= link_to 'Show test cases', test_sets_path(:problem_id => @problem.id) %>
-<%#= link_to 'Add test case', new_test_case_path(:problem_id => @problem.id) %>
+<%= link_to 'Download test cases', export_problem_path(@problem) %>
 <br>
 <br>
 
 <b>Test Cases:</b><br>
-<table style="width: 100%;">
-  <tr><th>Name</th><th>Input</th><th>Output</th></tr>
+<table style="width: 100%; table-layout: fixed;">
+  <tr><th style="width: 20%">Name</th><th>Input</th><th>Output</th></tr>
 <% @problem.test_cases.each do |kase| %>
   <tr>
     <td><%= kase.name %></td>
-    <td><pre><%= kase.input.slice(0...200).split("\n").take(10).join("\n") %></pre></td>
-    <td><pre><%= kase.output.slice(0...200).split("\n").take(10).join("\n") %></pre></td>
+    <td><%= predisplay kase.input.slice(0...200).split("\n").take(10).join("\n") %></td>
+    <td><%= predisplay kase.output.slice(0...200).split("\n").take(10).join("\n") %></td>
   </tr>
 <% end %>
 </table>

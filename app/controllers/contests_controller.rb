@@ -2,7 +2,7 @@ class ContestsController < ApplicationController
   def permitted_params
     @_permitted_params ||= begin
       permitted_attributes = [:title, :start_time, :end_time, :duration, :problem_set_id]
-      permitted_attributes << :owner_id if policy(@contest).transfer?
+      permitted_attributes << :owner_id if policy(@contest || Contest).transfer?
       params.require(:contest).permit(*permitted_attributes)
     end
   end
@@ -44,6 +44,7 @@ class ContestsController < ApplicationController
   # GET /contests/1
   # GET /contests/1.xml
   def show
+    @contest = Contest.find(params[:id])
     if !policy(@contest).access?
       redirect_to info_contest_path(@contest)
       return
@@ -105,7 +106,8 @@ class ContestsController < ApplicationController
   # POST /contests
   # POST /contests.xml
   def create
-    @contest = Contest.new(permitted_params.reverse_merge(:owner => current_user))
+    @contest = Contest.new(permitted_params)
+    @contest.owner ||= current_user
     authorize @contest, :create?
     authorize ProblemSet.find(params[:contest][:problem_set_id]), :use? if params[:contest][:problem_set_id]
 

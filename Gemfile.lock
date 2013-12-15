@@ -92,7 +92,6 @@ GEM
       thor
     debug_inspector (0.0.2)
     debugger-linecache (1.2.0)
-    declarative_authorization (0.5.7)
     devise (3.2.2)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
@@ -287,7 +286,6 @@ DEPENDENCIES
   coffee-rails
   connection_pool
   coveralls
-  declarative_authorization
   devise (~> 3.2.2)
   facebox-rails
   factory_girl

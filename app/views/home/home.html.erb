@@ -18,7 +18,7 @@
       <h2>Upcoming and Current Contests</h2>
       <%= render 'contests/index' %>
     <% end %>
-    <% if !user.competing? %>
+    <% if !current_user.competing? %>
       <h2>Public Problems</h2>
       <%= render 'problem_sets/index' %>
     <% end %>

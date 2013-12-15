@@ -7,9 +7,9 @@ class SubmissionPolicy < ApplicationPolicy
       else
         if user.competing?
           problem_set_ids = ContestRelations.where{ |contest_relations| contest_relations.user_id == user.id & contest_relations.started_at <= DateTime.now & contest_relations.finish_at > DateTime.now }.joins(:contest).select(:problem_set_id)
-          return scope.joins(:problems).joins(:problem_sets).where(:problems => {:problem_sets => {:id => problem_set_ids }})
+          return scope.joins(:problem).joins(:problem_sets).where(:problem => {:problem_sets => {:id => problem_set_ids }})
         else
-          return scope.joins(:problems).where{ |submission| (submission.user_id => user.id) | (submission.problem.owner_id => user.id) }
+          return scope.joins(:problem).where{ |submission| (submission.user_id == user.id) | (submission.problem.owner_id == user.id) }
         end
       end
     end
@@ -20,7 +20,7 @@ class SubmissionPolicy < ApplicationPolicy
   end
 
   def show?
-    scope.where(:id => record.id).exists?
+    user.is_staff? or scope.where(:id => record.id).exists?
   end
 
   def rejudge?

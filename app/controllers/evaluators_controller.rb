@@ -3,13 +3,9 @@ class EvaluatorsController < ApplicationController
   def permitted_params
     @_permitted_params ||= begin
       permitted_attributes = [:name, :description, :source]
-      permitted_attributes << :owner_id if policy(@evaluator).transfer?
+      permitted_attributes << :owner_id if policy(@evaluator || Evaluator).transfer?
       params.require(:evaluator).permit(*permitted_attributes)
     end
-  end
-
-  def new_evaluator_from_params
-    @evaluator = Evaluator.new(:owner => current_user)
   end
 
   # GET /evaluators
@@ -38,7 +34,7 @@ class EvaluatorsController < ApplicationController
   # GET /evaluators/new
   # GET /evaluators/new.xml
   def new
-    @evaluator = Evaluator.new
+    @evaluator = Evaluator.new(:owner_id => current_user.id)
     authorize @evaluator, :new?
     respond_to do |format|
       format.html # new.html.erb
@@ -55,7 +51,8 @@ class EvaluatorsController < ApplicationController
   # POST /evaluators
   # POST /evaluators.xml
   def create
-    @evaluator = Evaluator.new(permitted_params.reverse_merge(:owner_id => current_user))
+    @evaluator = Evaluator.new(permitted_params)
+    @evaluator.owner_id ||= current_user.id
     authorize @evaluator, :create?
     respond_to do |format|
       if @evaluator.save

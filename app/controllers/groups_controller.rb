@@ -1,10 +1,9 @@
 class GroupsController < ApplicationController
-  #filter_resource_access :additional_collection => { :browse => :index, :add_problem_set => :index, :add_contest => :index }, :additional_member => { :info => :show, :contests => :access }
 
   def permitted_params
     @_permitted_attributes ||= begin
       permitted_attributes = [:name, :visibility, :membership]
-      permitted_attributes << :owner_id if policy(@group).transfer?
+      permitted_attributes << :owner_id if policy(@group || Group).transfer?
       permitted_attributes
     end
     params.require(:group).permit(*@_permitted_attributes)
@@ -109,7 +108,7 @@ class GroupsController < ApplicationController
   # GET /groups/new
   # GET /groups/new.xml
   def new
-    @group = Group.new
+    @group = Group.new(:owner => current_user)
     authorize @group, :new?
     respond_to do |format|
       format.html # new.html.erb
@@ -126,7 +125,8 @@ class GroupsController < ApplicationController
   # POST /groups
   # POST /groups.xml
   def create
-    @group = Group.new(permitted_params.reverse_merge(:owner => current_user))
+    @group = Group.new(permitted_params)
+    @group.owner ||= current_user
     authorize @group, :create?
     respond_to do |format|
       if @group.save

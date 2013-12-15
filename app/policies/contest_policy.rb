@@ -27,7 +27,7 @@ class ContestPolicy < ApplicationPolicy
   end
 
   def show?
-    contestant? or record.groups.where(:id => 0).exists? or record.groups.joins(:memberships).where(:memberships => {:user_id => user.id}).exists?
+    user.is_staff? or contestant? or record.groups.where(:id => 0).exists? or record.groups.joins(:memberships).where(:memberships => {:member_id => user.id}).exists?
   end
 
   def scoreboard?
