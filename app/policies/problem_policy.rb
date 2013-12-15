@@ -4,10 +4,8 @@ class ProblemPolicy < ApplicationPolicy
     def resolve
       if user.is_staff?
         scope.all
-      elsif user.competing? # TODO: contest problems
+      elsif user.competing?
         scope.none
-        #problem_set_ids = ContestRelations.where{ |contest_relations| contest_relations.user_id == user.id & contest_relations.started_at <= DateTime.now & contest_relations.finish_at > DateTime.now }.joins(:contest).select(:problem_set_id)
-        #return scope.joins(:problem_sets).where(:problem_sets => {:id => problem_set_ids })
       else
         scope.where(:owner_id => user.id)
       end
@@ -15,7 +13,8 @@ class ProblemPolicy < ApplicationPolicy
   end
 
   def index?
-    true
+    return true if record == Problem
+    show?
   end
 
   def inspect?
@@ -29,7 +28,7 @@ class ProblemPolicy < ApplicationPolicy
   def show?
     return true if user.is_staff?
     return record.contest_relations.where{|relation|(relation.user_id == user.id) & (relation.started_at <= DateTime.now) & (relation.finish_at > DateTime.now)}.exists? if user.competing?
-    user.owns(record) or record.groups.where(:id => 0).exists? or record.group_members.where{|member|(member.user_id == user.id)}.exists?
+    user.owns(record) or record.groups.where(:id => 0).exists? or record.group_memberships.where{|membership|(membership.member_id == user.id)}.exists?
   end
 
   def submit?

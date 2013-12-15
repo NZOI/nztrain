@@ -19,7 +19,8 @@ class ContestPolicy < ApplicationPolicy
   end
 
   def index?
-    true
+    return true if record == Contest
+    show?
   end
 
   def manage?

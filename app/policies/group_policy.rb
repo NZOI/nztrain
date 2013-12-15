@@ -67,7 +67,7 @@ class GroupPolicy < ApplicationPolicy
   def destroy?
     return false if record != Group && record.id == 0 && !user.has_role?(:superadmin)
     return false unless user.is_organiser?
-    super or record == Group or show? and user.owns(record)
+    super or record == Group or show? && user.owns(record)
   end
 
   def member?

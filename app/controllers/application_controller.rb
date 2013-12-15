@@ -6,7 +6,6 @@ class ApplicationController < ActionController::Base
   before_filter :update_last_seen_at
   before_filter :read_settings
   before_filter :check_su_loss
-  before_filter :set_leader
   before_filter :wrong_site
   before_filter :configure_permitted_parameters, if: :devise_controller?
   protect_from_forgery
@@ -52,10 +51,6 @@ class ApplicationController < ActionController::Base
     if !current_user.is_admin?
       redirect("You must be an admin to perform this operation")
     end
-  end
-  
-  def set_leader
-    @brownie_leader = User.find(:first, :order => "brownie_points DESC")
   end
 
   def wrong_site

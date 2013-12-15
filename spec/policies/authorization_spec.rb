@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Authorization do
+describe "Authorization" do
   include FixturesSpecHelper
   before(:all) do
     @superadmin = users(:superadmin)
@@ -32,31 +32,31 @@ describe Authorization do
   end
   describe 'on models' do
     it 'superadmin can manage all objects' do
-      @superadmin.should_be_permitted_to :manage, [:problems, :settings, :roles, :users, :groups, :evaluators, :contests]
+      @superadmin.should_be_permitted_to :manage, [Problem, Setting, Role, User, Group, Evaluator, Contest]
     end
     it 'admin can manage most objects' do
-      @admin.should_be_permitted_to :manage, [:problems, :evaluators, :contests, Problem.new, Group.new, Contest.new, @user, @admin, @group]
+      @admin.should_be_permitted_to :manage, [Problem, Evaluator, Contest, Problem.new, Group.new, Contest.new, @user, @admin, @group]
     end
     it 'admin cannot manage Role, Setting, group for everyone, and superadmin user' do
-      @admin.should_not_be_permitted_to :manage, [:settings, :roles, Group.find(0), @superadmin]
+      @admin.should_not_be_permitted_to :manage, [Setting, Role, Group.find(0), @superadmin]
     end
     it 'user cannot see Role or Setting' do
-      @user.should_not_be_permitted_to [:index,:show,:edit,:new], [:settings, :roles]
+      @user.should_not_be_permitted_to [:index,:show,:edit,:new], [Setting, Role]
     end
   end
   describe 'on problems' do
     it 'admin can :manage all problems' do
-      @admin.should_be_permitted_to [:read,:manage], [@private_problem, @group_problem, @user_problem, @admin_problem, @everyone_problem, @contest_problem]
+      @admin.should_be_permitted_to [:show,:manage], [@private_problem, @group_problem, @user_problem, @admin_problem, @everyone_problem, @contest_problem]
     end
     it 'user can read group or public problems' do
-      @user.should_be_permitted_to :read, @everyone_problem
-      @user.should_be_permitted_to :read, [@group_problem, @everyone_problem]
+      @user.should_be_permitted_to :show, @everyone_problem
+      @user.should_be_permitted_to :show, [@group_problem, @everyone_problem]
     end
     it 'user can read/update owned problem' do
-      @user.should_be_permitted_to [:index, :read, :edit, :update], @user_problem
+      @user.should_be_permitted_to [:index, :show, :edit, :update], @user_problem
     end
     it 'user cannot read private problems' do
-      @user.should_not_be_permitted_to [:index, :read, :update], [@private_problem, @admin_problem, @contest_problem]
+      @user.should_not_be_permitted_to [:index, :show, :update], [@private_problem, @admin_problem, @contest_problem]
     end
     it 'user can create problem' do
       @user.should_be_permitted_to [:new, :create], Problem.new(:owner_id => users(:user).id)
@@ -73,23 +73,23 @@ describe Authorization do
         @contest_user.reload
       end
       it 'can read contest problem' do
-        @contest_user.should_be_permitted_to :read, [@contest_problem]
+        @contest_user.should_be_permitted_to :show, [@contest_problem]
       end
       it 'cannot read/update other problems' do
-        @contest_user.should_not_be_permitted_to [:index, :read, :update], [@private_problem, @admin_problem, @user_problem]
+        @contest_user.should_not_be_permitted_to [:index, :show, :update], [@private_problem, @admin_problem, @user_problem]
       end
     end
   end
   describe 'on problem sets' do
     it 'admin can :manage all problem sets' do
-      @admin.should_be_permitted_to [:read,:manage], [@private_set, @group_set, @contest_set, @everyone_set]
+      @admin.should_be_permitted_to [:show,:manage], [@private_set, @group_set, @contest_set, @everyone_set]
     end
     # removed feature
     #it 'user can read group or public problem sets' do
-    #  @user.should_be_permitted_to :read, [@group_set, @everyone_set]
+    #  @user.should_be_permitted_to :show, [@group_set, @everyone_set]
     #end
     it 'user cannot read private or contest problem sets' do
-      @user.should_not_be_permitted_to [:index, :read, :update], [@private_set, @contest_set]
+      @user.should_not_be_permitted_to [:index, :show, :update], [@private_set, @contest_set]
     end
     context 'user in contest' do
       before(:all) do
@@ -100,7 +100,7 @@ describe Authorization do
         @relation.destroy
       end
       it 'cannot read/update other problems' do
-        @contest_user.should_not_be_permitted_to [:index, :read, :update], [@private_set, @group_set, @everyone_set]
+        @contest_user.should_not_be_permitted_to [:index, :show, :update], [@private_set, @group_set, @everyone_set]
       end
     end
   end

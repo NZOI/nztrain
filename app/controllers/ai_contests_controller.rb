@@ -1,9 +1,7 @@
 class AiContestsController < ApplicationController
   # GET /ai_contests
   # GET /ai_contests.json
-
-  filter_resource_access :additional_member => {:sample => :show, :submit => :show, :submissions => :show, :judge => :judge, :rejudge => :rejudge}
-
+  # TODO: fix authorization
   def new_ai_contest_from_params
     @ai_contest = AiContest.new(:owner_id => current_user.id)
   end
