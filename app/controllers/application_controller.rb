@@ -1,13 +1,9 @@
-require 'declarative_authorization/maintenance'
-
 class ApplicationController < ActionController::Base
-  include Authorization::Maintenance
   include ApplicationHelper
   include Pundit
   layout "scaffold"
 
   before_filter :update_last_seen_at
-  before_filter :set_current_user
   before_filter :read_settings
   before_filter :check_su_loss
   before_filter :set_leader
@@ -75,10 +71,6 @@ class ApplicationController < ActionController::Base
   protected
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) << :username << :name << :email
-  end
-
-  def set_current_user
-    Authorization.current_user = current_user
   end
 
   def update_last_seen_at
