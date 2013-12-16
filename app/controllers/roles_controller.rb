@@ -1,6 +1,4 @@
 class RolesController < ApplicationController
-  filter_resource_access
-
   def permitted_params
     @_permitted_params ||= begin
       permitted_attributes = [:name]
@@ -8,14 +6,11 @@ class RolesController < ApplicationController
     end
   end
 
-  def new_role_from_params
-    @role = Role.new
-  end
-
   # GET /roles
   # GET /roles.xml
   def index
-    @roles = Role.scoped
+    authorize Role.new, :index?
+    @roles = policy_scope(Role)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @roles }
@@ -25,6 +20,8 @@ class RolesController < ApplicationController
   # GET /roles/1
   # GET /roles/1.xml
   def show
+    @role = Role.find(params[:id])
+    authorize @role, :show?
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @role }
@@ -34,6 +31,8 @@ class RolesController < ApplicationController
   # GET /roles/new
   # GET /roles/new.xml
   def new
+    @role = Role.new
+    authorize @role, :new?
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @role }
@@ -42,13 +41,17 @@ class RolesController < ApplicationController
 
   # GET /roles/1/edit
   def edit
+    @role = Role.find(params[:id])
+    authorize @role, :edit?
   end
 
   # POST /roles
   # POST /roles.xml
   def create
+    @role = Role.new(permitted_params)
+    authorize @role, :create?
     respond_to do |format|
-      if @role.update_attributes(permitted_params)
+      if @role.save
         format.html { redirect_to(@role, :notice => 'Role was successfully created.') }
         format.xml  { render :xml => @role, :status => :created, :location => @role }
       else
@@ -61,6 +64,8 @@ class RolesController < ApplicationController
   # PUT /roles/1
   # PUT /roles/1.xml
   def update
+    @role = Role.find(params[:id])
+    authorize @role, :update?
     respond_to do |format|
       if @role.update_attributes(permitted_params)
         format.html { redirect_to(@role, :notice => 'Role was successfully updated.') }
@@ -75,6 +80,8 @@ class RolesController < ApplicationController
   # DELETE /roles/1
   # DELETE /roles/1.xml
   def destroy
+    @role = Role.find(params[:id])
+    authorize @role, :destroy?
     @role.destroy
 
     respond_to do |format|

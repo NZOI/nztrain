@@ -7,10 +7,10 @@
       <th>Description</th>
       <th>User</th>
       <th></th>
-      <% if permitted_to? :update, Evaluator %>
+      <% if policy(Evaluator).update? %>
         <th></th>
       <% end %>
-      <% if permitted_to? :destroy, Evaluator %>
+      <% if policy(Evaluator).destroy? %>
         <th></th>
       <% end %>
     </tr>
@@ -22,11 +22,11 @@
     <td><%= evaluator.description %></td>
     <td><%= evaluator.owner_id %></td>
     <td><%= link_to 'Show', evaluator %></td>
-    <% if permitted_to? :update, Evaluator %>
-      <td><%= link_to 'Edit', edit_evaluator_path(evaluator) if permitted_to? :update, evaluator %></td>
+    <% if policy(Evaluator).update? %>
+      <td><%= link_to 'Edit', edit_evaluator_path(evaluator) if policy(evaluator).update? %></td>
     <% end %>
-    <% if permitted_to? :destroy, Evaluator %>
-      <td><%= link_to 'Destroy', evaluator, :data => { :confirm => 'Are you sure?' }, :method => :delete if permitted_to? :destroy, evaluator %></td>
+    <% if policy(Evaluator).destroy? %>
+      <td><%= link_to 'Destroy', evaluator, :data => { :confirm => 'Are you sure?' }, :method => :delete if policy(evaluator).destroy? %></td>
     <% end %>
   </tr>
 <% end %>
@@ -35,4 +35,4 @@
 
 <br />
 
-<%= link_to 'New Evaluator', new_evaluator_path if permitted_to? :create, :evaluators %>
+<%= link_to 'New Evaluator', new_evaluator_path if policy(Evaluator).create? %>

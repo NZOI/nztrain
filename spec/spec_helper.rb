@@ -8,7 +8,7 @@ require 'rspec/rails'
 require 'rspec/autorun'
 require 'capybara/rspec'
 require 'capybara/email/rspec'
-require 'declarative_authorization/maintenance'
+require "pundit/rspec"
 
 # include seeds
 require "#{Rails.root}/db/seeds.rb"

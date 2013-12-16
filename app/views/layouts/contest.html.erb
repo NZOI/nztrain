@@ -1,6 +1,6 @@
 <% content_for :title, @contest.title %>
-<%= toolbox_push :edit, edit_contest_path(@contest) if permitted_to? :update, @contest %>
-<%= toolbox_push :delete, @contest if permitted_to? :destroy, @contest %>
+<%= toolbox_push :edit, edit_contest_path(@contest) if policy(@contest).update? %>
+<%= toolbox_push :delete, @contest if policy(@contest).destroy? %>
 
 <% content_for :content do %>
   <table style="background-color: none; border: 0px; width: 100%; font-size: 150%;">
@@ -9,7 +9,7 @@
       <td><span style="font-size: 200%"><%= @contest.problem_set.problems.count %> </span>problems</td>
     </tr>
   </table>
-  <% if permitted_to? :start, @contest %>
+  <% if policy(@contest).start? %>
     <div style="float: right"><%= link_to 'Start Contest', start_contest_path(@contest), :method => :put %></div>
   <% end %>
   <% if @contest.is_running? %>
@@ -33,7 +33,7 @@
     <b>Duration:</b>    <%= @contest.duration %><br>
     <b>Owner:</b> <%= @contest.owner_id %><br>
   </p>
-  <% if @contest.end_time < DateTime.now and @contest.finalized_at.nil? and permitted_to? :update, @contest %>
+  <% if @contest.end_time < DateTime.now and @contest.finalized_at.nil? and policy(@contest).update? %>
     <%= link_to "Finalize results", finalize_contest_path(@contest), :data => { :confirm => 'Are you sure?' }, :method => :put %>
     <%#= "Re-judge all" %><br />
   <% elsif @contest.finalized_at and current_user.is_admin? %>
@@ -44,16 +44,16 @@
 #  SimpleNavigation::ItemContainer.new do |menu|
   render_navigation do |menu|
     menu.dom_class = :tab_menu
-    menu.item :info, "info", info_contest_path(@contest) if permitted_to? :read, @contest
-    menu.item :problems, "problems", contest_path(@contest) if permitted_to? :access_problems, @contest
-    menu.item :scoreboard, "scoreboard", scoreboard_contest_path(@contest) if permitted_to? :read, @contest
+    menu.item :info, "info", info_contest_path(@contest) if policy(@contest).show?
+    menu.item :problems, "problems", contest_path(@contest) if policy(@contest).access?
+    menu.item :scoreboard, "scoreboard", scoreboard_contest_path(@contest) if policy(@contest).show?
 #  end.render
   end
   %>
   <%= content_tag :div, :class => :tab_box do %>
     <%= yield %>
   <% end %>
-  <% if permitted_to? :update, @contest %>
+  <% if policy(@contest).update? %>
     <%= render 'admin' %>
   <% end %>
 <% end %>

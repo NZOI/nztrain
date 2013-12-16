@@ -1,12 +1,12 @@
 <% content_for :title, "Users" %>
-<% if permitted_to? :su, User %>
+<% if policy(User).su? %>
   <%= render :partial => 'su', :formats => [:js] %>
 <% end %>
 <table class="main_table hoverable selectable">
   <thead>
     <tr>
       <th>Username</th>
-      <% if permitted_to? :inspect, User %>
+      <% if policy(User).inspect? %>
         <th>Name</th>
         <th>Email</th>
       <% end %>
@@ -14,13 +14,13 @@
       <th>Solved Problems</th>
       <th>Brownie Points</th>
       <th></th>
-      <% if permitted_to? :update, User %>
+      <% if policy(User).edit? %>
         <th></th>
       <% end %>
-      <% if permitted_to? :destroy, User %>
+      <% if policy(User).destroy? %>
         <th></th>
       <% end %>
-      <% if permitted_to? :su, User %>
+      <% if policy(User).su? %>
         <th></th>
       <% end %>
     </tr>
@@ -29,7 +29,7 @@
     <% @users.each do |user| %>
       <tr>
         <td><%= user.username %></td>
-        <% if permitted_to? :inspect, user %>
+        <% if policy(user).inspect? %>
           <td><%= user.name %></td>
           <td>
               <%= user.email %> <span style="color:red;"><%= "(unconfirmed)" if !user.confirmed? %></span>
@@ -39,13 +39,13 @@
         <td><%= user.num_solved %></td>
         <td><%= user.brownie_points %></td>
         <td><%= link_to 'Show', user %></td>
-        <% if permitted_to? :update, User %>
-          <td><%= link_to 'Edit', edit_user_path(user) if permitted_to? :update, user%></td>
+        <% if policy(User).edit? %>
+          <td><%= link_to 'Edit', edit_user_path(user) if policy(user).edit? %></td>
         <% end %>
-        <% if permitted_to? :destroy, User %>
-          <td><%= link_to 'Destroy', user, :data => { :confirm => 'Are you sure?' }, :method => :delete if permitted_to? :destroy, user %></td>
+        <% if policy(User).destroy? %>
+          <td><%= link_to 'Destroy', user, :data => { :confirm => 'Are you sure?' }, :method => :delete if policy(user).destroy? %></td>
         <% end %>
-        <% if permitted_to? :su, user %>
+        <% if policy(user).su? %>
           <td><%= link_to "su", su_user_path(user), :rel => "facebox" %></td>
         <% end %>
       </tr>

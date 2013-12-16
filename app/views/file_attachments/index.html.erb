@@ -32,5 +32,5 @@
 </table>
 
 <br>
-<%= link_to "New", new_file_attachment_path if permitted_to? :create, :file_attachments %>
+<%= link_to "New", new_file_attachment_path if policy(FileAttachment).create? %>
 

@@ -1,16 +1,10 @@
 class ContestsController < ApplicationController
-  filter_resource_access :additional_collection => {:browse => :index}, :additional_member => [:start, :finalize, :unfinalize, [:info, :show], :scoreboard]
-
   def permitted_params
     @_permitted_params ||= begin
       permitted_attributes = [:title, :start_time, :end_time, :duration, :problem_set_id]
-      permitted_attributes << :owner_id if permitted_to? :transfer, @contest
+      permitted_attributes << :owner_id if policy(@contest || Contest).transfer?
       params.require(:contest).permit(*permitted_attributes)
     end
-  end
-
-  def new_contest_from_params
-    @contest = Contest.new(:owner => current_user)
   end
 
   # GET /contests
@@ -18,10 +12,10 @@ class ContestsController < ApplicationController
   def index
     case params[:filter].to_s
     when 'my'
-      permitted_to! :manage, Contest.new(:owner_id => current_user.id)
+      authorize Contest.new(:owner_id => current_user.id), :manage?
       @contests = Contest.where(:owner_id => current_user.id).order("end_time DESC")
     else
-      permitted_to! :manage, Contest.new
+      authorize Contest.new, :manage?
       @contests = Contest.order("end_time DESC")
     end
     
@@ -31,6 +25,7 @@ class ContestsController < ApplicationController
   end
 
   def browse
+    authorize Contest, :index?
     groups_contests = Contest.joins(:groups => :members).where{(groups.id == 0) | (groups.members.id == my{current_user.id})}.distinct
     case params[:filter].to_s
     when 'active'
@@ -42,15 +37,15 @@ class ContestsController < ApplicationController
     when 'past'
       @contests = groups_contests.where{(end_time < Time.now)}.order("end_time DESC")
     else
-      raise Authorization::AuthorizationError
+      raise Pundit::NotAuthorizedError
     end
-
   end
 
   # GET /contests/1
   # GET /contests/1.xml
   def show
-    if !permitted_to? :access_problems, @contest
+    @contest = Contest.find(params[:id])
+    if !policy(@contest).access?
       redirect_to info_contest_path(@contest)
       return
     end
@@ -67,11 +62,15 @@ class ContestsController < ApplicationController
   end
 
   def info
+    @contest = Contest.find(params[:id])
+    authorize @contest, :show?
     @groups = Group.all
     render :layout => 'contest'
   end
 
   def scoreboard
+    @contest = Contest.find(params[:id])
+    authorize @contest, :scoreboard?
     @groups = Group.all
     @problems = @contest.problem_set.problems
     @realtimejudging = true # if false, scores only revealed at the end
@@ -83,6 +82,8 @@ class ContestsController < ApplicationController
   # GET /contests/new
   # GET /contests/new.xml
   def new
+    @contest = Contest.new(:owner => current_user)
+    authorize @contest, :new?
     @problem_sets = ProblemSet.all
     @start_time = ""
     @end_time = ""
@@ -95,6 +96,8 @@ class ContestsController < ApplicationController
 
   # GET /contests/1/edit
   def edit
+    @contest = Contest.find(params[:id])
+    authorize @contest, :edit?
     @problem_sets = ProblemSet.all
     @start_time = @contest.start_time.strftime("%d/%m/%Y %H:%M")
     @end_time = @contest.end_time.strftime("%d/%m/%Y %H:%M")
@@ -103,15 +106,18 @@ class ContestsController < ApplicationController
   # POST /contests
   # POST /contests.xml
   def create
-    permitted_to! :use, params[:contest][:problem_set_id] if params[:contest][:problem_set_id]
+    @contest = Contest.new(permitted_params)
+    @contest.owner ||= current_user
+    authorize @contest, :create?
+    authorize ProblemSet.find(params[:contest][:problem_set_id]), :use? if params[:contest][:problem_set_id]
 
-    params[:contest][:start_time] = params[:contest][:start_time].get_date(Time.zone)
-    params[:contest][:end_time] = params[:contest][:end_time].get_date(Time.zone)
+    params[:contest][:start_time] = Time.zone.parse(params[:contest][:start_time])
+    params[:contest][:end_time] = Time.zone.parse(params[:contest][:end_time])
 
     logger.debug "time zone is " + Time.zone.to_s
 
     respond_to do |format|
-      if @contest.update_attributes(permitted_params)
+      if @contest.save
         format.html { redirect_to(@contest, :notice => 'Contest was successfully created.') }
         format.xml  { render :xml => @contest, :status => :created, :location => @contest }
       else
@@ -124,10 +130,12 @@ class ContestsController < ApplicationController
   # PUT /contests/1
   # PUT /contests/1.xml
   def update
-    permitted_to! :use, ProblemSet.find(params[:contest][:problem_set_id]) if params[:contest][:problem_set_id] && (params[:contest][:problem_set_id] != @contest.problem_set_id) # can only use problem sets which user has permission to use
+    @contest = Contest.find(params[:id])
+    authorize @contest, :update?
+    authorize ProblemSet.find(params[:contest][:problem_set_id]), :use? if params[:contest][:problem_set_id] && (params[:contest][:problem_set_id] != @contest.problem_set_id) # can only use problem sets which user has permission to use
 
-    params[:contest][:start_time] = params[:contest][:start_time].get_date(Time.zone)
-    params[:contest][:end_time] = params[:contest][:end_time].get_date(Time.zone)
+    params[:contest][:start_time] = Time.zone.parse(params[:contest][:start_time])
+    params[:contest][:end_time] = Time.zone.parse(params[:contest][:end_time])
 
     respond_to do |format|
       if @contest.update_attributes(permitted_params)
@@ -143,6 +151,8 @@ class ContestsController < ApplicationController
   # DELETE /contests/1
   # DELETE /contests/1.xml
   def destroy
+    @contest = Contest.find(params[:id])
+    authorize @contest, :destroy?
     @contest.destroy
 
     respond_to do |format|
@@ -152,7 +162,7 @@ class ContestsController < ApplicationController
   end
 
   def start
-    @contest_relation = ContestRelation.new
+    @contest = Contest.find(params[:id])
 
     #TODO: check that no relation already exists
     if ContestRelation.find(:first, :conditions => ["user_id = ? and contest_id = ?", current_user, @contest])
@@ -160,11 +170,12 @@ class ContestsController < ApplicationController
       return
     end
 
+    authorize @contest, :start?
     if !@contest.is_running?
       redirect_to(contests_url, :alert => "This contest is not currently running.")
       return
     end
-
+    @contest_relation = ContestRelation.new
     @contest_relation.user = current_user
     @contest_relation.started_at = DateTime.now
     @contest_relation.contest = @contest
@@ -181,12 +192,16 @@ class ContestsController < ApplicationController
   end
 
   def finalize
+    @contest = Contest.find(params[:id])
+    authorize @contest, :finalize?
     @contest.finalized_at = Time.now
     @contest.save
     redirect_to contest_path(@contest), :notice => "Contest results finalized"
   end
 
   def unfinalize
+    @contest = Contest.find(params[:id])
+    authorize @contest, :unfinalize?
     @contest.finalized_at = nil
     @contest.save
     redirect_to contest_path(@contest), :notice => "Contest results unfinalized"

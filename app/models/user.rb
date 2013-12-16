@@ -33,28 +33,16 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :roles
 
   #has_many :group_invitations, :class_name => :Request, :as => :target, :conditions => { :verb => 'invite', :subject_type => 'Group' }
-  has_many :requests, :class_name => :Request, :as => :target, :conditions => { :requestee_id => :target_id }
+  has_many :requests, -> { where requestee_id: :target_id }, :class_name => :Request, :as => :target
 
   # Scopes
 
-  scope :distinct, select("distinct(users.id), users.*")
-  scope :num_solved, select("(SELECT COUNT(DISTINCT submissions.problem_id) FROM submissions JOIN problems ON problems.id = submissions.problem_id WHERE submissions.user_id = users.id AND submissions.score = 100 AND problems.owner_id != users.id) as num_solved")
+  scope :distinct, -> { select("distinct(users.id), users.*") }
+  scope :num_solved, -> { select("users.*, (SELECT COUNT(DISTINCT submissions.problem_id) FROM submissions JOIN problems ON problems.id = submissions.problem_id WHERE submissions.user_id = users.id AND submissions.score = 100 AND problems.owner_id != users.id) as num_solved") }
   
   def self.find_for_authentication(conditions={})
     self.where("lower(username) = lower(?)", conditions[:email]).limit(1).first ||
     self.where("email = ?", conditions[:email]).limit(1).first
-  end
-
-  def handle
-    if permitted_to? :inspect
-      if self.name && !self.name.empty?
-        return "#{self.username} \"#{self.name}\""
-      else
-        return "#{self.username} <#{self.email}>"
-      end
-    else
-      return "#{self.username}"
-    end
   end
 
   def get_solved
@@ -82,6 +70,12 @@ class User < ActiveRecord::Base
   def is_admin?
     self.is_any? [:admin, :superadmin]
   end
+  def is_staff?
+    self.is_any? [:admin, :superadmin, :staff]
+  end
+  def is_organiser?
+    self.is_any? [:admin, :superadmin, :staff, :organiser]
+  end
   def is_any?(roles)
     (self.roles.map(&:name) & roles.map(&:to_s)).any?
   end
@@ -90,6 +84,9 @@ class User < ActiveRecord::Base
   end
   def openbook?
     !self.competing?
+  end
+  def owns(object)
+    object.respond_to?(:owner_id) and object.owner_id == self.id
   end
 
   def reload(options = nil)

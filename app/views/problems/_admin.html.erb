@@ -1,4 +1,4 @@
-<% if permitted_to? :inspect, @problem %>
+<% if policy(@problem).inspect? %>
   <b>Users that have submitted:</b>
   <table class="main_table">
   <tr>
@@ -9,7 +9,7 @@
   <% @all_subs.each do |sub| %>
   	<% if sub.user != nil %>
   		<tr>
-        		<td> <%= link_to sub.user.handle, sub.user %> </td>
+        		<td> <%= link_to handle(sub.user), sub.user %> </td>
         	<td> <%= progress_bar(sub.score,sub) %><div style="display: inline-block; vertical-align: middle; text-align: right; width: 2.5em;">(<%= link_to @sub_count[sub.user], :controller => "submissions", :by_user => sub.user, :by_problem => @problem %>)</div> </td>
       	</tr>
   	<% end %>
@@ -17,20 +17,21 @@
   </table>
   <br />
 <% end %>
-<% if (permitted_to? :use, @problem) && !@problem_sets.nil? && @problem_sets.size>0 %>
+<% if (policy(@problem).use?) && !@problem_sets.nil? && @problem_sets.size>0 %>
   <p>
-  <%= form_tag(:controller => "problem_problem_set", :action => "add", :method => :put, :problem_id => @problem) do %>
+  <%= form_tag(problem_problem_set_add_path, :method => :put) do %>
+    <%= hidden_field_tag :problem_id, @problem.id %>
     <%= collection_select :problem, :problem_set_ids, @problem_sets, :id, :title %>
     <%= submit_tag 'Add to problem set' %>
   <% end %>
   </p>
 <% end %>
-<% if permitted_to? :inspect, @problem %>
+<% if policy(@problem).inspect? %>
   <p>
   <b> Evaluator: </b>
   <% if @problem.evaluator %>
     <%= link_to @problem.evaluator.name, @problem.evaluator %>
-    <% if permitted_to? :inspect, @problem.evaluator # privilege required to see evaluator source %>
+    <% if policy(@problem.evaluator).inspect? # privilege required to see evaluator source %>
       <%= predisplay @problem.evaluator.source, language: :sh %>
     <% end %>
   <% else %>

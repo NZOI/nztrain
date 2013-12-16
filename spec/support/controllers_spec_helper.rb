@@ -39,8 +39,9 @@ module ControllersSpecHelper
       options = process_plural_options resource, {:action => :index}.merge(options)
       it "can #{options[:action]} #{resource}" do
         get options[:action], (process_hash options[:params])
-        response.should be_success
-        [ActiveRecord::Relation, Array].should include assigns(options[:resources_name]).class
+        expect(response).to be_success
+        collection = assigns(options[:resources_name])
+        expect(collection.is_a?(ActiveRecord::Relation) || collection.is_a?(Array)).to be_true
       end
     end
     def can_browse resource, options ={}
@@ -81,11 +82,11 @@ module ControllersSpecHelper
         response.should be_success
       end
       it "can create #{resource}" do
-        expect do 
+        expect do
           post :create, options[:resource_name] => options[:attributes]
         end.to change{(Kernel.const_get options[:class_name]).count}.by(1)
         response.should redirect_to send "#{options[:resource_name]}_path", assigns(options[:resource_name])
-        assigns(options[:resource_name]).should have_attributes(options[:attributes])
+        expect(assigns(options[:resource_name])).to have_attributes(options[:attributes])
       end
     end
     def can_destroy resource, options = {}
@@ -95,7 +96,7 @@ module ControllersSpecHelper
         expect do 
           delete :destroy, :id => object.to_param
         end.to change{object.class.count}.by(-1)
-        response.should redirect_to send "#{options[:resources_name]}_path"
+        expect(response).to be_redirect
       end
     end
   end
@@ -106,7 +107,7 @@ module ControllersSpecHelper
       expected.each do |key,value|
         case
         when actual[key].class == ActiveSupport::TimeWithZone && value.class == String
-          matching &&= (actual[key] == value.get_date(Time.zone))
+          matching &&= (actual[key] == Time.zone.parse(value))
         else
           matching &&= (actual[key] == value)
         end
@@ -118,7 +119,7 @@ module ControllersSpecHelper
       expected.each do |key,value|
         case
         when actual[key].class == ActiveSupport::TimeWithZone && value.class == String
-          matching = (actual[key] == (val = value.get_date(Time.zone)))
+          matching = (actual[key] == (val = Time.zone.parse(value)))
         else
           matching = (actual[key] == (val = value))
         end

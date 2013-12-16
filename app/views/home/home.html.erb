@@ -18,7 +18,7 @@
       <h2>Upcoming and Current Contests</h2>
       <%= render 'contests/index' %>
     <% end %>
-    <% if permitted_to? :access_problems, Group.find(0) %>
+    <% if !current_user.competing? %>
       <h2>Public Problems</h2>
       <%= render 'problem_sets/index' %>
     <% end %>

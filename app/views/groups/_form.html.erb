@@ -25,10 +25,10 @@
   </div>
   <div class="field">
     <%= f.label :owner_id %><br />
-    <% if permitted_to? :transfer, @group %>
+    <% if policy(@group).transfer? %>
       <%= f.text_field :owner_id %>
     <% else %>
-      <%= @group.owner.handle %>
+      <%= handle(@group.owner) %>
     <% end %>
 
   </div>

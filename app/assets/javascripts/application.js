@@ -109,7 +109,6 @@ $(document).ready(function() {
         speed: 'fast'
     });
 
-    $('.markdown').markItUp(myMarkdownSettings);
     $('.date-picker').datetimepicker({ dateFormat: 'dd/mm/yy' });
 
     $('#menu').css({'min-width':$('#nav').width()+$('#controls').width() + 'px'});

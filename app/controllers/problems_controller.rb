@@ -1,10 +1,9 @@
 class ProblemsController < ApplicationController
-  filter_resource_access :additional_member => {:submit => :submit, :submissions => :submit, :test_cases => :inspect, :import => :update, :export => :inspect }
 
   def permitted_params
     @_permitted_attributes ||= begin
       permitted_attributes = [:title, :statement, :input_type, :output_type, :memory_limit, :time_limit, :evaluator_id]
-      permitted_attributes << :owner_id if permitted_to? :transfer, @problem
+      permitted_attributes << :owner_id if policy(@problem || Problem).transfer?
       permitted_attributes << :input if params.require(:problem)[:input_type] == 'file'
       permitted_attributes << :output if params.require(:problem)[:output_type] == 'file'
       permitted_attributes
@@ -15,22 +14,18 @@ class ProblemsController < ApplicationController
   def submit_params # attributes allowed to be included in submissions
     @_submit_attributes ||= begin
       submit_attributes = [:language_id, :source_file]
-      submit_attributes << :source if permitted_to? :submit_source, @problem
+      submit_attributes << :source if policy(@problem).submit_source?
       submit_attributes
     end
     p = params.require(:submission).permit(*@_submit_attributes).merge(:user_id => current_user.id, :problem_id => params[:id])
     p
   end
 
-  def new_problem_from_params
-    @problem = Problem.new(:owner => current_user)
-  end
-
   def visible_attributes
     @_visible_attributes ||= begin
       visible_attributes = [:linked_title, :input, :output, :memory_limit, :time_limit, :linked_owner, :progress_bar]
-      visible_attributes << :edit_link if permitted_to? :update, @problem
-      visible_attributes << :destroy_link if permitted_to? :destroy, @problem
+      visible_attributes << :edit_link if policy(@problem).update?
+      visible_attributes << :destroy_link if policy(@problem).destroy?
       visible_attributes
     end
   end
@@ -46,7 +41,7 @@ class ProblemsController < ApplicationController
       @problem = Problem.new
       @problems = Problem.score_by_user(current_user.id).select('*')
     end
-    permitted_to! :manage, @problem
+    authorize @problem, :update?
 
     @problems_presenter = ProblemPresenter::Collection.new(@problems).permit!(*visible_attributes)
 
@@ -58,9 +53,10 @@ class ProblemsController < ApplicationController
   # GET /problems/1
   # GET /problems/1.xml
   def show
+    @problem = Problem.find(params[:id])
+    authorize @problem, :show?
     #TODO: restrict to problems that current user owns/manages
-    #@problem_sets = ProblemSet.accessible_by(current_ability,:update) # can only add problem to problem sets user can update to
-    @problem_sets = ProblemSet.with_permissions_to(:update) if permitted_to? :update, :problem_sets # can only add problem to problem sets user can update to
+    @problem_sets = ProblemSet.all.select { |set| policy(set).use? } # TODO: fix to be more efficient
     @submissions = @problem.submission_history(current_user)
 
     @all_subs = {};
@@ -77,6 +73,8 @@ class ProblemsController < ApplicationController
   end
 
   def submit
+    @problem = Problem.find(params[:id])
+    authorize @problem, :submit?
     if request.post? # post request
       @problem = Problem.find(params[:id])
       @submission = Submission.new(submit_params) # create submission
@@ -101,6 +99,8 @@ class ProblemsController < ApplicationController
 
   def submissions
     @problem = Problem.find(params[:id])
+    authorize @problem, :show?
+    @problem = Problem.find(params[:id])
     if current_user.openbook?
       @submissions = @problem.submission_history(current_user)
     else
@@ -114,12 +114,16 @@ class ProblemsController < ApplicationController
   end
 
   def test_cases
+    @problem = Problem.find(params[:id])
+    authorize @problem, :inspect?
     respond_to do |format|
       format.html { render :layout => "problem" }
     end
   end
 
   def import
+    @problem = Problem.find(params[:id])
+    authorize @problem, :update?
     redirect_to(test_cases_problem_path(@problem), :alert => 'No zip file uploaded') and return if params[:import_file].nil?
     redirect_to(test_cases_problem_path(@problem), :alert => 'Invalid importer specified') and return if !Problems::Importers.has_key?(params[:importer])
     begin
@@ -131,10 +135,11 @@ class ProblemsController < ApplicationController
     rescue StandardError => e
       redirect_to(test_cases_problem_path(@problem), :alert => 'An error has occurred - was the right importer selected?')
     end
-
   end
 
   def export
+    @problem = Problem.find(params[:id])
+    authorize @problem, :inspect?
     name = @problem.title.gsub(/[\W]/,"")
     name = "testcases" if name.empty?
     filename = name + ".zip"
@@ -147,6 +152,8 @@ class ProblemsController < ApplicationController
 
   # GET /problems/new
   def new
+    @problem = Problem.new(:owner => current_user)
+    authorize @problem, :new?
     respond_to do |format|
       format.html # new.html.erb
     end
@@ -154,12 +161,18 @@ class ProblemsController < ApplicationController
 
   # GET /problems/1/edit
   def edit
+    @problem = Problem.find(params[:id])
+    authorize @problem, :edit?
   end
 
   # POST /problems
   def create
+    @problem = Problem.new(permitted_params)
+    @problem.owner ||= current_user
+    authorize @problem, :create?
+
     respond_to do |format|
-      if @problem.update_attributes(permitted_params)
+      if @problem.save
         format.html { redirect_to(@problem, :notice => 'Problem was successfully created.') }
         format.xml  { render :xml => @problem, :status => :created, :location => @problem }
       else
@@ -172,6 +185,8 @@ class ProblemsController < ApplicationController
   # PUT /problems/1
   # PUT /problems/1.xml
   def update
+    @problem = Problem.find(params[:id])
+    authorize @problem, :update?
     respond_to do |format|
       if @problem.update_attributes(permitted_params)
         format.html { redirect_to(@problem, :notice => 'Problem was successfully updated.') }
@@ -186,6 +201,8 @@ class ProblemsController < ApplicationController
   # DELETE /problems/1
   # DELETE /problems/1.xml
   def destroy
+    @problem = Problem.find(params[:id])
+    authorize @problem, :destroy?
     @problem.destroy
 
     respond_to do |format|

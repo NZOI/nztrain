@@ -3,7 +3,7 @@
   <thead>
     <tr>
       <th>Username</th>
-      <% if permitted_to? :inspect, User %>
+      <% if policy(User).inspect? %>
         <th>Name</th>
       <% end %>
       <th>Last seen</th>
@@ -15,10 +15,10 @@
     <% @users.each do |user| %>
       <tr>
         <td><%= user.username %></td>
-        <% if permitted_to? :inspect, User %>
-          <td><%= user.name if permitted_to? :inspect, user %></td>
+        <% if policy(User).inspect? %>
+          <td><%= user.name if policy(user).inspect? %></td>
         <% end %>
-        <td><%= distance_of_time_in_words_to_now user.last_seen_at %> ago</td>
+        <td><%= "#{distance_of_time_in_words_to_now user.last_seen_at} ago" if user.last_seen_at %></td>
         <td><%= user.last_seen_at %></td>
         <td><%= link_to 'Show', user %></td>
       </tr>

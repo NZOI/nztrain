@@ -5,8 +5,8 @@ class ContestRelation < ActiveRecord::Base
   belongs_to :contest
   has_many :contest_scores
 
-  scope :active, lambda { where{(started_at <= DateTime.now) & (finish_at > DateTime.now)} }
-  scope :user, lambda { |u_id| where(:user_id => u_id) }
+  scope :active, -> { where{(started_at <= DateTime.now) & (finish_at > DateTime.now)} }
+  scope :user, ->(u_id) { where(:user_id => u_id) }
 
   def active?
     (started_at <= DateTime.now) && (finish_at > DateTime.now)
@@ -34,7 +34,7 @@ class ContestRelation < ActiveRecord::Base
     transaction do # update total at contest_relation
       self.score = self.contest_scores.sum(:score)
       lastsubmit = self.contest_scores.joins(:submission).where("contest_scores.score > 0").maximum("submissions.created_at")
-      self.time_taken = lastsubmit ? DateTime.parse(lastsubmit).in_time_zone - self.started_at : 0
+      self.time_taken = lastsubmit ? lastsubmit.in_time_zone - self.started_at : 0
       self.save
     end
   end

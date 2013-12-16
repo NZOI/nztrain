@@ -1,6 +1,6 @@
 <% content_for :title, @problem.title %>
-<%= toolbox_push :edit, edit_problem_path(@problem) if permitted_to? :update, @problem %> 
-<%= toolbox_push :delete, @problem if permitted_to? :destroy, @problem %> 
+<%= toolbox_push :edit, edit_problem_path(@problem) if policy(@problem).edit? %> 
+<%= toolbox_push :delete, @problem if policy(@problem).destroy? %> 
 
 <% content_for :content do %>
 
@@ -21,9 +21,9 @@
   render_navigation do |menu|
     menu.dom_class = :tab_menu
     menu.item :statement, "problem statement", problem_path(@problem)
-    menu.item :submit, "submit", submit_problem_path(@problem), :highlights_on => :subpath if permitted_to? :submit, @problem
+    menu.item :submit, "submit", submit_problem_path(@problem), :highlights_on => :subpath if policy(@problem).submit?
     menu.item :submissions, "submissions", submissions_problem_path(@problem)
-    menu.item :test_cases, "test cases", test_cases_problem_path(@problem) if permitted_to? :inspect, @problem
+    menu.item :test_cases, "test cases", test_cases_problem_path(@problem) if policy(@problem).inspect?
 #  end.render
   end
   %>

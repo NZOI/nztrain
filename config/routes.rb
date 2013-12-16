@@ -4,35 +4,33 @@ NZTrain::Application.routes.draw do
   require 'qless/server'
   authenticate :user, ->(current_user) {current_user.is_admin?} do
     get 'qless', :to => 'qless#default', :as => 'qless'
-    constraints ->(request) {request.get?} do
-      mount Qless::Server.new($qless) => '/qless/server', :as => 'qless_server'
-    end
-  end
-  authenticate :user, ->(current_user){current_user.has_role?(:superadmin)} do
-    mount Qless::Server.new($qless) => '/qless/server', :as => 'qless_server'
+    #constraints ->(request) {request.get?} do
+    mount Qless::Server.new($qless) => '/qless/server', :as => 'qless_server' # cannot restrict post requests anymore
+    #end
   end
 
-  resources :ai_contests do
-    member do
-      get 'sample'
-      get 'submit'
-      post 'submit'
-      get 'submissions'
-      get 'scoreboard'
-      post 'rejudge'
-      post 'judge'
-    end
-  end
+  #resources :ai_contests do
+  #  member do
+  #    get 'sample'
+  #    get 'submit'
+  #    post 'submit'
+  #    get 'submissions'
+  #    get 'scoreboard'
+  #    post 'rejudge'
+  #    post 'judge'
+  #  end
+  #end
 
-  resources :ai_submissions, :only => [:show] do
-    member do
-      put 'deactivate'
-      put 'activate'
-      post 'rejudge'
-    end
-  end
+  #resources :ai_submissions, :only => [:show] do
+  #  member do
+  #    put 'deactivate'
+  #    put 'activate'
+  #    post 'rejudge'
+  #  end
+  #end
 
-  resources :test_sets
+  #resources :test_sets
+  #resources :test_cases
 
   resources :evaluators
 
@@ -58,7 +56,7 @@ NZTrain::Application.routes.draw do
     end
   end
 
-  resources :contest_relations
+  # resources :contest_relations
 
   resources :submissions, :except => [:new,:create] do
     collection do
@@ -95,8 +93,6 @@ NZTrain::Application.routes.draw do
     end
   end
 
-  resources :test_cases
-
   resources :users, :only => :index do
     collection do
       post 'suexit'
@@ -131,9 +127,10 @@ NZTrain::Application.routes.draw do
     end
   end
 
-  match 'problem_problem_set/:action(:format)' => "problem_problem_set"
+  put 'problem_problem_set/add' => "problem_problem_set#add"
+  put 'problem_problem_set/remove' => "problem_problem_set#remove"
 
-  match 'group_problem_set/:action(:format)' => "group_problem_set"
+  put 'group_problem_set/add' => "group_problem_set#add"
 
   resources :groups do
     collection do
@@ -180,20 +177,6 @@ NZTrain::Application.routes.draw do
     end
   end
 
-  #match 'groups/:id/add_user(:format)' => 'groups#add_user'
-  #match 'groups/:id/remove_user(:format)' => 'groups#remove_user'
-
-  # The priority is based upon order of creation:
-  # first created -> highest priority.
-
-  # Sample of regular route:
-  #   match 'products/:id' => 'catalog#view'
-  # Keep in mind you can assign values other than :controller and :action
-
-  # Sample of named route:
-  #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
-  # This route can be invoked with purchase_url(:id => product.id)
-
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 
@@ -236,8 +219,4 @@ NZTrain::Application.routes.draw do
 
   # See how all your routes lay out with "rake routes"
 
-  # This is a legacy wild controller route that's not recommended for RESTful applications.
-  # Note: This route will make all actions in every controller accessible via GET requests.
-  # match ':controller(/:action(/:id(.:format)))'
-  #
 end

@@ -322,6 +322,7 @@ input[type="file"] {
   color: white;
 }
 .ui-datepicker {
+  margin-top: 30px;
   font-size: smaller;
 }
 .ui-datepicker td {

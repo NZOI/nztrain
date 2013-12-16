@@ -4,6 +4,6 @@
 
 <br />
 
-<% if permitted_to? :create, :problem_sets %>
+<% if policy(ProblemSet).create? %>
   <%= link_to 'New Problem set', new_problem_set_path %>
 <% end %>

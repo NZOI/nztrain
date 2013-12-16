@@ -21,7 +21,7 @@
     <%= f.submit 'Submit' %>
   </div>
 <% end %>
-<% if permitted_to? :submit_source, @problem %>
+<% if policy(@problem).submit_source? %>
   <center><b>or submit source directly:</b></center>
   <%= form_for @submission, :url => submit_problem_path(@problem) do |f| %>
     <div class="field">

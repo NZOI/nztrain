@@ -1,5 +1,4 @@
 class SubmissionsController < ApplicationController
-  filter_resource_access :additional_member => [:rejudge], :new => []
 
   def permitted_params
     @_permitted_params ||= begin
@@ -15,18 +14,14 @@ class SubmissionsController < ApplicationController
   # GET /submissions.xml
   def index
     params[:by_user] = current_user.id if params[:filter] == 'my'
-    permitted_to! :index, Submission.new if params[:by_user].nil?
-    if current_user.openbook? || permitted_to?(:read, Problem.new)
-      permitted_to! :read, Problem.find(params[:by_problem]) unless params[:by_problem].nil?
-      @submissions = apply_scopes(Submission).paginate(:order => "created_at DESC", :page => params[:page], :per_page => 20)
+    authorize Submission.new, :show? if params[:by_user].nil?
+    if current_user.openbook? || policy(Problem.new).show?
+      authorize Problem.find(params[:by_problem]), :show? unless params[:by_problem].nil?
+      @submissions = apply_scopes(Submission)
     else # only allowed to see contest submissions
-      @submissions = Submission.joins(:contest_scores => :contest_relations).where{
-        (user_id == my{current_user.id}) & 
-        (contest_scores.contest_relations.started_at <= DateTime.now) &
-        (contest_scores.contest_relations.finish_at > DateTime.now)
-      }.paginate(:order => "created_at DESC", :page => params[:page], :per_page => 20)
+      @submissions = policy_scope(Submission)
     end
-
+    @submissions = @submissions.paginate(:order => "created_at DESC", :page => params[:page], :per_page => 20)
     # TODO: fix submission permissions
 
     respond_to do |format|
@@ -38,6 +33,8 @@ class SubmissionsController < ApplicationController
   # GET /submissions/1
   # GET /submissions/1.xml
   def show
+    @submission = Submission.find(params[:id])
+    authorize @submission, :show?
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @submission }
@@ -47,6 +44,8 @@ class SubmissionsController < ApplicationController
   # GET /submissions/new
   # GET /submissions/new.xml
   def new
+    @submission = Submission.new
+    authorize @submission, :new?
     @problem = params[:problem]
     logger.debug "going to submit, problem is #{@problem} and params are:"
     logger.debug params
@@ -59,10 +58,14 @@ class SubmissionsController < ApplicationController
 
   # GET /submissions/1/edit
   def edit
+    @submission = Submission.find(params[:id])
+    authorize @submission, :edit?
     @problem = @submission.problem
   end
 
   def rejudge
+    @submission = Submission.find(params[:id])
+    authorize @submission, :rejudge?
     if @submission.rejudge
       redirect_to @submission, :notice => "Rejudge request queued."
     else
@@ -74,12 +77,10 @@ class SubmissionsController < ApplicationController
   # POST /submissions.xml
   def create
     # don't let users submit to problems they don't have access to (which they could do by id speculatively to try get access to problem title, # of test cases etc.) (ie. they should have read access)
-    permitted_to! :read, Problem.find(params[:submission][:problem_id])
-    logger.debug "creating new submission , problem is #{params[:submission][:problem_id]} and params are:"
-    logger.debug params
+    authorize Problem.find(params[:submission][:problem_id]), :submit?
     params[:submission][:source] = IO.read(params[:submission][:source].path)
     @submission = Submission.new(permitted_params.merge(:score => nil, :user_id => current_user.id))
-
+    authorize @submission, :create?
     respond_to do |format|
       if @submission.save
         @submission.judge
@@ -95,6 +96,8 @@ class SubmissionsController < ApplicationController
   # PUT /submissions/1
   # PUT /submissions/1.xml
   def update
+    @submission = Submission.find(params[:id])
+    authorize @submission, :update?
     params[:submission][:source] = IO.read(params[:submission][:source].path)
 
     respond_to do |format|
@@ -111,6 +114,8 @@ class SubmissionsController < ApplicationController
   # DELETE /submissions/1
   # DELETE /submissions/1.xml
   def destroy
+    @submission = Submission.find(params[:id])
+    authorize @submission, :destroy?
     @submission.destroy
 
     respond_to do |format|

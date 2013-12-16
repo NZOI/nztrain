@@ -1,5 +1,17 @@
 module ApplicationHelper
 
+  def handle(user)
+    if policy(user).inspect?
+      if user.name && !user.name.empty?
+        return "#{user.username} \"#{user.name}\""
+      else
+        return "#{user.username} <#{user.email}>"
+      end
+    else
+      return "#{user.username}"
+    end
+  end
+
   def predisplay(string, type: :code, language: nil, **options)
     truncated_string = Code.limitstring(string, **options.extract!(:linelimit, :charlimit))
     continuation = (truncated_string.length < string.length) ? content_tag(:div, "...", :class => "continuation") : ""

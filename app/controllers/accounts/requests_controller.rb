@@ -1,6 +1,6 @@
 class Accounts::RequestsController < ApplicationController
   before_filter do
-    raise Authorization::AuthorizationError if !user_signed_in?
+    raise Pundit::NotAuthorizedError if !user_signed_in?
   end
 
   def index

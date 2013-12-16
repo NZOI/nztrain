@@ -10,7 +10,7 @@ class ProblemSet < ActiveRecord::Base
   has_many :group_members, :through => :groups, :source => :users, :uniq => true
 
   # Scopes
-  scope :distinct, select("distinct(problem_sets.id), problem_sets.*")
+  scope :distinct, -> { select("distinct(problem_sets.id), problem_sets.*") }
 
   def for_contestant? u_id
     self.contests.joins(:contest_relations).where(:contest_relations => {:user_id => u_id}).where{{ contest_relations => sift(:active) }}.any?
