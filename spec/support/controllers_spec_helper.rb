@@ -103,12 +103,11 @@ module ControllersSpecHelper
   # Instance methods
   RSpec::Matchers.define :have_attributes do |expected|
     match do |actual|
-      Time.zone = "Auckland" # strange inconsistent behaviour here - sees UTC even though it iz NZST inside controller
       matching = true
       expected.each do |key,value|
         case
         when actual[key].class == ActiveSupport::TimeWithZone && value.class == String
-          matching &&= (actual[key] == value.get_date(Time.zone))
+          matching &&= (actual[key] == Time.zone.parse(value))
         else
           matching &&= (actual[key] == value)
         end
@@ -116,17 +115,11 @@ module ControllersSpecHelper
       matching
     end
     failure_message_for_should do |actual|
-      puts Time.zone
-      Time.zone = "Auckland"
       message = "expected attributes of object to match hash:\n"
       expected.each do |key,value|
-        puts Time.zone
         case
         when actual[key].class == ActiveSupport::TimeWithZone && value.class == String
-          puts Time.zone
-          Time.zone = "Auckland"
-          puts Time.zone
-          matching = (actual[key] == (val = value.get_date(Time.zone)))
+          matching = (actual[key] == (val = Time.zone.parse(value)))
         else
           matching = (actual[key] == (val = value))
         end

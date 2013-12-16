@@ -111,8 +111,8 @@ class ContestsController < ApplicationController
     authorize @contest, :create?
     authorize ProblemSet.find(params[:contest][:problem_set_id]), :use? if params[:contest][:problem_set_id]
 
-    params[:contest][:start_time] = params[:contest][:start_time].get_date(Time.zone)
-    params[:contest][:end_time] = params[:contest][:end_time].get_date(Time.zone)
+    params[:contest][:start_time] = Time.zone.parse(params[:contest][:start_time])
+    params[:contest][:end_time] = Time.zone.parse(params[:contest][:end_time])
 
     logger.debug "time zone is " + Time.zone.to_s
 
@@ -134,8 +134,8 @@ class ContestsController < ApplicationController
     authorize @contest, :update?
     authorize ProblemSet.find(params[:contest][:problem_set_id]), :use? if params[:contest][:problem_set_id] && (params[:contest][:problem_set_id] != @contest.problem_set_id) # can only use problem sets which user has permission to use
 
-    params[:contest][:start_time] = params[:contest][:start_time].get_date(Time.zone)
-    params[:contest][:end_time] = params[:contest][:end_time].get_date(Time.zone)
+    params[:contest][:start_time] = Time.zone.parse(params[:contest][:start_time])
+    params[:contest][:end_time] = Time.zone.parse(params[:contest][:end_time])
 
     respond_to do |format|
       if @contest.update_attributes(permitted_params)
