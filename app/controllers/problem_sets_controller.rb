@@ -8,10 +8,10 @@ class ProblemSetsController < ApplicationController
     end
   end
 
-  def add_problem # currently unused function
+  def add_problem # unused
     @problem_set = ProblemSet.find(params[:problem][:problem_set_ids])
     authorize @problem_set, :update?
-    problem = Problem.find(params[:problem_id])
+    problem = Problem.find(params[:id]) # note switched params - TODO: fix form
     authorize problem, :use?
     if @problem_set.problems.exists?(problem)
       redirect_to(problem, :alert => "This problem set already contains this problem")

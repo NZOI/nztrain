@@ -6,7 +6,7 @@
     <% if policy(Problem).update? %>
       <th></th>
     <% end %>
-    <% if policy(Problem).destroy? %>
+    <% if policy(@problem_set).update? %>
       <th></th>
     <% end %>
   </tr>
@@ -17,15 +17,15 @@
       <% if policy(Problem).update? %>
         <td><%= link_to 'Edit', edit_problem_path(problem) if policy(problem).update? %></td>
       <% end %>
-      <% if policy(Problem).destroy? %>
-        <td><%= link_to 'Remove', remove_problem_problem_set_path(@problem_set, :problem_id => problem.id), :method => "put" if policy(problem).destroy? %></td>
+      <% if policy(@problem_set).update? %>
+        <td><%= link_to 'Remove', remove_problem_problem_set_path(@problem_set, :problem_id => problem.id), :method => "put" %></td>
       <% end %>
     </tr>
   <% end %>
 </table>
 <% if policy(@problem_set).use? %>
   <p>
-  <%= form_tag(:controller => "group_problem_set", :action => "add", :method => :put, :problem_set_id => @problem_set) do %>
+  <%= form_tag(group_problem_set_add_path(:problem_set_id => @problem_set), :method => :put) do %>
     <%= collection_select :problem_set, :group_ids, @groups, :id, :name %>
     <%= submit_tag "Give group access" %>
   <% end %>

@@ -163,7 +163,7 @@ class GroupsController < ApplicationController
     @group.destroy
 
     respond_to do |format|
-      format.html { redirect_to(groups_url) }
+      format.html { redirect_to(browse_groups_url) }
       format.xml  { head :ok }
     end
   end
