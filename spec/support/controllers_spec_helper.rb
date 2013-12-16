@@ -96,7 +96,7 @@ module ControllersSpecHelper
         expect do 
           delete :destroy, :id => object.to_param
         end.to change{object.class.count}.by(-1)
-        response.should redirect_to send "#{options[:resources_name]}_path"
+        expect(response).to be_success
       end
     end
   end
