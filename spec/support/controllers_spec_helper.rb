@@ -116,11 +116,16 @@ module ControllersSpecHelper
       matching
     end
     failure_message_for_should do |actual|
+      puts Time.zone
       Time.zone = "Auckland"
       message = "expected attributes of object to match hash:\n"
       expected.each do |key,value|
+        puts Time.zone
         case
         when actual[key].class == ActiveSupport::TimeWithZone && value.class == String
+          puts Time.zone
+          Time.zone = "Auckland"
+          puts Time.zone
           matching = (actual[key] == (val = value.get_date(Time.zone)))
         else
           matching = (actual[key] == (val = value))
