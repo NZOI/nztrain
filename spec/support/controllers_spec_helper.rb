@@ -96,7 +96,7 @@ module ControllersSpecHelper
         expect do 
           delete :destroy, :id => object.to_param
         end.to change{object.class.count}.by(-1)
-        expect(response).to be_success
+        expect(response).to be_redirect
       end
     end
   end
