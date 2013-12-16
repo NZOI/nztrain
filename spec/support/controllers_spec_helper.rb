@@ -82,11 +82,11 @@ module ControllersSpecHelper
         response.should be_success
       end
       it "can create #{resource}" do
-        expect do 
+        expect do
           post :create, options[:resource_name] => options[:attributes]
         end.to change{(Kernel.const_get options[:class_name]).count}.by(1)
         response.should redirect_to send "#{options[:resource_name]}_path", assigns(options[:resource_name])
-        assigns(options[:resource_name]).should have_attributes(options[:attributes])
+        expect(assigns(options[:resource_name])).to have_attributes(options[:attributes])
       end
     end
     def can_destroy resource, options = {}
@@ -103,6 +103,7 @@ module ControllersSpecHelper
   # Instance methods
   RSpec::Matchers.define :have_attributes do |expected|
     match do |actual|
+      Time.zone = "Auckland" # strange inconsistent behaviour here - sees UTC even though it iz NZST inside controller
       matching = true
       expected.each do |key,value|
         case
@@ -115,6 +116,7 @@ module ControllersSpecHelper
       matching
     end
     failure_message_for_should do |actual|
+      Time.zone = "Auckland"
       message = "expected attributes of object to match hash:\n"
       expected.each do |key,value|
         case
