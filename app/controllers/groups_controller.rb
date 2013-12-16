@@ -36,13 +36,13 @@ class GroupsController < ApplicationController
   def add_contest
     @group = Group.find(params[:contest][:group_ids])
     authorize @group, :update?
-    contest = Contest.find(params[:contest_id])
+    @contest = Contest.find(params[:contest_id])
     authorize @contest, :use?
-    if @group.contests.exists?(contest)
-      redirect_to(contest, :alert => "This group already has access to this contest")
+    if @group.contests.exists?(@contest)
+      redirect_to(@contest, :alert => "This group already has access to this contest")
       return
     end
-    @group.contests.push(contest)
+    @group.contests.push(@contest)
     redirect_to(contest, :notice => "Contest added.")
   end
 

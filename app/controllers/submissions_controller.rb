@@ -15,17 +15,13 @@ class SubmissionsController < ApplicationController
   def index
     params[:by_user] = current_user.id if params[:filter] == 'my'
     authorize Submission.new, :show? if params[:by_user].nil?
-    if current_user.openbook? || policy(Problem.new).read?
-      authorize Problem.find(params[:by_problem]), :read? unless params[:by_problem].nil?
-      @submissions = apply_scopes(Submission).paginate(:order => "created_at DESC", :page => params[:page], :per_page => 20)
+    if current_user.openbook? || policy(Problem.new).show?
+      authorize Problem.find(params[:by_problem]), :show? unless params[:by_problem].nil?
+      @submissions = apply_scopes(Submission)
     else # only allowed to see contest submissions
-      @submissions = Submission.joins(:contest_scores => :contest_relations).where{
-        (user_id == my{current_user.id}) & 
-        (contest_scores.contest_relations.started_at <= DateTime.now) &
-        (contest_scores.contest_relations.finish_at > DateTime.now)
-      }.paginate(:order => "created_at DESC", :page => params[:page], :per_page => 20)
+      @submissions = policy_scope(Submission)
     end
-
+    @submissions = @submissions.paginate(:order => "created_at DESC", :page => params[:page], :per_page => 20)
     # TODO: fix submission permissions
 
     respond_to do |format|

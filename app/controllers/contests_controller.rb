@@ -25,7 +25,7 @@ class ContestsController < ApplicationController
   end
 
   def browse
-    authorize Contest.new, :index?
+    authorize Contest, :index?
     groups_contests = Contest.joins(:groups => :members).where{(groups.id == 0) | (groups.members.id == my{current_user.id})}.distinct
     case params[:filter].to_s
     when 'active'
