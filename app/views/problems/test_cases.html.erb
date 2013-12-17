@@ -1,10 +1,10 @@
 <p>
 <%= form_tag( import_problem_path(@problem), :multipart => true) do %>
-  <%= radio_button_tag(:upload, "merge", :checked => 'yes') %>
-  <%= label_tag(:upload_merge, "Merge with existing test cases") %><br />
-  <span style="margin-left: 8em;">or</span><br />
-  <%= radio_button_tag(:upload, "replace") %>
+  <%= radio_button_tag(:upload, "replace", :checked => 'yes') %>
   <%= label_tag(:upload_replace, "Replace existing test cases with upload") %><br />
+  <span style="margin-left: 8em;">or</span><br />
+  <%= radio_button_tag(:upload, "merge") %>
+  <%= label_tag(:upload_merge, "Merge with existing test cases") %><br />
 
   <%= label_tag(:importer) %>
   <%= select_tag(:importer, options_for_select(Problems::TestCaseImportOptions)) %><br />
@@ -35,7 +35,7 @@
   <tr><th>Name</th><th>Points</th><th>Cases</th></tr>
 <% @problem.test_sets.each do |set| %>
   <tr>
-    <td><%= set.name %></td>
+    <td><%= set.name %><%= " (prerequisite)" if set.prerequisite? %></td>
     <td><%= set.points %></td>
     <td><%= set.test_cases.pluck(:name).to_json %></td>
   </tr>

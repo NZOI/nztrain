@@ -1,20 +1,19 @@
 # Specification for "<%= problem.title %>"
 # 
+# samples: array of test cases which are published in the problem statement
+# prerequisites: array of test sets which must be correct before scoring any points
 # test_set:
 #   points: number of points allocated (relative to all other sets)
-#   visibility: (optional, default=private)
-#     public: displayed as a sample test case, but feedback may be hidden
-#     sample: equivalent to public + prerequisite
-#     prerequisite: a prerequisite for scoring any points - feedback always given
-#     private: feedback may be hidden in contests
 #   test_cases: array of test case names
 # 
 # Example:
 #
 # # specification.yaml
+# samples: [ case1 ]
+# prerequisites: [ set1name ]
 # test_sets:
-#   set1name: { points: 1, visibility: sample,  test_cases: [ case1 ] }
-#   set2name: { points: 1, visibility: private, test_cases: [ case1, case2 ] }
+#   set1name: { points: 1, test_cases: [ case1 ] }
+#   set2name: { points: 1, test_cases: [ case1, case2 ] }
 #
 # problem.zip
 # ├── inputs/
@@ -25,11 +24,16 @@
 # │   └── case2.txt
 # └── specification.yaml
 
+# names of sample test cases
+<% delim = (problem.sample_cases.count < 5) ? ['[','','',', ',']'] : ["\n",' - ','',"\n","\n"] -%>
+samples: <%= raw delim[0] + problem.sample_cases.pluck(:name).map{ |name| "#{delim[1]}#{y(name)}#{delim[2]}" }.join(delim[3]) + delim[4] %>
+# names of prerequisite test sets
+<% delim = (problem.prerequisite_sets.count < 5) ? ['[','','',', ',']'] : ["\n",' - ','',"\n","\n"] -%>
+prerequisites: <%= raw delim[0] + problem.prerequisite_sets.pluck(:name).map{ |name| "#{delim[1]}#{y(name)}#{delim[2]}" }.join(delim[3]) + delim[4] %>
 test_sets:
 <% problem.test_sets.each do |set| %>
   <%= raw y set.name %>:
     points: <%= set.points %>
-<%= "    visibility: #{TestSet::VISIBILITY[set.visibility]}\n" if set.visibility != TestSet::VISIBILITY[:private] -%>
     test_cases: [<%= raw set.test_cases.map{ |kase| y kase.name }.join(",") %>]
 <% end %>
 

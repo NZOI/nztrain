@@ -133,7 +133,7 @@ class ProblemsController < ApplicationController
         redirect_to(test_cases_problem_path(@problem), :alert => 'No test cases or test sets detected.')
       end
     rescue StandardError => e
-      redirect_to(test_cases_problem_path(@problem), :alert => 'An error has occurred - was the right importer selected?')
+      redirect_to(test_cases_problem_path(@problem), :alert => "An error has occurred - was the right importer selected?")
     end
   end
 

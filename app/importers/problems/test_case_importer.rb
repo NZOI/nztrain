@@ -21,6 +21,20 @@ module Problems
     protected
     def import_specification(spec)
       import_sets(spec['test_sets'] || {})
+      import_prerequisites(spec['prerequisites']) if spec.has_key?('prerequisites')
+      import_samples(spec['samples']) if spec.has_key?('samples')
+    end
+
+    def import_prerequisites(set_names)
+      problem.test_sets.each do |set|
+        set.update_attributes(:prerequisite => set_names.include?(set.name))
+      end
+    end
+
+    def import_samples(case_names)
+      problem.test_cases.each do |kase|
+        kase.update_attributes(:sample => case_names.include?(kase.name))
+      end
     end
 
     def import_files
@@ -62,20 +76,19 @@ module Problems
     end
 
     def import_sets(setdata)
-      setmap = Hash[problem.test_sets.select([:id, :name]).map{ |set| [set.name, set] }]
       setdata.each do |name, attributes|
         setopts = {}
         setopts[:points] = attributes.fetch('points', 1)
-        setopts[:visibility] = attributes.fetch('visibility', :private)
-        cases = attributes['test_cases'] || []
-        if cases.is_a?(Array)
-          setopts[:test_cases] = cases.map{ |name| casemap[name] }
-          raise "Undefined test case referenced by test set" unless setopts[:test_cases].select{ |kase| kase.nil? }.empty?
-        end
         if setmap.has_key?(name)
           setmap[name].update_attributes(setopts)
         else
-          problem.test_sets << TestSet.new(setopts.merge(:name => name))
+          setmap[name] = TestSet.new(setopts.merge(:name => name))
+          problem.test_sets << setmap[name]
+        end
+        cases = attributes['test_cases'] || []
+        if cases.is_a?(Array)
+          raise "Undefined test case referenced by test set" unless cases.map{ |name| casemap[name] }.select{ |kase| kase.nil? }.empty?
+          setmap[name].test_cases = cases.map{ |name| casemap[name] }
         end
       end
     end

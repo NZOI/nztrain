@@ -2,8 +2,7 @@
   <%= markdown_parse(@problem.statement) %>
 </div>
 <ul class="samples">
-  <% public_cases = @problem.test_cases.where( :id => @problem.test_sets.joins(:test_case_relations).where( :visibility => [TestSet::VISIBILITY[:public], TestSet::VISIBILITY[:sample]] ).select(:test_case_relations => :test_case_id)).order(:id) %>
-  <% public_cases.each_with_index do |kayse, index| %>
+  <% @problem.sample_cases.each_with_index do |kayse, index| %>
     <li>
       <div class="input">
         <h3>Sample Input <%= index+1 %></h3>

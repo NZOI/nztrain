@@ -1,7 +1,6 @@
 module Problems
   class FlatCaseImporter < BaseImporter
     def import(path, options = {})
-      setmap = {}
       dir.foreach(path) do |entry|
         setname = nil
         outputname = case entry
@@ -27,15 +26,14 @@ module Problems
           if casemap.has_key?(name)
             casemap[name].update_attributes(caseopts)
           else
+            caseopts.merge!(:sample => true) if name =~ /\.(dummy|sample)(\.|\z)/
             kase = TestCase.new(caseopts.merge(:name => name))
             problem.test_cases << kase
             if setmap.has_key?(setname)
               set = setmap[setname]
             else
               setopts = {:name => setname, :points => 1}
-              if setname =~ /\.(dummy|sample)(\.|\z)/
-                setopts.merge!(:points => 0, :visibility => :sample)
-              end
+              setopts.merge!(:points => 0, :prerequisite => true) if setname =~ /\.(dummy|sample)(\.|\z)/
               set = setmap[setname] = TestSet.new(setopts)
               problem.test_sets << set
             end
