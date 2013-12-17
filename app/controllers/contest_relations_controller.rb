@@ -1,5 +1,5 @@
 class ContestRelationsController < ApplicationController
-  filter_resource_access
+  #filter_resource_access
 
   def permitted_params
     @_permitted_params ||= begin
