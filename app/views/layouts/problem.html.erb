@@ -23,7 +23,7 @@
     menu.item :statement, "problem statement", problem_path(@problem)
     menu.item :submit, "submit", submit_problem_path(@problem), :highlights_on => :subpath if policy(@problem).submit?
     menu.item :submissions, "submissions", submissions_problem_path(@problem)
-    menu.item :test_cases, "test cases", test_cases_problem_path(@problem) if policy(@problem).inspect?
+    menu.item :test_cases, "test cases", problem_test_cases_path(@problem) if policy(@problem).inspect?
 #  end.render
   end
   %>

@@ -1,0 +1,55 @@
+<p>
+<%= form_tag( import_problem_path(@problem), :multipart => true) do %>
+  <%= radio_button_tag(:upload, "replace", :checked => 'yes') %>
+  <%= label_tag(:upload_replace, "Replace existing test cases with upload") %><br />
+  <span style="margin-left: 8em;">or</span><br />
+  <%= radio_button_tag(:upload, "merge") %>
+  <%= label_tag(:upload_merge, "Merge with existing test cases") %><br />
+
+  <%= label_tag(:importer) %>
+  <%= select_tag(:importer, options_for_select(Problems::TestCaseImportOptions)) %><br />
+
+  <%= file_field_tag 'import_file', :id => "file-form"%>
+  <%= submit_tag 'Upload zipped test cases' %>
+<% end %>
+</p>
+
+<%= link_to 'Download test cases', export_problem_path(@problem) %>
+<br>
+<br>
+
+<h2>Test Cases</h2>
+<%= form_tag problem_test_cases_path(@problem), method: :patch do %>
+  <table style="width: 100%; table-layout: fixed;">
+    <tr><th style="width: 20%">Name</th><%= "<th style=\"width: 50px\">Sample?</th>".html_safe if policy(@problem).update? %><th>Input</th><th>Output</th></tr>
+    <% @problem.test_cases.each do |kayse| %>
+      <tr>
+        <td><%= kayse.name %></td>
+        <td><%= policy(@problem).update? ? check_box("test_cases[#{kayse.id}]","sample", checked: kayse.sample?) : (kayse.sample? ? "Yes" : "No")%></td>
+        <td><%= predisplay kayse.input.slice(0...200).split("\n").take(10).join("\n") %></td>
+        <td><%= predisplay kayse.output.slice(0...200).split("\n").take(10).join("\n") %></td>
+      </tr>
+    <% end %>
+  </table>
+  <% if policy(@problem).update? %>
+    <%= submit_tag 'Update' %>
+  <% end %>
+<% end %>
+<br>
+<h2>Test Sets</h2>
+<%= form_tag problem_test_cases_path(@problem), method: :patch do %>
+  <table style="width: 100%;">
+    <tr><th>Name</th><th>Prerequisite?</th><th>Points</th><th>Cases</th></tr>
+    <% @problem.test_sets.each do |set| %>
+      <tr>
+        <td><%= set.name %></td>
+        <td><%= policy(@problem).update? ? check_box("test_sets[#{set.id}]","prerequisite", checked: set.prerequisite?) : (set.prerequisite? ? "Yes" : "No") %></td>
+        <td><%= set.points %></td>
+        <td><%= set.test_cases.pluck(:name).to_json %></td>
+      </tr>
+    <% end %>
+  </table>
+  <% if policy(@problem).update? %>
+    <%= submit_tag 'Update' %>
+  <% end %>
+<% end %>
