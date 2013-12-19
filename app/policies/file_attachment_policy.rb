@@ -4,6 +4,8 @@ class FileAttachmentPolicy < ApplicationPolicy
     def resolve
       if user.is_staff?
         scope.all
+      elsif user.is_organiser?
+        scope.where(:owner_id => user.id)
       else
         scope.none
       end
@@ -15,7 +17,7 @@ class FileAttachmentPolicy < ApplicationPolicy
   end
 
   def manage?
-    super or user.is_staff? && (record == FileAttachment || user.owns(record))
+    super or user.is_organiser? && (record == FileAttachment || user.owns(record))
   end
 
   def show?
