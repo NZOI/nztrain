@@ -1,4 +1,13 @@
 NZTrain::Application.routes.draw do
+  concern :file_root do |options|
+    options ||= {}
+    resources :files, options.merge(:except => [:new, :edit]) do
+      collection do
+        get 'download/*filepath', action: :show, as: :download
+      end
+    end
+  end
+
   root :to => "home#home"
 
   require 'qless/server'
@@ -83,7 +92,7 @@ NZTrain::Application.routes.draw do
     resources :test_cases, :module => :problems, :only => [:index] do
       patch '', action: :update, on: :collection
     end
-    resources :files, :module => :problems, :except => [:new, :edit]
+    concerns :file_root, :module => :problems
   end
 
   resources :problem_sets do
@@ -168,7 +177,7 @@ NZTrain::Application.routes.draw do
       put 'remove_problem_set'
       put 'remove_contest'
     end
-    resources :files, :module => :groups, :except => [:new, :edit]
+    concerns :file_root, :module => :groups
   end
 
   resources :file_attachments do

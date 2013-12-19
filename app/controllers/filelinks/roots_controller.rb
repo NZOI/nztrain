@@ -1,6 +1,6 @@
 class Filelinks::RootsController < ApplicationController
   private
-  helper_method :model, :index_path, :show_path
+  helper_method :model, :index_path, :show_path, :download_path
 
   def model
     instance_variable_get :"@#{root_name}"
@@ -20,6 +20,10 @@ class Filelinks::RootsController < ApplicationController
 
   def show_path(filelink)
     send("#{root_name}_file_path", model, filelink)
+  end
+
+  def download_path(filelink)
+    send("download_#{root_name}_files_path", model, filelink.filepath)
   end
 
   def filelink_params
@@ -47,7 +51,12 @@ class Filelinks::RootsController < ApplicationController
   def show
     self.model = load_model
     authorize model, :access?
-    @filelink = model.filelinks.find(params[:id])
+    if params[:id]
+      @filelink = model.filelinks.find(params[:id])
+    else
+      filepath = [params[:filepath], params[:format]].compact.join('.')
+      @filelink = model.filelinks.find_by_filepath(filepath)
+    end
     send_file FileAttachmentUploader.root + @filelink.file_attachment_url, :filename => File.basename(@filelink.filepath), :disposition => 'inline'
   end
 

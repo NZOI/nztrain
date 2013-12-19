@@ -31,7 +31,7 @@
     <% @filelinks.each do |filelink| %>
       <tr>
         <td><%= File.dirname(filelink.filepath) %></td>
-        <td><%= link_to File.basename(filelink.filepath), show_path(filelink) %></td>
+        <td><%= link_to File.basename(filelink.filepath), download_path(filelink) %></td>
         <% if policy(model).update? %>
           <td>
             <%= form_for filelink, :url => show_path(filelink) do |f| %>
