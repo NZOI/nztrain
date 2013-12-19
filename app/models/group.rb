@@ -18,7 +18,7 @@ class Group < ActiveRecord::Base
   #, -> { where :verb => :invite, :target_type => :users }
   #has_many :invitees, :through => :invitations, :source => :target, :source_type => 'User', :conditions => { :status => Request::STATUS[:pending] } # TODO: expired_at condition
 
-  has_many :file_attachments, :class_name => GroupFileAttachment, :dependent => :destroy, :include => :file_attachment
+  has_many :filelinks, :as => :root, :dependent => :destroy, :include => :file_attachment
 
   # Scopes
   scope :distinct, -> { select("distinct(groups.id), groups.*") }

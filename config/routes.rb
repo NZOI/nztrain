@@ -83,7 +83,7 @@ NZTrain::Application.routes.draw do
     resources :test_cases, :module => :problems, :only => [:index] do
       patch '', action: :update, on: :collection
     end
-    #resources :files, :module => :groups, :except => [:new, :edit]
+    resources :files, :module => :problems, :except => [:new, :edit]
   end
 
   resources :problem_sets do

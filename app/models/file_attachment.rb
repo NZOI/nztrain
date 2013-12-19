@@ -3,8 +3,7 @@ class FileAttachment < ActiveRecord::Base
 
   belongs_to :owner, :class_name => :User
 
-  has_many :group_file_attachments
-  has_many :problem_file_attachments
+  has_many :filelinks, :dependent => :destroy
 
   mount_uploader :file_attachment, FileAttachmentUploader
 

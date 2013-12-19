@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131219035927) do
+ActiveRecord::Schema.define(version: 20131219083253) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -119,15 +119,16 @@ ActiveRecord::Schema.define(version: 20131219035927) do
     t.datetime "updated_at",      null: false
   end
 
-  create_table "group_file_attachments", force: true do |t|
-    t.integer  "group_id"
+  create_table "filelinks", force: true do |t|
+    t.integer  "root_id"
     t.integer  "file_attachment_id"
     t.datetime "created_at"
     t.string   "filepath"
+    t.string   "root_type"
   end
 
-  add_index "group_file_attachments", ["file_attachment_id"], name: "index_group_file_attachments_on_file_attachment_id", using: :btree
-  add_index "group_file_attachments", ["group_id", "filepath"], name: "index_group_file_attachments_on_group_id_and_filepath", using: :btree
+  add_index "filelinks", ["file_attachment_id"], name: "index_filelinks_on_file_attachment_id", using: :btree
+  add_index "filelinks", ["root_id", "filepath"], name: "index_filelinks_on_root_id_and_filepath", using: :btree
 
   create_table "group_memberships", force: true do |t|
     t.integer  "group_id"
@@ -174,11 +175,6 @@ ActiveRecord::Schema.define(version: 20131219035927) do
   end
 
   add_index "languages", ["identifier"], name: "index_languages_on_identifier", unique: true, using: :btree
-
-  create_table "problem_file_attachments", force: true do |t|
-    t.integer "problem_id"
-    t.integer "file_attachment_id"
-  end
 
   create_table "problem_sets", force: true do |t|
     t.string   "title"

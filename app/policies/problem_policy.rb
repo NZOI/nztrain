@@ -31,6 +31,10 @@ class ProblemPolicy < ApplicationPolicy
     user.owns(record) or record.groups.where(:id => 0).exists? or record.group_memberships.where{|membership|(membership.member_id == user.id)}.exists?
   end
 
+  def access?
+    show?
+  end
+
   def submit?
     show?
   end

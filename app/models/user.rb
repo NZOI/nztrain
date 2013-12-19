@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :roles
 
   #has_many :group_invitations, :class_name => :Request, :as => :target, :conditions => { :verb => 'invite', :subject_type => 'Group' }
-  has_many :requests, -> { where requestee_id: :target_id }, :class_name => :Request, :as => :target
+  has_many :requests, -> { where requestee_id: :target_id }, :class_name => Request, :as => :target
 
   # Scopes
 
