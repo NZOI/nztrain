@@ -34,6 +34,7 @@ gem 'facebox-rails'
 gem 'strong_presenter', '~> 0.2.2'
 gem 'render_anywhere'
 gem 'pygments.rb'
+gem 'ranked-model', :github => 'mixonic/ranked-model'
 
 gem 'pg'
 gem 'backup'

@@ -7,6 +7,13 @@ GIT
       terminal-table (>= 1.4.5)
 
 GIT
+  remote: git://github.com/mixonic/ranked-model.git
+  revision: 2053ecf78ce22ba8fcfe919de9f3fa0630596eba
+  specs:
+    ranked-model (0.3)
+      activerecord (>= 3.1.12)
+
+GIT
   remote: git://github.com/ronalchn/qless.git
   revision: 930b3f30f93d1df2b2916c40eef9ad8dee96f8cc
   branch: nztrain
@@ -306,6 +313,7 @@ DEPENDENCIES
   qless!
   rails (~> 4.0.0)
   rails4_upgrade!
+  ranked-model!
   recaptcha
   redcarpet
   redis

@@ -11,6 +11,9 @@ class TestCase < ActiveRecord::Base
 
   scope :distinct, -> { select("distinct(test_cases.id), test_cases.*") }
 
+  include RankedModel
+  ranks :problem_order, with_same: :problem_id
+
   def problem
     self.test_set.problem
   end

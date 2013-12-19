@@ -2,10 +2,10 @@ class Problem < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
   has_and_belongs_to_many :problem_sets
-  has_many :test_sets, :dependent => :destroy
-  has_many :prerequisite_sets, -> { where(:prerequisite => true) }, :class_name => TestSet
-  has_many :test_cases, :dependent => :destroy
-  has_many :sample_cases, -> { where(:sample => true).order(:id) }, :class_name => TestCase
+  has_many :test_sets, -> { rank(:problem_order) } , :dependent => :destroy
+  has_many :prerequisite_sets, -> { where(:prerequisite => true).rank(:problem_order) }, :class_name => TestSet
+  has_many :test_cases, -> { rank(:problem_order) }, :dependent => :destroy
+  has_many :sample_cases, -> { where(:sample => true).rank(:problem_order) }, :class_name => TestCase
   has_many :submissions, :dependent => :destroy
   belongs_to :owner, :class_name => :User
   belongs_to :evaluator

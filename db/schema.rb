@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131217112526) do
+ActiveRecord::Schema.define(version: 20131219035927) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -281,7 +281,8 @@ ActiveRecord::Schema.define(version: 20131217112526) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "problem_id"
-    t.boolean  "sample",     default: false
+    t.boolean  "sample",        default: false
+    t.integer  "problem_order"
   end
 
   add_index "test_cases", ["problem_id", "name"], name: "index_test_cases_on_problem_id_and_name", unique: true, using: :btree
@@ -292,7 +293,8 @@ ActiveRecord::Schema.define(version: 20131217112526) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "prerequisite", default: false
+    t.boolean  "prerequisite",  default: false
+    t.integer  "problem_order"
   end
 
   add_index "test_sets", ["problem_id", "name"], name: "index_test_sets_on_problem_id_and_name", unique: true, using: :btree
