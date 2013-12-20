@@ -3,9 +3,9 @@ class Group < ActiveRecord::Base
 
   has_many :memberships, class_name: GroupMembership, dependent: :destroy
   has_many :members, through: :memberships
-  has_many :problem_set_associations, class_name: GroupProblemSet, dependent: :destroy
+  has_many :problem_set_associations, class_name: GroupProblemSet, inverse_of: :group, dependent: :destroy
   has_many :problem_sets, through: :problem_set_associations
-  has_many :contest_associations, class_name: GroupContest, dependent: :destroy
+  has_many :contest_associations, class_name: GroupContest, inverse_of: :group, dependent: :destroy
   has_many :contests, through: :contest_associations
 
   belongs_to :owner, :class_name => :User

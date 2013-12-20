@@ -1,8 +1,8 @@
 class ProblemSetProblem < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
-  belongs_to :problem_set
-  belongs_to :problem
+  belongs_to :problem_set, inverse_of: :problem_associations
+  belongs_to :problem, inverse_of: :problem_set_associations
 
   validates_presence_of :problem_set, :problem
 

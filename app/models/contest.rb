@@ -6,7 +6,7 @@ class Contest < ActiveRecord::Base
   has_many :contest_relations, :dependent => :destroy
   has_many :contestants, :through => :contest_relations, :source => :user
 
-  has_many :group_associations, class_name: GroupContest, dependent: :destroy
+  has_many :group_associations, class_name: GroupContest, inverse_of: :contest, dependent: :destroy
   has_many :groups, through: :group_associations
   has_many :group_members, :through => :groups, :source => :users, :uniq => true
 

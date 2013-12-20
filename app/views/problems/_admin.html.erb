@@ -21,7 +21,7 @@
   <p>
   <%= form_tag(problem_problem_set_add_path, :method => :put) do %>
     <%= hidden_field_tag :problem_id, @problem.id %>
-    <%= collection_select :problem, :problem_set_ids, @problem_sets, :id, :title %>
+    <%= collection_select :problem, :problem_set_ids, @problem_sets, :id, :name %>
     <%= submit_tag 'Add to problem set' %>
   <% end %>
   </p>

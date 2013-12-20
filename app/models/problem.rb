@@ -1,7 +1,7 @@
 class Problem < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
-  has_many :problem_set_associations, class_name: ProblemSetProblem, dependent: :destroy
+  has_many :problem_set_associations, class_name: ProblemSetProblem, inverse_of: :problem, dependent: :destroy
   has_many :problem_sets, through: :problem_set_associations
 
   has_many :test_sets, -> { rank(:problem_order) } , :dependent => :destroy

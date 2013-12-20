@@ -17,7 +17,7 @@
   </div>
   <div class="field">
     <%= f.label :problem_set_id %><br />
-    <%= f.collection_select :problem_set_id, @problem_sets, :id, :title %>
+    <%= f.collection_select :problem_set_id, @problem_sets, :id, :name %>
   </div>
   <div class="field">
     <%= f.label :start_time %><br />
