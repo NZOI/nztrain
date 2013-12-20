@@ -1,0 +1,31 @@
+<h2>Editing Problem Sets</h2>
+
+<table class="main_table hoverable">
+  <thead>
+    <tr>
+      <th width="80%">Name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @problem_set_associations.each do |association| %>
+      <% problem_set = association.problem_set %>
+      <tr>
+        <%= form_for association, :url => group_problem_set_path(@group, association), :method => :patch do |f| %>
+          <td style="padding-top: 0; padding-bottom: 0;">
+            <%= f.radio_button :name_reset, true %><b><%= f.label 'name_reset_true', problem_set.name %></b> or <%= f.radio_button :name_reset, false, "data-radio-enable" => 'group_problem_set_name' %><%= text_field_tag "group_problem_set[name]", association.name %>
+            <%= f.submit "Update", :style => "margin: 0" %>
+          </td>
+          <td>
+            <span style="font-weight: normal; font-style: italic;">(<%= problem_set.problems.length %>&nbsp;problem<%= problem_set.problems.length==1?"":"s" %>)</span>
+          </td>
+        <% end %>
+        <td><%= link_to 'Show', problem_set if policy(problem_set).show? %></td>
+        <td><%= link_to 'Remove', group_problem_set_path(@group, association), :method => :delete, :data => { :confirm => 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+

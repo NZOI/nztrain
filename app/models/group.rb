@@ -1,10 +1,13 @@
 class Group < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
-  has_many :memberships, :class_name => :GroupMembership, :dependent => :destroy
-  has_many :members, :through => :memberships
-  has_and_belongs_to_many :problem_sets
-  has_and_belongs_to_many :contests
+  has_many :memberships, class_name: GroupMembership, dependent: :destroy
+  has_many :members, through: :memberships
+  has_many :problem_set_associations, class_name: GroupProblemSet, dependent: :destroy
+  has_many :problem_sets, through: :problem_set_associations
+  has_many :contest_associations, class_name: GroupContest, dependent: :destroy
+  has_many :contests, through: :contest_associations
+
   belongs_to :owner, :class_name => :User
 
   has_many :join_requests, :class_name => :Request, :as => :target, :conditions => { :subject_type => 'User', :verb => 'join' }

@@ -5,10 +5,12 @@ class Contest < ActiveRecord::Base
   has_many :problems, :through => :problem_set
   has_many :contest_relations, :dependent => :destroy
   has_many :contestants, :through => :contest_relations, :source => :user
-  belongs_to :owner, :class_name => :User
-  has_and_belongs_to_many :groups
 
+  has_many :group_associations, class_name: GroupContest, dependent: :destroy
+  has_many :groups, through: :group_associations
   has_many :group_members, :through => :groups, :source => :users, :uniq => true
+
+  belongs_to :owner, :class_name => :User
 
   before_save do # update the end time that was cached
     contest_relations.find_each do |relation|

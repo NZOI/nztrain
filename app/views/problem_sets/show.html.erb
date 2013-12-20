@@ -1,24 +1,33 @@
-<% content_for :title, @problem_set.title %>
-<table width="100%">
-  <tr>
-    <th>Title</th>
-    <th></th>
-    <% if policy(Problem).update? %>
-      <th></th>
-    <% end %>
-    <% if policy(@problem_set).update? %>
-      <th></th>
-    <% end %>
-  </tr>
-  <% @problem_set.problems.each do |problem| %>
+<% content_for :title, @problem_set.name %>
+<table class="main_table hoverable">
+  <thead>
     <tr>
-      <td><%= problem.title %></td>
+      <th width="50%">Title</th>
+      <th></th>
+      <% if policy(Problem).update? %>
+        <th></th>
+      <% end %>
+      <% if policy(@problem_set).update? %>
+        <th></th>
+        <th></th>
+      <% end %>
+    </tr>
+  </thead>
+  <% @problem_set.problem_associations.each do |association| %>
+    <% problem = association.problem %>
+    <tr>
+      <td><%= problem.name %></td>
       <td><%= link_to 'Show', problem %></td>
       <% if policy(Problem).update? %>
         <td><%= link_to 'Edit', edit_problem_path(problem) if policy(problem).update? %></td>
       <% end %>
       <% if policy(@problem_set).update? %>
         <td><%= link_to 'Remove', remove_problem_problem_set_path(@problem_set, :problem_id => problem.id), :method => "put" %></td>
+        <td>
+          <%= %i{first up down last}.map do |move| %>
+            <% link_to move.to_s.humanize, problem_set_path(@problem_set, "problem_set[problem_associations_attributes][0][id]" => association.id, "problem_set[problem_associations_attributes][0][problem_set_order_position]" => move), method: :patch %>
+          <% end.join(' | ').html_safe %>
+        </td>
       <% end %>
     </tr>
   <% end %>

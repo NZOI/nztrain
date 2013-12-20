@@ -1,4 +1,4 @@
-<% content_for :title, @contest.title %>
+<% content_for :title, @contest.name %>
 <%= toolbox_push :edit, edit_contest_path(@contest) if policy(@contest).update? %>
 <%= toolbox_push :delete, @contest if policy(@contest).destroy? %>
 

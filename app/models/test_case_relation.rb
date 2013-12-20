@@ -1,5 +1,5 @@
 class TestCaseRelation < ActiveRecord::Base
-  # attr_accessible :title, :body
+  # attr_accessible :name, :body
 
   include ActiveModel::ForbiddenAttributesProtection
 

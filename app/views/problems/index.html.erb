@@ -1,7 +1,7 @@
 <% content_for :title, "Problems" %>
 <% toolbox_push :new, new_problem_path if policy(Problem).create? %>
 
-<% columns = {:linked_title => "Title",
+<% columns = {:linked_name => "Title",
               :input => "Input",
               :output => "Output",
                :memory_limit => "Memory Limt",

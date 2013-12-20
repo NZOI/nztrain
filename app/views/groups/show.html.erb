@@ -1,3 +1,7 @@
+<% if policy(@group).update? %>
+  <%= link_to "Edit problem sets", edit_group_problem_sets_path(@group) %>
+  <br>
+  <br>
+<% end %>
 
-<%= render "problem_sets/index" %>
-
+<%= render 'problem_sets' %>

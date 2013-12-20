@@ -174,10 +174,12 @@ NZTrain::Application.routes.draw do
         end
       end
 
-      put 'remove_problem_set'
       put 'remove_contest'
     end
     concerns :file_root, :module => :groups
+    resources :problem_sets, :module => :groups, :only => [:show, :update, :destroy] do
+      get 'edit', on: :collection
+    end
   end
 
   resources :file_attachments do

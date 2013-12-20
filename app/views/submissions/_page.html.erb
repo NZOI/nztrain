@@ -47,7 +47,7 @@
         <td><% if submission.user %><%= handle(submission.user) %><% end %></td>
       <% end %>
       <% if params[:by_problem].nil? %>
-        <td><%= submission.problem.title %></td>
+        <td><%= submission.problem.name %></td>
       <% end %>
       <td><%= link_to 'Show', submission %></td>
       <% if policy(submission).update? %>

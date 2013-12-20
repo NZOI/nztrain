@@ -1,4 +1,4 @@
-<% content_for :title, @problem.title %>
+<% content_for :title, @problem.name %>
 <%= toolbox_push :edit, edit_problem_path(@problem) if policy(@problem).edit? %> 
 <%= toolbox_push :delete, @problem if policy(@problem).destroy? %> 
 

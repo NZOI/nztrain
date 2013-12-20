@@ -12,7 +12,7 @@
 
   <% @problems.each do |problem| %>
     <tr>
-      <td> <%= link_to problem.title, problem_path(problem) %> </td>
+      <td> <%= link_to problem.name, problem_path(problem) %> </td>
       <td> <%= @contest.problem_score(current_user, problem) %> </td>
       <td> <%= @contest.num_solved(problem) %> </td>
     </tr>

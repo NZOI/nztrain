@@ -9,7 +9,7 @@
 <% end %>
 <% if params[:by_problem] && !params[:by_problem].nil?
      p = Problem.find(params[:by_problem]) %>
-  <p><b>Problem:</b> <%= link_to p.title, p %></p>
+  <p><b>Problem:</b> <%= link_to p.name, p %></p>
 <% end %>
 <%= render "page" %>
 <% # :reload => '[{"urlregex":"page=([0-9]+)","regexindex":1},{"query":"page"}]' # :reload => [{:urlregex => "page=([0-9]+)", :regexindex => 1},{:query => "page"}] %>

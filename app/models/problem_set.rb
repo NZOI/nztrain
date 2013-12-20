@@ -1,13 +1,18 @@
 class ProblemSet < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
-  has_and_belongs_to_many :problems
+  has_many :problem_associations, -> { rank(:problem_set_order) }, class_name: ProblemSetProblem, dependent: :destroy
+  has_many :problems, through: :problem_associations
+  has_many :group_associations, class_name: GroupProblemSet, dependent: :destroy
+  has_many :groups, through: :group_associations
+  has_many :group_members, :through => :groups, :source => :users, :uniq => true
+
   has_many :contests
-  has_and_belongs_to_many :groups
+  has_many :contest_relations, :through => :contests, :source => :contest_relations
+
   belongs_to :owner, :class_name => :User
 
-  has_many :contest_relations, :through => :contests, :source => :contest_relations
-  has_many :group_members, :through => :groups, :source => :users, :uniq => true
+  accepts_nested_attributes_for :problem_associations
 
   # Scopes
   scope :distinct, -> { select("distinct(problem_sets.id), problem_sets.*") }

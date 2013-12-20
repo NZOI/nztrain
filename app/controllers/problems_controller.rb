@@ -2,7 +2,7 @@ class ProblemsController < ApplicationController
 
   def permitted_params
     @_permitted_attributes ||= begin
-      permitted_attributes = [:title, :statement, :input_type, :output_type, :memory_limit, :time_limit, :evaluator_id]
+      permitted_attributes = [:name, :statement, :input_type, :output_type, :memory_limit, :time_limit, :evaluator_id]
       permitted_attributes << :owner_id if policy(@problem || Problem).transfer?
       permitted_attributes << :input if params.require(:problem)[:input_type] == 'file'
       permitted_attributes << :output if params.require(:problem)[:output_type] == 'file'
@@ -23,7 +23,7 @@ class ProblemsController < ApplicationController
 
   def visible_attributes
     @_visible_attributes ||= begin
-      visible_attributes = [:linked_title, :input, :output, :memory_limit, :time_limit, :linked_owner, :progress_bar]
+      visible_attributes = [:linked_name, :input, :output, :memory_limit, :time_limit, :linked_owner, :progress_bar]
       visible_attributes << :edit_link if policy(@problem).update?
       visible_attributes << :destroy_link if policy(@problem).destroy?
       visible_attributes
@@ -140,7 +140,7 @@ class ProblemsController < ApplicationController
   def export
     @problem = Problem.find(params[:id])
     authorize @problem, :inspect?
-    name = @problem.title.gsub(/[\W]/,"")
+    name = @problem.name.gsub(/[\W]/,"")
     name = "testcases" if name.empty?
     filename = name + ".zip"
 

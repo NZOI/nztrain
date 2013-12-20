@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131219083253) do
+ActiveRecord::Schema.define(version: 20131220034551) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 20131219083253) do
   add_index "ai_contest_games", ["iteration", "ai_submission_1_id", "ai_submission_2_id"], name: "each_game", unique: true, using: :btree
 
   create_table "ai_contests", force: true do |t|
-    t.string   "title"
+    t.string   "name"
     t.datetime "start_time"
     t.datetime "end_time"
     t.integer  "owner_id"
@@ -85,7 +85,7 @@ ActiveRecord::Schema.define(version: 20131219083253) do
   add_index "contest_scores", ["contest_relation_id", "problem_id"], name: "index_contest_scores_on_contest_relation_id_and_problem_id", using: :btree
 
   create_table "contests", force: true do |t|
-    t.string   "title"
+    t.string   "name"
     t.datetime "start_time"
     t.datetime "end_time"
     t.decimal  "duration"
@@ -94,11 +94,6 @@ ActiveRecord::Schema.define(version: 20131219083253) do
     t.datetime "updated_at"
     t.integer  "problem_set_id"
     t.datetime "finalized_at"
-  end
-
-  create_table "contests_groups", id: false, force: true do |t|
-    t.integer "contest_id"
-    t.integer "group_id"
   end
 
   create_table "evaluators", force: true do |t|
@@ -130,11 +125,28 @@ ActiveRecord::Schema.define(version: 20131219083253) do
   add_index "filelinks", ["file_attachment_id"], name: "index_filelinks_on_file_attachment_id", using: :btree
   add_index "filelinks", ["root_id", "filepath"], name: "index_filelinks_on_root_id_and_filepath", using: :btree
 
+  create_table "group_contests", force: true do |t|
+    t.integer "group_id"
+    t.integer "contest_id"
+  end
+
+  add_index "group_contests", ["contest_id", "group_id"], name: "index_group_contests_on_contest_id_and_group_id", using: :btree
+  add_index "group_contests", ["group_id", "contest_id"], name: "index_group_contests_on_group_id_and_contest_id", using: :btree
+
   create_table "group_memberships", force: true do |t|
     t.integer  "group_id"
     t.integer  "member_id"
     t.datetime "created_at"
   end
+
+  create_table "group_problem_sets", force: true do |t|
+    t.integer "group_id"
+    t.integer "problem_set_id"
+    t.string  "name"
+  end
+
+  add_index "group_problem_sets", ["group_id", "problem_set_id"], name: "index_group_problem_sets_on_group_id_and_problem_set_id", using: :btree
+  add_index "group_problem_sets", ["problem_set_id", "group_id"], name: "index_group_problem_sets_on_problem_set_id_and_group_id", using: :btree
 
   create_table "groups", force: true do |t|
     t.string   "name"
@@ -143,11 +155,6 @@ ActiveRecord::Schema.define(version: 20131219083253) do
     t.integer  "owner_id"
     t.integer  "visibility", default: 0, null: false
     t.integer  "membership", default: 0, null: false
-  end
-
-  create_table "groups_problem_sets", id: false, force: true do |t|
-    t.integer "group_id"
-    t.integer "problem_set_id"
   end
 
   create_table "language_groups", force: true do |t|
@@ -176,20 +183,24 @@ ActiveRecord::Schema.define(version: 20131219083253) do
 
   add_index "languages", ["identifier"], name: "index_languages_on_identifier", unique: true, using: :btree
 
+  create_table "problem_set_problems", force: true do |t|
+    t.integer "problem_set_id"
+    t.integer "problem_id"
+    t.integer "problem_set_order"
+  end
+
+  add_index "problem_set_problems", ["problem_id", "problem_set_id"], name: "index_problem_set_problems_on_problem_id_and_problem_set_id", using: :btree
+  add_index "problem_set_problems", ["problem_set_id", "problem_id"], name: "index_problem_set_problems_on_problem_set_id_and_problem_id", using: :btree
+
   create_table "problem_sets", force: true do |t|
-    t.string   "title"
+    t.string   "name"
     t.integer  "owner_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "problem_sets_problems", id: false, force: true do |t|
-    t.integer "problem_set_id"
-    t.integer "problem_id"
-  end
-
   create_table "problems", force: true do |t|
-    t.string   "title"
+    t.string   "name"
     t.text     "statement"
     t.string   "input"
     t.string   "output"

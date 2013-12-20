@@ -1,7 +1,9 @@
 class Problem < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
-  has_and_belongs_to_many :problem_sets
+  has_many :problem_set_associations, class_name: ProblemSetProblem, dependent: :destroy
+  has_many :problem_sets, through: :problem_set_associations
+
   has_many :test_sets, -> { rank(:problem_order) } , :dependent => :destroy
   has_many :prerequisite_sets, -> { where(:prerequisite => true).rank(:problem_order) }, :class_name => TestSet
   has_many :test_cases, -> { rank(:problem_order) }, :dependent => :destroy
@@ -17,7 +19,7 @@ class Problem < ActiveRecord::Base
 
   has_many :filelinks, :as => :root, :dependent => :destroy, :include => :file_attachment
 
-  validates :title, :presence => true, :uniqueness => { :case_sensitive => false }
+  validates :name, :presence => true, :uniqueness => { :case_sensitive => false }
 
   before_save do
     self.input = 'data.in' if self.input == ''

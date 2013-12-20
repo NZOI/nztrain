@@ -1,6 +1,6 @@
 class ProblemPresenter < ApplicationPresenter
   presents :problem
-  delegate :title, to: :problem
+  delegate :name, to: :problem
 
   present_resource_links
   present_owner_link
@@ -9,8 +9,8 @@ class ProblemPresenter < ApplicationPresenter
     h.tag :img, :src => user.avatar_url
   end
 
-  def linked_title
-    h.link_to problem.title, problem
+  def linked_name
+    h.link_to problem.name, problem
   end
 
   def input

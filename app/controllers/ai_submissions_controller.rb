@@ -38,7 +38,7 @@ class AiSubmissionsController < ApplicationController
 
     def permitted_params
       @_permitted_params ||= begin
-        permitted_attributes = [:title, :start_time, :end_time, :statement, :judge, :sample_ai, :iterations, :iterations_preview]
+        permitted_attributes = [:name, :start_time, :end_time, :statement, :judge, :sample_ai, :iterations, :iterations_preview]
         permitted_attributes << :owner_id if permitted_to? :transfer, @contest
         params.require(:ai_contest).permit(*permitted_attributes)
       end

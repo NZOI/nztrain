@@ -9,30 +9,6 @@ class GroupsController < ApplicationController
     params.require(:group).permit(*@_permitted_attributes)
   end
 
-  #def new_group_from_params
-  #  @group = Group.new(:owner => current_user)
-  #end
-
-  #def add_problem_set # not currently used (setup like problem_problem_sets_controller method, other way is to setup like the add_contest method)
-  #  @group = Group.find(params[:problem_set][:group_ids])
-  #  permitted_to! :update, @group
-  #  problem_set = ProblemSet.find(params[:problem_set_id])
-  #  permitted_to! :use, problem_set # cannot add problem sets without use permission
-  #  if @group.problem_sets.exists?(problem_set)
-  #    redirect_to(problem, :alert => "This group already has access to this problem set")
-  #    return
-  #  end
-  #  @group.problem_sets.push(problem_set)
-  #  redirect_to(problem_set, :notice => "Problem set added.")
-  #end
-
-  #def remove_problem_set
-  #  permitted_to! :update, @group
-  #  problem_set = ProblemSet.find(params[:problem_set_id])
-  #  @group.problem_sets.delete(problem_set)
-  #  redirect_to(@group, :notice => "Problem set removed.")
-  #end
-
   def add_contest
     @group = Group.find(params[:contest][:group_ids])
     authorize @group, :update?
@@ -81,7 +57,7 @@ class GroupsController < ApplicationController
   def show
     @group = Group.find(params[:id])
     if policy(@group).access?
-      @problem_sets = @group.problem_sets
+      @problem_set_associations = @group.problem_set_associations
       render :layout => "group"
     else
       redirect_to info_group_path(@group)

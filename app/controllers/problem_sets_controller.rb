@@ -2,7 +2,7 @@ class ProblemSetsController < ApplicationController
 
   def permitted_params
     @_permitted_params ||= begin
-      permitted_attributes = [:title]
+      permitted_attributes = [:name, :problem_associations_attributes => [ :id, :problem_set_order_position ]]
       permitted_attributes << :owner_id if policy(@problem_set || ProblemSet).transfer?
       params.require(:problem_set).permit(*permitted_attributes)
     end
@@ -101,6 +101,7 @@ class ProblemSetsController < ApplicationController
   def update
     @problem_set = ProblemSet.find(params[:id])
     authorize @problem_set, :update?
+
     respond_to do |format|
       if @problem_set.update_attributes(permitted_params)
         format.html { redirect_to(@problem_set, :notice => 'Problem set was successfully updated.') }

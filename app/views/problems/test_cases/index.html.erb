@@ -57,7 +57,7 @@
           <td>
             <%= %i{first up down last}.map do |move| %>
               <% link_to move.to_s.humanize, problem_test_cases_path(@problem, "test_sets[#{set.id}][problem_order_position]" => move), method: :patch %>
-              <% end.join(' | ').html_safe %>
+            <% end.join(' | ').html_safe %>
           </td>
         <% end %>
       </tr>

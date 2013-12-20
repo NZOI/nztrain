@@ -1,7 +1,7 @@
 class ContestsController < ApplicationController
   def permitted_params
     @_permitted_params ||= begin
-      permitted_attributes = [:title, :start_time, :end_time, :duration, :problem_set_id]
+      permitted_attributes = [:name, :start_time, :end_time, :duration, :problem_set_id]
       permitted_attributes << :owner_id if policy(@contest || Contest).transfer?
       params.require(:contest).permit(*permitted_attributes)
     end
