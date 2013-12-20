@@ -7,7 +7,7 @@ module Problems
       importer = self.new(problem)
       # redirect to import zip etc if zip path etc
       
-      extension = options.fetch(:extension) { Array(path.match(/\.[[:alnum:]]+?\z/))[0] }
+      extension = options.fetch(:extension) { File.extname(path) }
       context = case extension
       when '.zip'; :enter_zip
       else; :enter_fs

@@ -34,6 +34,6 @@ test_sets:
 <% problem.test_sets.each do |set| %>
   <%= raw y set.name %>:
     points: <%= set.points %>
-    test_cases: [<%= raw set.test_cases.map{ |kase| y kase.name }.join(",") %>]
+    test_cases: [<%= raw set.test_cases.map{ |kase| y kase.name }.join(", ") %>]
 <% end %>
 

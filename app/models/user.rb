@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   mount_uploader :avatar, AvatarUploader
 
   validates :name, :length => {:maximum => 100, :minimum => 2}
-  validates :username, :length => { :in => 2..32 }, :format => { :with => /\A[[:alnum:]_](\.?[[:alnum:]_])*\z/, :message => "Only letters, numbers, underscores or non-adjacent dots allowed in username" }, :presence => true, :uniqueness => { :case_sensitive => false }
+  validates :username, :length => { :in => 2..32 }, :format => { :with => /\A\w(\.?\w)*\z/, :message => "Only letters, numbers, underscores or non-adjacent dots allowed in username" }, :presence => true, :uniqueness => { :case_sensitive => false }
   validates :avatar, :file_size => { :maximum => 40.kilobytes.to_i }
 
   before_save do

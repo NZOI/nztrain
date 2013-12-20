@@ -5,7 +5,7 @@ module Problems
     def self.export(problem, path, options = {})
       exporter = self.new(problem)
       # redirect to export zip etc if zip path etc
-      extension = Array(path.match(/\.[[:alnum:]]+?\z/))[0]
+      extension = File.extname(path)
       context = case extension
       when '.zip'; :enter_zip
       else; :enter_fs
