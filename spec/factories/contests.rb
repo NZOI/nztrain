@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :contest do
-    sequence(:title) {|n| "Contest #{n}" }
+    sequence(:name) {|n| "Contest #{n}" }
     start_time "2012-01-01 08:00:00"
     end_time "2012-01-01 18:00:00"
     finalized_at nil

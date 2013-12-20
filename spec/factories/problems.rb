@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :problem do
-    sequence(:title) {|n| "Problem #{n}" }
+    sequence(:name) {|n| "Problem #{n}" }
     statement "Do nothing"
     sequence(:input) {|n| "#{n}.in" }
     sequence(:output) {|n| "#{n}.out"}
@@ -10,7 +10,7 @@ FactoryGirl.define do
     time_limit 1
     owner_id 0
     factory :adding_problem do
-      sequence(:title) {|n| "Adding problem #{n}" }
+      sequence(:name) {|n| "Adding problem #{n}" }
       statement "Read two integers from input and output the sum."
       input "add.in"
       output "add.out"

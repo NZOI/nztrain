@@ -19,7 +19,7 @@ describe "Authorization" do
     @admin_problem = FactoryGirl.create(:problem, :owner => users(:admin))
     @everyone_problem = FactoryGirl.create(:problem, :problem_sets => [@everyone_set])
     @contest_set = FactoryGirl.create(:problem_set)
-    @contest = FactoryGirl.create(:contest, :title => "Contest", :groups => [@group], :problem_set => @contest_set, :duration => 100, :start_time => DateTime.now.advance(:hours => -100), :end_time => DateTime.now.advance(:hours => 100))
+    @contest = FactoryGirl.create(:contest, :name => "Contest", :groups => [@group], :problem_set => @contest_set, :duration => 100, :start_time => DateTime.now.advance(:hours => -100), :end_time => DateTime.now.advance(:hours => 100))
     @contest_problem = FactoryGirl.create(:problem, :problem_sets => [@contest_set])
     @private_set = FactoryGirl.create(:problem_set)
     @private_contest = FactoryGirl.create(:contest, :problem_set => @contest_set)

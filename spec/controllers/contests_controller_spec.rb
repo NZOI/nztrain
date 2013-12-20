@@ -16,8 +16,8 @@ describe ContestsController do
     can_index :contests
     can_index :contests, :params => { :filter => 'my' }
 
-    can_create :contest, :attributes => { :title => "A unique title", :start_time => "2012-01-01 08:00:00", :end_time => "2012-01-01 18:00:00", :duration => 5.0 }
-    can_manage :contest, :attributes => { :title => "A unique title", :start_time => "2012-01-01 08:00:00", :end_time => "2012-01-01 18:00:00", :duration => 5.0 }
+    can_create :contest, :attributes => { :name => "A unique title", :start_time => "2012-01-01 08:00:00", :end_time => "2012-01-01 18:00:00", :duration => 5.0 }
+    can_manage :contest, :attributes => { :name => "A unique title", :start_time => "2012-01-01 08:00:00", :end_time => "2012-01-01 18:00:00", :duration => 5.0 }
   end
 
   context "as an organiser" do

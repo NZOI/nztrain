@@ -13,8 +13,8 @@ describe ProblemSetsController do
       sign_in users(:admin)
     end
     can_index :problem_sets
-    can_create :problem_set, :attributes => { :title => "A unique title" }
-    can_manage :problem_set, :attributes => { :title => "A unique title" }
+    can_create :problem_set, :attributes => { :name => "A unique title" }
+    can_manage :problem_set, :attributes => { :name => "A unique title" }
   end
 
   context "as an organiser" do
