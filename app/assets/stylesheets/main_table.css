@@ -9,8 +9,13 @@ table.main_table td, table.main_table th {
   text-align:left;
 }
 
-table.centered_cells td, table.centered_cells th {
+tr.centered_cells td, tr.centered_cells th {
   text-align: center;
+}
+
+table.main_table td.tight {
+  padding: 0;
+  border: 0;
 }
 
 table.main_table > thead > tr {

@@ -1,10 +1,11 @@
 GIT
-  remote: git://github.com/alindeman/rails4_upgrade.git
-  revision: 6d71d4418891ef11243451481f28cbb3072c6019
+  remote: git://github.com/activerecord-hackery/squeel.git
+  revision: d37122201707ba7b2b882dea79b026b664b149b6
   specs:
-    rails4_upgrade (0.5.0)
-      bundler (>= 1.2.2)
-      terminal-table (>= 1.4.5)
+    squeel (1.1.1)
+      activerecord (>= 3.0)
+      activesupport (>= 3.0)
+      polyamorous (~> 0.6.0)
 
 GIT
   remote: git://github.com/mixonic/ranked-model.git
@@ -232,10 +233,6 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
-    squeel (1.1.1)
-      activerecord (>= 3.0)
-      activesupport (>= 3.0)
-      polyamorous (~> 0.6.0)
     strong_attributes (0.0.2)
       activesupport (>= 3.0)
     strong_presenter (0.2.2)
@@ -247,7 +244,6 @@ GEM
     superfish-rails (1.6.0.1)
     term-ansicolor (1.2.2)
       tins (~> 0.8)
-    terminal-table (1.4.5)
     therubyracer (0.12.0)
       libv8 (~> 3.16.14.0)
       ref
@@ -312,7 +308,6 @@ DEPENDENCIES
   pygments.rb
   qless!
   rails (~> 4.0.0)
-  rails4_upgrade!
   ranked-model!
   recaptcha
   redcarpet
@@ -328,7 +323,7 @@ DEPENDENCIES
   simple_form
   sinatra
   spring
-  squeel
+  squeel!
   strong_presenter (~> 0.2.2)
   superfish-rails
   therubyracer (~> 0.11)

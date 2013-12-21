@@ -30,10 +30,12 @@ module ApplicationHelper
   end
 
   def progress_bar(percent, link = nil, options = {})
-    options.reverse_merge!(width: '100px')
+    options.reverse_merge!(size: :standard)
+    options[:width] = options[:size]==:compact ? '30px' : '100px' unless options.has_key?(:width)
     unless percent.nil?
       percent = percent.to_i
-      text = percent.to_s + '%'
+      text = percent.to_s
+      text += '%' unless options[:size] == :compact
     else
       text = '-'
     end

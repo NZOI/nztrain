@@ -6,6 +6,7 @@ pre {
   font-family: Consolas, "Liberation Mono", Courier, monospace;
   white-space: pre-wrap;
   word-wrap: break-word;
+  word-break: break-all;
   counter-reset: line-numbering;
   position: relative;
   margin-left: 4.5ex;

@@ -2,7 +2,6 @@ source 'http://rubygems.org'
 
 gem 'devise', '~> 3.2.2'
 gem 'rails', '~> 4.0.0'
-gem 'rails4_upgrade', github: 'alindeman/rails4_upgrade'
 
 gem 'psych', '~> 2.0.2' # part of stdlib, need newer version for safe_load
 
@@ -26,7 +25,7 @@ gem 'pundit'
 gem 'recaptcha', :require => 'recaptcha/rails'
 gem 'loofah'
 gem 'whenever', :require => false # for cron jobs
-gem 'squeel' # (NEW GEM) use lightly - only using in ability.rb, until it is more established (Jan 2012)  ---------> supersedes meta_where
+gem 'squeel', :github => 'activerecord-hackery/squeel' # until version 1.1.2 released
 gem 'tilt'
 gem 'simple-navigation'
 gem 'simple_form'

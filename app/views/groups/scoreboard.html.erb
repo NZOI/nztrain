@@ -1,17 +1,17 @@
 
-<table class="main_table centered_cells">
+<table class="main_table">
   <thead>
-    <tr>
+    <tr class="centered_cells">
       <th rowspan="2">Member</th>
       <% @problem_set_associations.each do |association|%>
         <% problem_set = association.problem_set %>
-        <th colspan="<%= problem_set.problems.count %>"><%= association.name %></th>
+        <th colspan="<%= problem_set.problems.count*2 %>"><%= association.name %></th>
       <% end %>
     </tr>
-    <tr>
+    <tr class="centered_cells">
       <% @problem_set_associations.each do |association|%>
         <% association.problem_set.problems.each do |problem| %>
-          <th style="font-size: smaller;"><%= problem.name %></th>
+          <th colspan="2" style="font-size: smaller;padding:2px"><div style="overflow: hidden; width: 55px; word-wrap; break-word; word-break: break-all; max-height: 50px"><%= problem.name %></div></th>
         <% end %>
       <% end %>
     </tr>
@@ -23,9 +23,14 @@
         <% @problem_set_associations.each do |association|%>
           <% association.problem_set.problems.each do |problem| %>
             <% relation = @scores[member.id][problem.id] %>
-            <td>
+            <td class="tight">
               <% if relation.try(:last_viewed_at) %>
-                <%= progress_bar(relation.try(:submission).try(:score), relation.try(:submission), width: '40px') %> (<%= link_to((relation.try(:submissions_count) || 0), :controller => "submissions", :by_user => member, :by_problem => problem) %>)
+                <%= progress_bar(relation.try(:submission).try(:score), relation.try(:submission), size: :compact) %>
+              <% end %>
+            </td>
+            <td class="tight" style="text-align: right;padding-left:5px;padding-right:5px;">
+              <% if relation.try(:last_viewed_at) %>
+                (<%= link_to((relation.try(:submissions_count) || 0), :controller => "submissions", :by_user => member, :by_problem => problem) %>)
               <% end %>
             </td>
           <% end %>
