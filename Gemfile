@@ -25,7 +25,7 @@ gem 'pundit'
 gem 'recaptcha', :require => 'recaptcha/rails'
 gem 'loofah'
 gem 'whenever', :require => false # for cron jobs
-gem 'squeel', :github => 'activerecord-hackery/squeel' # until version 1.1.2 released
+gem 'squeel', '~> 1.1.1' # until version 1.1.2 released
 gem 'tilt'
 gem 'simple-navigation'
 gem 'simple_form'

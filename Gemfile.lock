@@ -1,13 +1,4 @@
 GIT
-  remote: git://github.com/activerecord-hackery/squeel.git
-  revision: d37122201707ba7b2b882dea79b026b664b149b6
-  specs:
-    squeel (1.1.1)
-      activerecord (>= 3.0)
-      activesupport (>= 3.0)
-      polyamorous (~> 0.6.0)
-
-GIT
   remote: git://github.com/mixonic/ranked-model.git
   revision: 2053ecf78ce22ba8fcfe919de9f3fa0630596eba
   specs:
@@ -233,6 +224,10 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
+    squeel (1.1.1)
+      activerecord (>= 3.0)
+      activesupport (>= 3.0)
+      polyamorous (~> 0.6.0)
     strong_attributes (0.0.2)
       activesupport (>= 3.0)
     strong_presenter (0.2.2)
@@ -323,7 +318,7 @@ DEPENDENCIES
   simple_form
   sinatra
   spring
-  squeel!
+  squeel (~> 1.1.1)
   strong_presenter (~> 0.2.2)
   superfish-rails
   therubyracer (~> 0.11)
