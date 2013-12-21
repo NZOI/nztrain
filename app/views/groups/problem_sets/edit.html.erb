@@ -3,7 +3,7 @@
 <table class="main_table hoverable">
   <thead>
     <tr>
-      <th width="80%">Name</th>
+      <th width="80%" colspan="4">Name</th>
       <th></th>
       <th></th>
       <th></th>
@@ -14,8 +14,14 @@
       <% problem_set = association.problem_set %>
       <tr>
         <%= form_for association, :url => group_problem_set_path(@group, association), :method => :patch do |f| %>
+          <td>
+            <%= f.radio_button :name_reset, true %><b><%= f.label 'name_reset_true', problem_set.name %></b>
+          </td>
+          <td>or</td>
           <td style="padding-top: 0; padding-bottom: 0;">
-            <%= f.radio_button :name_reset, true %><b><%= f.label 'name_reset_true', problem_set.name %></b> or <%= f.radio_button :name_reset, false, "data-radio-enable" => 'group_problem_set_name' %><%= text_field_tag "group_problem_set[name]", association.name %>
+            <%= f.radio_button :name_reset, false, "data-radio-enable" => 'group_problem_set_name' %> <%= text_field_tag "group_problem_set[name]", association.name, :style => "width: 80%" %>
+          </td>
+          <td style="padding-top: 0; padding-bottom: 0;">
             <%= f.submit "Update", :style => "margin: 0" %>
           </td>
           <td>

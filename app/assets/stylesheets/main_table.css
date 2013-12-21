@@ -4,6 +4,10 @@ table.main_table {
   width: 100%;
 }
 
+table.main_table td, table.main_table th {
+  vertical-align: middle;
+}
+
 table.main_table > thead > tr {
   background-color: #A1CCA1;
   border: 1px solid black;

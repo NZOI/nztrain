@@ -46,7 +46,7 @@ ul.tab_menu li a:hover {
 }
 
 .tab_box h1, .tab_box h2, .tab_box h3, .tab_box h4, .tab_box h5 {
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   margin-top: 5px;
   font-weight: bold;
   font-family: Helvetica, Arial;

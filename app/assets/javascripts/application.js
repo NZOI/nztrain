@@ -118,4 +118,5 @@ $(document).ready(function() {
         $(this).find(".submission_details_hider").slideDown();
     });
     $(".submission_details_hider").hide();
+    $("#main").focus();
 });
