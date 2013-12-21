@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131221014009) do
+ActiveRecord::Schema.define(version: 20131221101354) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -266,7 +266,7 @@ ActiveRecord::Schema.define(version: 20131221014009) do
     t.text     "judge_log"
     t.datetime "judged_at"
     t.string   "job"
-    t.integer  "classification", default: 0
+    t.integer  "classification"
   end
 
   add_index "submissions", ["problem_id", "created_at"], name: "index_submissions_on_problem_id_and_created_at", using: :btree
