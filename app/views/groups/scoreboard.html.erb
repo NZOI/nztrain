@@ -1,0 +1,37 @@
+
+<table class="main_table centered_cells">
+  <thead>
+    <tr>
+      <th rowspan="2">Member</th>
+      <% @problem_set_associations.each do |association|%>
+        <% problem_set = association.problem_set %>
+        <th colspan="<%= problem_set.problems.count %>"><%= association.name %></th>
+      <% end %>
+    </tr>
+    <tr>
+      <% @problem_set_associations.each do |association|%>
+        <% association.problem_set.problems.each do |problem| %>
+          <th style="font-size: smaller;"><%= problem.name %></th>
+        <% end %>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @members.each do |member| %>
+      <tr>
+        <td><%= member.username %></td>
+        <% @problem_set_associations.each do |association|%>
+          <% association.problem_set.problems.each do |problem| %>
+            <% relation = @scores[member.id][problem.id] %>
+            <td>
+              <% if relation.try(:last_viewed_at) %>
+                <%= progress_bar(relation.try(:submission).try(:score), relation.try(:submission), width: '40px') %> (<%= link_to((relation.try(:submissions_count) || 0), :controller => "submissions", :by_user => member, :by_problem => problem) %>)
+              <% end %>
+            </td>
+          <% end %>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+
+</table>

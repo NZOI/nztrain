@@ -38,6 +38,11 @@
 <%= @submission.user.username %>
 </p>
 
+<p>
+<b>Classification:</b>
+<%= Submission::CLASSIFICATION[@submission.classification].to_s.humanize %>
+</p>
+
 <% @judge_data = @submission.judge_data %>
 <table class="results">
   <% if @judge_data.compiled? %>

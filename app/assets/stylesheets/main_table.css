@@ -6,6 +6,11 @@ table.main_table {
 
 table.main_table td, table.main_table th {
   vertical-align: middle;
+  text-align:left;
+}
+
+table.centered_cells td, table.centered_cells th {
+  text-align: center;
 }
 
 table.main_table > thead > tr {
@@ -52,7 +57,6 @@ table.main_table > tbody > tr > td, table.main_table > thead > tr > th {
   padding-left: 10px;
   padding-right: 10px;
   padding-top: 2px;
-  text-align:left;
   border: 1px solid #DDD;
 }
 

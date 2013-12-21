@@ -5,11 +5,28 @@ class Submission < ActiveRecord::Base
   belongs_to :problem
   has_many :contest_scores
   belongs_to :language
+
+  def user_problem_relation
+    UserProblemRelation.where(:user_id => user_id, :problem_id => problem_id).first_or_create!
+  end
   
   validates :source, :presence => true
   validate do |submission|
     errors.add :language_id, "Invalid language specified" if submission.language.nil?
     errors.add :language_id, "Cannot use protected language" unless Language.submission_options.values.include?(submission.language_id)
+  end
+
+  # ranked: default - submission may be ranked
+  # unranked: default if user can inspect problem - every other submissions is also un-ranked
+  # model: a model solution which should score perfectly
+  # solution: an efficient alternative which should score perfectly
+  # inefficient: a solution which will timeout on 1 or more test cases, never be a wrong answer or partial score, and scores > 0
+  # partial: an efficient solution which scores at least partial marks for every test case
+  # incorrect: an efficient solution which will have at least 1 wrong answer (score 0 on at least 1 test case)
+  CLASSIFICATION = Enumeration.new 0 => :ranked, 1 => :unranked, 2 => :model, 3 => :solution, 4 => :inefficient, 5 => :partial, 6 => :incorrect
+
+  before_create do
+    self.classification = (SubmissionPolicy.new(self.user, self).inspect? ? CLASSIFICATION[:unranked] : CLASSIFICATION[:ranked]) if classification.nil?
   end
 
   after_save do
@@ -20,7 +37,16 @@ class Submission < ActiveRecord::Base
           ContestScore.find_or_initialize_by_contest_relation_id_and_problem_id(record.id,self.problem_id).recalculate_and_save
         end
       end
+      self.user_problem_relation.recalculate_and_save
     end
+  end
+
+  after_create do
+    self.user_problem_relation.increment!(:submissions_count)
+  end
+
+  after_destroy do
+    self.user_problem_relation.decrement!(:submissions_count)
   end
 
   def contests
@@ -30,6 +56,10 @@ class Submission < ActiveRecord::Base
 
   # scopes (lazy running SQL queries)
   scope :distinct, -> { select("distinct(submissions.id), submissions.*") }
+
+  def ranked?
+    classification == CLASSIFICATION[:ranked]
+  end
 
   def self.by_user(user_id)
     where("submissions.user_id IN (?)", user_id.to_s.split(','))

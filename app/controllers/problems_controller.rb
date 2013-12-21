@@ -55,6 +55,7 @@ class ProblemsController < ApplicationController
   def show
     @problem = Problem.find(params[:id])
     authorize @problem, :show?
+
     #TODO: restrict to problems that current user owns/manages
     @problem_sets = ProblemSet.all.select { |set| policy(set).use? } # TODO: fix to be more efficient
     @submissions = @problem.submission_history(current_user)
@@ -70,6 +71,8 @@ class ProblemsController < ApplicationController
     respond_to do |format|
       format.html { render :layout => "problem" }
     end
+
+    UserProblemRelation.where(:user_id => current_user.id, :problem_id => params[:id]).first_or_create!.view! unless in_su?
   end
 
   def submit

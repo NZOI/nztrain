@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131220034551) do
+ActiveRecord::Schema.define(version: 20131221014009) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -266,6 +266,7 @@ ActiveRecord::Schema.define(version: 20131220034551) do
     t.text     "judge_log"
     t.datetime "judged_at"
     t.string   "job"
+    t.integer  "classification", default: 0
   end
 
   add_index "submissions", ["problem_id", "created_at"], name: "index_submissions_on_problem_id_and_created_at", using: :btree
@@ -305,6 +306,22 @@ ActiveRecord::Schema.define(version: 20131220034551) do
   end
 
   add_index "test_sets", ["problem_id", "name"], name: "index_test_sets_on_problem_id_and_name", unique: true, using: :btree
+
+  create_table "user_problem_relations", force: true do |t|
+    t.integer  "problem_id"
+    t.integer  "user_id"
+    t.integer  "submissions_count"
+    t.integer  "ranked_score"
+    t.integer  "ranked_submission_id"
+    t.integer  "submission_id"
+    t.datetime "last_viewed_at"
+    t.datetime "first_viewed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_problem_relations", ["problem_id", "ranked_score"], name: "index_user_problem_relations_on_problem_id_and_ranked_score", using: :btree
+  add_index "user_problem_relations", ["user_id", "problem_id"], name: "index_user_problem_relations_on_user_id_and_problem_id", unique: true, using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                              default: "",    null: false

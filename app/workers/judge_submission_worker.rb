@@ -102,7 +102,7 @@ class JudgeSubmissionWorker < ApplicationWorker
       Isolate.box do |box|
         self.box = box
         yield
-      end
+      end or raise Isolate::LockError, "Error locking box"
     end
   end
 

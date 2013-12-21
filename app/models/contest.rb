@@ -78,4 +78,8 @@ class Contest < ActiveRecord::Base
     return self.contest_relations.size
   end
 
+  def finalized?
+    !!finalized_at
+  end
+
 end

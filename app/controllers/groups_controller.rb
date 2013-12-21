@@ -81,6 +81,25 @@ class GroupsController < ApplicationController
     end
   end
 
+  def scoreboard
+    @group = Group.find(params[:id])
+    authorize @group, :inspect?
+    @problem_set_associations = @group.problem_set_associations
+
+    problem_ids = ProblemSetProblem.where(:problem_set_id => GroupProblemSet.where(:group_id => @group.id).select(:problem_set_id)).select(:problem_id)
+    @members = @group.members
+
+    @scores = {}
+    @members.each { |member| @scores[member.id] ||= {} }
+    UserProblemRelation.where(:user_id => GroupMembership.where(:group_id => @group.id).select(:member_id), :problem_id => problem_ids).each do |relation|
+      @scores[relation.user_id][relation.problem_id] = relation
+    end
+
+    respond_to do |format|
+      format.html { render :layout => "group" }
+    end
+  end
+
   # GET /groups/new
   # GET /groups/new.xml
   def new

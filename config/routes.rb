@@ -155,6 +155,7 @@ NZTrain::Application.routes.draw do
     member do
       get 'contests'
       get 'info'
+      get 'scoreboard'
 
       scope path: :members, module: :groups, controller: :members do
         put 'join'

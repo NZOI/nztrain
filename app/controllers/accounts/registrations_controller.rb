@@ -14,5 +14,8 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def destroy
+    redirect_to root_path, :alert => "Sorry. This feature is disabled. Why? Because cleanup of database objects associated with a user is not implemented."
+  end
 end
 

@@ -24,6 +24,7 @@
     menu.item :files, "files", group_files_path(@group) if policy(@group).update? || (@group.filelinks.any? && policy(@group).access?)
     menu.item :contests, "contests", contests_group_path(@group) if policy(@group).access?
     menu.item :members, "members", members_group_path(@group), :highlights_on => %r(#{members_group_path(@group)}) if policy(@group).access?
+    menu.item :scoreboard, "scoreboard", scoreboard_group_path(@group) if policy(@group).inspect?
 #  end.render
   end
   %>
