@@ -14,10 +14,10 @@ class Problem < ActiveRecord::Base
 
   has_many :contests, :through => :problem_sets
   has_many :contest_relations, :through => :contests
-  has_many :groups, :through => :problem_sets, :uniq => :true
+  has_many :groups, -> { uniq } , :through => :problem_sets
   has_many :group_memberships, :through => :groups, :source => :memberships
 
-  has_many :filelinks, :as => :root, :dependent => :destroy, :include => :file_attachment
+  has_many :filelinks, -> { includes(:file_attachment) } , :as => :root, :dependent => :destroy
 
   validates :name, :presence => true, :uniqueness => { :case_sensitive => false }
 
@@ -67,7 +67,7 @@ class Problem < ActiveRecord::Base
   end
 
   def submission_history(user, from = DateTime.new(1), to = DateTime.now)
-    return Submission.find(:all, :conditions => ["created_at between ? and ? and user_id IN (?) and problem_id = ?", from, to, user, self], :order => "created_at ASC")
+    return Submission.where("created_at between ? and ? and user_id IN (?) and problem_id = ?", from, to, user, self).order(created_at: :asc)
   end
 
   def input_type=(type)

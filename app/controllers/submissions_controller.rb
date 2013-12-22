@@ -21,7 +21,7 @@ class SubmissionsController < ApplicationController
     else # only allowed to see contest submissions
       @submissions = policy_scope(Submission)
     end
-    @submissions = @submissions.paginate(:order => "created_at DESC", :page => params[:page], :per_page => 20)
+    @submissions = @submissions.order(created_at: :desc).page(params[:page]).per_page(20)
     # TODO: fix submission permissions
 
     respond_to do |format|

@@ -38,7 +38,7 @@ class GroupsController < ApplicationController
       @groups = Group.where(:owner_id => current_user.id)
     else
       authorize Group.new, :update?
-      @groups = Group.scoped
+      @groups = Group.all
     end
 
     respond_to do |format|

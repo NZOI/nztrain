@@ -12,7 +12,7 @@ class EvaluatorsController < ApplicationController
   # GET /evaluators.xml
   def index
     authorize Evaluator, :index?
-    @evaluators = Evaluator.scoped
+    @evaluators = Evaluator.all
 
     respond_to do |format|
       format.html # index.html.erb

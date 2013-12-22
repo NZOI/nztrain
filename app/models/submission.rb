@@ -34,7 +34,7 @@ class Submission < ActiveRecord::Base
       self.contests.select("contest_relations.id, contests.finalized_at").find_each do |record|
         # only update contest score if contest not yet sealed
         if record.finalized_at.nil? # are results finalized?
-          ContestScore.find_or_initialize_by_contest_relation_id_and_problem_id(record.id,self.problem_id).recalculate_and_save
+          ContestScore.find_or_initialize_by(contest_relation_id: record.id, problem_id: self.problem_id).recalculate_and_save
         end
       end
       self.user_problem_relation.recalculate_and_save

@@ -37,7 +37,7 @@ class ProblemSetsController < ApplicationController
       @problem_sets = ProblemSet.where(:owner_id => current_user.id)
     else
       authorize ProblemSet.new, :manage?
-      @problem_sets = ProblemSet.scoped
+      @problem_sets = ProblemSet.all
     end
 
     respond_to do |format|

@@ -10,18 +10,18 @@ class Group < ActiveRecord::Base
 
   belongs_to :owner, :class_name => :User
 
-  has_many :join_requests, :class_name => :Request, :as => :target, :conditions => { :subject_type => 'User', :verb => 'join' }
+  has_many :join_requests, -> { where(:subject_type => 'User', :verb => 'join') }, :class_name => :Request, :as => :target
   #, -> { where :subject_type => :users, :verb => :join }
   #has_many :applicants, :through => :applications, :source => :subject, :source_type => 'User'
   #def applicants
   #  self.join_requests.pending.subject
   #end
 
-  has_many :invitations, :class_name => :Request, :as => :subject, :conditions => { :verb => 'invite', :target_type => 'User' }
+  has_many :invitations, -> { where(:verb => 'invite', :target_type => 'User') }, :class_name => :Request, :as => :subject
   #, -> { where :verb => :invite, :target_type => :users }
   #has_many :invitees, :through => :invitations, :source => :target, :source_type => 'User', :conditions => { :status => Request::STATUS[:pending] } # TODO: expired_at condition
 
-  has_many :filelinks, :as => :root, :dependent => :destroy, :include => :file_attachment
+  has_many :filelinks, -> { includes(:file_attachment) }, :as => :root, :dependent => :destroy
 
   # Scopes
   scope :distinct, -> { select("distinct(groups.id), groups.*") }

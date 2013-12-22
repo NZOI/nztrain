@@ -19,7 +19,7 @@ if !(User.exists?(0)) # code in this block to be fixed
 end
 
 ["superadmin","admin","staff","organiser","author"].each do |role|
-  Role.find_or_create_by_name(role)
+  Role.find_or_create_by(name: role)
 end
 
 # give superadmin status to set everything up
@@ -35,7 +35,7 @@ if rootuser && rootuser.username == "root"
 end
 
 ["recaptcha/public_key","recaptcha/private_key"].each do |setting|
-  Setting.find_or_create_by_key(setting)
+  Setting.find_or_create_by(key: setting)
 end
 
 # create a special group called Everyone
