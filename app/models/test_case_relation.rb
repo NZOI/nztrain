@@ -1,10 +1,8 @@
 class TestCaseRelation < ActiveRecord::Base
-  # attr_accessible :name, :body
-
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :test_case
-  belongs_to :test_set
+  belongs_to :test_set, touch: true
 
   validate do |relation|
     if relation.test_case_id == nil

@@ -2,9 +2,10 @@ class ApplicationWorker
   extend Qless::Job::SupportsMiddleware
 
   def self.put(options = {})
-    job = $qless.queues[default_queue].put(self, options)
+    queue = options.delete(:queue) || default_queue
+    job = $qless.queues[queue].put(self, options)
 
-    $qless.queues[default_queue].pop.perform if Rails.env.test?
+    $qless.queues[queue].pop.perform if Rails.env.test?
 
     job
   end

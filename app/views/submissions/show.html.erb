@@ -38,10 +38,17 @@
 <%= @submission.user.username %>
 </p>
 
-<p>
-<b>Classification:</b>
-<%= Submission::CLASSIFICATION[@submission.classification].to_s.humanize %>
-</p>
+<% if policy(@submission).inspect? %>
+  <p>
+  <b>Job:</b>
+  <%= link_to_if current_user.is_admin? && $qless.jobs[@submission.job], @submission.job, "#{qless_server_path}/jobs/#{@submission.job}" %>
+  </p>
+
+  <p>
+  <b>Classification:</b>
+  <%= Submission::CLASSIFICATION[@submission.classification].to_s.humanize %>
+  </p>
+<% end %>
 
 <% @judge_data = @submission.judge_data %>
 <table class="results">

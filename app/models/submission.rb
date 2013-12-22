@@ -86,14 +86,16 @@ class Submission < ActiveRecord::Base
     true
   end
 
-  def judge
-    self.job = JudgeSubmissionWorker.judge(self)
+  def judge(queue: nil)
+    self.job = JudgeSubmissionWorker.judge(self, queue: queue)
     self.save
+    self.job
   end
 
-  def rejudge
+  def rejudge(queue: nil)
     self.judge_log = nil # TODO: move successful log to another column
-    save and judge
+    save and judge(queue: queue)
+    self.job
   end
 
 end
