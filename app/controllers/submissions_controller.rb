@@ -3,6 +3,7 @@ class SubmissionsController < ApplicationController
   def permitted_params
     @_permitted_params ||= begin
       permitted_attributes = [:problem_id, :source, :language]
+      permitted_attributes << :classification if policy(@submission).allowed_classifications.include?(params[:submission][:classification].to_i)
       params.require(:submission).permit(*permitted_attributes)
     end
   end
@@ -98,7 +99,7 @@ class SubmissionsController < ApplicationController
   def update
     @submission = Submission.find(params[:id])
     authorize @submission, :update?
-    params[:submission][:source] = IO.read(params[:submission][:source].path)
+    params[:submission][:source] = IO.read(params[:submission][:source].path) if params[:submission][:source]
 
     respond_to do |format|
       if @submission.update_attributes(permitted_params)

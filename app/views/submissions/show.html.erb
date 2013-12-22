@@ -1,4 +1,7 @@
 <% content_for :title, "Submission" %>
+<%= toolbox_push :edit, edit_submission_path(@submission) if policy(@submission).edit? %> 
+<%= toolbox_push :back, @submission.problem %>
+
 <%= stylesheet_link_tag "submission" %>
 
 <% if @submission.score == nil %>
@@ -85,7 +88,7 @@
         <% set_data.test_cases.each_with_index do |(case_id, case_data), j| %>
           <tr class="test_case status_<%= case_data.status %>">
             <td class="test_name">Case #<%= sprintf("%d.%#{set_data.test_cases.size.to_s.size}d",i+1,j+1) %></td>
-            <td class="test_time"><%= case_data.time %></td>
+            <td class="test_time"><%= case_data.print_time %></td>
             <td class="test_memory"><%= case_data.meta.memory %></td>
             <td class="judgement"><%= case_data.judgement %></td>
             <td></td>
@@ -96,7 +99,7 @@
                 <table>
                   <tr>
                     <% if case_data.status == :timeout %>
-                      <th>Time (<%= case_data.killed? ? "killed" : "exited" %>):</th><td><%= case_data.meta.time %></td>
+                      <th>Time (<%= case_data.killed? ? "killed" : "exited" %>):</th><td><%= case_data.meta.print_time %></td>
                     <% end %>
                     <th>Wall time:</th><td><%= case_data.meta.walltime %></td>
                     <% if [:signal, :runtime, :timeout].include? case_data.status %>
@@ -141,7 +144,4 @@
 <b>Source:</b>
 <%= predisplay(@submission.source, language: @submission.language.lexer) %>
 </p>
-
-<%= link_to 'Edit', edit_submission_path(@submission) if policy(@submission).edit? %> 
-<%= link_to 'Back', @submission.problem %>
 

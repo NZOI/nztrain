@@ -153,6 +153,15 @@ class ProblemsController < ApplicationController
     send_file zipfile, :type => 'application/zip', :disposition => 'attachment', :filename => filename
   end
 
+  def testing
+    @problem = Problem.find(params[:id])
+    authorize @problem, :inspect?
+    @submissions = @problem.test_submissions
+    respond_to do |format|
+      format.html { render :layout => "problem" }
+    end
+  end
+
   # GET /problems/new
   def new
     @problem = Problem.new(:owner => current_user)

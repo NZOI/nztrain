@@ -25,8 +25,26 @@ class Submission < ActiveRecord::Base
   # incorrect: an efficient solution which will have at least 1 wrong answer (score 0 on at least 1 test case)
   CLASSIFICATION = Enumeration.new 0 => :ranked, 1 => :unranked, 2 => :model, 3 => :solution, 4 => :inefficient, 5 => :partial, 6 => :incorrect
 
+  before_save do
+    if source_was.nil?
+      problem = Problem.find(self.problem_id)
+      self.input = problem.input
+      self.output = problem.output
+    end
+    update_test_messages
+    true
+  end
+
   before_create do
     self.classification = (SubmissionPolicy.new(self.user, self).inspect? ? CLASSIFICATION[:unranked] : CLASSIFICATION[:ranked]) if classification.nil?
+  end
+
+  after_create do
+    self.user_problem_relation.increment!(:submissions_count)
+  end
+
+  after_destroy do
+    self.user_problem_relation.decrement!(:submissions_count)
   end
 
   after_save do
@@ -39,14 +57,18 @@ class Submission < ActiveRecord::Base
       end
       self.user_problem_relation.recalculate_and_save
     end
-  end
-
-  after_create do
-    self.user_problem_relation.increment!(:submissions_count)
-  end
-
-  after_destroy do
-    self.user_problem_relation.decrement!(:submissions_count)
+    if self.test_errors_changed?
+      change = 0
+      change += 1 if test_errors_was.nil? || test_errors_was.empty?
+      change -= 1 if test_errors.nil? || test_errors.empty?
+      problem.increment!(:test_error_count, change) if change != 0
+    end
+    if self.test_warnings_changed?
+      change = 0
+      change += 1 if test_warnings_was.nil? || test_warnings_was.empty?
+      change -= 1 if test_warnings.nil? || test_warnings.empty?
+      problem.increment!(:test_warning_count, change) if change != 0
+    end
   end
 
   def contests
@@ -57,10 +79,6 @@ class Submission < ActiveRecord::Base
   # scopes (lazy running SQL queries)
   scope :distinct, -> { select("distinct(submissions.id), submissions.*") }
 
-  def ranked?
-    classification == CLASSIFICATION[:ranked]
-  end
-
   def self.by_user(user_id)
     where("submissions.user_id IN (?)", user_id.to_s.split(','))
   end
@@ -69,21 +87,20 @@ class Submission < ActiveRecord::Base
     where("submissions.problem_id IN (?)", problem_id.to_s.split(','))
   end
 
+  def ranked?
+    classification == CLASSIFICATION[:ranked]
+  end
+
+  def stale?
+    self.judged_at < self.problem.rejudge_at
+  end
+
   def source_file=(file)
     self.source = IO.read(file.path)
   end
 
   def judge_data
     JudgeData.new(judge_log, Hash[problem.test_sets.map{|s|[s.id,s.test_case_ids]}], problem.test_case_ids, problem.prerequisite_set_ids)
-  end
-
-  before_save do
-    if source_was.nil?
-      problem = Problem.find(self.problem_id)
-      self.input = problem.input
-      self.output = problem.output
-    end
-    true
   end
 
   def judge(queue: nil)
@@ -98,4 +115,63 @@ class Submission < ActiveRecord::Base
     self.job
   end
 
+  # for whether the problem has any errors (in test data)
+  # update problem with any errors/warnings
+  def update_test_messages
+    classification = Submission::CLASSIFICATION[self.classification]
+    if (self.judge_log_changed? && ![:ranked, :unranked].include?(classification)) || self.classification_changed?
+      if [:ranked, :unranked].include?(classification)
+        self.test_errors = nil
+        self.test_warnings = nil
+        return
+      end
+
+      return if stale? # judge is stale!
+
+      judge_data = self.judge_data
+      return if judge_data.status == :pending # incomplete judge_log
+      return if judge_data.errored? # judge errored - very bad
+
+      errors = []
+      warnings = []
+
+      if judge_data.status == :error || judge_data.score.nil? # evaluator (probably) errored
+        errors.add "Evaluator error (probably)"
+      else
+        case classification
+        when :model, :solution
+          # evaluation of every test set = 1, score = 100
+          judge_data.test_cases.values.map { |case_data| case_data.status == :correct }.all? or errors.push "Did not pass all test cases"
+          judge_data.score == 100 or errors.push "Solution did not get a perfect score"
+        when :inefficient
+          # timeout on some test case, we expect no wall timeouts
+          judge_data.test_cases.values.map { |case_data| case_data.status == :timeout }.any? or errors.push "No case timed out"
+          judge_data.test_cases.values.map { |case_data| !%i[correct timeout].include?(case_data.status) }.any? and errors.push "Did not pass or timeout on all test cases"
+          # 0 < score < 100
+          judge_data.score < 100 or errors.push "Got a perfect score"
+          0 < judge_data.score or errors.push "Did not score"
+        when :partial
+          # 0 < score < 100, all evaluations > 0, no timeouts
+          judge_data.score < 100 or errors.push "Got a perfect score"
+          0 < judge_data.score or errors.push "Did not score"
+          judge_data.test_cases.values.map { |case_data| case_data.evaluation > 0 }.all? or errors.push "Did not score on some test cases"
+        when :incorrect
+          # score < 100, evaluation_i == 0, no timeouts
+          judge_data.score < 100 or errors.push "Got a perfect score"
+          judge_data.test_cases.values.map { |case_data| case_data.status == :wrong }.any? or errors.push "Did not get a wrong answer"
+          judge_data.test_cases.values.map { |case_data| case_data.status == :timeout }.any? and errors.push "Timed out"
+        else
+          return # unsupported classification
+        end
+
+        judge_data.test_cases.values.map { |case_data| (0.5..1).include?(case_data.meta.time/self.problem.time_limit) }.any? and warnings.push "Used more than half the time limit in a test"
+        judge_data.test_cases.values.map { |case_data| (1...2).include?(case_data.meta.time/self.problem.time_limit) }.any? and warnings.push "Close to being under the time limit in a test" if self.classification == :inefficient
+      end
+
+      self.test_errors = errors
+      self.test_warnings = warnings
+    end
+  end
+
 end
+

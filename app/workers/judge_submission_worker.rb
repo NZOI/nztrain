@@ -15,13 +15,14 @@ class JudgeSubmissionWorker < ApplicationWorker
 
   def perform
     self.submission = Submission.find(job.data['id'])
+    judge_start_time = Time.now
     result = judge
 
     submission.with_lock do # This block is called within a transaction,
       submission.reload # todo: fetch only columns needed
       submission.judge_log = result.to_json
       submission.score = result['score']
-      submission.judged_at = DateTime.now
+      submission.judged_at = judge_start_time
       submission.save
     end
   rescue StandardError => e
@@ -61,11 +62,14 @@ class JudgeSubmissionWorker < ApplicationWorker
       result['test_sets'] = {}
       denominator = problem.test_sets.map(&:points).inject(&:+).to_f
 
+      extra_time = (Submission::CLASSIFICATION[:inefficient] == submission.classification) ? problem.time_limit*2 : [problem.time_limit*0.5, (20.0/problem.test_cases.count)].min
+      resource_limits = { :mem => problem.memory_limit*1024, :time => problem.time_limit, :extra_time => extra_time, :wall_time => problem.time_limit*3+extra_time+5, :stack => StackLimit, :processes => false }
+
       # prerequisites
       prereqs = problem.test_cases.where(:id => problem.prerequisite_sets.joins(:test_case_relations).select(:test_case_relations => :test_case_id))
 
       prereqs.each do |test_case|
-        result['test_cases'][test_case.id] = judge_test_case(test_case, run_command) unless result['test_cases'].has_key?(test_case.id)
+        result['test_cases'][test_case.id] = judge_test_case(test_case, run_command, resource_limits) unless result['test_cases'].has_key?(test_case.id)
       end
 
       problem.prerequisite_sets.each do |test_set|
@@ -80,7 +84,7 @@ class JudgeSubmissionWorker < ApplicationWorker
 
       # test cases
       (problem.test_cases - prereqs).each do |test_case|
-        result['test_cases'][test_case.id] = judge_test_case(test_case, run_command) unless result['test_cases'].has_key?(test_case.id)
+        result['test_cases'][test_case.id] = judge_test_case(test_case, run_command, resource_limits) unless result['test_cases'].has_key?(test_case.id)
       end
 
       # test sets
@@ -114,19 +118,18 @@ class JudgeSubmissionWorker < ApplicationWorker
     box.clean!
   end
 
-  def judge_test_case(test_case, run_command)
+  def judge_test_case(test_case, run_command, resource_limits)
     FileUtils.copy(File.expand_path(ExeFileName, tmpdir), box.expand_path(ExeFileName))
-    result = run_test_case(test_case, run_command)
+    result = run_test_case(test_case, run_command, resource_limits)
     result['evaluator'] = evaluate_output(test_case, result['output'], result['output_size'], problem.evaluator)
     result['log'] = truncate_output(result['log']) # log only a small portion
     result['output'] = truncate_output(result['output'].slice(0,100)) # store only a small portion
     result
   end
 
-  def run_test_case(test_case, run_command)
-    resource_limits = { :mem => problem.memory_limit*1024, :time => problem.time_limit, :wall_time => problem.time_limit*3+5, :stack => StackLimit }
+  def run_test_case(test_case, run_command, resource_limits = {})
     stream_limit = OutputBaseLimit + test_case.output.bytesize*2
-    run_opts = resource_limits.reverse_merge(:processes => false, :output_limit => stream_limit, :clean_utf8 => true)
+    run_opts = resource_limits.reverse_merge(:output_limit => stream_limit, :clean_utf8 => true)
     if submission.input.nil?
       run_opts[:stdin_data] = test_case.input
     else

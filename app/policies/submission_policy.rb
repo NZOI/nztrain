@@ -15,16 +15,30 @@ class SubmissionPolicy < ApplicationPolicy
     end
   end
 
+  def inspect?
+    super or (policy(record.problem).inspect? && !user.competing?)
+  end
+
+  def update?
+    super or (policy(record.problem).update? && !user.competing?)
+  end
+
   def index?
     true
   end
 
   def show?
-    user.is_staff? or scope.where(:id => record.id).exists?
+    inspect? or scope.where(:id => record.id).exists?
   end
 
   def rejudge?
     manage?
+  end
+
+  def allowed_classifications
+    return 0..6 if user.is_superadmin? 
+    return record.classification == 0 ? [0] : (1..6) if update?
+    return []
   end
 end
 

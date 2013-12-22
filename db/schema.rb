@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131222021036) do
+ActiveRecord::Schema.define(version: 20131222110552) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -211,6 +211,8 @@ ActiveRecord::Schema.define(version: 20131222021036) do
     t.datetime "updated_at"
     t.integer  "evaluator_id"
     t.datetime "rejudge_at"
+    t.integer  "test_error_count",   default: 0
+    t.integer  "test_warning_count", default: 0
   end
 
   create_table "requests", force: true do |t|
@@ -268,6 +270,8 @@ ActiveRecord::Schema.define(version: 20131222021036) do
     t.datetime "judged_at"
     t.string   "job"
     t.integer  "classification"
+    t.string   "test_errors",    array: true
+    t.string   "test_warnings",  array: true
   end
 
   add_index "submissions", ["problem_id", "created_at"], name: "index_submissions_on_problem_id_and_created_at", using: :btree

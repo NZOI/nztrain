@@ -1,0 +1,14 @@
+div.warning_message {
+  color: #FF8000;
+  font-weight: bold;
+}
+
+div.error_message {
+  color: #FF0000;
+  font-weight: bold;
+}
+
+div.ok_message {
+  color: #00C000;
+  font-weight: bold;
+}

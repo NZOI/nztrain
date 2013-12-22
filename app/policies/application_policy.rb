@@ -59,6 +59,10 @@ class ApplicationPolicy
     Pundit.policy_scope!(user, record.class)
   end
 
+  def policy(record)
+    Pundit.policy(user, record)
+  end
+
   class Scope
     attr_reader :user, :scope
 

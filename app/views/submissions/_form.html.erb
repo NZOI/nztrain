@@ -12,11 +12,18 @@
     </div>
   <% end %>
   <div class="field">
+    <%= f.label :language_id %><br>
+    <%= f.select :language_id, Language.submission_options %>
+  </div>
+  <div class="field">
+    <%= f.label :source %><br>
     <%= f.file_field :source %>
   </div>
   <div class="field">
-    <%= f.select :language, ['C++', 'C', 'Haskell', 'Python']%>
+    <%= f.label :classification %><br>
+    <%= f.select :classification, policy(@submission).allowed_classifications.map{ |i| [Submission::CLASSIFICATION[i].to_s.humanize, i] } %>
   </div>
+
   <div class="actions">
     <%= f.submit %>
   </div>

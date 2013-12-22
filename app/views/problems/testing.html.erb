@@ -1,0 +1,40 @@
+<p><b>Errors: </b><%= @problem.test_error_count %></p>
+<p><b>Warnings: </b><%= @problem.test_warning_count %></p>
+
+<h2>Submissions Tested</h2>
+<table class="main_table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Classification</th>
+      <th>Score</th>
+      <th style="width: 50%">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @submissions.each do |submission| %>
+      <tr>
+        <td><%= link_to submission.id, submission %></td>
+        <td><%= Submission::CLASSIFICATION[submission.classification].to_s.humanize %></td>
+        <td><%= submission.score %></td>
+        <td>
+          <% if submission.test_errors.nil? || submission.test_warnings.nil? %>
+            <p>Unknown</p>
+          <% elsif submission.test_errors.empty? && submission.test_warnings.empty? %>
+            <p>Passing</p>
+          <% else %>
+            <% submission.test_errors.each do |msg| %>
+              <p>Error: <%= msg %></p>
+            <% end %>
+            <% submission.test_warnings.each do |msg| %>
+              <p>Warning: <%= msg %></p>
+            <% end %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% if @submissions.empty? %>
+  <em>No tested submissions</em>
+<% end %>

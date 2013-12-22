@@ -88,6 +88,8 @@ NZTrain::Application.routes.draw do
 
       get 'export'
       post 'import'
+
+      get 'testing'
     end
     resources :test_cases, :module => :problems, :only => [:index] do
       patch '', action: :update, on: :collection

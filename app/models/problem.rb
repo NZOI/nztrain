@@ -9,6 +9,8 @@ class Problem < ActiveRecord::Base
   has_many :test_cases, -> { rank(:problem_order) }, inverse_of: :problem, dependent: :destroy
   has_many :sample_cases, -> { where(:sample => true).rank(:problem_order) }, :class_name => TestCase
   has_many :submissions, :dependent => :destroy
+  has_many :test_submissions, -> { where.not(:classification => [Submission::CLASSIFICATION[:ranked], Submission::CLASSIFICATION[:unranked]]).order(:score) }, class_name: Submission
+
   belongs_to :owner, :class_name => :User
   belongs_to :evaluator
 

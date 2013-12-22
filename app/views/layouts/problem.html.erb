@@ -3,7 +3,19 @@
 <%= toolbox_push :delete, @problem if policy(@problem).destroy? %> 
 
 <% content_for :content do %>
-
+<% if policy(@problem).inspect? %>
+  <% if !@problem.test_submissions.any? %>
+    <div class="warning_message">No test submissions</div>
+  <% else %>
+    <% if @problem.test_error_count > 0 %>
+      <div class="error_message">Error in test submissions</div>
+    <% elsif @problem.test_warning_count > 0 %>
+      <div class="warning_message">Warning in test submissions</div>
+    <% else %>
+      <div class="ok_message">Test submissions passing</div>
+    <% end %>
+  <% end %>
+<% end %>
 <% if @problem.input.nil? %>
   <b>Input: </b>Standard Input (stdin)<br />
 <% else %>
@@ -25,6 +37,7 @@
     menu.item :submit, "submit", submit_problem_path(@problem), :highlights_on => :subpath if policy(@problem).submit?
     menu.item :submissions, "submissions", submissions_problem_path(@problem)
     menu.item :test_cases, "test cases", problem_test_cases_path(@problem) if policy(@problem).inspect?
+    menu.item :testing, "testing", testing_problem_path(@problem) if policy(@problem).inspect?
 #  end.render
   end
   %>

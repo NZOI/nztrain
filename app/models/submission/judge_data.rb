@@ -28,13 +28,17 @@ class Submission
         "#{disp(mem)} #{unit}"
       end
 
-      def time
-        return "" if data['time'].nil?
-        "#{disp(data['time'])} seconds"
+      def print_time
+        return "" if time.nil?
+        "#{disp(time)} seconds"
       end
 
       def walltime
         sprintf "%.3f seconds", data['time-wall']
+      end
+
+      def time
+        data['time']
       end
 
       def message
@@ -178,7 +182,7 @@ class Submission
         evaluator.evaluation
       end
 
-      def time
+      def print_time
         return "" if data['time'].nil?
         "#{meta.disp(data['time'])} seconds"
       end
