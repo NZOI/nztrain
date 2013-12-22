@@ -3,7 +3,6 @@ class TestCase < ActiveRecord::Base
 
   has_many :test_case_relations, :dependent => :destroy
   has_many :test_sets, :through => :test_case_relations
-  has_many :problems, :through => :test_sets # deprecated
   belongs_to :problem, touch: :rejudge_at
 
   validates :input, :presence => true
@@ -13,10 +12,6 @@ class TestCase < ActiveRecord::Base
 
   include RankedModel
   ranks :problem_order, with_same: :problem_id
-
-  def problem
-    self.test_set.problem
-  end
 
   def truncated_output
     JudgeSubmissionWorker.truncate_output(output)
