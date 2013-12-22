@@ -3,8 +3,9 @@
   <thead>
     <tr class="centered_cells">
       <th rowspan="2">Member</th>
-      <% @problem_set_associations.each do |association|%>
+      <% @problem_set_associations.each do |association| %>
         <% problem_set = association.problem_set %>
+        <% next if problem_set.problems.count == 0 %>
         <th colspan="<%= problem_set.problems.count*2 %>"><%= association.name %></th>
       <% end %>
     </tr>
