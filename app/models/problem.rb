@@ -4,9 +4,9 @@ class Problem < ActiveRecord::Base
   has_many :problem_set_associations, class_name: ProblemSetProblem, inverse_of: :problem, dependent: :destroy
   has_many :problem_sets, through: :problem_set_associations
 
-  has_many :test_sets, -> { rank(:problem_order) } , :dependent => :destroy
+  has_many :test_sets, -> { rank(:problem_order) }, inverse_of: :problem, dependent: :destroy
   has_many :prerequisite_sets, -> { where(:prerequisite => true).rank(:problem_order) }, :class_name => TestSet
-  has_many :test_cases, -> { rank(:problem_order) }, :dependent => :destroy
+  has_many :test_cases, -> { rank(:problem_order) }, inverse_of: :problem, dependent: :destroy
   has_many :sample_cases, -> { where(:sample => true).rank(:problem_order) }, :class_name => TestCase
   has_many :submissions, :dependent => :destroy
   belongs_to :owner, :class_name => :User

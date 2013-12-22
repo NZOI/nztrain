@@ -14,7 +14,10 @@ module FixturesSpecHelper
 
   def self.destroy
     @@table_names.each do |table|
-      (class_variable_get "@@#{table}".to_sym).each { |k,v| v.destroy }
+      (class_variable_get "@@#{table}".to_sym).each { |k,v|
+        v.clear_association_cache # touching already destroyed association object causes `touch': can not touch on a new record object (ActiveRecord::ActiveRecordError)
+        v.destroy
+      }
     end
   end
 

@@ -3,7 +3,7 @@ class TestCase < ActiveRecord::Base
 
   has_many :test_case_relations, :dependent => :destroy
   has_many :test_sets, :through => :test_case_relations
-  belongs_to :problem, touch: :rejudge_at
+  belongs_to :problem, inverse_of: :test_cases, touch: :rejudge_at
 
   validates :input, :presence => true
   validates :output, :presence => true
