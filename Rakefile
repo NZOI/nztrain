@@ -29,7 +29,7 @@ namespace :qless do
 
     # The only required option is QUEUES; the
     # rest have reasonable defaults.
-    queues = %w[judge stalejudge].map { |name| $qless.queues[name] }
+    queues = %w[judge stalejudge queue].map { |name| $qless.queues[name] }
     job_reserver = Qless::JobReservers::Ordered.new(queues)
 
     worker = Qless::Workers::ForkingWorker.new(job_reserver, :num_workers => 2, :interval => 2).run

@@ -31,18 +31,7 @@ class Problem < ActiveRecord::Base
 
   after_save do
     if self.rejudge_at_changed?
-      self.submissions.each do |submission|
-        qjob = $qless.jobs[submission.job] unless submission.job.nil?
-        case qjob.try(:state)
-        when nil, 'complete'
-          submission.rejudge(queue: 'stalejudge')
-        when 'running'
-          qjob.move('judge')
-        when 'waiting','scheduled','stalled' # do nothing
-        else
-          submission.rejudge(queue: 'stalejudge')
-        end
-      end
+      job = RejudgeProblemWorker.rejudge(self)
     end
   end
 
