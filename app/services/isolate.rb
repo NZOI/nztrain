@@ -210,7 +210,9 @@ EOF
     if has_cgroup?
       options[:cg] = "" unless options.delete(:cg) == false
       options[:cg_timing] = "" unless options.delete(:cg_timing) == false || !options.has_key?(:cg)
-      options[:cg_mem] = options[:mem] unless options.delete(:cg_mem) == false || !options.has_key?(:cg) || !options.has_key?(:mem)
+      # mem limits shared library memory which causes problems with the .so libraries python loads
+      # this does not affect control group memory limits, if --cg-mem is set, we don't need to set --mem limits
+      options[:cg_mem] = options.delete(:mem) unless options.delete(:cg_mem) == false || !options.has_key?(:cg) || !options.has_key?(:mem)
     elsif !!options[:cg]
       raise CGroupsUnavailableError
     end

@@ -21,7 +21,7 @@ class Submission
 
       def memory
         return "" if data.empty?
-        mem = (data['cg-mem'] || data['max-rss'])
+        mem = (data['cg-mem'] || data['max-rss']).to_f
         unit = "kB"
         mem/=1000 and unit="MB" if mem > 1000
         mem/=1000 and unit="GB" if mem > 1000
