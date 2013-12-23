@@ -1,8 +1,8 @@
 class TestCase < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
-  has_many :test_case_relations, :dependent => :destroy
-  has_many :test_sets, :through => :test_case_relations
+  has_many :test_case_relations, inverse_of: :test_case, dependent: :destroy
+  has_many :test_sets, through: :test_case_relations
   belongs_to :problem, inverse_of: :test_cases, touch: :rejudge_at
 
   validates :input, :presence => true

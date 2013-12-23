@@ -65,11 +65,11 @@ module Problems
 
     protected
     def casemap
-      @casemap ||= Hash[problem.test_cases.select([:id, :name]).map{ |kase| [kase.name, kase] }]
+      @casemap ||= Hash[problem.test_cases.map{ |kase| [kase.name, kase] }]
     end
 
     def setmap
-      @setmap ||= Hash[problem.test_sets.select([:id, :name]).map{ |set| [set.name, set] }]
+      @setmap ||= Hash[problem.test_sets.map{ |set| [set.name, set] }]
     end
   end
 end

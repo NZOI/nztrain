@@ -27,13 +27,13 @@ module Problems
 
     def import_prerequisites(set_names)
       problem.test_sets.each do |set|
-        set.update_attributes(:prerequisite => set_names.include?(set.name))
+        set.assign_attributes(:prerequisite => set_names.include?(set.name))
       end
     end
 
     def import_samples(case_names)
-      problem.test_cases.each do |kase|
-        kase.update_attributes(:sample => case_names.include?(kase.name))
+      problem.test_cases.each do |kayse|
+        kayse.assign_attributes(:sample => case_names.include?(kayse.name))
       end
     end
 
@@ -65,11 +65,9 @@ module Problems
         if file.exist?(ofile = File.expand_path("#{name}#{ext}", outdir))
           parameters = {:input => file.read(File.expand_path(entry, indir)), :output => file.read(ofile)}
           if initialcases.include?(name)
-            casemap[name].update_attributes(parameters)
+            casemap[name].assign_attributes(parameters)
           else
-            kase = TestCase.new(parameters.merge(:name => name))
-            problem.test_cases << kase
-            casemap[name] = kase
+            casemap[name] = problem.test_cases.build(parameters.merge(:name => name))
           end
         end
       end
@@ -80,14 +78,13 @@ module Problems
         setopts = {}
         setopts[:points] = attributes.fetch('points', 1)
         if setmap.has_key?(name)
-          setmap[name].update_attributes(setopts)
+          setmap[name].assign_attributes(setopts)
         else
-          setmap[name] = TestSet.new(setopts.merge(:name => name))
-          problem.test_sets << setmap[name]
+          setmap[name] = problem.test_sets.build(setopts.merge(:name => name))
         end
         cases = attributes['test_cases'] || []
         if cases.is_a?(Array)
-          raise "Undefined test case referenced by test set" unless cases.map{ |name| casemap[name] }.select{ |kase| kase.nil? }.empty?
+          raise "Undefined test case referenced by test set" unless cases.map{ |name| casemap[name] }.select{ |kayse| kayse.nil? }.empty?
           setmap[name].test_cases = cases.map{ |name| casemap[name] }
         end
       end

@@ -24,21 +24,16 @@ module Problems
         if outputname && file.exist?(ofile = File.expand_path(outputname, path))
           caseopts = {:input => file.read(File.expand_path(entry, path)), :output => file.read(ofile)}
           if casemap.has_key?(name)
-            casemap[name].update_attributes(caseopts)
+            casemap[name].assign_attributes(caseopts)
           else
             caseopts.merge!(:sample => true) if name =~ /\.(dummy|sample)(\.|\z)/
-            kase = TestCase.new(caseopts.merge(:name => name))
-            problem.test_cases << kase
-            if setmap.has_key?(setname)
-              set = setmap[setname]
-            else
+            casemap[name] = problem.test_cases.build(caseopts.merge(:name => name))
+            unless setmap.has_key?(setname)
               setopts = {:name => setname, :points => 1}
               setopts.merge!(:points => 0, :prerequisite => true) if setname =~ /\.(dummy|sample)(\.|\z)/
-              set = setmap[setname] = TestSet.new(setopts)
-              problem.test_sets << set
+              setmap[setname] = problem.test_sets.build(setopts)
             end
-            set.test_cases << kase
-            casemap[name] = kase
+            setmap[setname].test_case_relations.build(test_case: casemap[name])
           end
         end
       end

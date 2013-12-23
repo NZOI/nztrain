@@ -1,7 +1,7 @@
 class TestCaseRelation < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
-  belongs_to :test_case
+  belongs_to :test_case, inverse_of: :test_case_relations
   belongs_to :test_set, inverse_of: :test_case_relations, touch: true
 
   validate do |relation|
