@@ -52,7 +52,7 @@ class ProblemPolicy < ApplicationPolicy
     limit = 128 if user.is_organiser?
     limit = 256 if user.is_admin?
     limit = 384 if user.is_superadmin?
-    [record.memory_limit_was, limit].max
+    [record.memory_limit_was || 0, limit].max
   end
 
   def maximum_total_time_limit
@@ -66,7 +66,7 @@ class ProblemPolicy < ApplicationPolicy
   def maximum_time_limit
     num_tests = [record.test_cases.count, 1].max
     limit = maximum_total_time_limit / num_tests
-    [record.time_limit_was, limit].max
+    [record.time_limit_was || 0.0, limit].max
   end
 end
 
