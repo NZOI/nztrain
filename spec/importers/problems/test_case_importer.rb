@@ -61,14 +61,14 @@ module Problems
           @problem = Problem.create(name: "New Problem for import")
           @problem.test_cases << TestCase.new(name: "test1", input: "original", output: "original")
           @problem.test_sets << TestSet.new(name: "s1", test_cases: @problem.test_cases.where(name: 'test1'))
-          @num_cases = 2
+          @num_cases = 3
           DeferredZip.new do |zipfile|
             make_test_case_directories(zipfile)
             (1..@num_cases).each do |i|
               %w[in out].each { |io| zipfile.file.open("#{io}puts/test#{i}.txt", "w") { |f| f.puts "#{io}put" } }
             end
             zipfile.file.open('specification.yaml',"w") do |f|
-              f.write({'test_sets' => {'s1' => {'points' => 2, 'test_cases' => %w[test1]}, 's2' => {'test_cases' => %w[test1 test2]}}}.to_yaml)
+              f.write({'test_sets' => {'s1' => {'points' => 2, 'test_cases' => %w[test1 test3]}, 's2' => {'test_cases' => %w[test1 test2]}}}.to_yaml)
             end
           end.with_zip do |zippath|
             TestCaseImporter.import(@problem, zippath, :extension => '.zip', :merge => true)
@@ -76,9 +76,10 @@ module Problems
         end
         it 'has expected tests' do
           expect(@problem.test_cases.count).to eq @num_cases
-          expect(@problem.test_sets.count).to eq @num_cases
-          expect(@problem.test_sets.first.test_cases.count).to eq 1
+          expect(@problem.test_sets.count).to eq 2
+          expect(@problem.test_sets.first.test_cases.count).to eq 2
           expect(@problem.test_cases.first.name).to eq 'test1'
+          expect(@problem.test_sets.first.test_cases.pluck(:name)).to include('test3')
         end
 
         it 'has new input' do
