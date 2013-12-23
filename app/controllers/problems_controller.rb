@@ -26,6 +26,7 @@ class ProblemsController < ApplicationController
       visible_attributes = [:linked_name, :input, :output, :memory_limit, :time_limit, :linked_owner, :progress_bar]
       visible_attributes << :edit_link if policy(@problem).update?
       visible_attributes << :destroy_link if policy(@problem).destroy?
+      visible_attributes << :test_status if policy(@problem).inspect?
       visible_attributes
     end
   end

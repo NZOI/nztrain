@@ -33,4 +33,16 @@ class ProblemPresenter < ApplicationPresenter
     h.progress_bar(problem.score) if problem.score
   end
 
+  def test_status
+    colour = case problem.test_status
+    when :error; "#FF0000"
+    when :warning; "#FF8000"
+    when 0; "#808080"
+    when 1; "#FFFF00"
+    when 2; "#80FF00"
+    when 3; "#00C000"
+    else; "#808080"
+    end
+    h.content_tag :div, " ", :style => "border-radius: 50%; width: 15px; height: 15px; background-color: #{colour}"
+  end
 end

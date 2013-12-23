@@ -85,4 +85,12 @@ class Problem < ActiveRecord::Base
     output.nil? ? 'stdout' : 'file'
   end
 
+  def test_status
+    return 0 if !test_submissions.any?
+    return :error if test_error_count > 0
+    return :warning if test_warning_count > 0
+    return 1 if !test_submissions.where(:classification => [Submission::CLASSIFICATION[:model],Submission::CLASSIFICATION[:solution]]).any?
+    return 2 if !test_submissions.where(:classification => Submission::CLASSIFICATION[:incorrect]).any?
+    return 3
+  end
 end

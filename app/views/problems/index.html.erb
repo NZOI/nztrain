@@ -1,19 +1,20 @@
 <% content_for :title, "Problems" %>
 <% toolbox_push :new, new_problem_path if policy(Problem).create? %>
 
-<% columns = {:linked_name => "Title",
+<% columns = {:test_status => "",
+              :linked_name => "Name",
               :input => "Input",
               :output => "Output",
-               :memory_limit => "Memory Limt",
-               :time_limit => "Time Limit",
-               :linked_owner => "Owner",
-               :progress_bar => "Progress",
-               :edit_link => "",
-               :destroy_link => ""} %>
+              :memory_limit => "Memory Limt",
+              :time_limit => "Time Limit",
+              :linked_owner => "Owner",
+              :progress_bar => "Progress",
+              :edit_link => "",
+              :destroy_link => ""} %>
 <table class="main_table">
   <thead>
     <tr>
-      <% @problems_presenter.select_permitted(*columns.keys) do |key| %>
+      <% @problems_presenter.select_permitted(*columns.keys).each do |key| %>
         <th><%= columns[key] %></th>
       <% end %>
     </tr>
