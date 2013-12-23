@@ -51,7 +51,7 @@ class ProblemPolicy < ApplicationPolicy
     limit = 64 # MB
     limit = 128 if user.is_organiser?
     limit = 256 if user.is_admin?
-    limit = 384 if user.is_superadmin?
+    limit = 512 if user.is_superadmin?
     [record.memory_limit_was || 0, limit].max
   end
 
