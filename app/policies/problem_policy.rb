@@ -46,5 +46,27 @@ class ProblemPolicy < ApplicationPolicy
   def create?
     !!user
   end
+
+  def maximum_memory_limit
+    limit = 64 # MB
+    limit = 128 if user.is_organiser?
+    limit = 256 if user.is_admin?
+    limit = 384 if user.is_superadmin?
+    [record.memory_limit_was, limit].max
+  end
+
+  def maximum_total_time_limit
+    limit = 30 # seconds
+    limit = 60 if user.is_organiser?
+    limit = 120 if user.is_admin? # 2 minutes
+    limit = 300 if user.is_superadmin? # 5 minutes
+    limit.to_f
+  end
+
+  def maximum_time_limit
+    num_tests = [record.test_cases.count, 1].max
+    limit = maximum_total_time_limit / num_tests
+    [record.time_limit_was, limit].max
+  end
 end
 

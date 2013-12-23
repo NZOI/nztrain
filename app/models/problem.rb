@@ -30,7 +30,7 @@ class Problem < ActiveRecord::Base
   end
 
   after_save do
-    if self.rejudge_at_changed?
+    if self.rejudge_at_changed? && self.submissions.any?
       job = RejudgeProblemWorker.rejudge(self)
     end
   end

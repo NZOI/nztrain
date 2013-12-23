@@ -2,7 +2,7 @@ class ProblemsController < ApplicationController
 
   def permitted_params
     @_permitted_attributes ||= begin
-      permitted_attributes = [:name, :statement, :input_type, :output_type, :memory_limit, :time_limit, :evaluator_id]
+      permitted_attributes = [:name, :statement, :memory_limit, :time_limit, :input_type, :output_type, :evaluator_id]
       permitted_attributes << :owner_id if policy(@problem || Problem).transfer?
       permitted_attributes << :input if params.require(:problem)[:input_type] == 'file'
       permitted_attributes << :output if params.require(:problem)[:output_type] == 'file'
@@ -129,15 +129,26 @@ class ProblemsController < ApplicationController
     authorize @problem, :update?
     redirect_to(test_cases_problem_path(@problem), :alert => 'No zip file uploaded') and return if params[:import_file].nil?
     redirect_to(test_cases_problem_path(@problem), :alert => 'Invalid importer specified') and return if !Problems::Importers.has_key?(params[:importer])
+    message = {notice: ""}
     begin
+      original_total_time = @problem.test_cases.count * @problem.time_limit
       if Problems::Importers[params[:importer]].import(@problem, params[:import_file].path, :extension => '.zip', :merge => params[:upload] == 'merge')
-        redirect_to(test_cases_problem_path(@problem), :notice => "Successfully uploaded. New counts for the problem are: # Test Sets: #{ @problem.test_sets.count }, # Test Cases: #{ @problem.test_cases.count }") and return
+        message[:notice] = "Successfully uploaded. New counts for the problem are: # Test Sets: #{ @problem.test_sets.count }, # Test Cases: #{ @problem.test_cases.count }. "
       else
-        redirect_to(test_cases_problem_path(@problem), :alert => 'No test cases or test sets detected.')
+        message[:alert] = 'No test cases or test sets detected. '
       end
     rescue StandardError => e
-      redirect_to(test_cases_problem_path(@problem), :alert => "An error has occurred - was the right importer selected?")
+      message[:alert] = "An error has occurred - was the right importer selected? "
+    ensure
+      available_time = [original_total_time, policy(@problem).maximum_total_time_limit].max
+      if available_time < @problem.time_limit*@problem.test_cases.count
+        @problem.time_limit = available_time / @problem.test_cases.count
+        @problem.save
+        message[:alert] = "#{message[:alert]}Time limit reduced to #{@problem.time_limit} to meet total judging time limits."
+      end
     end
+
+    redirect_to(problem_test_cases_path(@problem), message)
   end
 
   def export
@@ -184,7 +195,7 @@ class ProblemsController < ApplicationController
     authorize @problem, :create?
 
     respond_to do |format|
-      if @problem.save
+      if validate(@problem) && @problem.save
         format.html { redirect_to(@problem, :notice => 'Problem was successfully created.') }
         format.xml  { render :xml => @problem, :status => :created, :location => @problem }
       else
@@ -199,8 +210,10 @@ class ProblemsController < ApplicationController
   def update
     @problem = Problem.find(params[:id])
     authorize @problem, :update?
+    
+    @problem.assign_attributes(permitted_params)
     respond_to do |format|
-      if @problem.update_attributes(permitted_params)
+      if validate(@problem) && @problem.save
         format.html { redirect_to(@problem, :notice => 'Problem was successfully updated.') }
         format.xml  { head :ok }
       else
@@ -221,5 +234,16 @@ class ProblemsController < ApplicationController
       format.html { redirect_to(problems_url) }
       format.xml  { head :ok }
     end
+  end
+
+  private
+  def validate(problem)
+    if policy(problem).maximum_memory_limit < (params.require(:problem)[:memory_limit].to_f || 0)
+      problem.errors.add :memory_limit, "The maximum allowed memory limit is #{policy(problem).maximum_memory_limit} MB"
+    end
+    if policy(problem).maximum_time_limit < (params.require(:problem)[:time_limit].to_f || 0)
+      problem.errors.add :time_limit, "The maximum allowed judging time is #{policy(problem).maximum_total_time_limit} seconds for a maximum time limit of #{policy(problem).maximum_time_limit} seconds per test case"
+    end
+    problem.errors.empty?
   end
 end
