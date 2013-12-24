@@ -268,8 +268,16 @@ module Problems
         self.paragraph[:plain] << text
       end
       def append_image(label, state)
+        mat = page.xobjects[label].hash[:Matrix]
+        box = page.xobjects[label].hash[:BBox]
+        if box
+          corners = [[0,1],[0,3],[2,1],[2,3]].map{|i,j| state.ctm_transform(*trsf(mat,box.values_at(i,j)))}.transpose
+          global_bbox = [corners[0].min, corners[1].min, corners[0].max-corners[0].min, corners[1].max-corners[1].min]
+        else
+          global_bbox = state.ctm_transform(0,0) + [state.ctm_transform(1,1),state.ctm_transform(0,0)].transpose.map{|b,a|b-a}
+        end
         self.paragraph[:text] << markup.image("fileattachmentroot/#{label}.extension")
-        self.paragraph[:images] << [page.number, label]
+        self.paragraph[:images] << [page.number, label, global_bbox]
       end
       def end_paragraph
         %i[monospace italic bold list_item].each { |attr| self.paragraph[:text] << markup.send(attr, paragraph[attr], false) }
@@ -286,16 +294,27 @@ module Problems
         end_page()
         statements
       end
+      def trsf(mat, coord)
+        [mat[0]*coord[0]+mat[2]*coord[1]+mat[4],mat[1]*coord[0]+mat[3]*coord[1]+mat[5]]
+      end
       def invoke_xobject(label)
-        if label.to_s =~ /\AImage[[:digit:]]+\z/
+        case page.xobjects[label].hash[:Subtype]
+        when :Image
           append_image(label, state) if !within?(:Artifact) && within?(:P)
+        when :Form
+          # crop(217.16,408.16,180,53) -> 397,460
+          # state
+          append_image(label, state) if !within?(:Artifact) && within?(:P)
+          # form = PDF::Reader::FormXObject.new(page, page.xobjects[label])
+          # extract to svg or take snapshot
         end
       end
     end
 
-    attr_accessor :reader
+    attr_accessor :pdf_path, :reader
 
     def initialize(pdf_path)
+      self.pdf_path = pdf_path
       self.reader = PDF::Reader.new(pdf_path)
     end
 
@@ -305,8 +324,7 @@ module Problems
       puts reader.pages.first.number
       summary = extract_summary
       statements = extract_statements(summary.map{ |problem| problem[:name] })
-      images = extract_images(statements.map{|statement| statement[:images]}.compact)
-
+      images = extract_images(statements.map{|statement| statement[:images]}.flatten(1))
       #puts reader.pages.first.text
       #reader.page(5).xobjects.values.first.unfiltered_data # image
       ['asdf']
@@ -316,7 +334,7 @@ module Problems
     def extract_summary
       summary_receiver = SummaryReceiver.new
       reader.page(1).walk(summary_receiver)
-      puts summary_receiver.summary.inspect
+      #puts summary_receiver.summary.inspect
       summary_receiver.summary
     end
 
@@ -325,12 +343,15 @@ module Problems
       reader.pages.drop(1).each do |page|
         page.walk(statement_receiver)
       end
-      puts statement_receiver.extract_statements.inspect
+      #puts statement_receiver.extract_statements.inspect
       statement_receiver.extract_statements
     end
 
     def extract_images(imagelist)
-      #extractor.process(imagelist)
+      extractor = PDF::ExtractImages::Extractor.new(pdf_path, reader)
+      extracted_images = extractor.extract_images(imagelist)
+      #puts extracted_images.inspect
+      extracted_images
     end
   end
 end
