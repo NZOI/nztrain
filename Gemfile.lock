@@ -100,6 +100,8 @@ GEM
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
     diff-lcs (1.2.4)
+    domain_name (0.5.15)
+      unf (>= 0.0.5, < 1.0.0)
     dotenv (0.9.0)
     erubis (2.7.0)
     execjs (2.0.2)
@@ -117,6 +119,8 @@ GEM
     has_scope (0.5.1)
     hashery (2.1.1)
     hike (1.2.3)
+    http-cookie (1.0.2)
+      domain_name (~> 0.5)
     i18n (0.6.9)
     jquery-historyjs (0.2.3)
       railties (>= 3.0)
@@ -134,13 +138,25 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    mechanize (2.7.2)
+      domain_name (~> 0.5, >= 0.5.1)
+      http-cookie (~> 1.0.0)
+      mime-types (~> 1.17, >= 1.17.2)
+      net-http-digest_auth (~> 1.1, >= 1.1.1)
+      net-http-persistent (~> 2.5, >= 2.5.2)
+      nokogiri (~> 1.4)
+      ntlm-http (~> 0.1, >= 0.1.1)
+      webrobots (>= 0.0.9, < 0.2)
     mime-types (1.25.1)
     mini_portile (0.5.1)
     minitest (4.7.5)
     multi_json (1.8.2)
+    net-http-digest_auth (1.4)
+    net-http-persistent (2.9)
     newrelic_rpm (3.6.7.159)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
+    ntlm-http (0.1.1)
     open4 (1.3.0)
     orm_adapter (0.5.0)
     pdf-reader (1.3.3)
@@ -265,12 +281,16 @@ GEM
     uglifier (2.2.1)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
+    unf (0.1.3)
+      unf_ext
+    unf_ext (0.0.6)
     unicorn (4.6.3)
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
     warden (1.2.3)
       rack (>= 1.0)
+    webrobots (0.1.1)
     whenever (0.8.2)
       activesupport (>= 2.3.4)
       chronic (>= 0.6.3)
@@ -306,6 +326,7 @@ DEPENDENCIES
   jquery-ui-rails
   libv8 (~> 3.3)
   loofah
+  mechanize
   newrelic_rpm
   nokogiri
   pdf-reader

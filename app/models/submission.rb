@@ -92,7 +92,7 @@ class Submission < ActiveRecord::Base
   end
 
   def stale?
-    self.judged_at < self.problem.rejudge_at
+    self.judged_at.nil? || self.judged_at < self.problem.rejudge_at
   end
 
   def source_file=(file)

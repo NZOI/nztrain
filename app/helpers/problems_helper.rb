@@ -29,8 +29,15 @@ module ProblemsHelper
     @markdown_renderer
   end
 
-  def markdown_parse(str, options={})
+  def markdown_parse(str, relative_root: request.path + '/')
     content = ProblemsHelper.markdown_renderer.render(str)
-    Loofah.fragment(content).scrub!(:escape).scrub!(Loofah::Scrubbers::NoForm.new).scrub!(Loofah::Scrubbers::MathJax.new).to_s.html_safe
+    content = Loofah.fragment(content)
+      .scrub!(:escape) # remove dangerous tags
+      .scrub!(Loofah::Scrubbers::NoForm.new) # remove forms
+      .scrub!(Loofah::Scrubbers::MathJax.new) # add mathjax support
+    unless relative_root.nil?
+      content = content.scrub!(Loofah::Scrubbers::RelativeLink.new(relative_root)) # re-write relative links as rooted links
+    end
+    content.to_s.html_safe
   end
 end

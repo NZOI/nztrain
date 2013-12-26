@@ -54,6 +54,7 @@ class Filelinks::RootsController < ApplicationController
     if params[:id]
       @filelink = model.filelinks.find(params[:id])
     else
+      raise ActiveRecord::RecordNotFound if params[:filepath].nil?
       filepath = [params[:filepath], params[:format]].compact.join('.')
       @filelink = model.filelinks.find_by_filepath(filepath)
     end

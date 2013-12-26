@@ -22,10 +22,24 @@ module PDF::ExtractImages
     # reader is PDF::Reader
     # imagelist is in [[pagenumber, xobjectlabel, [x,y]],...] format
     def extract_images(imagelist)
-      imagelist.map do |pg, name, pos|
+      Hash[imagelist.map do |pg, name, pos|
         filename = extract_image(pg, name, reader.page(pg).xobjects[name], pos)
-        [pg, name, filename]
+        [[pg, name], filename]
+      end]
+    end
+
+    def self.xobjectfilename(pgnum, name, xobjstream)
+      if xobjstream.hash[:Subtype] == :Form
+        ext = 'png'
+      elsif xobjstream.hash[:Subtype] == :Image
+        ext = case xobjstream.hash[:Filter]
+              when :CCITTFaxDecode; 'tif'
+              when :DCTDecode; 'jpg'
+              else
+                PDF::ExtractImages::Raw.new(xobjstream).supported? ? 'tif' : 'png'
+              end
       end
+      "#{pgnum}-#{name}.#{ext}"
     end
 
     private
@@ -38,28 +52,38 @@ module PDF::ExtractImages
     end
 
     def extract_image(pg, name, stream, bbox = nil, to: name)
+      filename = self.class.xobjectfilename(pg, name, stream)
       case stream.hash[:Subtype]
       when :Image then
         case stream.hash[:Filter]
         when :CCITTFaxDecode then
-          PDF::ExtractImages::Tiff.new(stream).save(expand_path(filename = "#{pg}-#{name}.tif"))
+          PDF::ExtractImages::Tiff.new(stream).save(expand_path(filename))
         when :DCTDecode      then
-          PDF::ExtractImages::Jpg.new(stream).save(expand_path(filename = "#{pg}-#{name}.jpg"))
+          PDF::ExtractImages::Jpg.new(stream).save(expand_path(filename))
         else
-          PDF::ExtractImages::Raw.new(stream).save(expand_path(filename = "#{pg}-#{name}.tif"))
+          raw_extractor = PDF::ExtractImages::Raw.new(stream)
+          if raw_extractor.supported?
+            raw_extractor.save(expand_path(filename))
+          else
+            save_snapshot(pg, bbox, filename)
+          end
         end
       when :Form then # to svg
-        raise 'No bounding box' if bbox.nil?
-        pdfbox = reader.page(pg).attributes[:MediaBox]
-        bbox[1] = pdfbox[3] - bbox[1] - bbox[3] # flipping y-coordinate
-        bbox[0] *= imagemagick_pages.x_resolution/72
-        bbox[1] *= imagemagick_pages.y_resolution/72
-        bbox[2] *= imagemagick_pages.x_resolution/72
-        bbox[3] *= imagemagick_pages.y_resolution/72
-        cropped_image = imagemagick_pages[pg-1].crop(*bbox)
-        cropped_image.write(expand_path(filename = "#{pg}-#{name}.png"))
+        save_snapshot(pg, bbox, filename)
       end
       filename
+    end
+
+    def save_snapshot(pg, bbox, filename)
+      raise 'No bounding box' if bbox.nil?
+      pdfbox = reader.page(pg).attributes[:MediaBox]
+      bbox[1] = pdfbox[3] - bbox[1] - bbox[3] # flipping y-coordinate
+      bbox[0] *= imagemagick_pages.x_resolution/72
+      bbox[1] *= imagemagick_pages.y_resolution/72
+      bbox[2] *= imagemagick_pages.x_resolution/72
+      bbox[3] *= imagemagick_pages.y_resolution/72
+      cropped_image = imagemagick_pages[pg-1].crop(*bbox)
+      cropped_image.write(expand_path(filename))
     end
 
     def imagemagick_pages
@@ -75,12 +99,20 @@ module PDF::ExtractImages
       @stream = stream
     end
 
+    def supported?
+      [:DeviceCMYK, :DeviceGray, :DeviceRGB].include?(colorspace)
+    end
+
+    def colorspace
+      @stream.hash[:ColorSpace]
+    end
+
     def save(filename)
-      case @stream.hash[:ColorSpace]
+      case colorspace
       when :DeviceCMYK then save_cmyk(filename)
       when :DeviceGray then save_gray(filename)
       when :DeviceRGB  then save_rgb(filename)
-      else
+      else # :Indexed colorspace is unsupported
         $stderr.puts "unsupport color depth #{@stream.hash[:ColorSpace]} #{filename}"
       end
     end
