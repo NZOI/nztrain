@@ -76,3 +76,5 @@ languages.each do |grpid, grpcfg|
   group.update_attributes(:current_language_id => group.languages.find_by_identifier(grpcfg[:current]).id)
 end
 
+ProblemSeries.where(identifier: "COCI").first_or_create!.update_attributes(name: "Croatian Open Competition in Informatics", importer_type: "Problems::COCI::Importer")
+

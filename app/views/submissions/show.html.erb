@@ -44,7 +44,7 @@
 <% if policy(@submission).inspect? %>
   <p>
   <b>Job:</b>
-  <%= link_to_if current_user.is_admin? && $qless.jobs[@submission.job], @submission.job, "#{qless_server_path}/jobs/#{@submission.job}" %>
+  <%= link_to_if current_user.is_admin? && $qless.jobs[@submission.job], @submission.job, qless_job_path(@submission.job) %>
   </p>
 
   <p>

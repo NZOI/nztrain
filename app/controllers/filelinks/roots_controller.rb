@@ -27,7 +27,7 @@ class Filelinks::RootsController < ApplicationController
   end
 
   def filelink_params
-    @filelink_params ||= [:filepath, :file_attachment_id]
+    @filelink_params ||= [:filepath, :file_attachment_id, :visibility]
     params.require(:filelink).permit(*@filelink_params)
   end
 
@@ -54,9 +54,11 @@ class Filelinks::RootsController < ApplicationController
     if params[:id]
       @filelink = model.filelinks.find(params[:id])
     else
+      raise ActiveRecord::RecordNotFound if params[:filepath].nil?
       filepath = [params[:filepath], params[:format]].compact.join('.')
       @filelink = model.filelinks.find_by_filepath(filepath)
     end
+    authorize @filelink, :show?
     send_file FileAttachmentUploader.root + @filelink.file_attachment_url, :filename => File.basename(@filelink.filepath), :disposition => 'inline'
   end
 

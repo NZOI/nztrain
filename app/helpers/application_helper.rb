@@ -90,4 +90,14 @@ module ApplicationHelper
     }
     map[symbol]
   end
+
+  def qless_job_path(job_or_jid)
+    jid = job_or_jid.respond_to?(:jid) ? job_or_jid.jid : job_or_jid
+    "#{qless_server_path}/jobs/#{jid}"
+  end
+
+  def qless_tag_path(tag)
+    "#{qless_server_path}/tag?tag=#{u(tag)}"
+  end
 end
+

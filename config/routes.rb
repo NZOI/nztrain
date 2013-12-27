@@ -3,7 +3,7 @@ NZTrain::Application.routes.draw do
     options ||= {}
     resources :files, options.merge(:except => [:new, :edit]) do
       collection do
-        get 'download/*filepath', action: :show, as: :download
+        get 'download/(*filepath)', action: :show, as: :download, defaults: {filepath: nil}
       end
     end
   end
@@ -192,6 +192,15 @@ NZTrain::Application.routes.draw do
     member do
       get 'download'
     end
+  end
+
+  namespace :importers do
+    get 'problem_series/:series/', to: 'problem_series#index', as: 'problem_series'
+    %w[download reindex].each do |operation|
+      post "problem_series/:series(/:vid(/:cid))/#{operation}", to: "problem_series##{operation}", as: "#{operation}_problem_series"
+    end
+    patch 'problem_series/:series/:vid(/:cid)', to: "problem_series#update", as: "update_problem_series"
+    post 'problem_series/:series/update_index', to: "problem_series#update_index", as: "update_index_problem_series"
   end
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):

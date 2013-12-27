@@ -1,5 +1,5 @@
 <div class="statement">
-  <%= markdown_parse(@problem.statement) %>
+  <%= markdown_parse(@problem.statement, relative_root: download_problem_files_path(@problem)) %>
 </div>
 <ul class="samples">
   <% @problem.sample_cases.each_with_index do |kayse, index| %>

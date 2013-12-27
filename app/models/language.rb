@@ -25,4 +25,17 @@ class Language < ActiveRecord::Base
     languages = Language.where(:id => LanguageGroup.where(identifier: %w[c++ c python haskell]).select(:current_language_id))
     Hash[languages.map{ |language| ["#{language.group.name} (#{language.name})", language.id] }]
   end
+
+  def self.infer(ext)
+    case ext
+    when *%w[.cpp]
+      LanguageGroup.where(identifier: 'c++').first.current_language
+    when *%w[.c]
+      LanguageGroup.where(identifier: 'c').first.current_language
+    when *%w[.py]
+      LanguageGroup.where(identifier: 'python').first.current_language
+    else
+      nil
+    end
+  end
 end

@@ -14,6 +14,9 @@ class Filelink < ActiveRecord::Base
     self.filepath = self.file_attachment.filename if self.filepath.blank?
   end
 
+  # protected = can view if not in contest
+  VISIBILITY = Enumeration.new 0 => :public, 1 => :protected, 2 => :private
+
   def file_attachment_url
     self.file_attachment.file_attachment_url
   end
