@@ -1,13 +1,37 @@
 class ProblemSeries
   class ImportWorker < Base
+
+    attr_accessor :submissions_to_judge
+    def initialize(*args)
+      super
+      self.submissions_to_judge = []
+    end
+
     def perform
       imports = job.data['operations']
 
       volumes = job.data['volume_id'] ? [job.data['volume_id'].to_i] : 0...(importer.index.size)
       volumes.each do |vid|
-        issues = job.data['volume_id'] && job.data['issue_id'] ? [job.data['issue_id'].to_i] : 0...(importer.volume(vid)[:contests].size)
+        issues = job.data['volume_id'] && job.data['issue_id'] ? [job.data['issue_id'].to_i] : 0...(importer.volume(vid)[:issues].size)
         issues.each do |num|
-          pids = job.data['volume_id'] && job.data['issue_id'] && job.data['problem_ids'] ? job.data['problem_ids'] : 0...(importer.contest(vid, num)[:problems].size)
+          issue_index = importer.issue(vid, num)
+
+          # check that we are downloaded and indexed
+          unless importer.downloaded?(vid, num) && issue_index[:problems]
+            job.log "#{importer.volume(vid)[:name]} #{issue_index[:name]} is not downloaded and indexed - skipping"
+            next
+          end
+
+          pids = job.data['volume_id'] && job.data['issue_id'] && job.data['problem_ids'] ? job.data['problem_ids'] : 0...(issue_index[:problems].size)
+
+          # Make a problem set for the volume/issue if it doesn't already exist
+          if issue_index[:problem_set_id]
+            problem_set = ProblemSet.where(id: issue_index[:problem_set_id]).first
+          end
+          if problem_set.nil?
+            problem_set = ProblemSet.create(name: "#{importer.volume(vid)[:name]} #{issue_index[:name]}", owner_id: 0)
+            issue_index[:problem_set_id] = problem_set.id
+          end
 
           importer.process(vid, num) do |index, data, pid, paths|
             next unless pids.include?(pid)
@@ -15,6 +39,14 @@ class ProblemSeries
             job.log "Processing problem #{vid}:#{num}:#{pid}"
 
             problem = (index[:problem_id].nil? ? Problem.new(name: index[:name], owner_id: 0) : Problem.find(index[:problem_id]))
+
+            # add problem to set if it isn't in the set
+            if !problem.problem_sets.where(id: problem_set.id).any?
+              problem.problem_sets << problem_set
+            end
+
+            next if job.data['disposition'] == 'missing' and problem.persisted? # in this mode, stuff is done only if the problem is missing completely
+
             manager = ProblemImportManager.new(problem, index, data, paths, job, importer, vid, num)
 
             ## import attributes
@@ -40,8 +72,12 @@ class ProblemSeries
             manager.import_statement_file if imports.include?('attachments') and (replace? or not manager.detect_statement_file?)
             manager.import_solution_file if imports.include?('attachments') and (replace? or not manager.detect_solution_file?)
 
+            self.submissions_to_judge += manager.submissions_to_judge
           end
         end
+      end
+      self.submissions_to_judge.each do |submission|
+        submission.judge(delay: 10)
       end
     end
 
@@ -50,7 +86,7 @@ class ProblemSeries
     end
 
     class ProblemImportManager
-      attr_accessor :problem, :index, :data, :paths, :logobj, :importer, :vid, :num
+      attr_accessor :problem, :index, :data, :paths, :logobj, :importer, :vid, :num, :submissions_to_judge
 
       def initialize(problem, index, data, paths, job, importer, vid, num)
         self.problem = problem
@@ -61,6 +97,7 @@ class ProblemSeries
         self.importer = importer
         self.vid = vid
         self.num = num
+        self.submissions_to_judge = []
       end
 
       def log(message)
@@ -93,7 +130,7 @@ class ProblemSeries
       def import_image(filename)
         # create a new file attachment
         ext = File.extname(filename)
-        attachment_name = "#{importer.contest(vid, num)[:name]} #{index[:name]} #{File.basename(filename, ext)}".parameterize + ext
+        attachment_name = "#{importer.issue(vid, num)[:name]} #{index[:name]} #{File.basename(filename, ext)}".parameterize + ext
         file_attachment = FileAttachment.new(name: attachment_name, owner_id: 0, file_attachment: File.open(File.expand_path(filename, paths[:tmp])))
         if file_attachment.save
           # remove any existing filelink
@@ -140,7 +177,7 @@ class ProblemSeries
         if model.nil? && paths[:model]
           submission = Submission.new(user_id: 0, problem: problem, source: File.read(paths[:model]), language: Language.infer(File.extname(paths[:model])), classification: Submission::CLASSIFICATION[:model])
           if submission.save
-            submission.judge
+            submissions_to_judge << submission
             model = {model: true, submission_id: submission.id}
             index[:tests] << model
           else
@@ -165,7 +202,7 @@ class ProblemSeries
               next if submission.persisted? # skip if already exists
               submission.language = Language.infer('.cpp')
               if submission.save
-                submission.judge
+                submissions_to_judge << submission
                 submission_index = {submission_id: submission.id, url: sourcepath}
                 index[:tests] << submission_index
               else
@@ -188,18 +225,56 @@ class ProblemSeries
       end
 
       def detect_statement_file?
-        true
+        problem.filelinks.where(filepath: "statement.pdf").any? # pdf for COCI, may be different for other importers
       end
 
       def import_statement_file
-        data[:pages] #
+        return false if !paths[:statement] # doesn't exist
+        filelink = problem.filelinks.find_or_initialize_by(filepath: "statement.pdf")
+        original_attachment = filelink.file_attachment
+        filelink.file_attachment = nil
+        filelink.file_attachment = FileAttachment.new(file_attachment: File.open(paths[:statement]), owner_id: 0, name: "statement.pdf")
+        filelink.visibility = Filelink::VISIBILITY[:protected]
+        if filelink.save
+          log "Statement attached for problem #{data[:name]}."
+        else
+          log "Statement attachment failed for problem #{data[:name]}."
+        end
+        # destroy original attachment if not otherwise referenced
+        if original_attachment
+          if original_attachment.owner_id == 0 && !original_attachment.filelinks.any?
+            original_attachment.destroy
+          end
+        end
       end
 
       def detect_solution_file?
+        problem.filelinks.where(filepath: "solution.pdf").any? # pdf for COCI, may be different for other importers
       end
 
       def import_solution_file
-        
+        return false if !paths[:solution] # doesn't exist
+        filelink = problem.filelinks.find_or_initialize_by(filepath: "solution.pdf")
+        original_attachment = filelink.file_attachment
+        filelink.file_attachment = nil
+        if data[:solution][:file_attachment_id]
+          filelink.file_attachment = FileAttachment.where(id: data[:solution][:file_attachment_id]).first
+        end
+        if filelink.file_attachment.nil?
+          filelink.file_attachment = FileAttachment.new(file_attachment: File.open(paths[:solution]), owner_id: 0, name: "solution.pdf")
+        end
+        filelink.visibility = Filelink::VISIBILITY[:private]
+        if filelink.save
+          log "Solution attached for problem #{data[:name]}."
+        else
+          log "Solution attachment failed for problem #{data[:name]}."
+        end
+        # destroy original attachment if not otherwise referenced
+        if original_attachment
+          if original_attachment.owner_id == 0 && !original_attachment.filelinks.any?
+            original_attachment.destroy
+          end
+        end
       end
     end
   end

@@ -36,6 +36,7 @@ gem 'pygments.rb'
 gem 'ranked-model', :github => 'mixonic/ranked-model'
 gem 'pdf-reader'
 gem 'mechanize'
+gem 'prawn'
 
 gem 'pg'
 gem 'backup'

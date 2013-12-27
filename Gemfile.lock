@@ -170,6 +170,10 @@ GEM
       activerecord (>= 3.0)
     polyglot (0.3.3)
     posix-spawn (0.3.8)
+    prawn (0.13.1)
+      pdf-reader (~> 1.2)
+      ruby-rc4
+      ttfunk (~> 1.0.3)
     psych (2.0.2)
     pundit (0.2.1)
       activesupport (>= 3.0.0)
@@ -331,6 +335,7 @@ DEPENDENCIES
   nokogiri
   pdf-reader
   pg
+  prawn
   psych (~> 2.0.2)
   pundit
   pygments.rb

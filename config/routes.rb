@@ -199,9 +199,8 @@ NZTrain::Application.routes.draw do
     %w[download reindex].each do |operation|
       post "problem_series/:series(/:vid(/:cid))/#{operation}", to: "problem_series##{operation}", as: "#{operation}_problem_series"
     end
-    patch 'problem_series/:series/:vid/:cid', to: "problem_series#update", as: "update_problem_series"
+    patch 'problem_series/:series/:vid(/:cid)', to: "problem_series#update", as: "update_problem_series"
     post 'problem_series/:series/update_index', to: "problem_series#update_index", as: "update_index_problem_series"
-    post 'problem_series/:series(/:vid(/:cid(/:pid)))/import(/:filter)', to: "problem_series#import", as: "import_problem_series", defaults: {filter: 'all'}
   end
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):

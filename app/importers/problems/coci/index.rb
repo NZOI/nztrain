@@ -9,7 +9,7 @@ module Problems
       #   { # volume format
       #     name: "COCI 2006/2007",
       #     url: "http://...",
-      #     contests: [
+      #     issues: [
       #                 {
       #                   name: "Contest #1",
       #                   problem_set_id: 0,
@@ -44,7 +44,7 @@ module Problems
           def self.series_match node_set
             node_set.find_all { |node| node.text =~ /^(COCI )([[:digit:]]{4})(.)([[:digit:]]{4})$/ }
           end
-          def self.contest_match node_set
+          def self.issue_match node_set
             node_set.find_all { |node| node.text =~ /^(Contest #[[:digit:]]+|Croatian ([[:alpha:]]+ )+in Informatics)$/i }
           end
           def self.canonicalize_series(title)
@@ -77,31 +77,31 @@ module Problems
         false
       end
 
-      def download(vn, cn) # volume/contest number
+      def download(vn, cn) # volume/issue number
         agent = Mechanize.new
         agent.pluggable_parser.default = Mechanize::Download
         agent.pluggable_parser.pdf = Mechanize::Download
-        contest = self.contest(vn, cn) or return false
+        issue = self.issue(vn, cn) or return false
         resources = CONTEST_RESOURCES.keys.reject{|r|r==:results}
         resources.reject{|r|r==:solutions}.each do |attr|
-          return false if contest[attr].nil? || contest[attr][:url].nil?
+          return false if issue[attr].nil? || issue[attr][:url].nil?
         end
         resources.each do |attr|
-          next if contest[attr].nil? || contest[attr][:url].nil?
-          filepath = "volume-#{vn}/contest-#{vn}/#{File.basename(contest[attr][:url])}"
+          next if issue[attr].nil? || issue[attr][:url].nil?
+          filepath = "volume-#{vn}/issue-#{cn}/#{File.basename(issue[attr][:url])}"
           fullpath = File.expand_path(filepath, DATAPATH)
-          agent.get(contest[attr][:url]).save!(fullpath) # download file
-          contest[attr][:local] = filepath
+          agent.get(issue[attr][:url]).save!(fullpath) # download file
+          issue[attr][:local] = filepath
         end
         save
         true
       end
 
       def downloaded?(vn, cn)
-        contest = self.contest(vn, cn) or return false
+        issue = self.issue(vn, cn) or return false
         %i[tasks testdata].each do |attr|
-          return false if contest[attr].nil? || contest[attr][:local].nil?
-          return false unless File.exists?(File.expand_path(contest[attr][:local], DATAPATH))
+          return false if issue[attr].nil? || issue[attr][:local].nil?
+          return false unless File.exists?(File.expand_path(issue[attr][:local], DATAPATH))
         end
         true
       end
@@ -114,35 +114,43 @@ module Problems
       end
 
       def contest(vn, cn)
+        issue(vn, cn)
+      end
+
+      def contests(vn)
+        issues(vn)
+      end
+
+      def issue(vn, cn)
         return nil if vn.blank?
         return nil if cn.blank?
         vn = vn.to_i
         cn = cn.to_i
         return nil unless vn < index.size || vn < 0
-        return nil unless cn < index[vn][:contests].size || cn < 0
-        contest = index[vn][:contests][cn]
+        return nil unless cn < index[vn][:issues].size || cn < 0
+        issue = index[vn][:issues][cn]
       end
 
-      def contests(vn)
+      def issues(vn)
         return [] if vn.nil? || vn == ""
         vn = vn.to_i
         return [] unless vn < index.size || vn < 0
-        index[vn][:contests]
+        index[vn][:issues]
       end
 
       def index_page(page, title = nil)
         title = page.root.xpath(".//*[not(ancestor::a) and series_match(.)]", COCINameMatcher).first.text if title.nil?
-        series = {name: COCINameMatcher.canonicalize_series(title), url: (page.canonical_uri || page.uri).to_s, contests: []}
+        series = {name: COCINameMatcher.canonicalize_series(title), url: (page.canonical_uri || page.uri).to_s, issues: []}
         page.root.xpath(".//td").each do |td|
-          contest = td.xpath(".//*[contest_match(.)]", COCINameMatcher).first
-          next if contest.nil?
-          contest = {name: contest.text.titleize}
+          issue = td.xpath(".//*[issue_match(.)]", COCINameMatcher).first
+          next if issue.nil?
+          issue = {name: issue.text.titleize}
           CONTEST_RESOURCES.each do |attr, label|
             link = td.xpath(".//a[. = '#{label}']").first
             next if link.nil?
-            contest[attr] = {url: URI.join(page.uri, link.attributes['href'].value).to_s}
+            issue[attr] = {url: URI.join(page.uri, link.attributes['href'].value).to_s}
           end
-          series[:contests] << contest
+          series[:issues] << issue
         end
         # merge series into index...
         existing_series = index.map{ |series| series[:name] }
@@ -176,25 +184,25 @@ module Problems
       end
 
       def set_problem_set_id(vid, cid, id)
-        contest = self.contest(vid, cid) or return false
+        issue = self.issue(vid, cid) or return false
         if id.blank?
-          contest[:problem_set_id] = nil
+          issue[:problem_set_id] = nil
         else
-          contest[:problem_set_id] = id if ProblemSet.find(id)
+          issue[:problem_set_id] = id if ProblemSet.find(id)
         end
         save
       end
 
       def set_problem_id(vid, cid, pid, id)
-        contest = self.contest(vid, cid) or return false
-        problems = (contest[:problems] || [])
+        issue = self.issue(vid, cid) or return false
+        problems = (issue[:problems] || [])
         return false if pid == "" or pid.nil?
         pid = pid.to_i
         return false unless pid < problems.size || pid < 0
         if id.blank?
-          contest[:problems][pid][:problem_id] = nil
+          issue[:problems][pid][:problem_id] = nil
         else
-          contest[:problems][pid][:problem_id] = id if Problem.find(id)
+          issue[:problems][pid][:problem_id] = id if Problem.find(id)
         end
         save
       end
@@ -202,15 +210,15 @@ module Problems
       private
       def merge_series!(series, updated)
         series.merge!(updated.slice(:name, :url)) # top-level merge
-        series[:contests] ||= []
+        series[:issues] ||= []
 
-        (updated[:contests] || []).each do |contest|
-          existing_contests = series[:contests].map{|contest| contest[:name] }
-          contest_index = existing_contests.index(contest[:name]) || existing_contests.size
+        (updated[:issues] || []).each do |issue|
+          existing_issues = series[:issues].map{|issue| issue[:name] }
+          issue_index = existing_issues.index(issue[:name]) || existing_issues.size
 
-          (series[:contests][contest_index] ||= {}).merge!(contest.slice(:name))
+          (series[:issues][issue_index] ||= {}).merge!(issue.slice(:name))
           CONTEST_RESOURCES.keys.each do |attr|
-            (series[:contests][contest_index][attr] ||= {}).merge!(contest[attr] || {})
+            (series[:issues][issue_index][attr] ||= {}).merge!(issue[attr] || {})
           end
         end
         series

@@ -39,7 +39,7 @@
     </thead>
     <tbody>
   <% @submissions.each do |submission| %>
-    <tr onClick="toggle_height(<%= "'submission#{submission.id}source'" %>);">
+    <tr>
       <td><%= submission.created_at.strftime("%b %d %Y, %H:%M") %>
         <td><%= submission.language.name %></td>
       <td><%= submission.score %></td>
@@ -56,9 +56,6 @@
       <% if policy(submission).destroy? %>
         <td><%= link_to 'Destroy', submission, :data => { :confirm => 'Are you sure?' }, :method => :delete %></td>
       <% end %>
-    </tr>
-      <tr>
-      <td colspan="<%= @table_columns %>" style="padding: 0px;"><pre id="submission<%= submission.id %>source" style="overflow-y: hidden; width: 100%; display: none; border: 0px; padding: 0px; margin: 0px;"><%= submission.source %></pre></td>
     </tr>
   <% end %>
     </tbody>

@@ -3,8 +3,8 @@ class JudgeSubmissionWorker < ApplicationWorker
 
   default_queue :judge
 
-  def self.judge(submission, queue: nil)
-    self.put(id: submission.id, queue: queue)
+  def self.judge(submission, queue: nil, delay: 0)
+    self.put(id: submission.id, queue: queue, delay: delay)
   end
 
 

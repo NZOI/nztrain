@@ -8,19 +8,19 @@ module Problems
       # find all the problems in the contest
       def process(vid, cid)
         return false if !downloaded?(vid, cid)
-        contest = self.contest(vid, cid) or return false
+        issue = self.issue(vid, cid) or return false
         Dir.mktmpdir do |tmpdir|
           pdfpath = File.expand_path("tasks.pdf", tmpdir)
-          FileUtils.copy(File.expand_path(contest[:tasks][:local], DATAPATH), pdfpath)
+          FileUtils.copy(File.expand_path(issue[:tasks][:local], DATAPATH), pdfpath)
 
           importer = PDFImporter.new(pdfpath)
           problems = importer.extract
 
-          contest[:problems] ||= []
+          issue[:problems] ||= []
 
           # extract zipped test data
           testpath = File.expand_path("testdata.zip", tmpdir)
-          FileUtils.copy(File.expand_path(contest[:testdata][:local], DATAPATH), testpath)
+          FileUtils.copy(File.expand_path(issue[:testdata][:local], DATAPATH), testpath)
 
           Zip::File.open(testpath) do |zfs|
             candidate_zips = []
@@ -30,10 +30,10 @@ module Problems
 
             solutiondir = File.expand_path("solutions", tmpdir)
             FileUtils.mkdir_p(solutiondir)
-            if contest[:solutions] && contest[:solutions][:local]
+            if issue[:solutions] && issue[:solutions][:local]
               # extract solution data
               solutionpath = File.expand_path("solutions.zip", tmpdir)
-              FileUtils.copy(File.expand_path(contest[:solutions][:local], DATAPATH), solutionpath)
+              FileUtils.copy(File.expand_path(issue[:solutions][:local], DATAPATH), solutionpath)
               Zip::InputStream::open(solutionpath) do |io|
                 while (entry = io.get_next_entry)
                   entry.extract(File.expand_path(entry.to_s, solutiondir))
@@ -43,9 +43,9 @@ module Problems
 
             # determine the problems we need
             problems.each do |problem_data|
-              existing = contest[:problems].map{ |p| p[:name] }
+              existing = issue[:problems].map{ |p| p[:name] }
               pid = existing.index(problem_data[:name]) || existing.size
-              merge_problem!(contest[:problems][pid] ||= {}, problem_data)
+              merge_problem!(issue[:problems][pid] ||= {}, problem_data)
 
               # find zip dir for test data
               simplename = problem_data[:name].mb_chars.normalize(:kd).gsub(/[^\x00-\x7F]/n,'').downcase.to_s.strip.split(' ')[0]
@@ -61,7 +61,7 @@ module Problems
               end
 
               # make sure the test submission array is present
-              contest[:problems][pid][:tests] ||= []
+              issue[:problems][pid][:tests] ||= []
 
               paths = {tmp: tmpdir, testdata: testdatadir}
 
@@ -71,9 +71,26 @@ module Problems
                 paths[:model] = mfile if File.exists?(mfile)
               end
 
-              problem_data[:results] = contest[:results]
+              problem_data[:results] = issue[:results]
 
-              yield(contest[:problems][pid], problem_data, pid, paths) if block_given?
+              # why bother splitting the solution pdf file?
+              if issue[:solutions] && issue[:solutions][:local]
+                possible_solution = File.expand_path("solutions.pdf", solutiondir)
+                paths[:solution] = possible_solution if File.exists?(possible_solution)
+                problem_data[:solution] = {file_attachment_id: issue[:solutions][:file_attachment_id]}
+              end
+
+              # create a new pdf file of the task with only the relevant pages
+              if problem_data[:pages]
+                paths[:statement] = File.expand_path("#{problem_data[:shortname]}-statement.pdf", tmpdir)
+                Prawn::Document.generate paths[:statement], skip_page_creation: true do |pdf|
+                  problem_data[:pages].each do |pg|
+                    pdf.start_new_page(template: pdfpath, template_page: pg)
+                  end
+                end
+              end
+
+              yield(issue[:problems][pid], problem_data, pid, paths) if block_given?
             end
           end
 
