@@ -195,13 +195,13 @@ NZTrain::Application.routes.draw do
   end
 
   namespace :importers do
-    get 'contest_series/:series/', to: 'contest_series#index', as: 'contest_series'
+    get 'problem_series/:series/', to: 'problem_series#index', as: 'problem_series'
     %w[download reindex].each do |operation|
-      post "contest_series/:series/:vid/:cid/#{operation}", to: "contest_series##{operation}", as: "#{operation}_contest_series"
+      post "problem_series/:series(/:vid(/:cid))/#{operation}", to: "problem_series##{operation}", as: "#{operation}_problem_series"
     end
-    patch 'contest_series/:series/:vid/:cid', to: "contest_series#update", as: "update_contest_series"
-    post 'contest_series/:series/update_index', to: "contest_series#update_index", as: "update_index_contest_series"
-    post 'contest_series/:series(/:vid(/:cid(/:pid)))/import(/:filter)', to: "contest_series#import", as: "import_contest_series", defaults: {filter: 'all'}
+    patch 'problem_series/:series/:vid/:cid', to: "problem_series#update", as: "update_problem_series"
+    post 'problem_series/:series/update_index', to: "problem_series#update_index", as: "update_index_problem_series"
+    post 'problem_series/:series(/:vid(/:cid(/:pid)))/import(/:filter)', to: "problem_series#import", as: "import_problem_series", defaults: {filter: 'all'}
   end
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131224231543) do
+ActiveRecord::Schema.define(version: 20131226234044) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,7 +108,6 @@ ActiveRecord::Schema.define(version: 20131224231543) do
   create_table "file_attachments", force: true do |t|
     t.string   "name"
     t.string   "file_attachment"
-    t.string   "string"
     t.integer  "owner_id"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
@@ -183,6 +182,13 @@ ActiveRecord::Schema.define(version: 20131224231543) do
   end
 
   add_index "languages", ["identifier"], name: "index_languages_on_identifier", unique: true, using: :btree
+
+  create_table "problem_series", force: true do |t|
+    t.string "name"
+    t.string "identifier"
+    t.string "importer_type"
+    t.text   "index_yaml"
+  end
 
   create_table "problem_set_problems", force: true do |t|
     t.integer "problem_set_id"

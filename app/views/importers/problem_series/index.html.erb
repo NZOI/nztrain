@@ -1,0 +1,96 @@
+<% content_for :title, series %>
+<% tagged_jobs = $qless.jobs.tagged(problem_series.tag)['jobs'].map{|jid|$qless.jobs[jid]} %>
+<% pending_jobs = tagged_jobs.select{|job| job.state == 'pending' } %>
+<%= link_to "Jobs", qless_tag_path(problem_series.tag) %>
+<% if pending_jobs.any? %>
+  <h2>Pending jobs</h2>
+  <ul>
+  <% pending_jobs.each do |job| %>
+    <li><%= link_to "#{job.jid} | #{job.klass_name}", qless_job_path(job.jid) %></li>
+  <% end %>
+  </ul>
+<% end %>
+
+<p><%= link_to "Update index", importers_update_index_problem_series_path(series), method: :post %></p>
+<br>
+<table class="main_table">
+  <% @index.each_with_index do |volume, vid| %>
+    <thead>
+      <tr class="subheading">
+        <th><%= link_to volume[:name], volume[:url] %></th>
+        <th>Downloaded</th>
+        <th>
+          <%= link_to "Download", importers_download_problem_series_path(series, vid), method: :post %> |
+          <%= link_to "Reindex", importers_reindex_problem_series_path(series, vid), method: :post %>
+        </th>
+        <th colspan="2">Imported</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% volume[:contests].each_with_index do |contest, cid| %>
+        <%= form_tag importers_update_problem_series_path(series, vid, cid), method: :patch do %>
+          <tr class="subheading">
+            <td><%= link_to_if contest[:url], contest[:name], contest[:url] %></td>
+            <td><%= importer.downloaded?(vid, cid) ? "Yes" : "No" %></td>
+            <td>
+              <%= link_to "Download", importers_download_problem_series_path(series, vid, cid), method: :post %> |
+              <%= link_to "Reindex", importers_reindex_problem_series_path(series, vid, cid), method: :post %>
+            </td>
+            <td><%= link_to ProblemSet.where(id: contest[:problem_set_id]).first.try(:name), problem_set_path(contest[:problem_set_id]) if contest[:problem_set_id] %></td>
+            <td>
+              <%= text_field "contest", :problem_set_id, value: contest[:problem_set_id], style: 'width: 50px' %>
+            </td>
+          </tr>
+          <% (contest[:problems] || []).each_with_index do |problem, pid| %>
+            <tr>
+              <td>
+                <%= check_box "contest[problems][#{pid}]", :select, {}, 1, 0 %>
+                <%= label_tag "contest[problems[#{pid}][select]" do %>
+                  <%= link_to_if problem[:url], problem[:name], problem[:url] %>
+                <% end %>
+              </td>
+              <td></td>
+              <td>
+                <% if problem[:problem_id] %>
+                  Re-import:
+                  <%= link_to "Statement", importers_import_problem_series_path(series, vid, cid, pid, :statement), method: :post %> |
+                  <%= link_to "Images (#{problem[:images].size})", importers_import_problem_series_path(series, vid, cid, pid, :images), method: :post %> |
+                  <%= link_to "Test Cases", importers_import_problem_series_path(series, vid, cid, pid, :tests), method: :post %> |
+                  <%= link_to "Test Submissions", importers_import_problem_series_path(series, vid, cid, pid, :submissions), method: :post %>
+                <% else %>
+                  <%= link_to "Import", importers_import_problem_series_path(series, vid, cid, pid), method: :post %>
+                <% end %>
+              </td>
+              <td><%= link_to Problem.where(id: problem[:problem_id]).first.try(:name), problem_path(problem[:problem_id]) if problem[:problem_id] %></td>
+              <td>
+                <%= text_field("contest[problems][#{pid}]", :problem_id, value: problem[:problem_id], style: 'width: 50px') %>
+              </td>
+            </tr>
+          <% end %>
+          <tr>
+            <td>
+              <%= radio_button "import", "disposition", "replace", checked: true %> <%= label_tag "import[disposition][replace]", "replace" %>
+              or
+              <%= radio_button "import", "disposition", "merge" %> <%= label_tag "import[disposition][merge]", "merge" %>
+              or
+              <%= radio_button "import", "disposition", "missing" %> <%= label_tag "import[disposition][missing]", "missing" %>
+            </td>
+            <td colspan="2">
+              Import:
+              <%= operation_list.map do |part|
+                    check_box("import", part, {}, 1, 0) + label_tag("import[#{part}]", part)
+                  end.join(', ').html_safe %>
+            </td>
+            <td>
+              <%= submit_tag "Import" %>
+            </td>
+            <td>
+              <%= submit_tag "Update" %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  <% end %>
+</table>
+

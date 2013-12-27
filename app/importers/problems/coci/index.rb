@@ -36,8 +36,8 @@ module Problems
       #
       included do
         SOURCE = "http://www.hsin.hr/coci/"
+        IDENTIFIER = "COCI"
         DATAPATH = File.expand_path("db/data/downloads/importers/coci/",Rails.root)
-        INDEXFILE = File.expand_path("index.yaml",DATAPATH)
         CONTEST_RESOURCES = {tasks: "Tasks", testdata: "Test data", solutions: "Solutions", results: "Results"}
 
         class COCINameMatcher
@@ -54,7 +54,10 @@ module Problems
         end
       end
 
-      def initialize
+      attr_reader :problem_series
+
+      def initialize(problem_series)
+        @problem_series = problem_series
         @index = nil
       end
 
@@ -103,9 +106,16 @@ module Problems
         true
       end
 
+      def volume(vn)
+        return nil if vn.blank?
+        vn = vn.to_i
+        return nil unless vn < index.size || vn < 0
+        index[vn]
+      end
+
       def contest(vn, cn)
-        return nil if vn.nil? || vn == ""
-        return nil if cn.nil? || cn == ""
+        return nil if vn.blank?
+        return nil if cn.blank?
         vn = vn.to_i
         cn = cn.to_i
         return nil unless vn < index.size || vn < 0
@@ -146,11 +156,7 @@ module Problems
       end
 
       def load
-        if !File.exists?(INDEXFILE)
-          @index = []
-        else
-          @index = Psych.safe_load(File.read(INDEXFILE), [Symbol], %i[name local url contests problem_set_id timestamp tasks testdata solutions results problems problem_id points images tests submission_id model language_id file_attachment_id])
-        end
+        @index = problem_series.index
         true
       end
 
@@ -164,13 +170,14 @@ module Problems
       end
 
       def save
-        File.open(INDEXFILE, "w") {|f| Psych.dump(index, f) }
+        problem_series.index = index
+        problem_series.save
         true
       end
 
       def set_problem_set_id(vid, cid, id)
         contest = self.contest(vid, cid) or return false
-        if id.nil? || id == ""
+        if id.blank?
           contest[:problem_set_id] = nil
         else
           contest[:problem_set_id] = id if ProblemSet.find(id)
@@ -184,7 +191,7 @@ module Problems
         return false if pid == "" or pid.nil?
         pid = pid.to_i
         return false unless pid < problems.size || pid < 0
-        if id.nil? || id == ""
+        if id.blank?
           contest[:problems][pid][:problem_id] = nil
         else
           contest[:problems][pid][:problem_id] = id if Problem.find(id)

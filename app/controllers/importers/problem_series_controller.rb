@@ -1,11 +1,7 @@
-class Importers::ContestSeriesController < ApplicationController
+class Importers::ProblemSeriesController < ApplicationController
   before_filter do
     raise Pundit::NotAuthorizedError unless current_user.is_superadmin?
     raise ActiveRecord::RecordNotFound if importer.nil?
-  end
-
-  def series
-    params[:series]
   end
 
   def index
@@ -13,38 +9,58 @@ class Importers::ContestSeriesController < ApplicationController
   end
 
   def update_index
-    if importer.update
-      redirect_to index_path, :notice => "The series index has been updated."
+    if jid = problem_series.update_index
+      redirect_to index_path, :notice => "Index update job (#{jid}) queued."
     else
       redirect_to index_path, :alert => "The series index failed to update."
     end
   end
 
   def download
-    if params[:vid] && params[:cid] && importer.download(params[:vid], params[:cid])
-      redirect_to index_path, :notice => "The contest data was downloaded"
+    if jid = problem_series.download(params[:vid], params[:cid])
+      redirect_to index_path, :notice => "Download job (#{jid}) queued."
     else
-      redirect_to index_path, :alert => "The contest could not be downloaded"
+      redirect_to index_path, :alert => "Download failed."
     end
   end
 
   def reindex
-    if params[:vid] && params[:cid] && importer.process(params[:vid], params[:cid])
-      redirect_to index_path, :notice => "The contest data was reindexed"
+    if jid = problem_series.reindex(params[:vid], params[:cid])
+      redirect_to index_path, :notice => "Reindex job (#{jid}) queued."
     else
-      redirect_to index_path, :alert => "The contest could not be reindexed"
+      redirect_to index_path, :alert => "Reindex failed."
     end
   end
 
   def update
-    contest = importer.contest(params[:vid], params[:cid]) or raise ActiveRecord::RecordNotFound
-    importer.set_problem_set_id(params[:vid], params[:cid], params[:contest][:problem_set_id]) if params[:contest] && params[:contest][:problem_set_id]
-    if params[:problems] && params[:problems].is_a?(Hash)
-      params[:problems].each do |pid, id|
-        importer.set_problem_id(params[:vid], params[:cid], pid, id)
+    case params[:commit]
+    when "Update"
+      problem_series.with_lock do
+        contest = importer.contest(params[:vid], params[:cid]) or raise ActiveRecord::RecordNotFound
+        contest_params = params.require(:contest)
+        importer.set_problem_set_id(params[:vid], params[:cid], params[:contest][:problem_set_id]) if contest_params[:problem_set_id]
+
+        if contest_params[:problems] && contest_params[:problems].is_a?(Hash)
+          contest_params[:problems].each do |pid, new_params|
+            importer.set_problem_id(params[:vid], params[:cid], pid, new_params[:problem_id])
+          end
+        end
+        redirect_to index_path, :notice => "Contest import ids updated"
       end
+    when "Import"
+      operations = params.require(:import).select{|k,v| operation_list.include?(k) && v && v.to_i!=0 }.keys
+      operations += operation_list if params.require(:import)[:all] == '1'
+      pids = params[:contest][:problems] if params[:contest] && params[:contest][:problems]
+      pids = pids.select{|k,v| v[:select] && v[:select].to_i!=0}.keys.map{|id|id.to_i}
+
+      if jid = problem_series.import(params[:vid], params[:cid], pids, disposition: params.require(:import)['disposition'] || 'merge', operations: operations)
+        redirect_to index_path, :notice => "Import job (#{jid}) queued."
+      else
+        redirect_to index_path, :alert => "Import failed."
+      end
+    else
+      redirect_to index_path, :alert => "Unknown operation requested"
     end
-    redirect_to index_path, :notice => "Contest import ids updated"
   end
 
   def import
@@ -169,18 +185,27 @@ class Importers::ContestSeriesController < ApplicationController
     redirect_to index_path, message
   end
 
-  helper_method :series, :importer, :index_path
+  helper_method :series, :importer, :index_path, :problem_series, :operation_list
 
   protected
-  IMPORTERS = {"COCI" => Problems::COCI::Importer}
-  def importer
-    @importer ||= begin
-      nil if !IMPORTERS.keys.include?(series.to_s)
-      IMPORTERS[series].new
-    end
+  def series
+    params[:series]
   end
+
+  def problem_series
+    @problem_series ||= ProblemSeries.find_by(identifier: series.to_s)
+  end
+
+  def importer
+    @importer ||= problem_series.importer
+  end
+
   def index_path
-    importers_contest_series_path(series)
+    importers_problem_series_path(series)
+  end
+
+  def operation_list
+    %w[statement attributes images test_cases submissions attachments]
   end
 end
 
