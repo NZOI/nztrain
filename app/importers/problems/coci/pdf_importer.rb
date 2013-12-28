@@ -218,6 +218,9 @@ module Problems
           self.paragraph = {text: "", plain: "", count: 0, bold_count: 0, bold: false, italic: false, monospace: false, list_item: false, monospace_count: 0, images: []}.merge(extra)
         end
         def page=(page)
+          if self.no_marked_content
+            create_paragraph
+          end
           end_page()
           self.page_text = ""
           self.current_name = nil
@@ -456,7 +459,6 @@ module Problems
         statements = extract_statements(summary.map{ |problem| problem[:name] })
         images = extract_images(statements.map{|statement| statement[:images]}.flatten(1))
         #puts reader.pages.first.text
-        byebug
         problem_data = summary.zip(statements).map{|summary, statement| summary.merge(statement)}.map do |data|
           data[:images] = images.slice(*data[:images].map{|pg, name, bbox|[pg,name]}) # get subset of images needed by problem
           data
