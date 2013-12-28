@@ -4,6 +4,8 @@ module Problems
       class TextStructureReceiver
         attr_accessor :state
 
+        SPACE = " "
+
         delegate :save_graphics_state, :restore_graphics_state, :concatenate_matrix, :begin_text_object, :end_text_object, :set_character_spacing, :set_horizontal_text_scaling, :set_text_font_and_size, :font_size, :set_text_leading, :set_text_rendering_mode, :set_text_rise, :set_word_spacing, :move_text_position, :move_text_position_and_set_leading, :set_text_matrix_and_text_line_matrix, :move_to_start_of_next_line, to: :state
 
         def page=(page)
@@ -27,18 +29,7 @@ module Problems
         end
 
         def show_text(text)
-          text_width = 0
-          glyphs = state.current_font.unpack(text)
-          utf8_text = glyphs.map do |glyph_code|
-            utf8_chars = state.current_font.to_utf8(glyph_code)
-            glyph_width = state.current_font.glyph_width(glyph_code) / 1000.0
-            th = 1
-            scaled_glyph_width = glyph_width * state.font_size * th
-            text_width += scaled_glyph_width
-            utf8_chars
-          end.join
-          x, y = rotated_coordinates(state.trm_transform(0,0))
-          return_text(utf8_text, state, [x, y], text_width)
+          show_text_with_positioning([text])
         end
         def width
           @mediabox[2] - @mediabox[0]
@@ -50,12 +41,44 @@ module Problems
           [(pos[0]-@mediabox[0])/width, (pos[1]-@mediabox[1])/height]
         end
         def show_text_with_positioning(array)
-          show_text(array.select{|el|el.is_a?(String)}.join)
+          # split into subarrays of distinct text strings
+          subarrays = [[]]
+          array.each do |arg|
+            if arg.is_a?(String) || arg.abs < 800 # a glyph width is normally about 0.688, so 800 represents kerning just over 1 character
+              subarrays.last << arg
+            else
+              subarrays << [arg] # start new subarray
+            end
+          end
+
+          subarrays.each do |subarray|
+            startpos = nil
+            utf8_text = ""
+            subarray.each do |element|
+              if element.is_a?(String)
+                startpos = rotated_coordinates(state.trm_transform(0,0)) if startpos.nil?
+                glyphs = state.current_font.unpack(element)
+                utf8_text << glyphs.map do |glyph_code|
+                  utf8_chars = state.current_font.to_utf8(glyph_code)
+                  glyph_width = state.current_font.glyph_width(glyph_code) / 1000.0
+                  state.process_glyph_displacement(glyph_width, 0, utf8_chars == SPACE)
+                  utf8_chars
+                end.join
+              else
+                state.process_glyph_displacement(0, element, false)
+              end
+            end
+            if !utf8_text.empty?
+              endpos = rotated_coordinates(state.trm_transform(0,0))
+              text_width = [endpos[0]-startpos[0], endpos[1]-startpos[1]].max
+              return_text(utf8_text.gsub(/▯/, " "), state, startpos, endpos, text_width)
+            end
+          end
         end
         alias_method :move_to_next_line_and_show_text, :show_text
         alias_method :set_spacing_next_line_show_text, :show_text
 
-        def return_text(current_text, state, abspos, textwidth)
+        def return_text(current_text, state, abspos, endpos, textwidth)
           puts "TEXT@#{sprintf("[%.2f,%.2f]", *abs2rel(abspos))}: #{current_text}"
         end
 
@@ -110,7 +133,7 @@ module Problems
         def rewind_last(n = 1)
           self.labelindex -= n
         end
-        def return_text(current_text, state, abspos, text_width)
+        def return_text(current_text, state, abspos, endpos, text_width)
           position_start = abspos
           position_end = abspos.dup
           position_end[0] += text_width # doesn't account for vertical text
@@ -341,9 +364,9 @@ module Problems
           self.full_text << text
           self.page_text << text
         end
-        def append_paragraph(text, state)
+        def append_paragraph(text, state, abspos) # abspos is the starting coordinates for the text
           if self.paragraph[:text].empty?
-            paragraph[:x] = state.trm_transform(0,0).first
+            paragraph[:x] = abspos.first
           end
           style = {list_item: paragraph[:list_item], bold: false, italic: false, monospace: false}
           fontdes = state.current_font.font_descriptor
@@ -393,11 +416,11 @@ module Problems
         def end_page
           append_statement(markup.pre(paragraph_style[:pre], paragraph_style[:pre] = false))
         end
-        def return_text(text, state, abspos, textwidth)
+        def return_text(text, state, abspos, endpos, textwidth)
           append_text(text)
           # potential text to add to statement
           if !within?(:Artifact) && within?(:P)
-            append_paragraph(text, state) 
+            append_paragraph(text, state, abspos)
           elsif marked_content.empty? # not in anything!
             if self.current_name.nil?
               self.current_name = detect_task(page_text)
@@ -406,23 +429,18 @@ module Problems
                 self.no_marked_content = true # very likely there are no paragraph marks to help us :(
               end
             elsif self.no_marked_content
-              append_paragraph(text, state)
-              @unmarkedend = abspos
-              @unmarkedend[0] += textwidth # a bit of a munge here (doesn't take page rotation... into account)
-            end
-          end
-        end
-        def move_text_position(dx, dy)
-          super
-          x, y = rotated_coordinates(state.trm_transform(0,0)) # actual coordinates
-          if self.no_marked_content && @unmarkedend # are we moving very far away?
-            charwidth = (state.current_font.glyph_width(32) / 1000.0 * state.font_size) # of a SPACE
-            if ((x-@unmarkedend[0])/6)**2 + (y-@unmarkedend[1])**2 > (charwidth)**2 # we are moving somewhere else?!?!
-              if abs2rel([x,y])[0] < 0.3 && abs2rel(@unmarkedend)[0] > 0.8 # probably end of line in the same paragraph
-                # do nothing
-              else # probably starting a new paragraph
-                create_paragraph
+              if @unmarkedend # exists
+                charwidth = (state.current_font.glyph_width(32) / 1000.0 * state.font_size)
+                if ((abspos[0]-@unmarkedend[0])/3)**2 + (abspos[1]-@unmarkedend[1])**2 > (charwidth)**2
+                  if abs2rel(abspos)[0] < 0.3 && abs2rel(@unmarkedend)[0] > 0.8 # probably end of line in the same paragraph
+                    # do nothing
+                  else # probably starting a new paragraph
+                    create_paragraph
+                  end
+                end
               end
+              append_paragraph(text, state, abspos)
+              @unmarkedend = endpos
             end
           end
         end
