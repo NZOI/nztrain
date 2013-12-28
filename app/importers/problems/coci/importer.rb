@@ -80,7 +80,7 @@ module Problems
 
               # check if there is a model solution
               %w[.cpp .c].each do |ext|
-                mfile = File.expand_path(zipdir + ext, solutiondir)
+                mfile = File.expand_path(problem_data[:shortname] + ext, solutiondir)
                 paths[:model] = mfile if File.exists?(mfile)
               end
 
