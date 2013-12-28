@@ -52,12 +52,25 @@ module Problems
               zipdirs = candidate_zips.select{|entry| entry =~ /\A#{simplename}/ }
               zipdir = (zipdirs.select{|entry| entry == simplename } + zipdirs)[0]
 
-              problem_data[:shortname] = zipdir
+              problem_data[:shortname] = zipdir || simplename
 
               testdatadir = File.expand_path("testdata-#{pid}", tmpdir)
               FileUtils.mkdir_p(testdatadir)
-              zfs.dir.foreach(zipdir) do |entry|
-                zfs.extract("#{zipdir}/#{entry}", File.expand_path(entry.to_s, testdatadir))
+
+              if zipdir.nil? # got a weird directory structure
+                candidate_zips.each do |zdir|
+                  zfs.dir.foreach("#{zdir}") do |edir|
+                    if edir =~ /\A#{simplename}/
+                      zfs.dir.foreach("#{zdir}/#{edir}") do |entry|
+                        zfs.extract("#{zdir}/#{edir}/#{entry}", File.expand_path(entry.to_s, testdatadir))
+                      end
+                    end
+                  end
+                end
+              else
+                zfs.dir.foreach(zipdir) do |entry|
+                  zfs.extract("#{zipdir}/#{entry}", File.expand_path(entry.to_s, testdatadir))
+                end
               end
 
               # make sure the test submission array is present

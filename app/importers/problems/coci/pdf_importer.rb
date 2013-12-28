@@ -477,6 +477,13 @@ module Problems
       def extract
         summary = extract_summary
         statements = extract_statements(summary.map{ |problem| problem[:name] })
+        statements.map! do |statement|
+          if statement.nil?
+            {statement: "", pages: [], images: []}
+          else
+            statement
+          end
+        end
         images = extract_images(statements.map{|statement| statement[:images]}.flatten(1))
         #puts reader.pages.first.text
         problem_data = summary.zip(statements).map{|summary, statement| summary.merge(statement)}.map do |data|
