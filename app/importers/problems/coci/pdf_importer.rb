@@ -209,6 +209,7 @@ module Problems
           self.full_text = ""
           self.markup = markup
           self.images = []
+          self.page_text = ""
           reset_paragraph
           reset_statement
           super()
