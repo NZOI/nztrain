@@ -62,7 +62,11 @@ module Problems
                   zfs.dir.foreach("#{zdir}") do |edir|
                     if edir =~ /\A#{simplename}/
                       zfs.dir.foreach("#{zdir}/#{edir}") do |entry|
-                        zfs.extract("#{zdir}/#{edir}/#{entry}", File.expand_path(entry.to_s, testdatadir))
+                        entryname = entry.to_s
+                        if edir =~ /examples/ && !(entryname =~ /dummy/)
+                          entryname = "test.dummy.#{entryname}"
+                        end
+                        zfs.extract("#{zdir}/#{edir}/#{entry}", File.expand_path(entryname, testdatadir))
                       end
                     end
                   end
