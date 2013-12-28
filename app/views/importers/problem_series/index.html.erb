@@ -46,8 +46,8 @@
           <% (issue[:problems] || []).each_with_index do |problem, pid| %>
             <tr>
               <td>
-                <%= check_box "issue[#{vid}][#{cid}][problems][#{pid}]", :select, {}, 1, 0 %>
-                <%= label_tag "issue[#{vid}][#{cid}][problems[#{pid}][select]" do %>
+                <%= check_box_tag "issue[#{vid}][#{cid}][checked_problems][#{pid}]", :checked %>
+                <%= label_tag "issue[#{vid}][#{cid}][checked_problems][#{pid}]" do %>
                   <%= link_to_if problem[:url], problem[:name], problem[:url] %>
                 <% end %>
               </td>
@@ -63,16 +63,16 @@
           <% if issue[:problems] && issue[:problems].any? %>
             <tr>
               <td>
-                <%= radio_button "import", "disposition", "replace", checked: true %> <%= label_tag "issue[#{vid}][#{cid}][disposition][replace]", "replace" %>
+                <%= radio_button "issue[#{vid}][#{cid}]", "disposition", "replace", checked: true %> <%= label_tag "issue[#{vid}][#{cid}][disposition][replace]", "replace" %>
                 or
-                <%= radio_button "import", "disposition", "merge" %> <%= label_tag "issue[#{vid}][#{cid}][disposition][merge]", "merge" %>
+                <%= radio_button "issue[#{vid}][#{cid}]", "disposition", "merge" %> <%= label_tag "issue[#{vid}][#{cid}][disposition][merge]", "merge" %>
                 or
-                <%= radio_button "import", "disposition", "missing" %> <%= label_tag "issue[#{vid}][#{cid}][disposition][missing]", "missing" %>
+                <%= radio_button "issue[#{vid}][#{cid}]", "disposition", "missing" %> <%= label_tag "issue[#{vid}][#{cid}][disposition][missing]", "missing" %>
               </td>
               <td colspan="2">
                 Import:
                 <%= operation_list.map do |part|
-                      check_box("issue[#{vid}][#{cid}]", part, {}, 1, 0) + label_tag("issue[#{vid}][#{cid}][#{part}]", part)
+                      check_box_tag("issue[#{vid}][#{cid}][#{part}]", :checked) + label_tag("issue[#{vid}][#{cid}][#{part}]", part)
                     end.join(', ').html_safe %>
               </td>
               <td>

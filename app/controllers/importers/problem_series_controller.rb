@@ -50,12 +50,11 @@ class Importers::ProblemSeriesController < ApplicationController
         redirect_to index_path, :notice => "Volume/Issue import ids updated"
       end
     when "Import", "Import All"
-      operations = issue_params.select{|k,v| operation_list.include?(k) && v && v.to_i!=0 }.keys
+      operations = issue_params.keys & operation_list
       operations = operation_list if operations.include?('all')
 
-      if issue_params[:problems]
-        pids = issue_params[:problems] 
-        pids = pids.select{|k,v| v[:select] && v[:select].to_i!=0}.keys.map{|id|id.to_i}
+      if issue_params[:checked_problems]
+        pids = issue_params[:checked_problems].keys.map{|id|id.to_i} || []
       end
       pids = nil if params[:commit] == "Import All"
 
