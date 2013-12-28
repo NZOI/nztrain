@@ -161,7 +161,8 @@ module Problems
         end
         def escape(text)
           # text.gsub(/[\\`*_{}\[\]\(\)#+-\.!]/,"\\\0") # markdown
-          text = text.gsub(/</,"&lt;").gsub(/>/,"&gt;").gsub(/&/,"&amp;")
+          text = text.gsub(/</,"&lt;").gsub(/>/,"&gt;").gsub(/&/,"&amp;") # escape html
+          text = text.gsub(/[\\\$]/,'\\\\\0') # escape markdown backslash and mathjax $ delimiter (Loofah scrubber)
           #"„‟“”".bytes # stylized single and double quotes
           #=> [226, 128, 158, 226, 128, 159, 226, 128, 156, 226, 128, 157]
           text.gsub(/[„‟]/,"'").gsub(/[“”]/,'"')
