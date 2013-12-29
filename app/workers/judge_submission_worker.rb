@@ -257,7 +257,11 @@ class JudgeSubmissionWorker < ApplicationWorker
     if result['status'] == 0
       numerator = test_sets.map{ |s| (graded_sets[s.id]['evaluation'] * s.points)}.inject(&:+).to_f
       result['evaluation'] = numerator/denominator
-      result['score'] = (preres.nil? || preres['evaluation'] == 1) ? (result['evaluation']*100).floor : 0
+      if denominator == 0
+        result['score'] = 0
+      else
+        result['score'] = (preres.nil? || preres['evaluation'] == 1) ? (result['evaluation']*100).floor : 0
+      end
     end
     result
   end
