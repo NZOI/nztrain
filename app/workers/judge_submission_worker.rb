@@ -100,11 +100,11 @@ class JudgeSubmissionWorker < ApplicationWorker
   attr_accessor :problem, :box, :tmpdir
 
   def time_limit
-    problem.time_limit || 0
+    problem.time_limit || 0.001
   end
 
   def memory_limit
-    problem.memory_limit || 0
+    problem.memory_limit || 0.001
   end
 
   def extra_time
