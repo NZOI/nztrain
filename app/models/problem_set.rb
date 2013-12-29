@@ -14,6 +14,8 @@ class ProblemSet < ActiveRecord::Base
 
   accepts_nested_attributes_for :problem_associations
 
+  validates :name, :presence => true
+
   # Scopes
   scope :distinct, -> { select("distinct(problem_sets.id), problem_sets.*") }
 

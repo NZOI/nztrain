@@ -21,7 +21,7 @@ class Problem < ActiveRecord::Base
 
   has_many :filelinks, -> { includes(:file_attachment) } , :as => :root, :dependent => :destroy
 
-  validates :name, :presence => true, :uniqueness => { :case_sensitive => false }
+  validates :name, :presence => true
 
   before_save do
     self.input = 'data.in' if self.input == ''

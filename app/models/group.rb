@@ -23,6 +23,8 @@ class Group < ActiveRecord::Base
 
   has_many :filelinks, -> { includes(:file_attachment) }, :as => :root, :dependent => :destroy
 
+  validates :name, :presence => true, :uniqueness => { :case_sensitive => false }
+
   # Scopes
   scope :distinct, -> { select("distinct(groups.id), groups.*") }
 

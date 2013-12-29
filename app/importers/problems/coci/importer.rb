@@ -15,6 +15,17 @@ module Problems
 
           importer = PDFImporter.new(pdfpath)
           problems = importer.extract
+          if problems.size == 0 # try find the task list in the results webpage
+            agent = Mechanize.new
+            page = agent.get(issue[:results][:url])
+            problemlist = []
+
+            page.links_with(:href => /#{SOURCE}.*\/solutions\/.*\/.*_[[:alnum:]].cpp$/).each do |link|
+              pname = link.uri.match(/_([[:alnum:]]).cpp$/)[1]
+              problemlist << pname if !problemlist.include?(pname)
+            end
+            problems = importer.extract(problemlist.map{|name|{name: name}})
+          end
 
           issue[:problems] ||= []
 

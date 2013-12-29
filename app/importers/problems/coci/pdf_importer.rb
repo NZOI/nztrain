@@ -474,8 +474,8 @@ module Problems
       end
 
       # get array of problem data
-      def extract
-        summary = extract_summary
+      def extract(summary = nil)
+        summary = extract_summary if summary.nil?
         statements = extract_statements(summary.map{ |problem| problem[:name] })
         statements.map! do |statement|
           if statement.nil?
