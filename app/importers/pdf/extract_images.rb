@@ -76,7 +76,7 @@ module PDF::ExtractImages
     end
 
     def convert_to_format(imagename, newname)
-      Magick::Image.new(expand_path(imagename)).write(expand_path(newname))
+      Magick::Image.read(expand_path(imagename)).first.write(expand_path(newname))
     end
 
     def save_snapshot(pg, bbox, filename)
