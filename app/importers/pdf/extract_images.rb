@@ -33,10 +33,9 @@ module PDF::ExtractImages
         ext = 'png'
       elsif xobjstream.hash[:Subtype] == :Image
         ext = case xobjstream.hash[:Filter]
-              when :CCITTFaxDecode; 'tif'
+              when :CCITTFaxDecode; 'png'
               when :DCTDecode; 'jpg'
-              else
-                PDF::ExtractImages::Raw.new(xobjstream).supported? ? 'tif' : 'png'
+              else; 'png'
               end
       end
       "#{pgnum}-#{name}.#{ext}"
@@ -57,13 +56,15 @@ module PDF::ExtractImages
       when :Image then
         case stream.hash[:Filter]
         when :CCITTFaxDecode then
-          PDF::ExtractImages::Tiff.new(stream).save(expand_path(filename))
+          PDF::ExtractImages::Tiff.new(stream).save(expand_path(filename + '.tif'))
+          convert_to_format(filename + '.tif', filename)
         when :DCTDecode      then
           PDF::ExtractImages::Jpg.new(stream).save(expand_path(filename))
         else
           raw_extractor = PDF::ExtractImages::Raw.new(stream)
           if raw_extractor.supported?
-            raw_extractor.save(expand_path(filename))
+            raw_extractor.save(expand_path(filename + '.tif'))
+            convert_to_format(filename + '.tif', filename)
           else
             save_snapshot(pg, bbox, filename)
           end
@@ -72,6 +73,10 @@ module PDF::ExtractImages
         save_snapshot(pg, bbox, filename)
       end
       filename
+    end
+
+    def convert_to_format(imagename, newname)
+      Magick::Image.new(expand_path(imagename)).write(expand_path(newname))
     end
 
     def save_snapshot(pg, bbox, filename)
