@@ -26,7 +26,7 @@ class Problem < ActiveRecord::Base
   before_save do
     self.input = 'data.in' if self.input == ''
     self.output = 'data.out' if self.output == ''
-    self.rejudge_at = Time.now if (self.changed & %w[memory_limit time_limit evaluator_id]).any?
+    self.rejudge_at = Time.now if rejudge_at.nil? || (self.changed & %w[memory_limit time_limit evaluator_id]).any?
   end
 
   after_save do
