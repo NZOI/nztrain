@@ -164,8 +164,10 @@ class Submission < ActiveRecord::Base
           return # unsupported classification
         end
 
-        judge_data.test_cases.values.map { |case_data| (0.5..1).include?(case_data.meta.time/self.problem.time_limit) }.any? and warnings.push "Used more than half the time limit in a test"
-        judge_data.test_cases.values.map { |case_data| (1...2).include?(case_data.meta.time/self.problem.time_limit) }.any? and warnings.push "Close to being under the time limit in a test" if self.classification == :inefficient
+        if self.problem.time_limit.to_f > 0
+          judge_data.test_cases.values.map { |case_data| (0.5..1).include?(case_data.meta.time/self.problem.time_limit) }.any? and warnings.push "Used more than half the time limit in a test"
+          judge_data.test_cases.values.map { |case_data| (1...2).include?(case_data.meta.time/self.problem.time_limit) }.any? and warnings.push "Close to being under the time limit in a test" if self.classification == :inefficient
+        end
       end
 
       self.test_errors = errors
