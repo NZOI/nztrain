@@ -62,8 +62,7 @@ class JudgeSubmissionWorker < ApplicationWorker
       result['test_sets'] = {}
       denominator = problem.test_sets.map(&:points).inject(&:+).to_f
 
-      extra_time = (Submission::CLASSIFICATION[:inefficient] == submission.classification) ? problem.time_limit*2 : [problem.time_limit*0.5, (20.0/problem.test_cases.count)].min
-      resource_limits = { :mem => problem.memory_limit*1024, :time => problem.time_limit, :extra_time => extra_time, :wall_time => problem.time_limit*3+extra_time+5, :stack => StackLimit, :processes => false }
+      resource_limits = { :mem => memory_limit*1024, :time => time_limit, :extra_time => extra_time, :wall_time => wall_time, :stack => StackLimit, :processes => false }
 
       # prerequisites
       prereqs = problem.test_cases.where(:id => problem.prerequisite_sets.joins(:test_case_relations).select(:test_case_relations => :test_case_id))
@@ -99,6 +98,23 @@ class JudgeSubmissionWorker < ApplicationWorker
 
   private
   attr_accessor :problem, :box, :tmpdir
+
+  def time_limit
+    problem.time_limit || 0
+  end
+
+  def memory_limit
+    problem.memory_limit || 0
+  end
+
+  def extra_time
+    (Submission::CLASSIFICATION[:inefficient] == submission.classification) ? time_limit*2 : [time_limit*0.5, (20.0/[problem.test_cases.count, 1.0].max)].min
+  end
+
+  def wall_time
+    time_limit*3+extra_time+5
+  end
+
   def setup_judging
     self.problem = submission.problem
     Dir.mktmpdir do |tmpdir|
@@ -138,7 +154,7 @@ class JudgeSubmissionWorker < ApplicationWorker
     r={}
     (r['output'], r['output_size']), (r['log'], r['log_size']), (r['box'],), r['meta'], r['stat'] = box.capture5(run_command, run_opts)
     r['stat'] = r['stat'].exitstatus
-    r['time'] = [r['meta']['time'],problem.time_limit.to_f].min
+    r['time'] = [r['meta']['time'],time_limit.to_f].min
     unless submission.output.nil?
       if box.exist?(submission.output)
         box.fopen(submission.output) { |f| r['output'], r['output_size'] = box.read_pipe_limited(f, stream_limit) }
@@ -167,7 +183,7 @@ class JudgeSubmissionWorker < ApplicationWorker
         file.chmod(0700)
         file.write(problem.evaluator.source.gsub(/\r\n?/, "\n"))
       end
-      resource_limits = { :mem => 262144, :time => problem.time_limit*3, :wall_time => problem.time_limit*3+30 }
+      resource_limits = { :mem => 262144, :time => time_limit*3, :wall_time => time_limit*3+30 }
       box.fopen("actual","w") { |f| f.write(actual) } # DEPRECATED
       box.fopen("input","w") { |f| f.write(test_case.input) } # DEPRECATED
       box.fopen("expected","w") { |f| f.write(expected) } # DEPRECATED
