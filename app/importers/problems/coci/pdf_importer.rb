@@ -117,9 +117,10 @@ module Problems
             end
           when :time_limit
             return 0 unless value =~ /([[:digit:]]+([,.][[:digit:]]+)?) ?((sec(onds?)?|min(utes?))?)/i
-            remainder = string.slice($~.end(0), string.length)
-            value = $~[1].gsub(/,/,'.').to_f
-            value *= 60 if $~[3] =~ /\Amin/
+            match = $~
+            remainder = string.slice(match.end(0), string.length)
+            value = match[1].gsub(/,/,'.').to_f
+            value *= 60 if match[3] =~ /\Amin/
           end
           self.summary[labelindex] ||= {}
           self.summary[labelindex][label] = value
