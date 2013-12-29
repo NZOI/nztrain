@@ -116,10 +116,11 @@ module Problems
             else value /= 1024*1024
             end
           when :time_limit
-            return 0 unless value =~ /([[:digit:]]+(\.[[:digit:]]+)?) ?((sec(onds?)?|min(utes?))?)/i
-            remainder = string.slice($~.end(0), string.length)
-            value = $~[1].to_f
-            value *= 60 if $~[3] =~ /\Amin/
+            return 0 unless value =~ /([[:digit:]]+([,.][[:digit:]]+)?) ?((sec(onds?)?|min(utes?))?)/i
+            match = $~
+            remainder = string.slice(match.end(0), string.length)
+            value = match[1].gsub(/,/,'.').to_f
+            value *= 60 if match[3] =~ /\Amin/
           end
           self.summary[labelindex] ||= {}
           self.summary[labelindex][label] = value
