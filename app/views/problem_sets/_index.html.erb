@@ -36,7 +36,7 @@
           <tbody>
             <% problems.each do |problem| %>
               <tr>
-                <td width="100%">&nbsp;&nbsp;&nbsp;<%= link_to problem.name, problem %></td>
+                <td width="100%">&nbsp;&nbsp;&nbsp;<%= ProblemPresenter.new(problem).test_status + "&nbsp;".html_safe if policy(problem).inspect? %><%= link_to problem.name, problem %></td>
                 <td><%= progress_bar(problem.score) %></td>
                 <td><%= link_to 'Show', problem %></td>
               </tr>

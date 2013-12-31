@@ -43,6 +43,6 @@ class ProblemPresenter < ApplicationPresenter
     when 3; "#00C000"
     else; "#808080"
     end
-    h.content_tag :div, " ", :style => "border-radius: 50%; width: 15px; height: 15px; background-color: #{colour}"
+    h.content_tag :div, " ", :style => "border-radius: 50%; width: 15px; height: 15px; background-color: #{colour}; display: inline-block"
   end
 end
