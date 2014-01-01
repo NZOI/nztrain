@@ -79,8 +79,8 @@ if [ ! -f "$ISOLATE_ROOT/usr/bin/cint.rb" ] ; then
 fi
 
 # gcc 4.8.1 on Precise (will not be needed when we use trusty tahr)
-echo "$chroot_cmd add-apt-repository ppa:ubuntu-toolchain-r/test"
-chroot "$ISOLATE_ROOT" add-apt-repository ppa:ubuntu-toolchain-r/test
+echo "$chroot_cmd add-apt-repository ppa:ubuntu-toolchain-r/test -y"
+chroot "$ISOLATE_ROOT" add-apt-repository ppa:ubuntu-toolchain-r/test -y
 
 echo "$chroot_cmd apt-get update"
 chroot "$ISOLATE_ROOT" apt-get update
