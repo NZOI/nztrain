@@ -7,14 +7,19 @@ c++:
   :lexer: c++
   :compiled: yes
   :interpreted: no
-  :current: c++03
+  :current: c++11
   :extension: .cpp
   :variants:
     c++03:
       :name: "C++03"
       :compiler: /usr/bin/g++
-      :flags: "-O2 -o %{output} %{source} -lm"
+      :flags: "-std=gnu++03 -O2 -o %{output} %{source} -lm"
 #      upgrade: c++11 # submissions will be upgraded if possible, if support is removed, it will be force-upgraded
+#      note: probably will never happen for this particular example... (or at least not for the next 10 years)
+    c++11:
+      :name: "C++11"
+      :compiler: /usr/bin/g++
+      :flags: "-std=gnu++11 -O2 -o %{output} %{source} -lm"
 c:
   :name: C
   :lexer: c
@@ -26,7 +31,7 @@ c:
     c99:
       :name: C99
       :compiler: /usr/bin/gcc
-      :flags: '-O2 -o %{output} %{source} -lm'
+      :flags: '-std=gnu99 -O2 -o %{output} %{source} -lm'
 python:
   :name: Python
   :lexer: python
