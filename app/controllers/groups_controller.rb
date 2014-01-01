@@ -23,6 +23,7 @@ class GroupsController < ApplicationController
   end
 
   def remove_contest
+    @group = Group.find(params[:id])
     authorize @group, :update?
     contest = Contest.find(params[:contest_id])
     @group.contests.delete(contest)
