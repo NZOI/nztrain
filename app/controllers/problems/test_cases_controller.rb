@@ -40,6 +40,6 @@ class Problems::TestCasesController < ApplicationController
   end
 
   def test_set_params(id)
-    params[:test_sets][id.to_s].permit(:prerequisite, :problem_order_position)
+    params[:test_sets][id.to_s].permit(:prerequisite, :problem_order_position, :points)
   end
 end

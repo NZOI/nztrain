@@ -46,12 +46,12 @@
 <h2>Test Sets</h2>
 <%= form_tag problem_test_cases_path(@problem), method: :patch do %>
   <table style="width: 100%;">
-    <tr><th>Name</th><th style="width:50px">Prerequisite?</th><th>Points</th><th>Cases</th><%= "<th style=\"width:150px\"></th>".html_safe if policy(@problem).update? %></tr>
+    <tr><th>Name</th><th style="width:50px">Prerequisite?</th><th style="max-width: 200px">Points</th><th style="width: 50%">Cases</th><%= "<th style=\"width:150px\"></th>".html_safe if policy(@problem).update? %></tr>
     <% @problem.test_sets.each do |set| %>
       <tr>
         <td><%= set.name %></td>
         <td><%= policy(@problem).update? ? check_box("test_sets[#{set.id}]","prerequisite", checked: set.prerequisite?) : (set.prerequisite? ? "Yes" : "No") %></td>
-        <td><%= set.points %></td>
+        <td><%= policy(@problem).update? ? text_field("test_sets[#{set.id}]","points", value: set.points, style: "width:50px"): set.points %></td>
         <td><%= set.test_cases.pluck(:name).to_json %></td>
         <% if policy(@problem).update? %>
           <td>

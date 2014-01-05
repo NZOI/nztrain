@@ -34,6 +34,7 @@ class ProblemsController < ApplicationController
   # GET /problems
   # GET /problems.xml
   def index
+    raise Pundit::NotAuthorizedError if current_user.nil?
     case params[:filter].to_s
     when 'my'
       @problem = Problem.new(:owner_id => current_user.id)
