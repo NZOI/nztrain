@@ -133,17 +133,17 @@ class ProblemsController < ApplicationController
     redirect_to(test_cases_problem_path(@problem), :alert => 'Invalid importer specified') and return if !Problems::Importers.has_key?(params[:importer])
     message = {notice: ""}
     begin
-      original_total_time = @problem.test_cases.count * @problem.time_limit
+      original_total_time = @problem.test_cases.count * (@problem.time_limit || 0)
       if Problems::Importers[params[:importer]].import(@problem, params[:import_file].path, :extension => '.zip', :merge => params[:upload] == 'merge')
         message[:notice] = "Successfully uploaded. New counts for the problem are: # Test Sets: #{ @problem.test_sets.count }, # Test Cases: #{ @problem.test_cases.count }. "
       else
         message[:alert] = 'No test cases or test sets detected. '
       end
-    rescue StandardError => e
-      message[:alert] = "An error has occurred - was the right importer selected? "
+    rescue Problems::Importers[params[:importer]]::ImportError => e
+      message[:alert] = "An error has occurred - was the right importer selected? " + e.message
     ensure
       available_time = [original_total_time, policy(@problem).maximum_total_time_limit].max
-      if available_time < @problem.time_limit*@problem.test_cases.count
+      if available_time < (@problem.time_limit || 0)*@problem.test_cases.count
         @problem.time_limit = available_time / @problem.test_cases.count
         @problem.save
         message[:alert] = "#{message[:alert]}Time limit reduced to #{@problem.time_limit} to meet total judging time limits."

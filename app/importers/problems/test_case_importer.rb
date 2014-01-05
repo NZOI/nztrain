@@ -48,7 +48,11 @@ module Problems
       self.outdir = File.expand_path('outputs', path)
       self.indir = File.expand_path('inputs', path)
       self.specfile = File.expand_path('specification.yaml', path)
-      raise "Missing specification.yaml file or inputs or outputs directory" unless file.exist?(specfile) && file.exist?(outdir) && file.exist?(indir)
+      missing = []
+      missing << "specification.yaml file" unless file.exist?(specfile)
+      missing << "inputs directory" unless file.exist?(indir)
+      missing << "outputs directory" unless file.exist?(outdir)
+      raise ImportError, "Missing #{missing.join(', ')}" unless missing.empty?
     end
 
     def import_cases(indir, outdir)
@@ -84,7 +88,7 @@ module Problems
         end
         cases = attributes['test_cases'] || []
         if cases.is_a?(Array)
-          raise "Undefined test case referenced by test set" unless cases.map{ |name| casemap[name] }.select{ |kayse| kayse.nil? }.empty?
+          raise ImportError, "Undefined test case referenced by test set" unless cases.map{ |name| casemap[name] }.select{ |kayse| kayse.nil? }.empty?
           setmap[name].test_cases = cases.map{ |name| casemap[name] }
         end
       end

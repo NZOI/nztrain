@@ -3,6 +3,8 @@ require 'zip/filesystem'
 module Problems
   class BaseImporter
 
+    class ImportError < StandardError; end
+
     def self.import(problem, path, options = {})
       importer = self.new(problem)
       # redirect to import zip etc if zip path etc
