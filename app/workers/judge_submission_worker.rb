@@ -205,7 +205,7 @@ class JudgeSubmissionWorker < ApplicationWorker
         r['evaluation'] = 1 if r['stat'] == 0 # DEPRECATED
       else
         r['evaluation'] = eval_output[0].to_f
-        r['message'] = truncate_output(eval_output[1])
+        r['message'] = truncate_output(eval_output[1] || "")
         r.delete('evaluation') if r['meta']['status'] != 'OK'
       end
       r['message'] = "No output.\n#{r['message']}" if output == ""
