@@ -37,7 +37,7 @@ class GroupPolicy < ApplicationPolicy
   end
 
   def join?
-    record.id != 0 && (user.is_admin? || user.owns(record) || record.membership == Group::MEMBERSHIP[:open]) && !member?
+    record.id != 0 && (user.is_admin? || user.owns(record) || record.membership == Group::MEMBERSHIP[:open] || record.invitations.pending.where(:target_id => user.id).any?) && !member?
   end
 
   def leave?
