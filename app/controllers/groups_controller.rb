@@ -19,7 +19,7 @@ class GroupsController < ApplicationController
       return
     end
     @group.contests.push(@contest)
-    redirect_to(contest, :notice => "Contest added.")
+    redirect_to(@contest, :notice => "Contest added.")
   end
 
   def remove_contest
