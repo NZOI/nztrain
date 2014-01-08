@@ -5,8 +5,10 @@ class TestCase < ActiveRecord::Base
   has_many :test_sets, through: :test_case_relations
   belongs_to :problem, inverse_of: :test_cases, touch: :rejudge_at
 
-  validates :input, :presence => true
-  validates :output, :presence => true
+  validate do
+    errors.add :input, "cannot be nil" if input.nil?
+    errors.add :output, "cannot be nil" if output.nil?
+  end
 
   scope :distinct, -> { select("distinct(test_cases.id), test_cases.*") }
 
