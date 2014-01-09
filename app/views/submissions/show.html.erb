@@ -115,7 +115,8 @@
                       <%= "Size: #{number_to_human_size(case_data.output_size)}" unless case_data.output_size.nil? %>
                     </th>
                     <th>Expected Output</th><th class="output_stats">Size: <%= number_to_human_size(test_case.output.bytesize) %></th>
-                    <th>Evaluator Log</th><th class="output_stats"><%= "Evaluation: #{sprintf("%.2f",case_data.evaluator.evaluation)}/1.00" %></th>
+                    <% evaluation = case_data.evaluator.evaluation %>
+                    <th>Evaluator Log</th><th class="output_stats"><%= "Evaluation: #{evaluation ? sprintf("%.2f",evaluation) : "nil"}/1.00" %></th>
                   </tr>
                   <tr>
                     <td colspan="2"><%= predisplay case_data.output, type: :samp %></td>
