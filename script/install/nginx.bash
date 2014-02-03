@@ -58,14 +58,13 @@ do
       # copy previous configuration files when upgrading
       if [ -f /etc/nginx/nginx.conf ]; then
         cp /etc/nginx/nginx.conf $INSTALL_DIR-$VER/conf/nginx.conf
-        cp /etc/nginx/*.app.conf $INSTALL_DIR-$VER/conf/
+        cp /etc/nginx/sites-* $INSTALL_DIR-$VER/conf/ -r
       else
         echo 'nginx.conf file from previous version of nginx not found'
       fi
       break;;
   esac
 done
-
 
 # remove previous symlinks, if any
 rm -f $INSTALL_DIR > /dev/null
@@ -76,6 +75,9 @@ rm -f $USER_BIN/$PROG_NAME > /dev/null
 ln -s $INSTALL_DIR-$VER $INSTALL_DIR
 cd /etc/; ln -s $INSTALL_DIR/conf nginx
 cd $USER_BIN; ln -s $INSTALL_DIR/sbin/$PROG_NAME .
+
+mkdir /etc/nginx/sites-available -p
+mkdir /etc/nginx/sites-enabled -p
 
 # create alternative
 # update-alternatives --install /usr/bin/nginx nginx $INSTALL_DIR/sbin/$PROG_NAME 400

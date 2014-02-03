@@ -18,7 +18,8 @@ fi
 NGINX_INSTALL_DIR="/usr/local/nginx"
 
 # nginx includes this app configuration
-bash $RAILS_ROOT/script/template.bash < $RAILS_ROOT/script/install/nginx.app.conf | cat > $NGINX_INSTALL_DIR/conf/$APP_NAME.app.conf
+bash $RAILS_ROOT/script/template.bash < $RAILS_ROOT/script/install/nginx.app.conf | cat > $NGINX_INSTALL_DIR/conf/sites-available/$SERVER_NAME.conf
+ln -s $NGINX_INSTALL_DIR/conf/sites-available/$SERVER_NAME.conf $NGINX_INSTALL_DIR/conf/sites-enabled/$SERVER_NAME.conf
 
 (
   RAILS_ENV=production
