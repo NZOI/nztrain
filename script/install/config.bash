@@ -60,9 +60,9 @@ done
 while [ -z "$RAILS_ENV" ] ; do
   anyset=true
   prompt 'What environment is used to run this rails installation - d[evelopment] (default), p[roduction] or t[est]? ' RAILS_ENV
-  if [[ "development" =~ "^$RAILS_ENV" ]] ; then RAILS_ENV=development
-  elif [[ "production" =~ "^$RAILS_ENV" ]]; then RAILS_ENV=production
-  elif [[ "test" =~ "^$RAILS_ENV" ]]; then RAILS_ENV=test
+  if [[ "development" =~ ^$RAILS_ENV ]] ; then RAILS_ENV=development
+  elif [[ "production" =~ ^$RAILS_ENV ]]; then RAILS_ENV=production
+  elif [[ "test" =~ ^$RAILS_ENV ]]; then RAILS_ENV=test
   else unset RAILS_ENV; fi
 done
 
