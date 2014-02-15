@@ -70,5 +70,6 @@ module NZTrain
       :enable_starttls_auto => true
     }
 
+    config.middleware.use PDFKit::Middleware, {}, :only => [%r[^/item/[0-9]*/label]]
   end
 end

@@ -1,0 +1,34 @@
+<%= form_for(@item, url: create_product_item_organisation_path(@organisation, @product)) do |f| %>
+  <% if @item.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@item.errors.count, "error") %> prohibited this item from being saved:</h2>
+
+      <ul>
+      <% @item.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :owner_id %><br />
+    <%= f.text_field :owner_id %>
+  </div>
+  <div class="field">
+    <%= f.label :sponsor_id %><br />
+    <%= f.text_field :sponsor_id %>
+  </div>
+  <div class="field">
+    <%= f.label :donator_id %><br />
+    <%= f.text_field :donator_id %>
+  </div>
+  <div class="field">
+    <%= f.label :condition %><br />
+    <%= f.text_field :condition %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

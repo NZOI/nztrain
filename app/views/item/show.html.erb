@@ -1,0 +1,5 @@
+<b>Product: </b><%= @item.product.name %><br>
+
+<%= markdown_parse(@item.product.description) %>
+
+<%= link_to "Label", label_item_path(@item) %>

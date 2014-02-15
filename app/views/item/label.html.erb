@@ -1,0 +1,114 @@
+<html>
+<head>
+<meta name="pdfkit-page_size" content="A5">
+<style type="text/css">
+body {
+  height: 90%;
+  margin: 0;
+  font-family: Helvetica;
+}
+table.qr {
+  border-width: 0;
+  border-style: none;
+  border-color: #0000ff;
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+table.qr td {
+  border-width: 0; 
+  border-style: none;
+  border-color: #0000ff; 
+  border-collapse: collapse; 
+  padding: 0; 
+  margin: 0; 
+  width: 8px; 
+  height: 8px; 
+}
+table.qr td.black { background-color: #000; }
+table.qr td.white { background-color: #fff; }
+h1 {
+  font-family: Times;
+  font-size: 20pt;
+  text-align: center;
+}
+h2 {
+  font-family: Times;
+  font-size: 16pt;
+}
+p {
+  text-align: center;
+  font-size: 16pt;
+}
+
+</style>
+</head>
+<body>
+<table style="width: 100%; min-height: 140mm; height: 100%">
+  <tr style="height: 10%">
+    <td colspan="2">
+      <h1 style="margin-top: 10px;"><%= @item.product.name %></h1>
+    </td>
+  </tr>
+  <tr style="height: 10%">
+    <td colspan="2">
+      <% if @item.donator %>
+        <p>Donated by <%= "the " if @item.donator.definite_article %><%= @item.donator.name %></p>
+      <% end %>
+      <% if @item.sponsor %>
+        <p>Sponsored by <%= "the " if @item.sponsor.definite_article %><%= @item.sponsor.name %></p>
+      <% end %>
+    </td>
+  </tr>
+  <tr style="min-height: 75mm; height: 40%">
+    <td colspan="2" style="padding: 7mm">
+<%
+qrcode = RQRCode::QRCode.new(item_url(@item), :size => 4, :level => :h)
+offset  = 0
+color   = "000"
+unit    = 10
+
+# height and width dependent on offset and QR complexity
+dimension = (qrcode.module_count*unit) + (2*offset)
+
+xml_tag   = %{<?xml version="1.0" standalone="yes"?>}
+open_tag  = %{<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" viewBox="0 0 #{dimension} #{dimension}" style="height: 100%; min-height: 75mm">}
+close_tag = "</svg>"
+
+result = []
+qrcode.modules.each_index do |c|
+  tmp = []
+  qrcode.modules.each_index do |r|
+    y = c*unit + offset
+    x = r*unit + offset
+
+    next unless qrcode.is_dark(c, r)
+    tmp << %{<rect width="#{unit}" height="#{unit}" x="#{x}" y="#{y}" style="fill:##{color}"/>}
+  end 
+  result << tmp.join
+end
+%>
+<%= raw [xml_tag, open_tag, result, close_tag].flatten.join("\n") %>
+    </td>
+  </tr>
+  <tr style="height: 20%">
+    <td colspan="2" style="padding-bottom: 5mm"><p><%= item_url(@item) %></p></td>
+  </tr>
+  <tr style="height: 20%">
+    <td width="100%" style="padding: 4%">
+      <h2><%= @item.organisation.name %></h2>
+      <b>Website: </b>http://nzoi.org.nz/<br>
+      <b>Email: </b>camp@nzoi.org.nz<br>
+    </td>
+    <td style="padding: 4%;">
+      <% if !@item.product.gtin.nil? %>
+        <% begin %>
+          <p><img src="data:image/png;base64,<%= Base64.strict_encode64(EAN13.new(sprintf("%012d",@item.product.gtin)).to_png) %>"></p>
+        <% rescue StandardError => e %>
+          <p><%= e %></p>
+        <% end %>
+      <% end %>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

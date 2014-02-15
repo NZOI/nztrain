@@ -1,0 +1,27 @@
+<% content_for :title, "Organisations" %>
+
+<table class="main_table hoverable selectable">
+  <thead>
+    <tr>
+      <th style="width: 50%;">Name</th>
+      <th>GTIN</th>
+      <th style="width: 40px;"></th>
+      <th style="width: 40px;"></th>
+      <th style="width: 40px;"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @organisations.each do |organisation| %>
+      <tr>
+        <td><%= organisation.name %></td>
+        <td><%= link_to 'Show', organisation %></td>
+        <td><%= link_to 'Edit', edit_organisation_path(organisation) %></td>
+        <td><%= link_to 'Destroy', organisation, :data => { :confirm => 'Are you sure?' }, :method => :delete %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br />
+
+<%= link_to 'New Organisation', new_organisation_path %>

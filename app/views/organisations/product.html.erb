@@ -1,0 +1,21 @@
+<b>Organisation: </b><%= @organisation.name %><br>
+<b>Product: </b><%= @product.name %><br>
+
+<%= markdown_parse(@product.description) %>
+<%#= markdown_parse(@product.description, relative_root: download_problem_files_path(@problem)) %>
+
+<table>
+  <tr>
+    <td>ID</td>
+    <td>Status</td>
+  </tr>
+  <% @items.each do |item| %>
+    <tr>
+      <td><%= item.id %></td>
+      <td><%= item.status %></td>
+    </tr>
+  <% end %>
+</table>
+
+<%= link_to "New Item", new_product_item_organisation_path %>
+

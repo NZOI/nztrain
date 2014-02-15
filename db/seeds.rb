@@ -78,3 +78,8 @@ end
 
 ProblemSeries.where(identifier: "COCI").first_or_create!.update_attributes(name: "Croatian Open Competition in Informatics", importer_type: "Problems::COCI::Importer")
 
+Entity.find_or_create_by(name: "New Zealand Olympiad in Informatics", entity_type: "Organisation") do |entity|
+  entity.entity_id = Organisation.create.id
+end
+
+

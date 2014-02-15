@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131226234044) do
+ActiveRecord::Schema.define(version: 20140215033457) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,6 +96,12 @@ ActiveRecord::Schema.define(version: 20131226234044) do
     t.datetime "finalized_at"
   end
 
+  create_table "entities", force: true do |t|
+    t.string  "name"
+    t.integer "entity_id"
+    t.string  "entity_type"
+  end
+
   create_table "evaluators", force: true do |t|
     t.string   "name",                     null: false
     t.text     "description", default: "", null: false
@@ -157,6 +163,24 @@ ActiveRecord::Schema.define(version: 20131226234044) do
     t.integer  "membership", default: 0, null: false
   end
 
+  create_table "item_histories", force: true do |t|
+    t.integer "item_id"
+    t.boolean "active"
+    t.integer "action"
+    t.integer "holder_id"
+  end
+
+  create_table "items", force: true do |t|
+    t.integer "product_id"
+    t.integer "owner_id"
+    t.integer "organisation_id"
+    t.integer "sponsor_id"
+    t.integer "condition"
+    t.integer "status"
+    t.integer "holder_id"
+    t.integer "donator_id"
+  end
+
   create_table "language_groups", force: true do |t|
     t.string   "identifier"
     t.string   "name"
@@ -182,6 +206,9 @@ ActiveRecord::Schema.define(version: 20131226234044) do
   end
 
   add_index "languages", ["identifier"], name: "index_languages_on_identifier", unique: true, using: :btree
+
+  create_table "organisations", force: true do |t|
+  end
 
   create_table "problem_series", force: true do |t|
     t.string "name"
@@ -220,6 +247,13 @@ ActiveRecord::Schema.define(version: 20131226234044) do
     t.datetime "rejudge_at"
     t.integer  "test_error_count",   default: 0
     t.integer  "test_warning_count", default: 0
+  end
+
+  create_table "products", force: true do |t|
+    t.string  "name"
+    t.integer "gtin",        limit: 8
+    t.text    "description"
+    t.string  "image"
   end
 
   create_table "requests", force: true do |t|

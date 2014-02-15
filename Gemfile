@@ -37,6 +37,8 @@ gem 'ranked-model', :github => 'mixonic/ranked-model'
 gem 'pdf-reader'
 gem 'mechanize'
 gem 'prawn'
+gem 'rqrcode'
+gem 'pdfkit'
 
 gem 'pg'
 gem 'backup'

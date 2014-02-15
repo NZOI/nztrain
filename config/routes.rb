@@ -45,6 +45,8 @@ NZTrain::Application.routes.draw do
 
   resources :settings
 
+  resources :products
+
   resources :roles
 
   resources :contests do
@@ -201,6 +203,21 @@ NZTrain::Application.routes.draw do
     end
     patch 'problem_series/:series/:vid(/:cid)', to: "problem_series#update", as: "update_problem_series"
     post 'problem_series/:series/update_index', to: "problem_series#update_index", as: "update_index_problem_series"
+  end
+
+  resources :organisations do
+    member do
+      get 'product/:product_id', to: "organisations#product", as: "product"
+      get 'product/:product_id/new_product_item', to: "organisations#new_product_item", as: "new_product_item"
+      post 'product/:product_id', to: "organisations#create_product_item", as: "create_product_item"
+    end
+  end
+
+  resources :items, only: :index
+  resources :item, except: [:index, :create, :new] do
+    member do
+      get 'label'
+    end
   end
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):

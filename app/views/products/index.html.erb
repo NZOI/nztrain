@@ -1,0 +1,28 @@
+<% content_for :title, "Products" %>
+
+<table class="main_table hoverable selectable">
+  <thead>
+    <tr>
+      <th style="width: 50%;">Name</th>
+      <th>GTIN</th>
+      <th style="width: 40px;"></th>
+      <th style="width: 40px;"></th>
+      <th style="width: 40px;"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @products.each do |product| %>
+      <tr>
+        <td><%= product.name %></td>
+        <td><%= product.gtin %></td>
+        <td><%= link_to 'Show', product %></td>
+        <td><%= link_to 'Edit', edit_product_path(product) %></td>
+        <td><%= link_to 'Destroy', product, :data => { :confirm => 'Are you sure?' }, :method => :delete %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br />
+
+<%= link_to 'New Product', new_product_path %>

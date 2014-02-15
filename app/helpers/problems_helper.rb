@@ -30,7 +30,7 @@ module ProblemsHelper
   end
 
   def markdown_parse(str, relative_root: request.path + '/')
-    content = ProblemsHelper.markdown_renderer.render(str)
+    content = ProblemsHelper.markdown_renderer.render(str || "")
     content = Loofah.fragment(content)
       .scrub!(Loofah::Scrubbers::NoComment.new) # remove comments
       .scrub!(:escape) # remove dangerous tags
