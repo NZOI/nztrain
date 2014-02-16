@@ -7,4 +7,12 @@ class Item < ActiveRecord::Base
   belongs_to :holder, :class_name => Entity
 
   has_many :item_histories
+
+  before_create do
+    scan_token = SecureRandom.random_number(100000000)
+  end
+
+  def scan_token
+    sprintf("%08d", self[:scan_token] || 0)
+  end
 end

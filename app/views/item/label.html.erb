@@ -62,7 +62,7 @@ p {
   <tr style="min-height: 75mm; height: 40%">
     <td colspan="2" style="padding: 7mm">
 <%
-qrcode = RQRCode::QRCode.new(item_url(@item), :size => 4, :level => :h)
+qrcode = RQRCode::QRCode.new(scan_item_url(@item, @item.scan_token), :size => 5, :level => :h)
 offset  = 0
 color   = "000"
 unit    = 10
@@ -91,7 +91,7 @@ end
     </td>
   </tr>
   <tr style="height: 20%">
-    <td colspan="2" style="padding-bottom: 5mm"><p><%= item_url(@item) %></p></td>
+    <td colspan="2" style="padding-bottom: 5mm"><p><%= scan_item_url(@item, @item.scan_token) %></p></td>
   </tr>
   <tr style="height: 20%">
     <td width="100%" style="padding: 4%">
