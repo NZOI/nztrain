@@ -28,7 +28,7 @@ bash script/install/postgresql.bash || exit 1 # create user & db if it doesn't e
 
 bash script/install/imagemagick.bash || exit 1 # install imagemagick
 
-sudo apt-get install wkhtmltopdf || exit 1
+sudo apt-get install wkhtmltopdf xvfb || exit 1
 
 bash script/install/nztrain.bash || exit 1 # fix files & directory structure
 
