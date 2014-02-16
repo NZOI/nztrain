@@ -62,7 +62,7 @@ p {
   <tr style="min-height: 75mm; height: 40%">
     <td colspan="2" style="padding: 7mm">
 <%
-qrcode = RQRCode::QRCode.new(scan_item_url(@item, @item.scan_token), :size => 5, :level => :h)
+qrcode = RQRCode::QRCode.new(scan_item_url(@item, @item.scan_token), :size => 8, :level => :h)
 offset  = 0
 color   = "000"
 unit    = 10
