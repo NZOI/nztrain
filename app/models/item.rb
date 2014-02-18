@@ -9,7 +9,8 @@ class Item < ActiveRecord::Base
   has_many :item_histories
 
   before_create do
-    scan_token = SecureRandom.random_number(100000000)
+    self.scan_token = SecureRandom.random_number(100000000)
+    true
   end
 
   def scan_token
