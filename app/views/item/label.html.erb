@@ -60,7 +60,7 @@ p {
     </td>
   </tr>
   <tr style="min-height: 75mm; height: 40%">
-    <td colspan="2" style="padding: 7mm">
+    <td colspan="2" style="padding: 7mm; text-align: center">
 <%
 qrcode = RQRCode::QRCode.new(scan_item_url(@item, @item.scan_token), :size => 8, :level => :h)
 offset  = 0
@@ -71,7 +71,7 @@ unit    = 10
 dimension = (qrcode.module_count*unit) + (2*offset)
 
 xml_tag   = %{<?xml version="1.0" standalone="yes"?>}
-open_tag  = %{<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" viewBox="0 0 #{dimension} #{dimension}" style="height: 100%; min-height: 75mm">}
+open_tag  = %{<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" viewBox="0 0 #{dimension} #{dimension}" style="height: 75mm;">}
 close_tag = "</svg>"
 
 result = []
