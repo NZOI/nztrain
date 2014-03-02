@@ -48,11 +48,11 @@ class EAN13
     w = opts[:width]
     h = opts[:height]
 
-    x = y = pad = 20
+    x = y = pad = 0.1*w
     w_bar = (w - pad * 2.0) / 95
     y_bar = (h - pad * 2.5) + pad
-    y_bar_guard = y_bar + 7
-    y_text = y_bar + 14
+    y_bar_guard = y_bar + 7*w/200
+    y_text = y_bar + 14*w/200
 
     im = Image.new(w, h)
     d = Magick::Draw.new
@@ -71,13 +71,13 @@ class EAN13
     draw.call(GUARD, true)
 
     d.font 'saxmono.ttf'
-    d.pointsize 16
-    d.kerning (42 * w_bar / 10 - 6) * 10 / 6
+    d.pointsize 16*w/200;
+    d.kerning (42 * w_bar / 10 - 6*w/200) * 10 / 6
     d.text_align Magick::CenterAlign
-    d.text 10, y_text, @nums.first.to_s
+    d.text 10*w/200, y_text, @nums.first.to_s
     d.text pad + 25 * w_bar, y_text, @nums[1,6].join
     d.text pad + 70 * w_bar, y_text, @nums[7,12].join
-    d.text 28 + 95 * w_bar, y_text, '>'
+    d.text 28*w/200 + 95 * w_bar, y_text, '>'
     d.draw(im)
 
     im.to_blob{self.format='png'}

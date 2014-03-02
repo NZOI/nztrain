@@ -102,7 +102,7 @@ end
     <td style="padding: 4%;">
       <% if !@item.product.gtin.nil? %>
         <% begin %>
-          <p><img src="data:image/png;base64,<%= Base64.strict_encode64(EAN13.new(sprintf("%012d",@item.product.gtin)).to_png) %>"></p>
+          <p><img style="width: 40mm" src="data:image/png;base64,<%= Base64.strict_encode64(EAN13.new(sprintf("%012d",@item.product.gtin)).to_png(width: 800, height: 600)) %>"></p>
         <% rescue StandardError => e %>
           <p><%= e %></p>
         <% end %>
