@@ -1,5 +1,3 @@
-require 'zip/filesystem'
-
 module Problems
   module COCI
     class Importer
@@ -43,8 +41,8 @@ module Problems
               # extract solution data
               solutionpath = File.expand_path("solutions.zip", tmpdir)
               FileUtils.copy(File.expand_path(issue[:solutions][:local], DATAPATH), solutionpath)
-              Zip::InputStream::open(solutionpath) do |io|
-                while (entry = io.get_next_entry)
+              Zip::File.open(solutionpath) do |zf|
+                zf.each do |entry|
                   entry.extract(File.expand_path(entry.to_s, solutiondir))
                 end
               end
