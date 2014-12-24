@@ -1,28 +1,54 @@
 class Language < ActiveRecord::Base
   belongs_to :group, :class_name => LanguageGroup
 
+  def source_filename
+    self[:source_filename] || "program"
+  end
+
+  def exe_filename
+    if compiled
+      "program#{self.exe_extension}"
+    else
+       "#{source_filename}#{self.extension}"
+    end
+  end
+
   def compile_command parameters = {}
     parameters.assert_valid_keys(:source, :output)
     parameters.fetch(:source)
+    parameters.reverse_merge! :source_dir => File.dirname(parameters[:source])
     parameters.reverse_merge! :output => 'a.out'
-    parameters.merge! :compiler => compiler
-    sprintf("%{compiler} #{flags}", parameters)
+    parameters.merge! explode_path_to_hash(:compiler, compiler)
+    sprintf(compiler_command, parameters)
   end
 
   # compiles source to output in box
   def compile box, source, output, options = {}
     result = {}
-    box.tmpfile(["program", self.extension]) do |source_file|
+    box.tmpfile([source_filename, self.extension]) do |source_file|
       box.fopen(source_file, 'w') { |f| f.write(source) }
       result['command'] = self.compile_command(:source => source_file, :output => output)
-      result.merge!(Hash[%w[output log box meta stat].zip(box.capture5(result['command'], options.reverse_merge(:processes => true)))])
+      result.merge!(Hash[%w[output log box meta stat].zip(box.capture5("/bin/bash -c #{result['command'].shellescape}", options.reverse_merge(:processes => true)))])
       result['stat'] = result['stat'].exitstatus
     end
     return result
   end
 
+  def run_command source = exe_filename
+    if interpreted
+      sprintf(interpreter_command, explode_path_to_hash(:interpreter, interpreter).merge(:source => source))
+    else
+      "./#{source}"
+    end
+  end
+
+  def explode_path_to_hash key, path
+    elements = path.split(';')
+    {key => path}.merge Hash[(0...elements.size).map{|i|"#{key}[#{i}]".to_sym}.zip(elements)]
+  end
+
   def self.submission_options
-    languages = Language.where(:id => LanguageGroup.where(identifier: %w[c++ c python haskell]).select(:current_language_id)).order(:identifier)
+    languages = Language.where(:id => LanguageGroup.where(identifier: %w[c++ c python haskell java]).select(:current_language_id)).order(:identifier)
     Hash[(languages + [Language.find_by(identifier: 'c++03')]).map{ |language| ["#{language.group.name} (#{language.name})", language.id] }]
   end
 

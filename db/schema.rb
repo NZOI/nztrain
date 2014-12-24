@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140218212023) do
+ActiveRecord::Schema.define(version: 20141224080737) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -196,14 +196,19 @@ ActiveRecord::Schema.define(version: 20140218212023) do
     t.string   "identifier"
     t.string   "compiler"
     t.boolean  "interpreted"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.string   "flags"
     t.string   "extension"
     t.boolean  "compiled"
     t.string   "name"
     t.string   "lexer"
     t.integer  "group_id"
+    t.string   "source_filename"
+    t.string   "exe_extension"
+    t.string   "compiler_command"
+    t.string   "interpreter"
+    t.string   "interpreter_command"
   end
 
   add_index "languages", ["identifier"], name: "index_languages_on_identifier", unique: true, using: :btree

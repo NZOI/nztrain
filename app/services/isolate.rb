@@ -213,7 +213,7 @@ EOF
       unless options.delete(:cg_mem) == false || !options.has_key?(:cg) || !options.has_key?(:mem)
         # mem (virtual address space) includes shared library memory which causes problems with the .so libraries python loads
         options[:cg_mem] = options[:mem]
-        options[:mem] += [0,[64*1024,320*1024-options[:cg_mem]].min].max # + 64MB bonus up to 320MB
+        options.delete(:mem) # control group memory excludes address memory that references library memory shared with other applications
       end
     elsif !!options[:cg]
       raise CGroupsUnavailableError

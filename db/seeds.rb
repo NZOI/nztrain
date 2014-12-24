@@ -61,7 +61,7 @@ if !(User.exists?(0))
 end
 
 languages = YAML.load(File.read(File.expand_path('db/languages.yml', Rails.root)))
-langfields = %i[name compiler flags lexer interpreted compiled extension]
+langfields = %i[name compiler compiler_command interpreter interpreter_command lexer interpreted compiled extension source_filename exe_extension]
 languages.each do |grpid, grpcfg|
   groupopts = grpcfg.slice(:name)
   group = LanguageGroup.where(:identifier => grpid).first_or_create!

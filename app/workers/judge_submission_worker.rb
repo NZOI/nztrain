@@ -15,6 +15,7 @@ class JudgeSubmissionWorker < ApplicationWorker
 
   def perform
     self.submission = Submission.find(job.data['id'])
+    self.exe_filename = submission.language.exe_filename
     judge_start_time = Time.now
     result = judge
 
@@ -34,12 +35,11 @@ class JudgeSubmissionWorker < ApplicationWorker
     raise
   end
 
-  ExeFileName = "program.exe"
   EvalFileName = "eval.sh"
   StackLimit = 1024 * 4 # 4 MB
   OutputBaseLimit = 1024 * 1024 * 2
 
-  attr_accessor :submission, :job
+  attr_accessor :submission, :job, :exe_filename
 
   def initialize(job)
     self.job = job
@@ -48,21 +48,20 @@ class JudgeSubmissionWorker < ApplicationWorker
   def judge
     result = {}
     setup_judging do
-      if submission.language.interpreted
-        File.open(File.expand_path(ExeFileName, tmpdir),"w") { |f| f.write(submission.source) }
-        run_command = submission.language.compile_command(:source => ExeFileName)
-      else
-        result['compile'] = compile!(ExeFileName) # possible caching
+      if submission.language.compiled
+        result['compile'] = compile!(exe_filename) # possible caching
         return result.merge!(grade_compile_error(result['compile'])) if result['compile']['stat'] != 0 #error
-
-        run_command = "./#{ExeFileName}"
+      else
+        File.open(File.expand_path(exe_filename, tmpdir),"w") { |f| f.write(submission.source) }
       end
+
+      run_command = submission.language.run_command(exe_filename)
 
       result['test_cases'] = {}
       result['test_sets'] = {}
       denominator = problem.test_sets.map(&:points).inject(&:+).to_f
 
-      resource_limits = { :mem => memory_limit*1024, :time => time_limit, :extra_time => extra_time, :wall_time => wall_time, :stack => StackLimit, :processes => false }
+      resource_limits = { :mem => memory_limit*1024, :time => time_limit, :extra_time => extra_time, :wall_time => wall_time, :stack => StackLimit, :processes => true }
 
       # prerequisites
       prereqs = problem.test_cases.where(:id => problem.prerequisite_sets.joins(:test_case_relations).select(:test_case_relations => :test_case_id))
@@ -135,7 +134,7 @@ class JudgeSubmissionWorker < ApplicationWorker
   end
 
   def judge_test_case(test_case, run_command, resource_limits)
-    FileUtils.copy(File.expand_path(ExeFileName, tmpdir), box.expand_path(ExeFileName))
+    FileUtils.copy(File.expand_path(exe_filename, tmpdir), box.expand_path(exe_filename))
     result = run_test_case(test_case, run_command, resource_limits)
     result['evaluator'] = evaluate_output(test_case, result['output'], result['output_size'], problem.evaluator)
     result['log'] = truncate_output(result['log']) # log only a small portion

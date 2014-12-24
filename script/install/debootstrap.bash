@@ -49,6 +49,8 @@ fi
 chroot_cmd="$ chroot \"$ISOLATE_ROOT\""
 chroot_install="$chroot_cmd apt-get install"
 
+mount -o bind /proc "$ISOLATE_ROOT/proc"
+
 echo "$chroot_cmd apt-get update"
 chroot "$ISOLATE_ROOT" apt-get update
 
@@ -67,6 +69,11 @@ chroot "$ISOLATE_ROOT" apt-get install ruby # Ruby (ruby)
 
 echo "$chroot_install ghc6"
 chroot "$ISOLATE_ROOT" apt-get install ghc6 # Haskell (ghc)
+
+echo "$chroot_install default-jdk"
+chroot "$ISOLATE_ROOT" apt-get install default-jdk # Java
+
+umount "$ISOLATE_ROOT/proc"
 
 if [ ! -f "$ISOLATE_ROOT/usr/bin/cint.rb" ] ; then
   cmd="cp `dirname $0`/cint.rb $ISOLATE_ROOT/usr/bin"
