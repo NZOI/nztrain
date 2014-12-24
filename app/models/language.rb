@@ -5,6 +5,10 @@ class Language < ActiveRecord::Base
     self[:source_filename] || "program"
   end
 
+  def processes
+    self[:processes]==0 ? true : self[:processes]
+  end
+
   def exe_filename
     if compiled
       "program#{self.exe_extension}"

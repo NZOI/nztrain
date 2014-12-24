@@ -61,7 +61,7 @@ class JudgeSubmissionWorker < ApplicationWorker
       result['test_sets'] = {}
       denominator = problem.test_sets.map(&:points).inject(&:+).to_f
 
-      resource_limits = { :mem => memory_limit*1024, :time => time_limit, :extra_time => extra_time, :wall_time => wall_time, :stack => StackLimit, :processes => true }
+      resource_limits = { :mem => memory_limit*1024, :time => time_limit, :extra_time => extra_time, :wall_time => wall_time, :stack => StackLimit, :processes => submission.language.processes }
 
       # prerequisites
       prereqs = problem.test_cases.where(:id => problem.prerequisite_sets.joins(:test_case_relations).select(:test_case_relations => :test_case_id))

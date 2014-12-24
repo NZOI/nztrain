@@ -11,6 +11,7 @@ c++:
   :extension: .cpp
   :source_filename: program
   :exe_extension: .exe
+  :processes: 1
   :variants:
     c++03:
       :name: "C++03"
@@ -31,6 +32,7 @@ c:
   :extension: .c
   :source_filename: program
   :exe_extension: .exe
+  :processes: 1
   :variants:
     c99:
       :name: C99
@@ -44,6 +46,7 @@ python:
   :current: python2
   :extension: .py
   :source_filename: program
+  :processes: 1
   :variants:
     python2:
       :name: "Python 2.7"
@@ -58,6 +61,7 @@ haskell:
   :extension: .hs
   :source_filename: program
   :exe_extension: .exe
+  :processes: 1
   :variants:
     haskell2010:
       :name: "Haskell 2010"
@@ -72,6 +76,7 @@ java:
   :extension: .java
   :source_filename: Main
   :exe_extension: .jar
+  :processes: 0
   :variants:
     java6:
       :name: Java 1.6
