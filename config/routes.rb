@@ -99,9 +99,10 @@ NZTrain::Application.routes.draw do
     concerns :file_root, :module => :problems
   end
 
-  resources :problem_sets do
+  resources :problem_sets, except: [:index] do
     collection do
-      get 'my', :to => 'problem_sets#index', :defaults => { :filter => 'my' }
+      get '', :action => :index, :as => '' # manually specify so that the primary #index route is not 'my'
+      get 'my', :action => :index, :defaults => { :filter => 'my' }
     end
     member do
       put 'add_problem'

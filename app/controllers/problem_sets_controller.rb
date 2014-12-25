@@ -39,6 +39,7 @@ class ProblemSetsController < ApplicationController
       authorize ProblemSet.new, :manage?
       @problem_sets = ProblemSet.all
     end
+    @problem_sets = @problem_sets.order(name: :asc).page(params[:page]).per_page(25)
 
     respond_to do |format|
       format.html # index.html.erb
