@@ -103,6 +103,10 @@ class Submission < ActiveRecord::Base
     JudgeData.new(judge_log, Hash[problem.test_sets.map{|s|[s.id,s.test_case_ids]}], problem.test_case_ids, problem.prerequisite_set_ids)
   end
 
+  def test_judge
+    JudgeSubmissionWorker.new.perform(self.id)
+  end
+
   def judge(queue: nil, delay: 0)
     self.job = JudgeSubmissionWorker.judge(self, queue: queue, delay: delay)
     self.save

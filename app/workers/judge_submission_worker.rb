@@ -7,14 +7,13 @@ class JudgeSubmissionWorker < ApplicationWorker
     self.put(id: submission.id, queue: queue, delay: delay)
   end
 
-
   def self.perform(job)
-    result = self.new(job).perform
+    result = self.new.perform(job.data['id'])
     job.complete
   end
 
-  def perform
-    self.submission = Submission.find(job.data['id'])
+  def perform(submission_id)
+    self.submission = Submission.find(submission_id)
     self.exe_filename = submission.language.exe_filename
     judge_start_time = Time.now
     result = judge
@@ -39,10 +38,9 @@ class JudgeSubmissionWorker < ApplicationWorker
   StackLimit = 1024 * 4 # 4 MB
   OutputBaseLimit = 1024 * 1024 * 2
 
-  attr_accessor :submission, :job, :exe_filename
+  attr_accessor :submission, :exe_filename
 
-  def initialize(job)
-    self.job = job
+  def initialize
   end
 
   def judge
