@@ -139,7 +139,14 @@ module Problems
       end
 
       def index_page(page, title = nil)
-        title = page.root.xpath(".//*[not(ancestor::a) and series_match(.)]", COCINameMatcher).first.text if title.nil?
+        if title.nil?
+          years = page.links_with(:href => /^http:\/\/www.timeanddate.com\/.*(\?|&)year=([[:digit:]]*)(&|$)/).map{ |link| link.href.match(/(\?|&)year=([[:digit:]]*)(&|$)/)[2].to_i }
+          if years.size > 2 && years.min+1 == years.max
+            title = "COCI #{years.min}/#{years.max}"
+          else
+            title = page.root.xpath(".//*[not(ancestor::a) and series_match(.)]", COCINameMatcher).first.text
+          end
+        end
         series = {name: COCINameMatcher.canonicalize_series(title), url: (page.canonical_uri || page.uri).to_s, issues: []}
         page.root.xpath(".//td").each do |td|
           issue = td.xpath(".//*[issue_match(.)]", COCINameMatcher).first

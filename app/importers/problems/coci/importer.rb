@@ -63,18 +63,26 @@ module Problems
 
               testdatadir = File.expand_path("testdata-#{pid}", tmpdir)
               FileUtils.mkdir_p(testdatadir)
-
               if zipdir.nil? # got a weird directory structure
-                candidate_zips.each do |zdir|
-                  zfs.dir.foreach("#{zdir}") do |edir|
-                    if edir =~ /\A#{simplename}/
-                      zfs.dir.foreach("#{zdir}/#{edir}") do |entry|
-                        entryname = entry.to_s
-                        if zdir =~ /examples/ && !(entryname =~ /dummy/)
-                          entryname = "test.dummy.#{entryname}"
+                if candidate_zips.any?
+                  candidate_zips.each do |zdir|
+                    zfs.dir.foreach("#{zdir}") do |edir|
+                      if edir =~ /\A#{simplename}/
+                        zfs.dir.foreach("#{zdir}/#{edir}") do |entry|
+                          entryname = entry.to_s
+                          if zdir =~ /examples/ && !(entryname =~ /dummy/)
+                            entryname = "test.dummy.#{entryname}"
+                          end
+                          zfs.extract("#{zdir}/#{edir}/#{entry}", File.expand_path(entryname, testdatadir))
                         end
-                        zfs.extract("#{zdir}/#{edir}/#{entry}", File.expand_path(entryname, testdatadir))
                       end
+                    end
+                  end
+                else # no directory index in zipfile
+                  zfs.entries.each do |entry|
+                    match = entry.name.match /\A#{simplename}\/(.*)$/
+                    if match
+                      zfs.extract(entry.name, File.expand_path(match[1], testdatadir))
                     end
                   end
                 end
@@ -83,7 +91,6 @@ module Problems
                   zfs.extract("#{zipdir}/#{entry}", File.expand_path(entry.to_s, testdatadir))
                 end
               end
-
               # make sure the test submission array is present
               issue[:problems][pid][:tests] ||= []
 

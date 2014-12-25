@@ -83,7 +83,11 @@ module Problems
         end
 
         def trsf(mat, coord)
-          [mat[0]*coord[0]+mat[2]*coord[1]+mat[4],mat[1]*coord[0]+mat[3]*coord[1]+mat[5]]
+          if mat.nil?
+            coord
+          else
+            [mat[0]*coord[0]+mat[2]*coord[1]+mat[4],mat[1]*coord[0]+mat[3]*coord[1]+mat[5]]
+          end
         end
       end
 
@@ -347,7 +351,7 @@ module Problems
             candidate_tasks = candidate_tasks.map{|name| name.mb_chars.normalize(:kd).gsub(/[^\x00-\x7F]/n,'').to_s }
           end
           candidate_tasks.each_with_index do |candidate, index|
-            return name_index + index if text =~ /(?<=[^[:word:]]|^)Task[[:space:]]+#{candidate}(?=[^[:word:]]|$)/i
+            return name_index + index if text =~ /(?<=[^[:word:]]|^)Task[[:space:]]*#{candidate}(?=[^[:word:]]|$)/i
           end
           candidate_tasks.each_with_index do |candidate, index|
             return name_index + index if text =~ /(?<=[^[:word:]]|^)#{candidate}(?=[^[:word:]]|$)/i
@@ -424,7 +428,7 @@ module Problems
             append_paragraph(text, state, abspos)
           elsif marked_content.empty? # not in anything!
             if self.current_name.nil?
-              self.current_name = detect_task(page_text)
+              self.current_name = detect_task(page_text) || detect_task(text)
               if !current_name.nil? # set task for statement
                 set_task()
                 self.no_marked_content = true # very likely there are no paragraph marks to help us :(
@@ -453,12 +457,14 @@ module Problems
           if !within?(:Artifact)
             case page.xobjects[label].hash[:Subtype]
             when :Image, :Form
-              if within?(:P)
-                append_image_to_paragraph(label, state)
-              elsif !current_name.nil?
-                text, imageinfo = process_image(label, state)
-                append_statement(text)
-                self.statements[current_name][:images] << imageinfo
+              if !current_name.nil?
+                if within?(:P)
+                  append_image_to_paragraph(label, state)
+                else !current_name.nil?
+                  text, imageinfo = process_image(label, state)
+                  append_statement(text)
+                  self.statements[current_name][:images] << imageinfo
+                end
               end
               # form = PDF::Reader::FormXObject.new(page, page.xobjects[label])
               # for :Form, extract to svg or take snapshot
@@ -477,6 +483,7 @@ module Problems
       # get array of problem data
       def extract(summary = nil)
         summary = extract_summary if summary.nil?
+        return [] if summary.size == 0 || summary.map{|s|s[:name].nil?}.any?
         statements = extract_statements(summary.map{ |problem| problem[:name] })
         statements.map! do |statement|
           if statement.nil?
@@ -485,6 +492,8 @@ module Problems
             statement
           end
         end
+        return [] if summary.size != statements.size
+
         images = extract_images(statements.map{|statement| statement[:images]}.flatten(1))
         #puts reader.pages.first.text
         problem_data = summary.zip(statements).map{|summary, statement| summary.merge(statement)}.map do |data|
@@ -509,7 +518,9 @@ module Problems
           page.walk(statement_receiver)
         end
         #puts statement_receiver.extract_statements.inspect
-        statement_receiver.extract_statements
+        statements = statement_receiver.extract_statements
+        statements[problemlist.size-1] = nil if statements.size < problemlist.size
+        statements
       end
 
       def extract_images(imagelist)
