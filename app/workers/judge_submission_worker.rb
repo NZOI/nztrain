@@ -35,7 +35,6 @@ class JudgeSubmissionWorker < ApplicationWorker
   end
 
   EvalFileName = "eval.sh"
-  StackLimit = 1024 * 4 # 4 MB
   OutputBaseLimit = 1024 * 1024 * 2
 
   attr_accessor :submission, :exe_filename
@@ -59,7 +58,7 @@ class JudgeSubmissionWorker < ApplicationWorker
       result['test_sets'] = {}
       denominator = problem.test_sets.map(&:points).inject(&:+).to_f
 
-      resource_limits = { :mem => memory_limit*1024, :time => time_limit, :extra_time => extra_time, :wall_time => wall_time, :stack => StackLimit, :processes => submission.language.processes }
+      resource_limits = { :mem => memory_limit*1024, :time => time_limit, :extra_time => extra_time, :wall_time => wall_time, :stack => stack_limit, :processes => submission.language.processes }
 
       # prerequisites
       prereqs = problem.test_cases.where(:id => problem.prerequisite_sets.joins(:test_case_relations).select(:test_case_relations => :test_case_id))
@@ -102,6 +101,11 @@ class JudgeSubmissionWorker < ApplicationWorker
 
   def memory_limit
     problem.memory_limit || 0.001
+  end
+
+  def stack_limit
+    0 # no stack limit - TODO: add stack limit field to problems
+      # StackLimit = 1024 * X # X MB
   end
 
   def extra_time
