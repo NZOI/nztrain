@@ -219,6 +219,8 @@ NZTrain::Application.routes.draw do
     member do
       get 'label'
       get 'scan/:scan_token', to: "item#scan", as: "scan" # public access
+      post 'loan'
+      post 'return'
     end
   end
 

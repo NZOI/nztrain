@@ -101,6 +101,12 @@
                       <% if policy(FileAttachment.new).manage? %>
                         <li><a href="<%= file_attachments_path %>">file attachments</a></li>
                       <% end %>
+                      <% if policy(Product).index? %>
+                        <li><a href="<%= products_path %>">products</a></li>
+                      <% end %>
+                      <% if policy(Item).index? %>
+                        <li><a href="<%= items_path %>">library</a></li>
+                      <% end %>
                     </ul>
                   </li>
                 <% end %>

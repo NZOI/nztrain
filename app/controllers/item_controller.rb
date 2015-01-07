@@ -11,6 +11,26 @@ class ItemController < ApplicationController
     render :label, :layout => false
   end
 
+  def loan
+    @item = Item.find(params[:id])
+    authorize @item, :manage?
+    if @item.loan!(params[:item][:holder_id])
+      redirect_to @item, :notice => "Item Loaned"
+    else
+      redirect_to @item, :alert => "No such user"
+    end
+  end
+
+  def return
+    @item = Item.find(params[:id])
+    authorize @item, :manage?
+    if @item.return!(params[:item][:holder_id])
+      redirect_to @item, :notice => "Item returned"
+    else
+      redirect_to @item, :alert => "No such user"
+    end
+  end
+
   def scan
     @item = Item.find(params[:id])
     if @item[:scan_token].nil?

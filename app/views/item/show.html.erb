@@ -2,4 +2,35 @@
 
 <%= markdown_parse(@item.product.description) %>
 
+Current Holder: <%= @item.holder ? @item.holder.name : "None" %>
+
+<p>Admin Actions:</p>
+
+<%= form_for @item, :url => return_item_path(@item), :method => :post do |f| %>
+  <p>
+    Return to UserID (Staff): <%= f.text_field :holder_id, :value => current_user.id %>
+    <%= f.submit 'Return' %>
+  </p>
+<% end %>
+<%= form_for @item, :url => loan_item_path(@item), :method => :post do |f| %>
+  <p>
+    Loan to UserID (User): <%= f.text_field :holder_id, :value => "" %>
+    <%= f.submit 'Loan' %>
+  </p>
+<% end %>
+
+Item History:
+
+<table class="main_table">
+  <thead>
+    <tr><th>Active</th><th>Action</th><th>Holder</th><th>DateTime</th></tr>
+  </thead>
+  <tbody>
+    <% @item.item_histories.each do |item_history| %>
+      <tr><td><%= item_history.active %></td><td><%= ItemHistory::ACTION[item_history.action] %></td><td><%= item_history.holder.name %></td><td><%= item_history.acted_at %></td></tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
 <%= link_to "Label", label_item_path(@item) %>
