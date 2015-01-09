@@ -40,6 +40,9 @@ gem 'prawn'
 gem 'rqrcode'
 gem 'pdfkit'
 
+gem 'countries'
+gem 'geocoder'
+
 gem 'pg'
 gem 'backup'
 
