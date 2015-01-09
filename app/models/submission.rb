@@ -43,7 +43,7 @@ class Submission < ActiveRecord::Base
     self.user_problem_relation.increment!(:submissions_count)
   end
 
-  after_destroy do
+  before_destroy do
     self.user_problem_relation.decrement!(:submissions_count)
   end
 
