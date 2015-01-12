@@ -41,6 +41,7 @@ gem 'rqrcode'
 gem 'pdfkit'
 
 gem 'countries'
+gem 'country_select'
 gem 'geocoder'
 
 gem 'pg'
