@@ -125,6 +125,7 @@ GEM
     has_scope (0.5.1)
     hashery (2.1.1)
     hike (1.2.3)
+    hive_geoip2 (0.1.2)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     i18n (0.6.9)
@@ -336,6 +337,7 @@ DEPENDENCIES
   foreman
   geocoder
   has_scope
+  hive_geoip2
   jquery-historyjs
   jquery-rails (~> 3.0.4)
   jquery-ui-rails

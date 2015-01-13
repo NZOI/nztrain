@@ -43,6 +43,7 @@ gem 'pdfkit'
 gem 'countries'
 gem 'country_select'
 gem 'geocoder'
+gem 'hive_geoip2'
 
 gem 'pg'
 gem 'backup'
