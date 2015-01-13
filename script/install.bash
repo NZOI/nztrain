@@ -28,6 +28,8 @@ bash script/install/postgresql.bash || exit 1 # create user & db if it doesn't e
 
 bash script/install/imagemagick.bash || exit 1 # install imagemagick
 
+bash script/install/maxmind.bash || exit 1 # maxmind GeoIP data
+
 sudo apt-get install wkhtmltopdf xvfb || exit 1
 
 bash script/install/nztrain.bash || exit 1 # fix files & directory structure
