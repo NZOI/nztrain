@@ -45,3 +45,6 @@ sudo bash -c "printf \"UserId 999999\nLicenseKey 000000000000\nProductIds GeoLit
   echo "$ $cmd"
   $cmd
 }
+
+true
+
