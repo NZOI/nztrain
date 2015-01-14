@@ -17,8 +17,6 @@ require "#{Rails.root}/db/seeds.rb"
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
-Geocoder.configure(lookup: :test)
-
 RSpec.configure do |config|
   # ## Mock Framework
   #
@@ -42,6 +40,7 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = true
 
   config.before(:suite) do
+    Geocoder.configure(lookup: :test)
     FixturesSpecHelper.initialize
   end
   config.after(:suite) do
