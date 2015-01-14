@@ -40,7 +40,6 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = true
 
   config.before(:suite) do
-    Geocoder.configure(lookup: :test)
     FixturesSpecHelper.initialize
   end
   config.after(:suite) do
@@ -54,6 +53,8 @@ RSpec.configure do |config|
 
   config.include FixturesSpecHelper, :type => :feature # supply fixture variables
   config.include RequestsSpecHelper, :type => :feature # use warden to shortcut login
+
+  config.include MockGeocoderSpecHelper
 
   config.include FixturesSpecHelper, :type => :presenter, example_group: {file_path: %r{spec/presenters}} # supply fixture variables
   config.include ActionView::TestCase::Behavior, :type => :presenter, example_group: {file_path: %r{spec/presenters}}
