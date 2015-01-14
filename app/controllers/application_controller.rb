@@ -65,7 +65,7 @@ class ApplicationController < ActionController::Base
 
   protected
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) << :username << :name << :email
+    devise_parameter_sanitizer.for(:sign_up) << :username << :name << :email << :country_code
   end
 
   def update_last_seen_at

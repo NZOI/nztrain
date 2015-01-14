@@ -25,8 +25,8 @@
   <%= f.file_field :avatar %>
   <%= f.hidden_field :avatar_cache %></p>
 
-  <p><%= f.label :name %><br />
-  <%= country_select(:user, :country, selected: request.location.try(:country_code), priority_countries: ["NZ", "AU"] ) %></p>
+  <p><%= f.label :country_code, "Country" %><br />
+  <%= country_select(:user, :country_code, selected: @user.country_code, priority_countries: ["NZ", "AU"] ) %></p>
 
 
   <p><%= f.submit "Update" %></p>
