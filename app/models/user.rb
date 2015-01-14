@@ -94,4 +94,9 @@ class User < ActiveRecord::Base
     remove_instance_variable(:@competing) if defined? @competing
     super
   end
+
+  def country_name
+    country = ISO3166::Country[country_code || 'NZ']
+    country.name
+  end
 end

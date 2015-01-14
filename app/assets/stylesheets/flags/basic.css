@@ -1,0 +1,44 @@
+.flags {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 0 0 0;  
+}
+
+.flags .l {
+  float: left;
+}
+
+.border .flag {
+  border: 1px solid;
+}
+
+.border .flag.selected {
+  border: 1px solid black;
+}
+
+.f16 .flag {
+  width: 16px;
+  height: 16px;
+}
+
+.f24 .flag {
+  width: 24px;
+  height: 24px;
+  margin: -3px 0 -3px 0;
+}
+
+.f32 .flag {
+  width: 32px;
+  height: 32px;
+}
+
+.f48 .flag {
+  width: 48px;
+  height: 48px;
+}
+
+.f64 .flag {
+  width: 64px;
+  height: 64px;
+}
+

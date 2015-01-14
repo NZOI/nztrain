@@ -61,7 +61,8 @@ table.main_table.selectable > tbody > tr.selected_row:hover > td {
 table.main_table > tbody > tr > td, table.main_table > thead > tr > th {
   padding-left: 10px;
   padding-right: 10px;
-  padding-top: 2px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   border: 1px solid #DDD;
 }
 

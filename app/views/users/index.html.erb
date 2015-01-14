@@ -2,9 +2,11 @@
 <% if policy(User).su? %>
   <%= render :partial => 'su', :formats => [:js] %>
 <% end %>
+
 <table class="main_table hoverable selectable">
   <thead>
     <tr>
+      <th></th>
       <th>Username</th>
       <% if policy(User).inspect? %>
         <th>Name</th>
@@ -28,6 +30,7 @@
   <tbody>
     <% @users.each do |user| %>
       <tr>
+        <td style="padding-left: 0; padding-right: 0"><%= flag_list(24){ flag(user.country_code.downcase, user.country_name, title: true) } if user.country_code %></td>
         <td><%= user.username %></td>
         <% if policy(user).inspect? %>
           <td><%= user.name %></td>
