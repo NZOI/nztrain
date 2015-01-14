@@ -17,6 +17,8 @@ require "#{Rails.root}/db/seeds.rb"
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
+Geocoder.configure(lookup: :test)
+
 RSpec.configure do |config|
   # ## Mock Framework
   #

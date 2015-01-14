@@ -38,9 +38,10 @@ $cmd
 echo "$ sudo printf \"UserId 999999\nLicenseKey 000000000000\nProductIds GeoLite2-City\n\" > /etc/GeoIP.conf"
 sudo bash -c "printf \"UserId 999999\nLicenseKey 000000000000\nProductIds GeoLite2-City\n\" > /etc/GeoIP.conf"
 
-sudo mkdir /usr/share/GeoIP -p
-
-cmd="sudo geoipupdate"
-echo "$ $cmd"
-$cmd
-
+[ -z "$TRAVIS" ] && {
+  sudo mkdir /usr/share/GeoIP -p
+  
+  cmd="sudo geoipupdate"
+  echo "$ $cmd"
+  $cmd
+}
