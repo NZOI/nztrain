@@ -17,8 +17,6 @@ do
     esac
 done
 
-
-
 cmd="sudo add-apt-repository -y ppa:maxmind/ppa"
 echo "$ $cmd"
 $cmd
@@ -37,5 +35,10 @@ cmd="sudo apt-get install geoipupdate"
 echo "$ $cmd"
 $cmd
 
+echo "$ sudo printf \"UserId 999999\nLicenseKey 000000000000\nProductIds GeoLite2-City\n\" > /etc/GeoIP.conf"
+sudo bash -c "printf \"UserId 999999\nLicenseKey 000000000000\nProductIds GeoLite2-City\n\" > /etc/GeoIP.conf"
 
+cmd="sudo geoipupdate"
+echo "$ $cmd"
+$cmd
 
