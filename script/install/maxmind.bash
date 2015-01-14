@@ -18,7 +18,7 @@ do
 done
 
 
-add-apt-repository ppa:maxmind/ppa
+add-apt-repository -y ppa:maxmind/ppa
 apt-get update
 
 # https://github.com/maxmind/libmaxminddb
