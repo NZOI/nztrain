@@ -19,7 +19,7 @@
   <%= f.password_field :password_confirmation %></p>
 
   <p><%= f.label :country_code, "Country" %><br />
-  <%= country_select(resource, :country_code, selected: request.location.try(:country_code), priority_countries: ["NZ", "AU"] %></p>
+  <%= country_select(resource, :country_code, selected: request.location.try(:country_code), priority_countries: ["NZ", "AU"]) %></p>
 
   <p>
     <%= recaptcha_tags :public_key => @db_settings["recaptcha/public_key"] if @db_settings["recaptcha/public_key"] && !@db_settings["recaptcha/public_key"].empty? %>
