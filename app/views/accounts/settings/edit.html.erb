@@ -28,6 +28,10 @@
   <p><%= f.label :country_code, "Country" %><br />
   <%= country_select(:user, :country_code, selected: @user.country_code, priority_countries: ["NZ", "AU"] ) %></p>
 
+  <p><%= f.label :school_graduation, "School Graduation" %><br />
+  <%= radio_button('user[school_graduation]', 'enabled', false, checked: !@user.school_graduation) %><%= f.label(:school_graduation_enabled_false, "Unspecified (Not considered eligible for IOI)") %> <br />
+  <%= radio_button('user[school_graduation]', 'enabled', true, checked: !!@user.school_graduation) %><%= select_month(@user.school_graduation || 12, prefix: 'user[school_graduation]') %><%= select_year(@user.school_graduation || Date.today, start_year: [Date.today.year-50,@user.school_graduation.year].min, end_year: Date.today.year+18, prefix: 'user[school_graduation]') %></p>
+
 
   <p><%= f.submit "Update" %></p>
 <% end %>

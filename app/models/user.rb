@@ -99,4 +99,17 @@ class User < ActiveRecord::Base
     country = ISO3166::Country[country_code || 'NZ']
     country.name
   end
+
+  def school_graduation=(value)
+    if value.is_a? Hash
+      if value[:enabled] == 'true'
+        super(DateTime.new(value[:year].to_i, value[:month].to_i, -1))
+      else
+        super(nil)
+      end
+    else
+      super
+    end
+  end
+
 end
