@@ -30,7 +30,7 @@
 
   <p><%= f.label :school_graduation, "School Graduation" %><br />
   <%= radio_button('user[school_graduation]', 'enabled', false, checked: !@user.school_graduation) %><%= f.label(:school_graduation_enabled_false, "Unspecified (Not considered eligible for IOI)") %> <br />
-  <%= radio_button('user[school_graduation]', 'enabled', true, checked: !!@user.school_graduation) %><%= select_month(@user.school_graduation || 12, prefix: 'user[school_graduation]') %><%= select_year(@user.school_graduation || Date.today, start_year: [Date.today.year-50,@user.school_graduation.year].min, end_year: Date.today.year+18, prefix: 'user[school_graduation]') %></p>
+  <%= radio_button('user[school_graduation]', 'enabled', true, checked: !!@user.school_graduation) %><%= select_month(@user.school_graduation || 12, {prefix: 'user[school_graduation]'}, class: :radio_input) %><%= select_year(@user.school_graduation || Date.today, {start_year: [Date.today.year-50,@user.school_graduation.try(:year) || Date.today.year].min, end_year: Date.today.year+18, prefix: 'user[school_graduation]'}, class: :radio_input) %></p>
 
 
   <p><%= f.submit "Update" %></p>

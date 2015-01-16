@@ -18,105 +18,109 @@
 //
 
 function createCookie(name,value,days) {
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime()+(days*24*60*60*1000));
-        var expires = "; expires="+date.toGMTString();
-    }
-    else var expires = "";
-    document.cookie = name+"="+value+expires+"; path=/";
+  if (days) {
+    var date = new Date();
+    date.setTime(date.getTime()+(days*24*60*60*1000));
+    var expires = "; expires="+date.toGMTString();
+  }
+  else var expires = "";
+  document.cookie = name+"="+value+expires+"; path=/";
 }
 
 function readCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-    }
-    return null;
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for(var i=0;i < ca.length;i++) {
+    var c = ca[i];
+    while (c.charAt(0)==' ') c = c.substring(1,c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+  }
+  return null;
 }
 
 var expandspeed = 1;
 var minduration = 250;
 function toggle_height(id, displaytype) {
-    if ($("#"+id).data("height")==undefined) {
-        $("#"+id).data("height",$('#'+id).height());
-        $("#"+id).data("state",0);
-        var e = document.getElementById(id);
-        e.style.height = "0px";
-        e.style.display = ((typeof(displaytype)=="undefined")?"block":displaytype);
-    }
-    if ($("#"+id).data("state")==0) {
-        $("#"+id).stop();
-        $("#"+id).animate({'height':$("#"+id).data("height")},Math.max(($("#"+id).data("height")-$("#"+id).height())/expandspeed,minduration));
-        $("#"+id).data("state",1);
-    }
-    else {
-        $("#"+id).stop();
-        $("#"+id).animate({'height':0},Math.max($("#"+id).height()/expandspeed,minduration));
-        $("#"+id).data("state",0);
-    }
+  if ($("#"+id).data("height")==undefined) {
+    $("#"+id).data("height",$('#'+id).height());
+    $("#"+id).data("state",0);
+    var e = document.getElementById(id);
+    e.style.height = "0px";
+    e.style.display = ((typeof(displaytype)=="undefined")?"block":displaytype);
+  }
+  if ($("#"+id).data("state")==0) {
+    $("#"+id).stop();
+    $("#"+id).animate({'height':$("#"+id).data("height")},Math.max(($("#"+id).data("height")-$("#"+id).height())/expandspeed,minduration));
+    $("#"+id).data("state",1);
+  }
+  else {
+    $("#"+id).stop();
+    $("#"+id).animate({'height':0},Math.max($("#"+id).height()/expandspeed,minduration));
+    $("#"+id).data("state",0);
+  }
 }
 
 var duration = 250;
 function shrink() {
-    createCookie("expanded", "false", 31);
-    $("#side").animate({width:'50px'}, duration);
-    $('#main-menu').animate({'left':'50px'}, duration);
-    $('#side-minify').html("&#9654;");
-    $('#main').animate({'left':'50px'}, duration);
-    $('#side-expanded').animate({'opacity':'0'},duration);
-    $('#side-contracted').animate({'opacity':'1'}, duration);
+  createCookie("expanded", "false", 31);
+  $("#side").animate({width:'50px'}, duration);
+  $('#main-menu').animate({'left':'50px'}, duration);
+  $('#side-minify').html("&#9654;");
+  $('#main').animate({'left':'50px'}, duration);
+  $('#side-expanded').animate({'opacity':'0'},duration);
+  $('#side-contracted').animate({'opacity':'1'}, duration);
 }
 
 function expand() {
-    createCookie("expanded", "true", 31);
-    $("#side").animate({width:'200px'}, duration);
-    $('#main-menu').animate({'left':'200px'}, duration);
-    $('#side-minify').html("&#9664;");
-    $('#main').animate({'left':'200px'}, duration);
-    $('#side-expanded').animate({'opacity':'1'},duration);
-    $('#side-contracted').animate({'opacity':'0'}, duration);
+  createCookie("expanded", "true", 31);
+  $("#side").animate({width:'200px'}, duration);
+  $('#main-menu').animate({'left':'200px'}, duration);
+  $('#side-minify').html("&#9664;");
+  $('#main').animate({'left':'200px'}, duration);
+  $('#side-expanded').animate({'opacity':'1'},duration);
+  $('#side-contracted').animate({'opacity':'0'}, duration);
 }
 
 $(document).ready(function() {
-    var expanded = readCookie("expanded");
-    if(expanded == "false") {
-    	duration = 0;
-    	shrink();
-    	duration = 250;
-    }
-    $('#side-minify').click(function() {
-    	if($('#side').width() <= 100)
-        expand();
-    	else
-        shrink();
-    });
+  var expanded = readCookie("expanded");
+  if(expanded == "false") {
+  	duration = 0;
+  	shrink();
+  	duration = 250;
+  }
+  $('#side-minify').click(function() {
+    if($('#side').width() <= 100)
+      expand();
+    else
+      shrink();
+  });
 
-    $("table.selectable > tbody > tr").click(function() {
-    	$(this).toggleClass("selected_row");
-    });
+  $("table.selectable > tbody > tr").click(function() {
+    $(this).toggleClass("selected_row");
+  });
 
-    $("#left-menu").superfish({
-        animation: {opacity:'show',height:'show'},
-        speed: 'fast'
-    });
+  $("#left-menu").superfish({
+    animation: {opacity:'show',height:'show'},
+    speed: 'fast'
+  });
 
-    $("#right-menu").superfish({
-        cssArrows: false,
-        speed: 'fast'
-    });
+  $("#right-menu").superfish({
+    cssArrows: false,
+    speed: 'fast'
+  });
 
-    $('.date-picker').datetimepicker({ dateFormat: 'dd/mm/yy' });
+  $('.date-picker').datetimepicker({ dateFormat: 'dd/mm/yy' });
 
-    $('#menu').css({'min-width':$('#nav').width()+$('#controls').width() + 'px'});
+  $('#menu').css({'min-width':$('#nav').width()+$('#controls').width() + 'px'});
 
-    $(".submission_details").click(function() {
-        console.log("abc");
-        $(this).find(".submission_details_hider").slideDown();
-    });
-    $(".submission_details_hider").hide();
-    $("#main").focus();
+  $(".submission_details").click(function() {
+    console.log("abc");
+    $(this).find(".submission_details_hider").slideDown();
+  });
+  $(".submission_details_hider").hide();
+  $("#main").focus();
+
+  $(".radio_input").click(function() {
+    $(this).prevAll("input[type=radio]:first").prop("checked", true);
+  });
 });

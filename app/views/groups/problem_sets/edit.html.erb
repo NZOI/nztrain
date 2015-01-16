@@ -15,11 +15,13 @@
       <tr>
         <%= form_for association, :url => group_problem_set_path(@group, association), :method => :patch do |f| %>
           <td>
-            <%= f.radio_button :name_reset, true %><b><%= f.label 'name_reset_true', problem_set.name %></b>
+            <%= label_tag do %>
+              <%= f.radio_button :name_reset, true %> <b><%= problem_set.name %></b>
+            <% end %>
           </td>
           <td>or</td>
           <td style="padding-top: 0; padding-bottom: 0;">
-            <%= f.radio_button :name_reset, false, "data-radio-enable" => 'group_problem_set_name' %> <%= text_field_tag "group_problem_set[name]", association.name, :style => "width: 80%" %>
+            <%= f.radio_button :name_reset, false, "data-radio-enable" => 'group_problem_set_name' %> <%= text_field_tag "group_problem_set[name]", association.name, :style => "width: 80%", class: :radio_input %>
           </td>
           <td style="padding-top: 0; padding-bottom: 0;">
             <%= f.submit "Update", :style => "margin: 0" %>
