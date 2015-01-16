@@ -44,7 +44,7 @@
       <table class="invis">
         <tr>
           <td style="width:100%">
-            <ul id="left-menu" class="sf-menu nav-theme">
+            <ul<%= ' id=left-menu' if user_signed_in? %> class="sf-menu nav-theme">
               <li><a href="<%= root_path %>">dashboard</a></li>
               <% if user_signed_in? %>
                 <li><a href="#" onClick="return false;">contests</a>
@@ -129,7 +129,7 @@
             </ul>
           </td>
           <td>
-            <ul id="right-menu" class="sf-menu nav-theme">
+            <ul<%= ' id=right-menu' if user_signed_in? %> class="sf-menu nav-theme">
               <li<%= raw ' class="masknav"' if in_su? %>>
               <% if user_signed_in? %>
                 <span id="current_user_username"><a href="<%= user_path(current_user) %>"><%= current_user.username %></a></span>
