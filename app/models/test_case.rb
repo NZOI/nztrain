@@ -15,6 +15,14 @@ class TestCase < ActiveRecord::Base
   include RankedModel
   ranks :problem_order, with_same: :problem_id
 
+  def input=(text)
+    super(text.encode(text.encoding, universal_newline: true))
+  end
+
+  def output=(text)
+    super(text.encode(text.encoding, universal_newline: true))
+  end
+
   def truncated_output
     JudgeSubmissionWorker.truncate_output(output)
   end
