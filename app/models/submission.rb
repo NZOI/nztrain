@@ -45,6 +45,9 @@ class Submission < ActiveRecord::Base
 
   before_destroy do
     self.user_problem_relation.decrement!(:submissions_count)
+    problem.recalculate_tests_and_save!
+    self.problem.decrement!(:test_error_count) unless test_errors.nil?
+    self.problem.decrement!(:test_warning_count) unless test_warnings.nil?
   end
 
   after_save do
@@ -174,6 +177,8 @@ class Submission < ActiveRecord::Base
         end
       end
 
+      errors = nil if errors.empty?
+      warnings = nil if warnings.empty?
       self.test_errors = errors
       self.test_warnings = warnings
     end

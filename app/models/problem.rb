@@ -11,6 +11,8 @@ class Problem < ActiveRecord::Base
   has_many :submissions, :dependent => :destroy
   has_many :test_submissions, -> { where.not(:classification => [Submission::CLASSIFICATION[:ranked], Submission::CLASSIFICATION[:unranked]]).order(:score) }, class_name: Submission
 
+  has_many :user_problem_relations, dependent: :destroy
+
   belongs_to :owner, :class_name => :User
   belongs_to :evaluator
 
@@ -45,6 +47,12 @@ class Problem < ActiveRecord::Base
   scope :by_group, ->(group_id) { joins(:problem_sets => :groups).where(:groups => {:id => group_id}).distinct }
 
   # methods
+
+  def recalculate_tests_and_save!
+    test_error_count = submissions.count(:test_errors)
+    test_warning_count = submissions.count(:test_warnings)
+    self.save
+  end
 
   def get_highest_scoring_submission(user, from = DateTime.new(1), to = DateTime.now)
     subs = self.submissions.find(:all, :conditions => ["created_at between ? and ? and user_id = ?", from, to, user])

@@ -29,6 +29,7 @@ class User < ActiveRecord::Base
   # Groups are used to assign local permissions, eg. access to individual problems/problem sets
   # Roles are used to assign global permissions, eg. access to problems on the whole site
   has_many :memberships, :class_name => :GroupMembership, :foreign_key => :member_id, :dependent => :destroy
+  has_many :user_problem_relations, dependent: :destroy
   has_many :groups, :through => :memberships
   has_and_belongs_to_many :roles
 

@@ -1,5 +1,6 @@
 <% content_for :title, "Submission" %>
 <%= toolbox_push :edit, edit_submission_path(@submission) if policy(@submission).edit? %> 
+<%= toolbox_push :delete, @submission if policy(@submission).destroy? %>
 <%= toolbox_push :back, @submission.problem %>
 
 <%= stylesheet_link_tag "submission" %>
