@@ -37,6 +37,8 @@ class User < ActiveRecord::Base
   has_many :requests, -> { where requestee_id: :target_id }, :class_name => Request, :as => :target
   has_one :entity, :as => :entity
 
+  belongs_to :school, counter_cache: true
+
   # Scopes
 
   scope :distinct, -> { select("distinct(users.id), users.*") }
@@ -105,6 +107,19 @@ class User < ActiveRecord::Base
     if value.is_a? Hash
       if value[:enabled] == 'true'
         super(DateTime.new(value[:year].to_i, value[:month].to_i, -1))
+      else
+        super(nil)
+      end
+    else
+      super
+    end
+  end
+
+  def school=(value)
+    if value.is_a? Hash
+      if value[:name] && value[:name] != ""
+        school = School.where(name: value[:name], country_code: value[:country_code]).first_or_initialize
+        super(school.synonym || school)
       else
         super(nil)
       end

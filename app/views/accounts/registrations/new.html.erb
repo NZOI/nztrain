@@ -19,11 +19,20 @@
   <%= f.password_field :password_confirmation %></p>
 
   <p><%= f.label :country_code, "Country" %><br />
-  <%= country_select(resource.class.model_name.singular, :country_code, selected: params[:user].try(:[], :country_code) || request.location.try(:country_code), priority_countries: ["NZ", "AU"]) %></p>
+  <%= f.country_select(:country_code, selected: @user.country_code || request.location.try(:country_code), priority_countries: ["NZ", "AU"]) %></p>
 
   <p><%= f.label :school_graduation, "School Graduation" %><br />
-  <%= radio_button('user[school_graduation]', 'enabled', false, checked: !@user.school_graduation) %><%= f.label(:school_graduation_enabled_false, "Unspecified (Not considered eligible for IOI)") %> <br />
-  <%= radio_button('user[school_graduation]', 'enabled', true, checked: !!@user.school_graduation) %><%= select_month(@user.school_graduation || 12, {prefix: 'user[school_graduation]'}, class: :radio_input) %><%= select_year(@user.school_graduation || Date.today, {start_year: [Date.today.year-50,@user.school_graduation.try(:year) || Date.today.year].min, end_year: Date.today.year+18, prefix: 'user[school_graduation]'}, class: :radio_input) %></p>
+  <%= f.fields_for :school_graduation do |graduation_form| %>
+  <%= graduation_form.radio_button('enabled', false, checked: !@user.school_graduation) %><%= f.label(:school_graduation_enabled_false, "Unspecified (Not considered eligible for IOI)") %> <br />
+  <%= graduation_form.radio_button('enabled', true, checked: !!@user.school_graduation) %><%= select_month(@user.school_graduation || 12, {prefix: 'user[school_graduation]'}, class: :radio_input) %><%= select_year(@user.school_graduation || Date.today, {start_year: [Date.today.year-50,@user.school_graduation.try(:year) || Date.today.year].min, end_year: Date.today.year+18, prefix: 'user[school_graduation]'}, class: :radio_input) %>
+  <% end %></p>
+
+  <p><%= f.label :school %><br />
+  <%= f.fields_for :school, @user.school do |school_form| %>
+    <%= school_form.text_field :name %>, 
+    <%= school_form.country_select(:country_code, only: ["NZ"] ) %>
+  <% end %>
+  </p>
 
   <p>
     <%= recaptcha_tags :public_key => @db_settings["recaptcha/public_key"] if @db_settings["recaptcha/public_key"] && !@db_settings["recaptcha/public_key"].empty? %>
