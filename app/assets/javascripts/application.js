@@ -123,4 +123,20 @@ $(document).ready(function() {
   $(".radio_input").click(function() {
     $(this).prevAll("input[type=radio]:first").prop("checked", true);
   });
+
+  // on radio button, will select a certain div to display?
+  //$("input[type=radio].select").change(function() {
+  //  $("." + $(this).attr('name')).hide();
+  //  $("." + $(this).attr('name') + "." + $(this).val()).show();
+  //});
+  $(".togglelink").click(function() {
+    if (typeof $(this).data("toggle") === "undefined") return;
+    $(this).parent().children("." + $(this).data("toggle"))
+      .toggle()
+      .prop('disabled', function(i, v) { return !v; });
+    
+  });
+
+  $(".jsdisplay").show().prop('disabled', false);
+  $(".jsnodisplay").hide().prop('disabled', true);
 });

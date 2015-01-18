@@ -29,8 +29,11 @@
 
   <p><%= f.label :school %><br />
   <%= f.fields_for :school, @user.school do |school_form| %>
-    <%= school_form.text_field :name %>, 
-    <%= school_form.country_select(:country_code, only: ["NZ"] ) %>
+    <%= school_form.text_field :name, class: [:school_select, :jsnodisplay] %>
+    <%= f.select :school_id, School.where(country_code: "NZ").order(:name).collect {|s| [s.name, s.id]}, { include_blank: true }, class: [:school_select, :jsdisplay], disabled: true %>, 
+    <%= school_form.country_select(:country_code, only: ["NZ"] ) %><br />
+    <a class="school_select togglelink jsnodisplay" data-toggle="school_select" href="javascript:void(0)">Select school from list</a>
+    <a class="school_select togglelink jsdisplay" data-toggle="school_select" href="javascript:void(0)">Add new school</a>
   <% end %>
   </p>
 
