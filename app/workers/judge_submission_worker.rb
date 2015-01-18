@@ -1,3 +1,7 @@
+# BigDecimal to avoid rounding (evaluator giving partial marks will output a decimal number)
+require 'bigdecimal'
+require 'bigdecimal/util'
+
 class JudgeSubmissionWorker < ApplicationWorker
   extend GCWorkerMiddleware
 
@@ -22,6 +26,9 @@ class JudgeSubmissionWorker < ApplicationWorker
       submission.reload # todo: fetch only columns needed
       submission.judge_log = result.to_json
       submission.score = result['score']
+      submission.evaluation = result['evaluation']
+      submission.points = result['points']
+      submission.maximum_points = maximum_points
       submission.judged_at = judge_start_time
       submission.save
     end
@@ -42,6 +49,10 @@ class JudgeSubmissionWorker < ApplicationWorker
   def initialize
   end
 
+  def maximum_points
+    @maxpoints ||= problem.test_sets.map(&:points).inject(&:+)
+  end
+
   def judge
     result = {}
     setup_judging do
@@ -56,7 +67,6 @@ class JudgeSubmissionWorker < ApplicationWorker
 
       result['test_cases'] = {}
       result['test_sets'] = {}
-      denominator = problem.test_sets.map(&:points).inject(&:+).to_f
 
       resource_limits = { :mem => memory_limit*1024, :time => time_limit, :extra_time => extra_time, :wall_time => wall_time, :stack => stack_limit, :processes => submission.language.processes }
 
@@ -68,7 +78,7 @@ class JudgeSubmissionWorker < ApplicationWorker
       end
 
       problem.prerequisite_sets.each do |test_set|
-        result['test_sets'][test_set.id] = grade_test_set(test_set, result['test_cases'], denominator)
+        result['test_sets'][test_set.id] = grade_test_set(test_set, result['test_cases'])
       end
 
       unless problem.prerequisite_sets.empty?
@@ -84,10 +94,10 @@ class JudgeSubmissionWorker < ApplicationWorker
 
       # test sets
       problem.test_sets.each do |test_set|
-        result['test_sets'][test_set.id] = grade_test_set(test_set, result['test_cases'], denominator) unless result['test_sets'].has_key?(test_set.id)
+        result['test_sets'][test_set.id] = grade_test_set(test_set, result['test_cases']) unless result['test_sets'].has_key?(test_set.id)
       end
       
-      result.merge!(grade_submission(result['test_sets'], denominator, preres))
+      result.merge!(grade_submission(result['test_sets'], preres))
     end
     result
   end
@@ -205,7 +215,7 @@ class JudgeSubmissionWorker < ApplicationWorker
         end
         r['evaluation'] = 1 if r['stat'] == 0 # DEPRECATED
       else
-        r['evaluation'] = eval_output[0].to_f
+        r['evaluation'] = eval_output[0].to_d
         r['message'] = truncate_output(eval_output[1] || "")
         r.delete('evaluation') if r['meta']['status'] != 'OK'
       end
@@ -216,7 +226,7 @@ class JudgeSubmissionWorker < ApplicationWorker
     box.clean!
   end
 
-  def grade_test_set test_set, evaluated_test_cases, denominator
+  def grade_test_set test_set, evaluated_test_cases
     result = {'cases' => []}
     pending, error, sig = false, false, false
     evaluations = test_set.test_case_relations.map do |relation|
@@ -236,7 +246,7 @@ class JudgeSubmissionWorker < ApplicationWorker
       # test set = min case score
       result['evaluation'] = evaluations.push(1).min
       result['evaluation'] = 0 if sig # any signal/runtime error/timeout fails the test set
-      result['score'] = (test_set.points * result['evaluation']).to_f*100/denominator
+      result['score'] = (test_set.points * result['evaluation']).to_d*100/maximum_points
     end
     result
   end
@@ -245,24 +255,26 @@ class JudgeSubmissionWorker < ApplicationWorker
     sets = graded_sets.values_at(*problem.prerequisite_set_ids)
     r = {}
     r['status'] = combined_status(sets)
-    r['evaluation'] = sets.map{ |s| s['evaluation'] }.sum.to_f/sets.size if r['status'] == 0
+    r['evaluation'] = sets.map{ |s| s['evaluation'] }.sum.to_d/sets.size if r['status'] == 0
     r
   end
 
-  def grade_submission(graded_sets, denominator, preres = nil)
+  def grade_submission(graded_sets, preres = nil)
     result = {}
     result['prerequisites'] = preres = grade_prerequisites(graded_sets) if preres.nil? && !problem.prerequisite_set_ids.empty?
     test_sets = problem.test_sets
     sets = graded_sets.values_at(*test_sets.map(&:id))
     result['status'] = combined_status(sets)
     if result['status'] == 0
-      numerator = test_sets.map{ |s| (graded_sets[s.id]['evaluation'] * s.points)}.inject(&:+).to_f
-      result['evaluation'] = numerator/denominator
-      if denominator == 0
+      numerator = test_sets.map{ |s| (graded_sets[s.id]['evaluation'] * s.points)}.inject(&:+).to_d
+      result['evaluation'] = numerator/maximum_points
+      result['points'] = numerator
+      if maximum_points == 0
         result['score'] = 0
       else
-        result['score'] = (preres.nil? || preres['evaluation'] == 1) ? (result['evaluation']*100).floor : 0
+        result['score'] = (preres.nil? || preres['evaluation'] == 1) ? (result['evaluation']*100).floor.to_i : 0
       end
+      result['evaluation'] = result['evaluation'].to_f # potential rounding issue
     end
     result
   end
@@ -276,7 +288,7 @@ class JudgeSubmissionWorker < ApplicationWorker
     when 0
       return { 'status' => 1 } # pending
     when 1
-      return { 'status' => 0, 'evaluation' => 0.0, 'score' => 0 }
+      return { 'status' => 0, 'evaluation' => 0.0, 'score' => 0, 'points' => 0.to_d }
     else
       return { 'status' => 2 } # errored
     end

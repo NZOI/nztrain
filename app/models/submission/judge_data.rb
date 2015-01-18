@@ -34,7 +34,7 @@ class Submission
       end
 
       def walltime
-        sprintf "%.3f seconds", data['time-wall']
+        sprintf "%.3f seconds", data['time-wall'] if data['time-wall']
       end
 
       def time
@@ -60,7 +60,7 @@ class Submission
 
     module Runnable
       def output
-        data['output']
+        data['output'] || ""
       end
 
       def output_size
@@ -121,7 +121,7 @@ class Submission
       end
 
       def evaluation
-        data['evaluation']
+        data['evaluation'].to_f
       end
 
       def message
@@ -207,7 +207,7 @@ class Submission
       end
 
       def evaluation
-        data['evaluation']
+        data['evaluation'].to_f
       end
 
       def score
@@ -287,7 +287,7 @@ class Submission
     end
 
     def prefail?
-      !@presets.empty? and prerequisites and (prerequisites['status'] != 0 or prerequisites['evaluation'] != 1)
+      !@presets.empty? and prerequisites and (prerequisites['status'] != 0 or prerequisites['evaluation'].to_f != 1)
     end
 
     def prerequisites

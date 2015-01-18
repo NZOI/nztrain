@@ -144,6 +144,6 @@
 <br>
 <p>
 <b>Source:</b>
-<%= predisplay(@submission.source, language: @submission.language.lexer) %>
+<%= predisplay(@submission.source || "", language: @submission.language.lexer) %>
 </p>
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150117073551) do
+ActiveRecord::Schema.define(version: 20150118104425) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -231,6 +231,7 @@ ActiveRecord::Schema.define(version: 20150117073551) do
     t.integer "problem_set_id"
     t.integer "problem_id"
     t.integer "problem_set_order"
+    t.integer "points",            default: 100
   end
 
   add_index "problem_set_problems", ["problem_id", "problem_set_id"], name: "index_problem_set_problems_on_problem_id_and_problem_set_id", using: :btree
@@ -241,6 +242,7 @@ ActiveRecord::Schema.define(version: 20150117073551) do
     t.integer  "owner_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "finalized_contests_count", default: 0
   end
 
   create_table "problems", force: true do |t|
@@ -330,6 +332,9 @@ ActiveRecord::Schema.define(version: 20150117073551) do
     t.integer  "classification"
     t.string   "test_errors",    array: true
     t.string   "test_warnings",  array: true
+    t.float    "evaluation"
+    t.decimal  "points"
+    t.integer  "maximum_points"
   end
 
   add_index "submissions", ["problem_id", "created_at"], name: "index_submissions_on_problem_id_and_created_at", using: :btree
