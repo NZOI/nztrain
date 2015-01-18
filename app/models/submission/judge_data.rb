@@ -92,7 +92,7 @@ class Submission
       end
 
       def status
-        return :pending if data.nil?
+        return :pending if data.nil? || data == {}
         return :success if !errored?
         return meta.result if data['stat'] == 1
         return :error
@@ -160,7 +160,7 @@ class Submission
 
       def status
         return :cancelled if @cancelled
-        return :pending if data.nil?
+        return :pending if data.nil? || data == {}
         return :error if evalerrored?
         return meta.result if data['stat'] == 1
         evaluator.result
