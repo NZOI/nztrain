@@ -120,8 +120,6 @@ class User < ActiveRecord::Base
       if value[:name] && value[:name] != ""
         school = School.where(name: value[:name], country_code: value[:country_code]).first_or_initialize
         super(school.synonym || school)
-      else
-        super(nil)
       end
     else
       super
