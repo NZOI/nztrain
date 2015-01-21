@@ -1,9 +1,12 @@
 <% content_for :title, @problem_set.name %>
+<%= toolbox_push :edit, edit_problem_set_path(@problem_set) if policy(@problem_set).edit? %> 
+<%= toolbox_push :delete, @problem_set if policy(@problem_set).destroy? %> 
+
 <table class="main_table hoverable">
   <thead>
     <tr>
       <th width="50%">Title</th>
-      <th></th>
+      <th>Points Weighting</th>
       <% if policy(Problem).update? %>
         <th></th>
       <% end %>
@@ -13,12 +16,12 @@
       <% end %>
     </tr>
   </thead>
-  <% @problem_set.problem_associations.each do |association| %>
+  <% @problem_set.problem_associations.each_with_index do |association,i| %>
     <% problem = association.problem %>
     <tr>
-      <td><%= problem.name %></td>
-      <td><%= link_to 'Show', problem %></td>
-      <% if policy(Problem).update? %>
+      <td><%= link_to problem.name, problem %></td>
+      <td><%= association.weighting %></td>
+      <% if policy(problem).update? %>
         <td><%= link_to 'Edit', edit_problem_path(problem) if policy(problem).update? %></td>
       <% end %>
       <% if policy(@problem_set).update? %>
@@ -32,6 +35,7 @@
     </tr>
   <% end %>
 </table>
+
 <% if policy(@problem_set).use? %>
   <p>
   <%= form_tag(group_problem_set_add_path(:problem_set_id => @problem_set), :method => :put) do %>
@@ -40,5 +44,4 @@
   <% end %>
   </p>
 
-  <%= link_to 'Edit', edit_problem_set_path(@problem_set) %>
 <% end %>

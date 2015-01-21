@@ -29,20 +29,32 @@ module ApplicationHelper
     string.to_json # JSON is a subset of YAML
   end
 
-  def progress_bar(percent, link = nil, options = {})
+  def progress_bar(score, weighting = nil, link = nil, options = {})
     options.reverse_merge!(size: :standard)
     options[:width] = options[:size]==:compact ? '30px' : '100px' unless options.has_key?(:width)
-    unless percent.nil?
-      percent = percent.to_i
-      text = percent.to_s
-      text += '%' unless options[:size] == :compact
+    unless weighting.nil? || weighting.is_a?(Numeric)
+      link = weighting
+      weighting = nil
+    end
+    unless score.nil?
+      score = score.to_i
+      text = score.to_s
+      unless options[:size] == :compact
+        if weighting.nil?
+          text += "%"
+        else
+          text += "/#{weighting}"
+        end
+      end
     else
       text = '-'
     end
     if link != nil
       text = link_to(text,link,{:class => "progress_link", :style => "display: block; width: 100%;"})
     end
-    if percent.nil?
+    weighting = 100 if weighting.nil?
+    percent = score*100/weighting unless score.nil?
+    if score.nil?
       colour = "rgb(192,192,192)"
       percent = 0;
     elsif percent <= 50 # make a nice spectrum of colours

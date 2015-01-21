@@ -9,7 +9,7 @@ class Problem < ActiveRecord::Base
   has_many :test_cases, -> { rank(:problem_order) }, inverse_of: :problem, dependent: :destroy
   has_many :sample_cases, -> { where(:sample => true).rank(:problem_order) }, :class_name => TestCase
   has_many :submissions, :dependent => :destroy
-  has_many :test_submissions, -> { where.not(:classification => [Submission::CLASSIFICATION[:ranked], Submission::CLASSIFICATION[:unranked]]).order(:score) }, class_name: Submission
+  has_many :test_submissions, -> { where.not(:classification => [Submission::CLASSIFICATION[:ranked], Submission::CLASSIFICATION[:unranked]]).order(:evaluation) }, class_name: Submission
 
   has_many :user_problem_relations, dependent: :destroy
 
@@ -100,5 +100,11 @@ class Problem < ActiveRecord::Base
     return 1 if !test_submissions.where(:classification => [Submission::CLASSIFICATION[:model],Submission::CLASSIFICATION[:solution]]).any?
     return 2 if !test_submissions.where(:classification => Submission::CLASSIFICATION[:incorrect]).any?
     return 3
+  end
+
+  # only used when properly joined with submission and problem_set_problems
+  def weighted_score
+    return nil if self.points.nil?
+    self.points * self.weighting / self.maximum_points
   end
 end

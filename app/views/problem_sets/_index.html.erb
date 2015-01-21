@@ -18,36 +18,7 @@
   </thead>
   <tbody>
 <% @problem_sets.each do |problem_set| %>
-  <% problems = problem_set.problems.score_by_user(current_user.id) %>
-  <tr class="subheading">
-    <td onClick="toggle_height('<%= "problemset#{problem_set.id}problems" %>');"><%= problem_set.name %> <span style="font-weight: normal; font-style: italic;">(<%= problem_set.problems.length %> problem<%= problem_set.problems.length==1?"":"s" %>)</span></td>
-    <td><%= progress_bar(problems.inject(0){|sum,x| sum+(x.score.to_i||0)}/problems.length) if problems.length>0 %></td>
-    <td><%= link_to 'Show', problem_set %></td>
-    <% if policy(ProblemSet).update? %>
-      <td><%= link_to 'Edit', edit_problem_set_path(problem_set) if policy(problem_set).update? %></td>
-    <% end %>
-    <% if policy(ProblemSet).destroy? %>
-      <td><%= link_to 'Destroy', problem_set, :data => { :confirm => 'Are you sure?' }, :method => :delete if policy(problem_set).destroy? %></td>
-    <% end %>
-  </tr>
-  <tr>
-    <td colspan="<%= @colspan %>" style="padding: 0px;">
-      <div id="problemset<%= problem_set.id %>problems" style="display: none; overflow-y: hidden;">
-        <table class="main_table hoverable selectable" onClick="event.cancelBubble = true;">
-          <tbody>
-            <% problems.each do |problem| %>
-              <tr>
-                <td width="100%">&nbsp;&nbsp;&nbsp;<%= ProblemPresenter.new(problem).test_status + "&nbsp;".html_safe if policy(problem).inspect? %><%= link_to problem.name, problem %></td>
-                <td><%= progress_bar(problem.score) %></td>
-                <td><%= link_to 'Show', problem %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    </td>
-  </tr>
-
+  <%= render partial: "item", locals: {problem_set: problem_set, edit_links: true} %>
 <% end %>
   </tbody>
 </table>

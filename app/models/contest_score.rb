@@ -9,13 +9,13 @@ class ContestScore < ActiveRecord::Base
 
   def recalculate_and_save
     transaction do # to ensure that if eg. multiple submissions finish judging, they do not recalculate at the same time
-      submissions = Submission.where(:problem_id => problem.id,:user_id => contest_relation.user_id,:created_at => contest_relation.started_at...contest_relation.finish_at).where("score IS NOT NULL") # relevant submissions
+      submissions = Submission.where(:problem_id => problem.id,:user_id => contest_relation.user_id,:created_at => contest_relation.started_at...contest_relation.finish_at).where("evaluation IS NOT NULL") # relevant submissions
       attempts = submissions.count
       if attempts == 0
         self.destroy # in case already in database - this occurs if submissions get deleted
       else
         self.attempts = attempts # attempts
-        submission = submissions.order("score DESC, created_at ASC").first
+        submission = submissions.order("evaluation DESC, created_at ASC").first
         self.attempt = submissions.where("created_at <= ?",submission.created_at).count # attempts number
         self.submission_id = submission.id
         self.score = submission.score

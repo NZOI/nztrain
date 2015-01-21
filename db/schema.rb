@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150118104425) do
+ActiveRecord::Schema.define(version: 20150121113050) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -231,7 +231,7 @@ ActiveRecord::Schema.define(version: 20150118104425) do
     t.integer "problem_set_id"
     t.integer "problem_id"
     t.integer "problem_set_order"
-    t.integer "points",            default: 100
+    t.integer "weighting",         default: 100
   end
 
   add_index "problem_set_problems", ["problem_id", "problem_set_id"], name: "index_problem_set_problems_on_problem_id_and_problem_set_id", using: :btree

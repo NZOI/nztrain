@@ -24,6 +24,26 @@
     <% end %>
 
   </div>
+
+  <table class="main_table hoverable">
+    <thead>
+      <tr>
+        <th width="50%">Title</th>
+        <th>Points Weighting</th>
+      </tr>
+    </thead>
+    <% @problem_set.problem_associations.each_with_index do |association,i| %>
+      <% problem = association.problem %>
+      <tr>
+        <td><%= link_to problem.name, problem %></td>
+        <td>
+          <%= text_field_tag "problem_set[problem_associations_attributes][#{i}][weighting]", association.weighting, :style => "width: 100px;" %>
+          <%= text_field_tag "problem_set[problem_associations_attributes][#{i}][id]", association.id, :style => "width: 0%;visibility:hidden" %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+
   <div class="actions">
     <%= f.submit %>
   </div>

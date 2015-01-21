@@ -19,6 +19,10 @@ class ProblemSet < ActiveRecord::Base
   # Scopes
   scope :distinct, -> { select("distinct(problem_sets.id), problem_sets.*") }
 
+  def problems_with_scores_by_user(user_id)
+    problems.joins("LEFT OUTER JOIN user_problem_relations ON user_problem_relations.problem_id = problems.id AND user_problem_relations.user_id = #{user_id} LEFT OUTER JOIN submissions ON submissions.id = user_problem_relations.submission_id").select([:id, :name, :test_error_count, :test_warning_count, {submissions: [:points, :maximum_points], problem_set_problems: :weighting}])
+  end
+
   def for_contestant? u_id
     self.contests.joins(:contest_relations).where(:contest_relations => {:user_id => u_id}).where{{ contest_relations => sift(:active) }}.any?
   end

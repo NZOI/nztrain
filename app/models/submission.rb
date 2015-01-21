@@ -50,6 +50,10 @@ class Submission < ActiveRecord::Base
     self.problem.decrement!(:test_warning_count) unless test_warnings.nil?
   end
 
+  after_destroy do
+    self.user_problem_relation.recalculate_and_save
+  end
+
   after_save do
     if self.score_changed? # only update if score changed
       self.contests.select("contest_relations.id, contests.finalized_at").find_each do |record|
