@@ -138,7 +138,7 @@ class JudgeSubmissionWorker < ApplicationWorker
   end
 
   def compile! output
-    result = submission.language.compile(box, submission.source, output, :mem => 262144, :wall_time => 60)
+    result = submission.language.compile(box, submission.source, output, :mem => 393216, :wall_time => 60)
     FileUtils.copy(box.expand_path(output), File.expand_path(output, tmpdir)) if result['stat'] == 0
     return result
   ensure
