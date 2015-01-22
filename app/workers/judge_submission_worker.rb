@@ -25,10 +25,8 @@ class JudgeSubmissionWorker < ApplicationWorker
     submission.with_lock do # This block is called within a transaction,
       submission.reload # todo: fetch only columns needed
       submission.judge_log = result.to_json
-      submission.score = result['score']
-      submission.evaluation = result['evaluation']
-      submission.points = result['points']
       submission.maximum_points = maximum_points
+      submission.points = result['points']
       submission.judged_at = judge_start_time
       submission.save
     end

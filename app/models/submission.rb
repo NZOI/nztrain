@@ -31,12 +31,14 @@ class Submission < ActiveRecord::Base
       self.input = problem.input
       self.output = problem.output
     end
+    self.evaluation = points.nil? || maximum_points.nil? ? nil : (points/maximum_points).to_f
     update_test_messages
     true
   end
 
   before_create do
     self.classification = (SubmissionPolicy.new(self.user, self).inspect? ? CLASSIFICATION[:unranked] : CLASSIFICATION[:ranked]) if classification.nil?
+    #self.maximum_points = self.problem.test_sets.sum(:points)
   end
 
   after_create do
@@ -55,7 +57,7 @@ class Submission < ActiveRecord::Base
   end
 
   after_save do
-    if self.score_changed? # only update if score changed
+    if self.evaluation_changed? # only update if score changed
       self.contests.select("contest_relations.id, contests.finalized_at").find_each do |record|
         # only update contest score if contest not yet sealed
         if record.finalized_at.nil? # are results finalized?
@@ -126,6 +128,10 @@ class Submission < ActiveRecord::Base
     self.job
   end
 
+  def weighted_score(weighting = 100)
+    points.nil? ? nil : self.points*weighting/self.maximum_points
+  end
+
   # for whether the problem has any errors (in test data)
   # update problem with any errors/warnings
   def update_test_messages
@@ -153,22 +159,22 @@ class Submission < ActiveRecord::Base
         when :model, :solution
           # evaluation of every test set = 1, score = 100
           judge_data.test_cases.values.map { |case_data| case_data.status == :correct }.all? or errors.push "Did not pass all test cases"
-          judge_data.score == 100 or errors.push "Solution did not get a perfect score"
+          judge_data.evaluation == 1 or errors.push "Solution did not get a perfect score"
         when :inefficient
           # timeout on some test case, we expect no wall timeouts
           judge_data.test_cases.values.map { |case_data| case_data.status == :timeout }.any? or errors.push "No case timed out"
           judge_data.test_cases.values.map { |case_data| !%i[correct timeout].include?(case_data.status) }.any? and errors.push "Did not pass or timeout on all test cases"
           # 0 < score < 100
-          judge_data.score < 100 or errors.push "Got a perfect score"
+          judge_data.evaluation < 1 or errors.push "Got a perfect score"
           0 < judge_data.score or errors.push "Did not score"
         when :partial
           # 0 < score < 100, all evaluations > 0, no timeouts
-          judge_data.score < 100 or errors.push "Got a perfect score"
-          0 < judge_data.score or errors.push "Did not score"
+          judge_data.evaluation < 1 or errors.push "Got a perfect score"
+          0 < judge_data.evaluation or errors.push "Did not score"
           judge_data.test_cases.values.map { |case_data| case_data.evaluation > 0 }.all? or errors.push "Did not score on some test cases"
         when :incorrect
           # score < 100, evaluation_i == 0, no timeouts
-          judge_data.score < 100 or errors.push "Got a perfect score"
+          judge_data.evaluation < 1 or errors.push "Got a perfect score"
           judge_data.test_cases.values.map { |case_data| case_data.status == :wrong }.any? or errors.push "Did not get a wrong answer"
           judge_data.test_cases.values.map { |case_data| case_data.status == :timeout }.any? and errors.push "Timed out"
         else
