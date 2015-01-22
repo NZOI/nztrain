@@ -17,26 +17,27 @@ describe Submission do
       @submission.score.should be_nil
       @submission.judge
       @submission.reload
-      @submission.score.should == 100
+      @submission.evaluation.should == 1
     end
     it 'judges submission on stdio problem' do
       problem = FactoryGirl.create(:adding_problem_stdio)
       submission = FactoryGirl.create(:adding_submission_stdio, :problem => problem, :user => @user)
-      submission.score.should be_nil
+      submission.evaluation.should be_nil
       submission.judge
       submission.reload
-      submission.score.should == 100
+      submission.evaluation.should == 1
     end
     it 'judges partially correct submissions correctly' do
       @char_submission.score.should be_nil
       @char_submission.judge
       @char_submission.reload
-      @char_submission.score.should == 50
+      @char_submission.points.should == 2
+      @char_submission.maximum_points.should == 4
 
       @unsigned_submission.score.should be_nil
       @unsigned_submission.judge
       @unsigned_submission.reload
-      @unsigned_submission.score.should == 75
+      @unsigned_submission.evaluation.should == 0.75
     end
   end
 end

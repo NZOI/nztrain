@@ -10,6 +10,7 @@
       <th></th>
       <% if policy(Contest).update? %>
         <th></th>
+        <th></th>
       <% end %>
       <% if policy(Contest).destroy? %>
         <th></th>
@@ -46,6 +47,7 @@
       <% end %>
     </td>
     <% if policy(Contest).update? %>
+      <td><%= contest.status if policy(contest).update? %></td>
       <td><%= link_to 'Edit', edit_contest_path(contest) if policy(contest).update? %></td>
     <% end %>
     <% if policy(Contest).destroy? %>

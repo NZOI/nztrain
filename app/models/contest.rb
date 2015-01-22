@@ -3,6 +3,7 @@ class Contest < ActiveRecord::Base
 
   belongs_to :problem_set
   has_many :problems, :through => :problem_set
+  has_many :problem_associations, :through => :problem_set
   has_many :contest_relations, :dependent => :destroy
   has_many :contestants, :through => :contest_relations, :source => :user
 
@@ -70,7 +71,7 @@ class Contest < ActiveRecord::Base
     if problem.nil? # gives count per problem
       self.contest_relations.joins(:contest_scores).group(:contest_scores => :problem_id).select(:contest_scores => :problem_id).select("COUNT(*)").select("SUM(attempts)")
     else
-      self.contest_relations.joins(:contest_scores).where(:contest_scores => {:problem_id => problem.id, :score => 100}).count
+      self.contest_relations.joins(:contest_scores).where(:contest_scores => {:problem_id => problem.id, :score => problem_associations.find_by(problem_id: problem.id).weighting}).count
     end
   end
 
@@ -80,6 +81,12 @@ class Contest < ActiveRecord::Base
 
   def finalized?
     !!finalized_at
+  end
+
+  def status
+    return "Upcoming" if Time.now < start_time
+    return "Running" if Time.now < end_time
+    return finalized? ? "Finalized" : "Preliminary"
   end
 
 end

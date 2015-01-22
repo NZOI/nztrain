@@ -73,6 +73,7 @@ class ContestsController < ApplicationController
     authorize @contest, :scoreboard?
     @groups = Group.all
     @problems = @contest.problem_set.problems
+    @weighting = Hash[@contest.problem_associations.pluck(:problem_id, :weighting)]
     @realtimejudging = true # if false, scores only revealed at the end
     @scoreboard = @contest.scoreboard
 

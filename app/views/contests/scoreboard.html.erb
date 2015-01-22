@@ -18,7 +18,7 @@
     <tr>
       <th style="min-width: 25%;"> User </th>
       <% @contest.problem_set.problems.each do |problem|%>
-        <th style="min-width: 6em;"> <%= link_to problem.name, problem_path(problem) %> </th>
+        <th style="min-width: 6em;"> <%= link_to problem.name, problem_path(problem) %> (<%= @weighting[problem.id] %>) </th>
       <% end %>
       <th> Score </th>
       <th> Time </th>
