@@ -32,7 +32,7 @@ class ContestRelation < ActiveRecord::Base
 
   def update_score_and_save
     transaction do # update total at contest_relation
-      self.score = self.contest_scores.sum(:score)
+      self.score = self.contest_scores.where(problem_id: contest.problem_set.problem_ids).sum(:score)
       lastsubmit = self.contest_scores.joins(:submission).where("contest_scores.score > 0").maximum("submissions.created_at")
       self.time_taken = lastsubmit ? lastsubmit.in_time_zone - self.started_at : 0
       self.save
