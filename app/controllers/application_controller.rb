@@ -10,6 +10,10 @@ class ApplicationController < ActionController::Base
   before_filter :configure_permitted_parameters, if: :devise_controller?
   protect_from_forgery
 
+  #helper ApplicationHelper
+  #helper ProblemsHelper
+  #helper Accounts::RequestsHelper
+
   def redirect(message)
       if !request.env["HTTP_REFERER"].blank? and request.env["HTTP_REFERER"] != request.env["REQUEST_URI"]
         redir = :back

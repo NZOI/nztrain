@@ -28,7 +28,7 @@ gem 'pundit', '0.2.1'
 gem 'recaptcha', :require => 'recaptcha/rails'
 gem 'loofah'
 gem 'whenever', :require => false # for cron jobs
-gem 'squeel', '~> 1.1.1' # until version 1.1.2 released
+gem 'squeel'#, '~> 1.1.1' # until version 1.1.2 released
 gem 'tilt'
 gem 'simple-navigation', '3.11.0'
 gem 'simple_form', '3.0.1'
