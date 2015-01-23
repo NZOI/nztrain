@@ -22,11 +22,12 @@
       <tr>
         <td><%= member.username %></td>
         <% @problem_set_associations.each do |association|%>
-          <% association.problem_set.problems.each do |problem| %>
+          <% association.problem_set.problem_associations.each do |problem_association| %>
+            <% problem = problem_association.problem %>
             <% relation = @scores[member.id][problem.id] %>
             <td class="tight">
               <% if relation.try(:last_viewed_at) %>
-                <%= progress_bar(relation.try(:submission).try(:score), relation.try(:submission), size: :compact) %>
+                <%= progress_bar(relation.try(:submission).try(:score), problem_association.weighting, relation.try(:submission), size: :compact) %>
               <% end %>
             </td>
             <td class="tight" style="text-align: right;padding-left:5px;padding-right:5px;">
