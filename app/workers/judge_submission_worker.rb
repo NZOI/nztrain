@@ -81,8 +81,8 @@ class JudgeSubmissionWorker < ApplicationWorker
 
       unless problem.prerequisite_sets.empty?
         result['prerequisites'] = preres = grade_prerequisites(result['test_sets'])
-        return result.merge('status' => preres['status']) if preres['status'] != 0
-        return result.merge('status' => 0, 'evaluation' => 0, 'score' => 0) if preres['evaluation'] != 1
+        return result.merge('status' => preres['status'], 'points' => 0) if preres['status'] != 0
+        return result.merge('status' => 0, 'points' => 0) if preres['evaluation'] != 1
       end
 
       # test cases
