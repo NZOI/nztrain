@@ -2,8 +2,8 @@ source 'http://rubygems.org'
 
 gem 'rails', '~> 4.0.0'
 
-#gem 'nzic_models', github: 'NZOI/nzic_models'
-gem 'nzic_models', path: '../../nzic/nzic_models'
+gem 'nzic_models', github: 'NZOI/nzic_models'
+#gem 'nzic_models', path: '../../nzic/nzic_models'
 
 gem 'devise', '~> 3.2.2'
 gem 'psych', '~> 2.0.2' # part of stdlib, need newer version for safe_load
@@ -18,15 +18,15 @@ gem 'jquery-ui-rails', '4.0.5'
 gem 'jquery-historyjs', '0.2.3'
 gem 'superfish-rails', '~> 1.6.0'
 
-gem "nokogiri", '1.6.0'
-gem 'redcarpet', '3.0.0'
+gem "nokogiri", '~> 1.6.0'
+gem 'redcarpet'
 gem 'rmagick', '2.13.2'
 gem 'carrierwave', '0.9.0'
 gem 'will_paginate'
 gem 'has_scope'
 gem 'pundit', '0.2.1'
 gem 'recaptcha', :require => 'recaptcha/rails'
-gem 'loofah', '1.2.1'
+gem 'loofah'
 gem 'whenever', :require => false # for cron jobs
 gem 'squeel', '~> 1.1.1' # until version 1.1.2 released
 gem 'tilt'
@@ -38,7 +38,7 @@ gem 'render_anywhere'
 gem 'pygments.rb', '0.5.4'
 gem 'ranked-model', :github => 'mixonic/ranked-model'
 gem 'pdf-reader'
-gem 'mechanize', '2.7.2'
+gem 'mechanize'
 gem 'prawn'
 gem 'rqrcode'
 gem 'pdfkit'
@@ -96,9 +96,9 @@ end
 # Gems used only for assets and not required  
 # in production environments by default.  
 #group :assets do  
-gem 'sass'
-gem 'sass-rails'
-gem 'coffee-rails'
+#gem 'sass'
+#gem 'sass-rails'
+#gem 'coffee-rails'
 gem 'uglifier', '>=1.0.3'
 gem 'libv8', '~> 3.3'
 gem 'therubyracer', '~> 0.11' # required for the execjs gem (dependency)
