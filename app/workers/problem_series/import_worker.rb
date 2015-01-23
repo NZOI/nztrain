@@ -40,14 +40,19 @@ class ProblemSeries
 
             problem = (index[:problem_id].nil? ? Problem.new(name: index[:name], owner_id: 0) : Problem.find(index[:problem_id]))
 
+            # each importer will need a different import manager
+            # at the moment, this is just for the COCI
+            manager = ProblemImportManager.new(problem, index, data, paths, job, importer, vid, num)
+
             # add problem to set if it isn't in the set
             if !problem.problem_sets.where(id: problem_set.id).any?
               problem.problem_sets << problem_set
+
+              # set problem weighting in official problem set
+              ProblemSetProblem.find_by(problem_set_id: problem_set.id, problem_id: problem.id).update_attributes(weighting: manager.get_maxscore)
             end
 
             next if job.data['disposition'] == 'missing' and problem.persisted? # in this mode, stuff is done only if the problem is missing completely
-
-            manager = ProblemImportManager.new(problem, index, data, paths, job, importer, vid, num)
 
             ## import attributes
             manager.import_attributes(replace: replace?) if imports.include?('attributes')
@@ -186,13 +191,22 @@ class ProblemSeries
         end
       end
 
+      def get_maxscore
+        @maxscore ||= begin
+          agent = Mechanize.new
+          page = agent.get(data[:results][:url])
+          links = page.links_with(:href => /#{data[:shortname]}.cpp$/)
+          maxscore = links.map{|link| link.text.to_i }.max || 0
+        end
+      end
+
       def import_test_submissions
         num_add = [(4 - problem.test_submissions.count),0].max
         if num_add > 0 && data[:shortname] && data[:results] && data[:results][:url]
           agent = Mechanize.new
           page = agent.get(data[:results][:url])
           links = page.links_with(:href => /#{data[:shortname]}.cpp$/)
-          maxscore = links.map{|link| link.text.to_i }.max || 0
+          maxscore = get_maxscore
           if maxscore > 0 && maxscore % 10 == 0
             links.select{|link|link.text.to_i == maxscore}.take(4).each do |link|
               sourcepath = URI.join(page.uri, link.uri).to_s

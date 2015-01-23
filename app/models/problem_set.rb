@@ -33,4 +33,7 @@ class ProblemSet < ActiveRecord::Base
     self.groups.joins(:users).where(:users => { :id => u_id }).any?
   end
 
+  def total_weighting
+    problem_associations.sum(:weighting)
+  end
 end

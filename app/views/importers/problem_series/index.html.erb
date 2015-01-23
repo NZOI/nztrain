@@ -28,6 +28,14 @@
       </tr>
     </thead>
     <tbody>
+      <% problem_set_ids = [] %>
+      <% problem_ids = [] %>
+      <% volume[:issues].each_with_index do |issue, cid| %>
+        <% problem_set_ids << issue[:problem_set_id] %>
+        <% problem_ids += (issue[:problems] || []).map { |p| p[:problem_id] } %>
+      <% end %>
+      <% imported_problem_sets = Hash[ProblemSet.where(id: problem_set_ids).select([:id, :name]).map{|p| [p.id,p]}] %>
+      <% imported_problems = Hash[Problem.where(id: problem_ids).includes(:problem_set_associations).select([:id, :name, :memory_limit, :time_limit, :test_error_count, :test_warning_count]).map{ |p| [p.id,p]}] %>
       <% volume[:issues].each_with_index do |issue, cid| %>
         <%= form_tag importers_update_problem_series_path(series, vid, cid), method: :patch do %>
           <tr class="subheading">
@@ -38,12 +46,19 @@
               <%= link_to "Reindex", importers_reindex_problem_series_path(series, vid, cid), method: :post %> |
               <%= link_to "Merge Import All", importers_update_problem_series_path(series, vid, cid, "issue[#{vid}][#{cid}][disposition]" => 'merge', "issue[#{vid}][#{cid}][all]" => 1, commit: 'Import All'), method: :patch %>
             </td>
-            <td><%= link_to ProblemSet.where(id: issue[:problem_set_id]).first.try(:name), problem_set_path(issue[:problem_set_id]) if issue[:problem_set_id] %></td>
+            <td>
+              <% if issue[:problem_set_id] %>
+                <% imported_problem_set = imported_problem_sets[issue[:problem_set_id].to_i] %>
+                <%= link_to imported_problem_set.try(:name), problem_set_path(issue[:problem_set_id]) %>
+                (<%= imported_problem_set.total_weighting %>)
+              <% end %>
+            </td>
             <td>
               <%= text_field "issue[#{vid}][#{cid}]", :problem_set_id, value: issue[:problem_set_id], style: 'width: 50px' %>
             </td>
           </tr>
           <% (issue[:problems] || []).each_with_index do |problem, pid| %>
+            <% imported_problem = imported_problems[problem[:problem_id].to_i] %>
             <tr>
               <td>
                 <%= check_box_tag "issue[#{vid}][#{cid}][checked_problems][#{pid}]", :checked %>
@@ -51,10 +66,18 @@
                   <%= link_to_if problem[:url], problem[:name], problem[:url] %>
                 <% end %>
               </td>
-              <td></td>
               <td>
               </td>
-              <td><%= link_to Problem.where(id: problem[:problem_id]).first.try(:name), problem_path(problem[:problem_id]) if problem[:problem_id] %></td>
+              <td>
+              </td>
+              <td>
+                <% if !imported_problem.nil? %>
+                  <%#= ProblemPresenter.new(imported_problem).test_status  %>
+                  <%= link_to imported_problem.try(:name), problem_path(problem[:problem_id]) %>
+                  (<%= imported_problem.problem_set_associations.detect{|psa| psa.problem_set_id == issue[:problem_set_id].to_i}.try(:weighting) %>)
+                  <%= imported_problem.memory_limit || '?' %> MB, <%= imported_problem.time_limit || '?' %> s
+                <% end %>
+              </td>
               <td>
                 <%= text_field("issue[#{vid}][#{cid}][problems][#{pid}]", :problem_id, value: problem[:problem_id], style: 'width: 50px') %>
               </td>
