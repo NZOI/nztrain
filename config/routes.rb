@@ -224,6 +224,14 @@ NZTrain::Application.routes.draw do
     end
   end
 
+  #get 'nzic/infos', to: 'nzic/infos#index'
+  namespace :nzic do
+    resources :info, param: :name, except: [:index] do
+    end
+    get 'info', to: 'info#index', as: :infos
+    #get 'info/:name', to: 'info#show', as: :info
+  end
+
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 

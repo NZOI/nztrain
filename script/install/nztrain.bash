@@ -7,7 +7,7 @@ fi
 # installation specific to nztrain application - files and directory structure
 
 # check if database.yml exists, if not, generate from database.yml.template
-if [ ! -f config/database.yml ] ; then
+if [ ! -f config/database.yml ] || [ config/database.yml.template -nt config/database.yml ] ; then
   cmd="bash script/template.bash < config/database.yml.template | cat > config/database.yml"
   echo "$ $cmd"
   bash script/template.bash < config/database.yml.template | cat > config/database.yml

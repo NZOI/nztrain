@@ -1,41 +1,44 @@
 source 'http://rubygems.org'
 
-gem 'devise', '~> 3.2.2'
 gem 'rails', '~> 4.0.0'
 
+#gem 'nzic_models', github: 'NZOI/nzic_models'
+gem 'nzic_models', path: '../../nzic/nzic_models'
+
+gem 'devise', '~> 3.2.2'
 gem 'psych', '~> 2.0.2' # part of stdlib, need newer version for safe_load
 
 # change back to cookie-based store (encrypted)
 gem 'activerecord-session_store'
 
-gem 'rubyzip'
+gem 'rubyzip', '1.1.0'
 
 gem 'jquery-rails', '~> 3.0.4'
-gem 'jquery-ui-rails'
-gem 'jquery-historyjs'
-gem 'superfish-rails'
+gem 'jquery-ui-rails', '4.0.5'
+gem 'jquery-historyjs', '0.2.3'
+gem 'superfish-rails', '~> 1.6.0'
 
-gem "nokogiri"
-gem 'redcarpet'
-gem 'rmagick'
-gem 'carrierwave'
+gem "nokogiri", '1.6.0'
+gem 'redcarpet', '3.0.0'
+gem 'rmagick', '2.13.2'
+gem 'carrierwave', '0.9.0'
 gem 'will_paginate'
 gem 'has_scope'
-gem 'pundit'
+gem 'pundit', '0.2.1'
 gem 'recaptcha', :require => 'recaptcha/rails'
-gem 'loofah'
+gem 'loofah', '1.2.1'
 gem 'whenever', :require => false # for cron jobs
 gem 'squeel', '~> 1.1.1' # until version 1.1.2 released
 gem 'tilt'
-gem 'simple-navigation'
-gem 'simple_form'
+gem 'simple-navigation', '3.11.0'
+gem 'simple_form', '3.0.1'
 gem 'facebox-rails'
 gem 'strong_presenter', '~> 0.2.2'
 gem 'render_anywhere'
-gem 'pygments.rb'
+gem 'pygments.rb', '0.5.4'
 gem 'ranked-model', :github => 'mixonic/ranked-model'
 gem 'pdf-reader'
-gem 'mechanize'
+gem 'mechanize', '2.7.2'
 gem 'prawn'
 gem 'rqrcode'
 gem 'pdfkit'

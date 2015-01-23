@@ -132,6 +132,10 @@ class Submission < ActiveRecord::Base
     points.nil? ? nil : self.points*weighting/self.maximum_points
   end
 
+  def score
+    weighted_score
+  end
+
   # for whether the problem has any errors (in test data)
   # update problem with any errors/warnings
   def update_test_messages

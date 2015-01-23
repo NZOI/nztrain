@@ -1,0 +1,13 @@
+<%= form_for @info do |f| %>
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :text %>
+    <%= f.text_area :text, class: 'markdown' %>
+  </div>
+
+  <%= f.submit %>
+<% end %>

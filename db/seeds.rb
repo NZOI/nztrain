@@ -18,7 +18,7 @@ if !(User.exists?(0)) # code in this block to be fixed
   #rootuser = User.new({:id => 0, :name => "Root User", :username => "root", :email => "root@nztrain.com", :encrypted_password => "Need an encrypted password here"})
 end
 
-["superadmin","admin","staff","organiser","author"].each do |role|
+["superadmin","admin","staff","organiser","author","NZIC_webmaster"].each do |role|
   Role.find_or_create_by(name: role)
 end
 

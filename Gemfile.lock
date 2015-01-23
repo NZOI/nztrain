@@ -328,7 +328,7 @@ DEPENDENCIES
   byebug
   capybara
   capybara-email
-  carrierwave
+  carrierwave (= 0.9.0)
   coffee-rails
   connection_pool
   countries
@@ -342,42 +342,42 @@ DEPENDENCIES
   geocoder
   has_scope
   hive_geoip2
-  jquery-historyjs
+  jquery-historyjs (= 0.2.3)
   jquery-rails (~> 3.0.4)
-  jquery-ui-rails
+  jquery-ui-rails (= 4.0.5)
   libv8 (~> 3.3)
-  loofah
-  mechanize
+  loofah (= 1.2.1)
+  mechanize (= 2.7.2)
   newrelic_rpm
-  nokogiri
+  nokogiri (= 1.6.0)
   pdf-reader
   pdfkit
   pg
   prawn
   psych (~> 2.0.2)
-  pundit
-  pygments.rb
+  pundit (= 0.2.1)
+  pygments.rb (= 0.5.4)
   qless!
   rails (~> 4.0.0)
   ranked-model!
   recaptcha
-  redcarpet
+  redcarpet (= 3.0.0)
   redis
   render_anywhere
-  rmagick
+  rmagick (= 2.13.2)
   rqrcode
   rspec-rails (~> 2.0)
   ruby_parser
-  rubyzip
+  rubyzip (= 1.1.0)
   sass
   sass-rails
-  simple-navigation
-  simple_form
+  simple-navigation (= 3.11.0)
+  simple_form (= 3.0.1)
   sinatra
   spring
   squeel (~> 1.1.1)
   strong_presenter (~> 0.2.2)
-  superfish-rails
+  superfish-rails (~> 1.6.0)
   therubyracer (~> 0.11)
   tilt
   uglifier (>= 1.0.3)

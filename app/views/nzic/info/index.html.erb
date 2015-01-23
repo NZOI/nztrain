@@ -1,0 +1,23 @@
+<%= content_for :title, "NZIC Info Pages" %>
+<% toolbox_push :new, new_nzic_info_path if policy(NZIC::Info).new? %>
+
+<table class="main_table">
+  <thead>
+    <th>Name</th>
+    <th>URL</th>
+    <th>Text</th>
+    <th></th>
+    <th></th>
+  </thead>
+  <tbody>
+    <% @infos.each do |info| %>
+      <tr>
+        <td><%= link_to info.name, info %></td>
+        <td><%= "/info/#{info.name}" %></td>
+        <td><%= info.text %></td>
+        <td><%= link_to "Edit", edit_nzic_info_path(info) %></td>
+        <td><%= "Destroy" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
