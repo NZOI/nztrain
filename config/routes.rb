@@ -224,12 +224,12 @@ NZTrain::Application.routes.draw do
     end
   end
 
-  #get 'nzic/infos', to: 'nzic/infos#index'
+  get 'nzic/info/*name/edit', to: 'nzic/info#edit', as: :edit_nzic_info
   namespace :nzic do
-    resources :info, param: :name, except: [:index] do
-    end
-    get 'info', to: 'info#index', as: :infos
-    #get 'info/:name', to: 'info#show', as: :info
+    resources :infos, controller: :info, param: :name, only: [:index, :new, :create]
+    get 'info/*name', to: 'info#show', as: :info
+    patch 'info/*name', to: 'info#update'
+    delete 'info/*name', to: 'info#destroy'
 
     resources :menu_items
   end
