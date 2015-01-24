@@ -16,8 +16,8 @@ class UserProblemRelation < ActiveRecord::Base
   def recalculate_and_save
     transaction do # to ensure that if eg. multiple submissions finish judging, they do not recalculate at the same time
       self.submissions_count = submissions.count
-      self.submission = submissions.where.not(:score => nil).order("score DESC, created_at ASC").first
-      self.ranked_submission = submissions.where(:classification => Submission::CLASSIFICATION[:ranked]).where.not(:score => nil).order("score DESC, created_at ASC").first
+      self.submission = submissions.where.not(:evaluation => nil).order("evaluation DESC, created_at ASC").first
+      self.ranked_submission = submissions.where(:classification => Submission::CLASSIFICATION[:ranked]).where.not(:evaluation => nil).order("evaluation DESC, created_at ASC").first
       self.ranked_score = ranked_submission.score unless self.ranked_submission.nil?
       self.save
     end
