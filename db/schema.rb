@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150121113050) do
+ActiveRecord::Schema.define(version: 20150124223718) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,6 +66,12 @@ ActiveRecord::Schema.define(version: 20150121113050) do
     t.datetime "finish_at"
     t.integer  "score",      default: 0,   null: false
     t.float    "time_taken", default: 0.0, null: false
+    t.integer  "school_id"
+    t.integer  "country_id"
+    t.integer  "status",     default: 0
+    t.integer  "extra_time", default: 0
+    t.datetime "start_time"
+    t.datetime "end_time"
   end
 
   add_index "contest_relations", ["contest_id", "score", "time_taken"], name: "index_contest_relations_on_contest_id_and_score_and_time_taken", order: {"score"=>:desc}, using: :btree
@@ -94,6 +100,10 @@ ActiveRecord::Schema.define(version: 20150121113050) do
     t.datetime "updated_at"
     t.integer  "problem_set_id"
     t.datetime "finalized_at"
+    t.string   "startcode"
+    t.integer  "observation",    default: 1
+    t.integer  "registration",   default: 0
+    t.integer  "affiliation",    default: 0
   end
 
   create_table "entities", force: true do |t|
