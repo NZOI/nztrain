@@ -18,6 +18,10 @@ class ContestPolicy < ApplicationPolicy
     record.contest_relations.where{ |relation| (relation.user_id == user.id) & (relation.started_at <= DateTime.now) & (relation.finish_at > DateTime.now) }.exists?
   end
 
+  def current_or_past_contestant?
+    record.contest_relations.where{ |relation| (relation.user_id == user.id) & (relation.started_at <= DateTime.now) }.exists?
+  end
+
   def index?
     return true if record == Contest
     show?
@@ -53,6 +57,10 @@ class ContestPolicy < ApplicationPolicy
 
   def access?
     manage? or current_contestant?
+  end
+
+  def overview?
+    manage? or current_or_past_contestant?
   end
 end
 

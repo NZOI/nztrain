@@ -45,11 +45,11 @@ class ContestsController < ApplicationController
   # GET /contests/1.xml
   def show
     @contest = Contest.find(params[:id])
-    if !policy(@contest).access?
+    if !policy(@contest).overview?
       redirect_to info_contest_path(@contest)
       return
     end
-    @problem_associations = @contest.problem_set.problem_associations.include(:problem)
+    @problem_associations = @contest.problem_set.problem_associations.includes(:problem)
     @groups = Group.all
     @contest_message = nil
     if @contest.get_relation(current_user) && !@contest.has_current_competitor?(current_user)
