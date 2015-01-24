@@ -4,19 +4,25 @@
 
 <p>
 <table class="main_table" >
-  <tr>
-    <th> Problem </th>
-    <th> Score </th>
-    <th> # Correct </th>
-  </tr>
-
-  <% @problems.each do |problem| %>
+  <thead>
     <tr>
-      <td> <%= link_to problem.name, problem_path(problem) %> </td>
-      <td> <%= @contest.problem_score(current_user, problem) %> </td>
-      <td> <%= @contest.num_solved(problem) %> </td>
+      <th>Problem</th>
+      <th>Points</th>
+      <th>Score</th>
+      <th># Correct</th>
     </tr>
-  <% end %>
+  </thead>
+  <tbody>
+    <% @problem_associations.each do |problem_association| %>
+      <% problem = problem_association.problem %>
+      <tr>
+        <td><%= link_to problem.name, problem_path(problem) %></td>
+        <td><%= problem_association.weighting %></td>
+        <td><%= progress_bar(@contest.problem_score(current_user, problem), problem_association.weighting) %></td>
+        <td><%= @contest.num_solved(problem) %></td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>
 </p>
 

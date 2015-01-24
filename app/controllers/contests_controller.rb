@@ -49,7 +49,7 @@ class ContestsController < ApplicationController
       redirect_to info_contest_path(@contest)
       return
     end
-    @problems = @contest.problem_set.problems
+    @problem_associations = @contest.problem_set.problem_associations.include(:problem)
     @groups = Group.all
     @contest_message = nil
     if @contest.get_relation(current_user) && !@contest.has_current_competitor?(current_user)
