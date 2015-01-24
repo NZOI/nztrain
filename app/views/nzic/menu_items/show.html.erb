@@ -1,0 +1,7 @@
+<% content_for :title, "NZIC menu item" %>
+<% toolbox_push :edit, edit_nzic_menu_item_path(@menu_item) if policy(@menu_item).edit? %>
+<% toolbox_push :back, nzic_menu_items_path %>
+
+<p><strong>Name: </strong><%= @menu_item.name %></p>
+<p><strong>Link: </strong><%= @menu_item.link %></p>
+

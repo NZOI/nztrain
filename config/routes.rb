@@ -230,6 +230,8 @@ NZTrain::Application.routes.draw do
     end
     get 'info', to: 'info#index', as: :infos
     #get 'info/:name', to: 'info#show', as: :info
+
+    resources :menu_items
   end
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):

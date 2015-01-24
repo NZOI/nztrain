@@ -3,7 +3,7 @@ class NZIC::InfoController < ApplicationController
   #helper 'nzic/info'
 
   def permitted_params
-    params.require(:nzic_info).permit(:name, :text)
+    params.require(:nzic_info).permit(:name, :title, :text)
   end
 
   def index

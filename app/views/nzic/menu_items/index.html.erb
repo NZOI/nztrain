@@ -1,0 +1,23 @@
+<%= content_for :title, "NZIC Menu" %>
+<% toolbox_push :new, new_nzic_menu_item_path if policy(NZIC::MenuItem).new? %>
+
+<table class="main_table">
+  <thead>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Link</th>
+    <th></th>
+    <th></th>
+  </thead>
+  <tbody>
+    <% @menu_items.each do |menu| %>
+      <tr>
+        <td><%= menu.id %></td>
+        <td><%= link_to menu.name, menu %></td>
+        <td><%= menu.link %></td>
+        <td><%= link_to "Edit", edit_nzic_menu_item_path(menu) %></td>
+        <td><%= "Destroy" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

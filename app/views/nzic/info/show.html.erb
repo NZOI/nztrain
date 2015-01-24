@@ -2,4 +2,6 @@
 <% toolbox_push :edit, edit_nzic_info_path(@info) if policy(@info).edit? %>
 <% toolbox_push :back, nzic_infos_path %>
 
+<h1><%= @info.title %></h1>
+
 <%= markdown_parse @info.text, root: File.expand_path('nzic', root_path) %>

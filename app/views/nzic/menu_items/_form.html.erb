@@ -1,0 +1,13 @@
+<%= form_for @menu_item do |f| %>
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :link %>
+    <%= f.text_field :link %>
+  </div>
+
+  <%= f.submit %>
+<% end %>
