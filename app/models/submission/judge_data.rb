@@ -37,6 +37,10 @@ class Submission
         sprintf "%.3f seconds", data['time-wall'] if data['time-wall']
       end
 
+      def exitsig
+        data['exitsig']
+      end
+
       def time
         data['time']
       end
@@ -51,7 +55,7 @@ class Submission
 
       def result
         case status
-        when 'SG'; :signal
+        when 'SG'; exitsig == 9 ? :memory : :signal
         when 'TO'; message =~ /wall/ ? :walltime : :timeout 
         when 'RE'; :runtime
         end
@@ -104,6 +108,7 @@ class Submission
         when :walltime; "Time Limit Exceeded (Wall)"
         when :runtime; "Runtime Error"
         when :signal; "Fatal Signal"
+        when :memory; "Memory Limit Exceeded"
         when :pending; "Pending"
         when :success; "Success"
         when :error; "Errored"
@@ -153,6 +158,7 @@ class Submission
         when :walltime; "Time Limit Exceeded (Wall)"
         when :runtime; "Runtime Error"
         when :signal; "Fatal Signal"
+        when :memory; "Memory Limit Exceeded"
         when :pending; "Pending"
         when :cancelled; "Cancelled"
         end + ( evaluator.message.empty? ? "" : " - " + evaluator.message)

@@ -57,7 +57,7 @@ table.results {
   border: 2px solid #500000;
 }
 
-.results tbody.test_set.status_wrong, .results tbody.compilation.status_timeout, .results tbody.compilation.status_walltime, .results tbody.summary.status_wrong {
+.results tbody.test_set.status_wrong, .results tbody.compilation.status_timeout, .results tbody.compilation.status_walltime, .results tbody.compilation.status_memory, .results tbody.summary.status_wrong {
   background-color: #E03030; /* red */
   border: 2px solid #681818;
 }
@@ -82,7 +82,7 @@ table.results {
   background-color: #A00000; /* dark red */
 }
 
-.results tr.test_case.status_wrong, .results tr.test_case.status_timeout, .results tr.test_case.status_walltime {
+.results tr.test_case.status_wrong, .results tr.test_case.status_timeout, .results tr.test_case.status_walltime, .results tr.test_case.status_memory {
   background-color: #E03030; /* red */
 }
 

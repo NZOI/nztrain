@@ -103,7 +103,7 @@
                       <th>Time (<%= case_data.killed? ? "killed" : "exited" %>):</th><td><%= case_data.meta.print_time %></td>
                     <% end %>
                     <th>Wall time:</th><td><%= case_data.meta.walltime %></td>
-                    <% if [:signal, :runtime, :timeout].include? case_data.status %>
+                    <% if [:signal, :runtime, :timeout, :memory].include? case_data.status %>
                       <th>Sandbox message:</th><td><%= case_data.meta.status + ": " + case_data.meta.message %></td>
                     <% end %>
                   </tr>
