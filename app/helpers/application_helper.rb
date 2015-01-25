@@ -93,12 +93,12 @@ module ApplicationHelper
   def toolbox_options symbol
     map = {
       :back => { :icon => :back, :color => :blue },
-      :delete => { :icon => :trash, :color => :red, :method => :delete, :data => { :confirm => "Are you sure?" } },
+      :delete => { :icon => :trash, :color => :red, :method => :delete, :data => { :confirm => "Are you sure? Deletion is irreversible." } },
       :edit => { :icon => :edit, :color => :blue },
       :new => { :icon => :new, :color => :blue },
       :apply => { :icon => :mail, :color => :blue, :method => :put },
       :join => { :icon => :login, :color => :green, :method => :put },
-      :leave => { :icon => :logout, :color => :red, :method => :put },
+      :leave => { :icon => :logout, :color => :red, :method => :put, :data => { :confirm => "Are you sure you want to leave this group?" } },
       :start => { :icon => :time, :color => :green, :method => :put }
     }
     map[symbol]
