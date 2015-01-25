@@ -76,8 +76,8 @@ module ApplicationHelper
   def toolbox_push text, link, options = {}
     if text.class == Symbol
       newopts = toolbox_options text
-      text = newopts[:text] || text.to_s.capitalize
-      options.reverse_merge! newopts.except(:text)
+      options.reverse_merge! newopts
+      text = options[:text] || text.to_s.capitalize
     end
     text = icon(options[:icon]) + text if options.has_key? :icon
     link_options = options.except(:icon, :color)
@@ -98,7 +98,8 @@ module ApplicationHelper
       :new => { :icon => :new, :color => :blue },
       :apply => { :icon => :mail, :color => :blue, :method => :put },
       :join => { :icon => :login, :color => :green, :method => :put },
-      :leave => { :icon => :logout, :color => :red, :method => :put }
+      :leave => { :icon => :logout, :color => :red, :method => :put },
+      :start => { :icon => :time, :color => :green, :method => :put }
     }
     map[symbol]
   end

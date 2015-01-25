@@ -1,4 +1,5 @@
 <% content_for :title, @contest.name %>
+<%= toolbox_push :start, start_contest_path(@contest), text: "Start Contest" if policy(@contest).start? %>
 <%= toolbox_push :edit, edit_contest_path(@contest) if policy(@contest).update? %>
 <%= toolbox_push :delete, @contest if policy(@contest).destroy? %>
 
