@@ -46,6 +46,7 @@
     menu.dom_class = :tab_menu
     menu.item :info, "info", info_contest_path(@contest) if policy(@contest).show?
     menu.item :problems, "problems", contest_path(@contest) if policy(@contest).overview?
+    menu.item :contestants, "contestants", contestants_contest_path(@contest) if policy(@contest).contestants?
     menu.item :scoreboard, "scoreboard", scoreboard_contest_path(@contest) if policy(@contest).show?
 #  end.render
   end

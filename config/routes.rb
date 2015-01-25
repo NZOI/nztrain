@@ -60,7 +60,9 @@ NZTrain::Application.routes.draw do
     member do
       get 'info'
       get 'scoreboard'
+      get 'contestants'
 
+      #get 'start'
       put 'start'
       put 'finalize'
       put 'unfinalize'

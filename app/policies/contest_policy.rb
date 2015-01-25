@@ -39,6 +39,10 @@ class ContestPolicy < ApplicationPolicy
     show?
   end
 
+  def contestants?
+    manage?
+  end
+
   def create?
     super or user.is_any?([:staff, :organiser])
   end

@@ -1,3 +1,14 @@
+<% if @contest.end_time >= DateTime.now() %>
+  <% if @contest.start_time >= DateTime.now() %>
+    <script type="text/javascript">
+    <!--
+      window.setTimeout("window.location.reload(true);", <%= ((@contest.start_time-Time.now())*1000).round %>);
+    //-->
+    </script>
+  <% end %>
+<% end %>
+
 <b>Mode: </b>Closed book<br>
 <b>Judge feedback: </b>Real-time<br>
 <b>Scoreboard: </b>Live<br>
+

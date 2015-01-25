@@ -1,0 +1,28 @@
+<table class="main_table" >
+  <thead>
+    <tr>
+      <th style="min-width: 25%;"> User </th>
+      <th> Started At </th>
+      <th> Finish At </th>
+      <th style="text-align: right"> Score </th>
+      <th> Time </th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @contest_relations.each do |contest_relation| %>
+      <tr>
+        <td>
+          <% if contest_relation.user %>
+            <%= link_to handle(contest_relation.user), contest_relation.user %>
+          <% else %>
+            <%= "Deleted User ID #{contest_relation[:user_id]}" %>
+          <% end %>
+        </td>
+        <td><%= contest_relation.started_at %></td>
+        <td><%= contest_relation.finish_at %></td>
+        <td style="text-align: right"><%= contest_relation.score %></td>
+        <td> <%= format("%d:%02d:%02d",contest_relation.time_taken.to_i/3600,contest_relation.time_taken.to_i/60%60,contest_relation.time_taken.to_i%60) %> </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

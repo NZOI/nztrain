@@ -80,6 +80,15 @@ class ContestsController < ApplicationController
     render :layout => 'contest'
   end
 
+  def contestants
+    @contest = Contest.find(params[:id])
+    authorize @contest, :contestants?
+    @groups = Group.all
+    @contest_relations = @contest.contest_relations.includes(:user)
+
+    render layout: 'contest'
+  end
+
   # GET /contests/new
   # GET /contests/new.xml
   def new
