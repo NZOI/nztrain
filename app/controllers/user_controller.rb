@@ -21,7 +21,7 @@ class UserController < ApplicationController
   def show
     @user = User.find(params[:id])
     authorize @user, :show?
-    @solved_problems = @user.get_solved
+    @solved_problems = @user.user_problem_relations.where(ranked_score: 100).joins(:problem).select([:problem_id, :ranked_submission_id, {problem: :name}]).order("problems.name")
 
     @user_presenter = UserPresenter.new(@user).permit!(*visible_attributes)
 
