@@ -16,7 +16,6 @@
 <% @solved_problems.each do |prob| %>
   <li>
   <%= link_to prob.name, problem_path(prob.problem_id) %>
-  <%= "ERROR" if prob.ranked_submission.evaluation != 1 %>
   </li>
 <% end %>
 </ul>
