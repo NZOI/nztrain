@@ -16,10 +16,12 @@ class TestCase < ActiveRecord::Base
   ranks :problem_order, with_same: :problem_id
 
   def input=(text)
+    text << "\n" unless text.end_with?("\n")
     super(text.encode(text.encoding, universal_newline: true))
   end
 
   def output=(text)
+    text << "\n" unless text.end_with?("\n")
     super(text.encode(text.encoding, universal_newline: true))
   end
 

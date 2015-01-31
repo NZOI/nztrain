@@ -20,6 +20,7 @@ module Problems
 
     protected
     def import_specification(spec)
+      import_spec_cases(spec['test_cases'] || {})
       import_sets(spec['test_sets'] || {})
       import_prerequisites(spec['prerequisites']) if spec.has_key?('prerequisites')
       import_samples(spec['samples']) if spec.has_key?('samples')
@@ -38,11 +39,17 @@ module Problems
     end
 
     def import_files
+      begin
+        specdata = Psych.safe_load(file.read(specfile))
+      rescue Psych::SyntaxError => e
+        raise ImportError, "YAML parse error: " + e.message
+      end
       import_cases(indir, outdir)
-      import_specification(Psych.safe_load(file.read(specfile)))
+      import_specification(specdata)
     end
 
     attr_accessor :outdir, :indir, :specfile
+
     def assert_files(path)
       # we expect an inputs and outputs
       self.outdir = File.expand_path('outputs', path)
@@ -50,13 +57,15 @@ module Problems
       self.specfile = File.expand_path('specification.yaml', path)
       missing = []
       missing << "specification.yaml file" unless file.exist?(specfile)
-      missing << "inputs directory" unless file.exist?(indir)
-      missing << "outputs directory" unless file.exist?(outdir)
+      # following checks may not work so well with winzip, and these directories are not strictly required...
+      # make directory so we can foreach it later
+      dir.mkdir(indir) unless file.exist?(indir)
+      #missing << "inputs directory" unless file.exist?(indir)
+      #missing << "outputs directory" unless file.exist?(outdir)
       raise ImportError, "Missing #{missing.join(', ')}" unless missing.empty?
     end
 
     def import_cases(indir, outdir)
-      initialcases = casemap.keys
       dir.foreach(indir) do |entry|
         ext = File.extname(entry)
         name = File.basename(entry, ext)
@@ -67,13 +76,30 @@ module Problems
         else; ext
         end
         if file.exist?(ofile = File.expand_path("#{name}#{ext}", outdir))
-          parameters = {:input => file.read(File.expand_path(entry, indir)), :output => file.read(ofile)}
-          if initialcases.include?(name)
-            casemap[name].assign_attributes(parameters)
-          else
-            casemap[name] = problem.test_cases.build(parameters.merge(:name => name))
-          end
+          import_case(name, file.read(File.expand_path(entry, indir)), file.read(ofile))
         end
+      end
+    end
+
+    def import_case(name, input, output)
+      parameters = {:input => input, :output => output}
+      if casemap.keys.include?(name)
+        casemap[name].assign_attributes(parameters)
+      else
+        casemap[name] = problem.test_cases.build(parameters.merge(name: name))
+      end
+    end
+
+    def import_spec_cases(casedata)
+      casedata.each do |name, attributes|
+        if !attributes.has_key?('input') || !attributes.has_key?('output')
+          raise ImportError, "Incomplete test case in specification"
+        elsif attributes['input'].class != String
+          raise ImportError, "Test Case \"#{name}\" input not a string"
+        elsif attributes['output'].class != String
+          raise ImportError, "Test Case \"#{name}\" output not a string"
+        end
+        import_case(name, attributes['input'], attributes['output'])
       end
     end
 
