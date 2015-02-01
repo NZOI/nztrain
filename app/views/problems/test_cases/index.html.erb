@@ -1,16 +1,39 @@
 <p>
 <%= form_tag( import_problem_path(@problem), :multipart => true) do %>
-  <%= radio_button_tag(:upload, "replace", :checked => 'yes') %>
-  <%= label_tag(:upload_replace, "Replace existing test cases with upload") %><br />
-  <span style="margin-left: 8em;">or</span><br />
-  <%= radio_button_tag(:upload, "merge") %>
-  <%= label_tag(:upload_merge, "Merge with existing test cases") %><br />
-
-  <%= label_tag(:importer) %>
-  <%= select_tag(:importer, options_for_select(Problems::TestCaseImportOptions)) %><br />
-
-  <%= file_field_tag 'import_file', :id => "file-form"%>
-  <%= submit_tag 'Upload zipped test cases' %>
+  <table>
+    <tr>
+      <td style="border: 0; border-right: 1px solid gray">
+        <p>
+          <%= radio_button_tag(:upload, "replace", :checked => 'yes') %>
+          <%= label_tag(:upload_replace, "Replace existing test cases with upload") %><br />
+          <span style="margin-left: 8em;">or</span><br />
+          <%= radio_button_tag(:upload, "merge") %>
+          <%= label_tag(:upload_merge, "Merge with existing test cases") %><br />
+        </p>
+        <p>
+        <%= label_tag(:importer) %>
+        <%= select_tag(:importer, options_for_select(Problems::TestCaseImportOptions)) %><br />
+        </p>
+      </td>
+      <td style="border: 0;">
+        <p>
+          <%= label_tag(:import_file, "Zip or spec file ") %><br />
+          <%= file_field_tag 'import_file', :id => "file-form"%>
+        </p>
+      </td>
+      <td style="border: 0; text-align: center">
+        <br>
+        <strong>or</strong>
+      </td>
+      <td style="border: 0;" width="50%">
+        <p>
+        <%= label_tag(:import_yaml, "specification.yaml") %><br />
+        <%= text_area_tag(:import_yaml, nil, style: 'height: 100px') %>
+        </p>
+      </td>
+    </tr>
+  </table>
+  <p align="center"><%= submit_tag 'Import test data' %></p>
 <% end %>
 </p>
 

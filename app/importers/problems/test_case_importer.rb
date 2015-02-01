@@ -1,24 +1,30 @@
 module Problems
   class TestCaseImporter < BaseImporter
     def import(path, options = {})
-      assert_files(path)
-      import_files()
+      if file.directory?(path)
+        assert_files(path)
+        import_files()
+      else
+        specimport(path, options)
+      end
 
       problem
     end
 
-    def around_import(path, options = {})
-      options.reverse_merge!(:merge => false)
-      clear! unless options[:merge]
-      super
-    end
-
-    def clear!()
-      problem.test_cases.clear
-      problem.test_sets.clear
-    end
-
     protected
+    # not a directory, import .yaml file only
+    def specimport(path, options = {})
+      if options[:inline]
+        @read_spec = path
+      else
+        self.specfile = path
+      end
+      specdata = load_spec()
+      import_specification(specdata)
+
+      problem
+    end
+
     def import_specification(spec)
       import_spec_cases(spec['test_cases'] || {})
       import_sets(spec['test_sets'] || {})
@@ -39,13 +45,19 @@ module Problems
     end
 
     def import_files
-      begin
-        specdata = Psych.safe_load(file.read(specfile))
-      rescue Psych::SyntaxError => e
-        raise ImportError, "YAML parse error: " + e.message
-      end
+      specdata = load_spec()
       import_cases(indir, outdir)
       import_specification(specdata)
+    end
+
+    def load_spec
+      Psych.safe_load(read_spec)
+    rescue Psych::SyntaxError => e
+      raise ImportError, "YAML parse error: " + e.message
+    end
+
+    def read_spec
+      @read_spec ||= file.read(specfile)
     end
 
     attr_accessor :outdir, :indir, :specfile

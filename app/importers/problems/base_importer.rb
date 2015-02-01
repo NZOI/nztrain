@@ -30,13 +30,27 @@ module Problems
     end
 
     def around_import(path, options)
+      options.reverse_merge!(:merge => false, :inline => false)
+
+      clear! unless options[:merge]
+
+      path = drill(path) unless options[:inline]
+      yield(path, options)
+    end
+
+    def clear!()
+      problem.test_cases.clear
+      problem.test_sets.clear
+    end
+
+    def drill(path)
       while true
         entries = dir.entries(path) - ['.','..']
         break unless entries.size == 1 and File.expand_path(entries.first, path).try do |candidate|
           file.directory?(candidate) and path = candidate
         end
-      end
-      yield(path, options)
+      end if file.directory?(path)
+      path
     end
 
     def enter_fs(*args)

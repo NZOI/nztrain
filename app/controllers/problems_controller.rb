@@ -129,12 +129,20 @@ class ProblemsController < ApplicationController
   def import
     @problem = Problem.find(params[:id])
     authorize @problem, :update?
-    redirect_to(test_cases_problem_path(@problem), :alert => 'No zip file uploaded') and return if params[:import_file].nil?
-    redirect_to(test_cases_problem_path(@problem), :alert => 'Invalid importer specified') and return if !Problems::Importers.has_key?(params[:importer])
+    options = {:merge => params[:upload] == 'merge'}
+    if !params[:import_file].nil?
+      importdata = params[:import_file].path
+    elsif params[:import_yaml] && params[:import_yaml] != ""
+      importdata = params[:import_yaml]
+      options[:inline] = true
+    else
+      redirect_to(problem_test_cases_path(@problem), :alert => 'No zip file uploaded') and return
+    end
+    redirect_to(problem_test_cases_path(@problem), :alert => 'Invalid importer specified') and return if !Problems::Importers.has_key?(params[:importer])
     message = {notice: ""}
     begin
       original_total_time = @problem.test_cases.count * (@problem.time_limit || 0)
-      if Problems::Importers[params[:importer]].import(@problem, params[:import_file].path, :extension => '.zip', :merge => params[:upload] == 'merge')
+      if Problems::Importers[params[:importer]].import(@problem, importdata, options)
         message[:notice] = "Successfully uploaded. New counts for the problem are: # Test Sets: #{ @problem.test_sets.count }, # Test Cases: #{ @problem.test_cases.count }. "
       else
         message[:alert] = 'No test cases or test sets detected. '

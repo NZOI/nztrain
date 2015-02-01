@@ -40,15 +40,5 @@ module Problems
       problem
     end
 
-    def around_import(path, options = {})
-      options.reverse_merge!(:merge => false)
-      clear! unless options[:merge]
-      super
-    end
-
-    def clear!()
-      problem.test_cases.clear
-      problem.test_sets.clear
-    end
   end
 end
