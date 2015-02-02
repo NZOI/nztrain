@@ -16,7 +16,11 @@ module Problems
       end
       importer.send(context, path, options) do |path, options|
         importer.around_import(path, options) do |path, options|
-          importer.import(path, options).save
+          importer.import(path, options)
+          problem.save
+          casemap.each(&:save)
+          setmap.each(&:save)
+          true # completed
         end
       end
     end
@@ -32,10 +36,12 @@ module Problems
     def around_import(path, options)
       options.reverse_merge!(:merge => false, :inline => false)
 
-      clear! unless options[:merge]
+      problem.with_lock do
+        clear! unless options[:merge]
 
-      path = drill(path) unless options[:inline]
-      yield(path, options)
+        path = drill(path) unless options[:inline]
+        yield(path, options)
+      end
     end
 
     def clear!()

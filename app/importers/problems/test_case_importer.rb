@@ -74,7 +74,7 @@ module Problems
       dir.mkdir(indir) unless file.exist?(indir)
       #missing << "inputs directory" unless file.exist?(indir)
       #missing << "outputs directory" unless file.exist?(outdir)
-      raise ImportError, "Missing #{missing.join(', ')}" unless missing.empty?
+      raise ImportError, "Was the right importer selected? Missing #{missing.join(', ')}" unless missing.empty?
     end
 
     def import_cases(indir, outdir)

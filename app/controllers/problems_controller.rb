@@ -148,7 +148,7 @@ class ProblemsController < ApplicationController
         message[:alert] = 'No test cases or test sets detected. '
       end
     rescue Problems::Importers[params[:importer]]::ImportError => e
-      message[:alert] = "An error has occurred - was the right importer selected? " + e.message
+      message[:alert] = e.message
     ensure
       available_time = [original_total_time, policy(@problem).maximum_total_time_limit].max
       if available_time < (@problem.time_limit || 0)*@problem.test_cases.count
