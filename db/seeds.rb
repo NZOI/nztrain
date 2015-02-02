@@ -38,6 +38,9 @@ end
   Setting.find_or_create_by(key: setting)
 end
 
+setting = Setting.find_or_create_by(key: "submissions/shuffle")
+setting.update_attributes(value: Random.new.rand(2E9.to_i).to_s) if setting.value.nil?
+
 # create a special group called Everyone
 if !(Group.exists?(0))
   everyone = Group.new()
