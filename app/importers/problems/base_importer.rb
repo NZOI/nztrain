@@ -17,10 +17,6 @@ module Problems
       importer.send(context, path, options) do |path, options|
         importer.around_import(path, options) do |path, options|
           importer.import(path, options)
-          problem.save
-          casemap.each(&:save)
-          setmap.each(&:save)
-          true # completed
         end
       end
     end
@@ -41,6 +37,11 @@ module Problems
 
         path = drill(path) unless options[:inline]
         yield(path, options)
+
+        problem.save
+        casemap.each_value(&:save)
+        setmap.each_value(&:save)
+        true # completed
       end
     end
 

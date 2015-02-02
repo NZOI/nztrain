@@ -86,7 +86,7 @@
           <th colspan="3">&nbsp;</th>
           <th class="judgement"><%= set_data.judgement %></th>
         </tr>
-        <% set_data.test_cases.each_with_index do |(case_id, case_data), j| %>
+        <% set_data.test_cases.to_a.shuffle(random: Random.new(Random.new(@submission.id+id).rand(@db_settings["submissions/shuffle"].to_i*id))).each_with_index do |(case_id, case_data), j| %>
           <tr class="test_case status_<%= case_data.status %>">
             <td class="test_name">Case #<%= sprintf("%d.%#{set_data.test_cases.size.to_s.size}d",i+1,j+1) %></td>
             <td class="test_time"><%= case_data.print_time %></td>
