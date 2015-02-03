@@ -4,10 +4,6 @@ class GroupProblemSet < ActiveRecord::Base
   belongs_to :group, inverse_of: :problem_set_associations
   belongs_to :problem_set, inverse_of: :group_associations
 
-  def renamed_problem_set
-    ProblemSet.where(id: problem_set_id).select("*, #{ActiveRecord::Base.sanitize(name)} AS name").first
-  end
-
   def name
     super || problem_set.name
   end
