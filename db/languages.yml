@@ -43,15 +43,32 @@ python:
   :lexer: python
   :compiled: no
   :interpreted: yes
-  :current: python2
+  :current: python3.4
   :extension: .py
   :source_filename: program
   :processes: 1
+  :interpreter_command: '%{interpreter} %{source}'
   :variants:
     python2:
       :name: "Python 2.7"
       :interpreter: /usr/bin/python
-      :interpreter_command: '%{interpreter} %{source}'
+    python3.4:
+      :name: "Python 3.4"
+      :interpreter: /usr/bin/python3.4
+ruby:
+  :name: Ruby
+  :lexer: ruby
+  :compiled: no
+  :interpreted: yes
+  :current: ruby2.2
+  :extension: .rb
+  :source_filename: program
+  :processes: 2
+  :interpreter_command: '%{interpreter} %{source}'
+  :variants:
+    ruby2.2:
+      :name: "Ruby 2.2"
+      :interpreter: /usr/bin/ruby2.2
 haskell:
   :name: Haskell
   :lexer: haskell

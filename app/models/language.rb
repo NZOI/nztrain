@@ -52,8 +52,10 @@ class Language < ActiveRecord::Base
   end
 
   def self.submission_options
-    languages = Language.where(:id => LanguageGroup.where(identifier: %w[c++ c python haskell java]).select(:current_language_id)).order(:identifier)
-    Hash[(languages + [Language.find_by(identifier: 'c++03')]).map{ |language| ["#{language.group.name} (#{language.name})", language.id] }]
+    latest = LanguageGroup.where(identifier: %w[c++ c python haskell java ruby]).pluck(:current_language_id)
+    old = Language.where(identifier: %w[c++03 python2]).pluck(:id)
+    languages = Language.where(:id => latest).order(:identifier) + Language.where(:id => old).order(:identifier)
+    Hash[languages.map{ |language| ["#{language.group.name} (#{language.name})", language.id] }]
   end
 
   def self.infer(ext)
