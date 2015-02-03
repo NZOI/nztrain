@@ -9,7 +9,7 @@
   </thead>
   <tbody>
 <% @problem_set_associations.each do |association| %>
-  <% problem_set = association.problem_set %>
+  <% problem_set = association.renamed_problem_set %>
   <%= render partial: 'problem_sets/item', locals: {problem_set: problem_set} %>
 
 <% end %>

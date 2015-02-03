@@ -49,8 +49,8 @@ class Problem < ActiveRecord::Base
   # methods
 
   def recalculate_tests_and_save!
-    test_error_count = submissions.count(:test_errors)
-    test_warning_count = submissions.count(:test_warnings)
+    self.test_error_count = submissions.count(:test_errors)
+    self.test_warning_count = submissions.count(:test_warnings)
     self.save
   end
 

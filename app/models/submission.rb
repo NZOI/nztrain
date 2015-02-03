@@ -66,18 +66,19 @@ class Submission < ActiveRecord::Base
       end
       self.user_problem_relation.recalculate_and_save
     end
-    if self.test_errors_changed?
-      change = 0
-      change += 1 if test_errors_was.nil? || test_errors_was.empty?
-      change -= 1 if test_errors.nil? || test_errors.empty?
-      problem.increment!(:test_error_count, change) if change != 0
-    end
-    if self.test_warnings_changed?
-      change = 0
-      change += 1 if test_warnings_was.nil? || test_warnings_was.empty?
-      change -= 1 if test_warnings.nil? || test_warnings.empty?
-      problem.increment!(:test_warning_count, change) if change != 0
-    end
+    #if self.test_errors_changed?
+    #  change = 0
+    #  change += 1 if test_errors_was.nil? || test_errors_was.empty?
+    #  change -= 1 if test_errors.nil? || test_errors.empty?
+    #  problem.increment!(:test_error_count, change) if change != 0
+    #end
+    #if self.test_warnings_changed?
+    #  change = 0
+    #  change += 1 if test_warnings_was.nil? || test_warnings_was.empty?
+    #  change -= 1 if test_warnings.nil? || test_warnings.empty?
+    #  problem.increment!(:test_warning_count, change) if change != 0
+    #end
+    problem.recalculate_tests_and_save!
   end
 
   def contests

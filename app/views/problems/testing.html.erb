@@ -18,16 +18,20 @@
         <td><%= Submission::CLASSIFICATION[submission.classification].to_s.humanize %></td>
         <td><%= submission.score %></td>
         <td>
-          <% if submission.test_errors.nil? || submission.test_warnings.nil? %>
+          <% if submission.test_errors.nil? && submission.test_warnings.nil? %>
             <p>Passing</p>
-          <% elsif submission.test_errors.empty? && submission.test_warnings.empty? %>
-            <p>Passing - DB inconsistency</p>
           <% else %>
-            <% submission.test_errors.each do |msg| %>
+            <% lines = 0 %>
+            <% (submission.test_errors||[]).each do |msg| %>
               <p>Error: <%= msg %></p>
+              <% lines += 1 %>
             <% end %>
-            <% submission.test_warnings.each do |msg| %>
+            <% (submission.test_warnings||[]).each do |msg| %>
               <p>Warning: <%= msg %></p>
+              <% lines += 1 %>
+            <% end %>
+            <% if lines == 0 %>
+              <p>Passing - DB inconsistency</p>
             <% end %>
           <% end %>
         </td>
