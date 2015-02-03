@@ -5,7 +5,7 @@ class GroupProblemSet < ActiveRecord::Base
   belongs_to :problem_set, inverse_of: :group_associations
 
   def renamed_problem_set
-    ProblemSet.where(id: problem_set_id).select("*, '#{name}' AS name").first
+    ProblemSet.where(id: problem_set_id).select("*, #{ActiveRecord::Base.sanitize(name)} AS name").first
   end
 
   def name
