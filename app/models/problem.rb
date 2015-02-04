@@ -51,6 +51,16 @@ class Problem < ActiveRecord::Base
   def recalculate_tests_and_save!
     self.test_error_count = submissions.count(:test_errors)
     self.test_warning_count = submissions.count(:test_warnings)
+    self.test_status = case
+    when !test_submissions.any?; 0
+    when test_error_count > 0; -1
+    when test_warning_count > 0; -2
+    when !test_submissions.where(:classification => [Submission::CLASSIFICATION[:model],Submission::CLASSIFICATION[:solution]]).any?
+      1
+    when !test_submissions.where(:classification => Submission::CLASSIFICATION[:incorrect]).any?
+      2
+    else; 3
+    end
     self.save
   end
 
@@ -91,15 +101,6 @@ class Problem < ActiveRecord::Base
 
   def output_type
     output.nil? ? 'stdout' : 'file'
-  end
-
-  def test_status
-    return 0 if !test_submissions.any?
-    return :error if test_error_count > 0
-    return :warning if test_warning_count > 0
-    return 1 if !test_submissions.where(:classification => [Submission::CLASSIFICATION[:model],Submission::CLASSIFICATION[:solution]]).any?
-    return 2 if !test_submissions.where(:classification => Submission::CLASSIFICATION[:incorrect]).any?
-    return 3
   end
 
   # only used when properly joined with submission and problem_set_problems
