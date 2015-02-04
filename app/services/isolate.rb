@@ -232,7 +232,9 @@ EOF
       'lib' => [], # core libraries
       'lib64' => [], # 64-bit libraries
       'usr' => [], # general binaries, includes and libraries
-      'etc/alternatives' => [], # required for many symbolic links to work
+      'etc' => [],
+      #'etc/alternatives' => [], # required for many symbolic links to work
+      #'etc/j' => [], # required for J to work (load profile)
       'var/lib' => [] # /var/lib/ghc required by ghc (Haskell compiler)
     }.map do |dir, opt|
       fullpath = File.expand_path(dir, isolate_root)

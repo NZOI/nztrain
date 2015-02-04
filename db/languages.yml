@@ -38,52 +38,6 @@ c:
       :name: C99
       :compiler: /usr/bin/gcc
       :compiler_command: '%{compiler} -std=gnu99 -O2 -o %{output} %{source} -lm'
-python:
-  :name: Python
-  :lexer: python
-  :compiled: no
-  :interpreted: yes
-  :current: python3.4
-  :extension: .py
-  :source_filename: program
-  :processes: 1
-  :interpreter_command: '%{interpreter} %{source}'
-  :variants:
-    python2:
-      :name: "Python 2.7"
-      :interpreter: /usr/bin/python
-    python3.4:
-      :name: "Python 3.4"
-      :interpreter: /usr/bin/python3.4
-ruby:
-  :name: Ruby
-  :lexer: ruby
-  :compiled: no
-  :interpreted: yes
-  :current: ruby2.2
-  :extension: .rb
-  :source_filename: program
-  :processes: 2
-  :interpreter_command: '%{interpreter} %{source}'
-  :variants:
-    ruby2.2:
-      :name: "Ruby 2.2"
-      :interpreter: /usr/bin/ruby2.2
-haskell:
-  :name: Haskell
-  :lexer: haskell
-  :compiled: yes
-  :interpreted: no
-  :current: haskell2010
-  :extension: .hs
-  :source_filename: program
-  :exe_extension: .exe
-  :processes: 1
-  :variants:
-    haskell2010:
-      :name: "Haskell 2010"
-      :compiler: /usr/bin/ghc
-      :compiler_command: '%{compiler} --make -O2 -o %{output} %{source} -lm'
 java:
   :name: Java
   :lexer: java
@@ -101,5 +55,66 @@ java:
       :compiler_command: '%{compiler[0]} -O -source 1.6 -J-Xms16m -J-Xmx256m %{source} && %{compiler[1]} cfe %{output} Main -C %{source_dir} Main.class'
       :interpreter: /usr/bin/java
       :interpreter_command: '%{interpreter} -jar %{source}'
-
+haskell:
+  :name: Haskell
+  :lexer: haskell
+  :compiled: yes
+  :interpreted: no
+  :current: haskell2010
+  :extension: .hs
+  :source_filename: program
+  :exe_extension: .exe
+  :processes: 1
+  :variants:
+    haskell2010:
+      :name: "Haskell 2010"
+      :compiler: /usr/bin/ghc
+      :compiler_command: '%{compiler} --make -O2 -o %{output} %{source} -lm'
+python:
+  :name: Python
+  :lexer: python
+  :compiled: no
+  :interpreted: yes
+  :current: python3.4
+  :extension: .py
+  :source_filename: program
+  :processes: 1
+  :interpreter_command: '%{interpreter} %{source}'
+  :compiler_command: '%{interpreter} -m py_compile %{source}'
+  :variants:
+    python2:
+      :name: "Python 2.7"
+      :interpreter: /usr/bin/python
+    python3.4:
+      :name: "Python 3.4"
+      :interpreter: /usr/bin/python3.4
+ruby:
+  :name: Ruby
+  :lexer: ruby
+  :compiled: no
+  :interpreted: yes
+  :current: ruby2.2
+  :extension: .rb
+  :source_filename: program
+  :processes: 2 # ruby seems to have an extra process
+  :interpreter_command: '%{interpreter} %{source}'
+  :compiler_command: '%{interpreter} -c %{source}'
+  :variants:
+    ruby2.2:
+      :name: "Ruby 2.2"
+      :interpreter: /usr/bin/ruby2.2
+j:
+  :name: J
+  :lexer: text
+  :compiled: no
+  :interpreted: yes
+  :current: j8
+  :extension: .ijs
+  :source_filename: program
+  :processes: 1
+  :interpreter_command: '%{interpreter} %{source}'
+  :variants:
+    j8:
+      :name: "J 8.0.3"
+      :interpreter: /usr/bin/ijconsole-8.0.3
 
