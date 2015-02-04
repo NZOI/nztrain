@@ -47,7 +47,7 @@ module ApplicationHelper
         end
       end
     else
-      text = weighting.nil? ? '-' : "-&nbsp;/#{weighting}"
+      text = weighting.nil? || options[:size] == :compact ? '-' : "-&nbsp;/#{weighting}"
     end
     if link != nil
       text = link_to(text,link,{:class => "progress_link", :style => "display: block; width: 100%;"})
