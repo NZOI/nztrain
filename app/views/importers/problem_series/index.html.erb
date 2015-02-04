@@ -35,7 +35,7 @@
         <% problem_ids += (issue[:problems] || []).map { |p| p[:problem_id] } %>
       <% end %>
       <% imported_problem_sets = Hash[ProblemSet.where(id: problem_set_ids).select([:id, :name]).map{|p| [p.id,p]}] %>
-      <% imported_problems = Hash[Problem.where(id: problem_ids).includes(:problem_set_associations).select([:id, :name, :memory_limit, :time_limit, :test_error_count, :test_warning_count]).map{ |p| [p.id,p]}] %>
+      <% imported_problems = Hash[Problem.where(id: problem_ids).includes(:problem_set_associations).select([:id, :name, :memory_limit, :time_limit, :test_error_count, :test_warning_count, :test_status]).map{ |p| [p.id,p]}] %>
       <% volume[:issues].each_with_index do |issue, cid| %>
         <%= form_tag importers_update_problem_series_path(series, vid, cid), method: :patch do %>
           <tr class="subheading">
@@ -72,7 +72,7 @@
               </td>
               <td>
                 <% if !imported_problem.nil? %>
-                  <%#= ProblemPresenter.new(imported_problem).test_status  %>
+                  <%= ProblemPresenter.new(imported_problem).test_status  %>
                   <%= link_to imported_problem.try(:name), problem_path(problem[:problem_id]) %>
                   (<%= imported_problem.problem_set_associations.detect{|psa| psa.problem_set_id == issue[:problem_set_id].to_i}.try(:weighting) %>)
                   <%= imported_problem.memory_limit || '?' %> MB, <%= imported_problem.time_limit || '?' %> s
