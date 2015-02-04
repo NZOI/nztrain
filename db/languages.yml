@@ -111,7 +111,7 @@ j:
   :current: j8
   :extension: .ijs
   :source_filename: program
-  :processes: 1
+  :processes: 3 # needed for system/main/stdlib.ijs to shell out to uname
   :interpreter_command: '%{interpreter} %{source}'
   :variants:
     j8:
