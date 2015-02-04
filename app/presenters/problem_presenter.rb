@@ -35,8 +35,8 @@ class ProblemPresenter < ApplicationPresenter
 
   def test_status
     colour = case problem.test_status
-    when :error; "#FF0000"
-    when :warning; "#FF8000"
+    when -1; "#FF0000"
+    when -2; "#FF8000"
     when 0; "#808080"
     when 1; "#FFFF00"
     when 2; "#80FF00"
