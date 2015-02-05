@@ -139,17 +139,11 @@ describe "Authorization" do
       @user.should_be_permitted_to :index, [@contest, @everyone_contest, @past_contest, @future_contest]
       @user.should_be_permitted_to :show, [@contest, @everyone_contest, @past_contest]
     end
-    it 'user cannot start a future contest' do
-      @user.should_not_be_permitted_to :start, @future_contest
-    end
     it 'user cannot index private contests' do
       @user.should_not_be_permitted_to [:index, :show], @private_contest
     end
     it 'user can start active contest' do
       @user.should_be_permitted_to :start, [@contest, @everyone_contest]
-    end
-    it 'user cannot start past or future contests' do
-      @user.should_not_be_permitted_to :start, [@past_contest, @future_contest]
     end
   end
 end
