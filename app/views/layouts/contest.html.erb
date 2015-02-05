@@ -1,5 +1,5 @@
 <% content_for :title, @contest.name %>
-<%= toolbox_push :start, start_contest_path(@contest), text: "Start Contest" if policy(@contest).start? %>
+<%= toolbox_push :start, start_contest_path(@contest), text: "Start Contest" if policy(@contest).start? && @contest.is_running? && !@contest.has_competitor?(current_user.id) %>
 <%= toolbox_push :edit, edit_contest_path(@contest) if policy(@contest).update? %>
 <%= toolbox_push :delete, @contest if policy(@contest).destroy? %>
 
@@ -10,9 +10,6 @@
       <td><span style="font-size: 200%"><%= @contest.problem_set.problems.count %> </span>problems</td>
     </tr>
   </table>
-  <% if policy(@contest).start? %>
-    <div style="float: right"><%= link_to 'Start Contest', start_contest_path(@contest), :method => :put %></div>
-  <% end %>
   <% if @contest.is_running? %>
     <% end_time = @contest.has_current_competitor?(current_user) ? @contest.get_relation(current_user).finish_at : @contest.end_time %>
     <%

@@ -173,30 +173,13 @@ class ContestsController < ApplicationController
 
   def start
     @contest = Contest.find(params[:id])
-
-    #TODO: check that no relation already exists
-    if ContestRelation.find(:first, :conditions => ["user_id = ? and contest_id = ?", current_user, @contest])
-      redirect_to(@contest, :alert => "You have already started this contest!")
-      return
-    end
-
     authorize @contest, :start?
-    if !@contest.is_running?
-      redirect_to(contests_url, :alert => "This contest is not currently running.")
-      return
-    end
-    @contest_relation = ContestRelation.new
-    @contest_relation.user = current_user
-    @contest_relation.started_at = DateTime.now
-    @contest_relation.contest = @contest
 
     respond_to do |format|
-      if @contest_relation.save
+      if @contest.start(current_user.id)
         format.html { redirect_to(@contest, :notice => 'Contest started.') }
-        format.xml  { render :xml => @contest_relation, :status => :created, :location => @contest_relation }
       else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @contest_relation.errors, :status => :unprocessable_entity }
+        format.html { redirect_to(@contest, :alert => @contest.errors.full_messages_for(:contest).join(' ')) }
       end
     end
   end

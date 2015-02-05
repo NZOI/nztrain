@@ -56,7 +56,11 @@ class ContestPolicy < ApplicationPolicy
   end
 
   def start?
-    !contestant? and show? and record.start_time <= DateTime.now and record.end_time > DateTime.now
+    # if double-start of clicking start at end of contest
+    # Forbidden message is user un-friendly
+
+    #!contestant? and show? and record.start_time <= DateTime.now and record.end_time > DateTime.now
+    show?
   end
 
   def access?

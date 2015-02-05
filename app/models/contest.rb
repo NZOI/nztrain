@@ -39,8 +39,8 @@ class Contest < ActiveRecord::Base
     joins(:contest_relations).where(:contest_relations => { :user_id => user_id }).where("contest_relations.started_at <= :time AND contest_relations.finish_at > :time",{:time => DateTime.now})
   end
 
-  def get_relation(user)
-    return self.contest_relations.where(:user_id => user).first
+  def get_relation(user_id)
+    return self.contest_relations.where(user_id: user_id).first
   end
 
   def is_running?
@@ -55,8 +55,12 @@ class Contest < ActiveRecord::Base
     return scoreboard
   end
 
-  def has_current_competitor?(user)
-    !!self.get_relation(user).try(:finish_at).try(:>,DateTime.now)
+  def has_current_competitor?(user_id)
+    !!self.get_relation(user_id).try(:finish_at).try(:>,DateTime.now)
+  end
+
+  def has_competitor?(user_id)
+    contest_relations.where(user_id: user_id).any?
   end
 
   def problem_score(user_id, problem)
@@ -87,6 +91,17 @@ class Contest < ActiveRecord::Base
     return "Upcoming" if Time.now < start_time
     return "Running" if Time.now < end_time
     return finalized? ? "Finalized" : "Preliminary"
+  end
+
+  # user_id starting a contest
+  def start(user_id)
+    errors.add(:contest, "is not currently running.") if !self.is_running?
+    errors.add(:contest, "has already been started.") if contest_relations.where(user_id: user_id).any?
+    return false unless errors.empty?
+
+    contest_relation = self.contest_relations.build(user_id: user_id, started_at: DateTime.now)
+
+    return contest_relation.save
   end
 
 end

@@ -32,13 +32,13 @@
     <td><%= contest.get_score(current_user.id) %></td>
     <td>
       <% if contest.is_running? && (policy(contest).start?) %>
-        <% if policy(contest).start? %>
+        <% if contest.has_current_competitor?(current_user.id) %>
+          <%= link_to 'Continue Contest', contest %>
+        <% elsif !contest.has_competitor?(current_user.id) %>
           <%= link_to 'Start Contest', start_contest_path(contest), :method => :put %>
           <% if policy(contest).show? %>
             <%= link_to 'Watch', contest %>
           <% end %>
-        <% elsif contest.has_current_competitor?(current_user) %>
-          <%= link_to 'Continue Contest', contest %>
         <% else %>
           <%= link_to 'Watch', contest %>
         <% end %>
