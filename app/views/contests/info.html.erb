@@ -1,11 +1,9 @@
-<% if @contest.end_time >= DateTime.now() %>
-  <% if @contest.start_time >= DateTime.now() %>
-    <script type="text/javascript">
-    <!--
-      window.setTimeout("window.location.reload(true);", <%= ((@contest.start_time-Time.now())*1000).round %>);
-    //-->
-    </script>
-  <% end %>
+<% if !@contest.started? && !@contest.start_time.nil? %>
+  <script type="text/javascript">
+  <!--
+    window.setTimeout("window.location.reload(true);", <%= ((@contest.start_time-Time.now())*1000).round %>);
+  //-->
+  </script>
 <% end %>
 
 <b>Mode: </b>Closed book<br>

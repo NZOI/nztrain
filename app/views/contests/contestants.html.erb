@@ -1,3 +1,9 @@
+<%= form_tag(register_contest_path(@contest)) do %>
+  <strong>Registration:</strong>
+  <%= label_tag :username %> <%= text_field_tag :username %>
+  <%= submit_tag "Register" %>
+<% end %>
+
 <table class="main_table" >
   <thead>
     <tr>
@@ -6,6 +12,7 @@
       <th> Finish At </th>
       <th style="text-align: right"> Score </th>
       <th> Time </th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -22,6 +29,9 @@
         <td><%= contest_relation.finish_at %></td>
         <td style="text-align: right"><%= contest_relation.score %></td>
         <td> <%= format("%d:%02d:%02d",contest_relation.time_taken.to_i/3600,contest_relation.time_taken.to_i/60%60,contest_relation.time_taken.to_i%60) %> </td>
+        <td>
+          <%= link_to 'Delete', contest_relation, :data => { :confirm => 'Are you sure?' }, :method => :delete if policy(contest_relation).destroy? %>
+        </td>
       </tr>
     <% end %>
   </tbody>

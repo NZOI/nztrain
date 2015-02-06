@@ -83,11 +83,15 @@ class ContestRelationsController < ApplicationController
   # DELETE /contest_relations/1.xml
   def destroy
     @contest_relation = ContestRelation.find(params[:id])
-    @contest_relation.destroy
+
+    authorize @contest_relation, :destroy?    
 
     respond_to do |format|
-      format.html { redirect_to(contest_relations_url) }
-      format.xml  { head :ok }
+      if @contest_relation.destroy
+        format.html { redirect_to(contestants_contest_path(@contest_relation.contest), :notice => 'Contestant deleted') }
+      else
+        format.html { redirect_to(contestants_contest_path(@contest_relation.contest), :alert => 'Could not delete contestant') }
+      end
     end
   end
 end

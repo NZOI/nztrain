@@ -12,18 +12,20 @@
   </table>
   <% if @contest.is_running? %>
     <% end_time = @contest.has_current_competitor?(current_user) ? @contest.get_relation(current_user).finish_at : @contest.end_time %>
-    <%
-      seconds = (end_time-Time.now)
-      hours, minutes, seconds = (seconds/3600).floor, (seconds%3600/60).floor, (seconds%60).floor
-    %>
-    <div id="countDownTimer" style="width: 50%"><!--<%= distance_of_time_in_words(DateTime.now,end_time) %>--><%= "#{hours} hours, #{minutes} minutes, #{seconds} seconds" %> remaining</div>
-    <script>
-      $(document).ready(function(){
-        var datesec = <%= end_time.to_i %>;
-        var date = new Date(Number(datesec) * 1000);
-        $("#countDownTimer").countdown({until: date, layout: '{sn} {sl}, {mn} {ml}, {hn} {hl}, and {dn} {dl} remaining'});
-      });
-    </script>
+    <% if !end_time.nil? %>
+      <%
+        seconds = (end_time-Time.now)
+        hours, minutes, seconds = (seconds/3600).floor, (seconds%3600/60).floor, (seconds%60).floor
+      %>
+      <div id="countDownTimer" style="width: 50%"><!--<%= distance_of_time_in_words(DateTime.now,end_time) %>--><%= "#{hours} hours, #{minutes} minutes, #{seconds} seconds" %> remaining</div>
+      <script>
+        $(document).ready(function(){
+          var datesec = <%= end_time.to_i %>;
+          var date = new Date(Number(datesec) * 1000);
+          $("#countDownTimer").countdown({until: date, layout: '{sn} {sl}, {mn} {ml}, {hn} {hl}, and {dn} {dl} remaining'});
+        });
+      </script>
+    <% end %>
   <% end %>
   <p>
     <b>Start time:</b>  <%= @contest.start_time %><br>
@@ -31,7 +33,7 @@
     <b>Duration:</b>    <%= @contest.duration %><br>
     <b>Owner:</b> <%= @contest.owner_id %><br>
   </p>
-  <% if @contest.end_time < DateTime.now and @contest.finalized_at.nil? and policy(@contest).update? %>
+  <% if @contest.ended? and @contest.finalized_at.nil? and policy(@contest).update? %>
     <%= link_to "Finalize results", finalize_contest_path(@contest), :data => { :confirm => 'Are you sure?' }, :method => :put %>
     <%#= "Re-judge all" %><br />
   <% elsif @contest.finalized_at and current_user.is_admin? %>

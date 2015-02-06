@@ -15,7 +15,7 @@ class Contest < ActiveRecord::Base
 
   before_save do # update the end time that was cached
     contest_relations.find_each do |relation|
-      relation.finish_at = [end_time,relation.started_at.advance(:hours => duration.to_f)].min
+      relation.finish_at = [end_time,relation.started_at.advance(:hours => duration.to_f)].min unless relation.started_at.nil?
       relation.save
     end if duration_changed? || end_time_changed?
 
@@ -40,11 +40,20 @@ class Contest < ActiveRecord::Base
   end
 
   def get_relation(user_id)
-    return self.contest_relations.where(user_id: user_id).first
+    return self.contest_relations.find_by(user_id: user_id)
   end
 
   def is_running?
-    return DateTime.now >= self.start_time && DateTime.now < self.end_time
+    started? && !ended?
+  end
+
+  def started?
+    return false if end_time.nil?
+    start_time.nil? || start_time <= DateTime.now
+  end
+
+  def ended?
+    !end_time.nil? && end_time < DateTime.now
   end
 
   def scoreboard
@@ -59,8 +68,9 @@ class Contest < ActiveRecord::Base
     !!self.get_relation(user_id).try(:finish_at).try(:>,DateTime.now)
   end
 
+  # not a competitor yet if only registered
   def has_competitor?(user_id)
-    contest_relations.where(user_id: user_id).any?
+    get_relation(user_id).try(:started?)
   end
 
   def problem_score(user_id, problem)
@@ -88,20 +98,36 @@ class Contest < ActiveRecord::Base
   end
 
   def status
-    return "Upcoming" if Time.now < start_time
-    return "Running" if Time.now < end_time
+    return "Upcoming" if !started?
+    return "Running" if is_running?
     return finalized? ? "Finalized" : "Preliminary"
   end
 
   # user_id starting a contest
-  def start(user_id)
+  def start(user)
     errors.add(:contest, "is not currently running.") if !self.is_running?
-    errors.add(:contest, "has already been started.") if contest_relations.where(user_id: user_id).any?
+    errors.add(:contest, "has already been started.") if has_competitor?(user.id)
     return false unless errors.empty?
 
-    contest_relation = self.contest_relations.build(user_id: user_id, started_at: DateTime.now)
+    contest_relation = build_contest_relation(user)
+
+    return contest_relation.start!
+  end
+
+  def register(user)
+    errors.add(:contest, "has ended already.") if ended?
+    errors.add(:contest, "has already been registered for.") if contest_relations.where(user_id: user.id).any?
+    return false unless errors.empty?
+
+    contest_relation = build_contest_relation(user)
 
     return contest_relation.save
+  end
+
+  def build_contest_relation(user)
+    contest_relations.find_or_initialize_by(user_id: user.id) do |contest_relation|
+      contest_relation.country_code = user.country_code
+    end
   end
 
 end

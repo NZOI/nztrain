@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150204112552) do
+ActiveRecord::Schema.define(version: 20150206053259) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,14 +64,14 @@ ActiveRecord::Schema.define(version: 20150204112552) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "finish_at"
-    t.integer  "score",      default: 0,   null: false
-    t.float    "time_taken", default: 0.0, null: false
+    t.integer  "score",                  default: 0,   null: false
+    t.float    "time_taken",             default: 0.0, null: false
     t.integer  "school_id"
-    t.integer  "country_id"
-    t.integer  "status",     default: 0
-    t.integer  "extra_time", default: 0
+    t.integer  "status",                 default: 0
+    t.integer  "extra_time",             default: 0
     t.datetime "start_time"
     t.datetime "end_time"
+    t.string   "country_code", limit: 2
   end
 
   add_index "contest_relations", ["contest_id", "score", "time_taken"], name: "index_contest_relations_on_contest_id_and_score_and_time_taken", order: {"score"=>:desc}, using: :btree

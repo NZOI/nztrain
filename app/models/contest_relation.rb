@@ -9,7 +9,16 @@ class ContestRelation < ActiveRecord::Base
   scope :user, ->(u_id) { where(:user_id => u_id) }
 
   def active?
-    (started_at <= DateTime.now) && (finish_at > DateTime.now)
+    started? && (finish_at > DateTime.now)
+  end
+
+  def started?
+    !started_at.nil? && started_at <= DateTime.now
+  end
+
+  def start!
+    self.started_at = DateTime.now
+    return self.save
   end
 
   # override setters to update finish_at when necessary

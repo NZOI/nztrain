@@ -74,8 +74,8 @@ class ApplicationController < ActionController::Base
 
   def update_last_seen_at
     if user_signed_in?
-      current_user.last_seen_at = DateTime.now
-      current_user.save
+      original_user.last_seen_at = DateTime.now
+      original_user.save
     end
   end
 end

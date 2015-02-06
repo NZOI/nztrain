@@ -26,16 +26,18 @@ class ContestsController < ApplicationController
 
   def browse
     authorize Contest, :index?
-    groups_contests = Contest.joins(:groups => :members).where{(groups.id == 0) | (groups.members.id == my{current_user.id})}.distinct
+
+    visible_contests = policy_scope(Contest)
+
     case params[:filter].to_s
     when 'active'
       @contests = Contest.joins(:contest_relations).where{ (contest_relations.user_id == my{current_user.id}) & (contest_relations.finish_at > Time.now) }.order("end_time ASC")
     when 'current'
-      @contests = groups_contests.where{(start_time < Time.now+30.minutes) & (end_time > Time.now)}.order("end_time ASC")
+      @contests = visible_contests.where{(start_time < Time.now+30.minutes) & (end_time > Time.now)}.order("end_time ASC")
     when 'upcoming'
-      @contests = groups_contests.where{(start_time > Time.now+30.minutes)}.order("start_time ASC")
+      @contests = visible_contests.where{(start_time > Time.now+30.minutes)}.order("start_time ASC")
     when 'past'
-      @contests = groups_contests.where{(end_time < Time.now)}.order("end_time DESC")
+      @contests = visible_contests.where{(end_time < Time.now)}.order("end_time DESC")
     else
       raise Pundit::NotAuthorizedError
     end
@@ -109,8 +111,8 @@ class ContestsController < ApplicationController
     @contest = Contest.find(params[:id])
     authorize @contest, :edit?
     @problem_sets = ProblemSet.all
-    @start_time = @contest.start_time.strftime("%d/%m/%Y %H:%M")
-    @end_time = @contest.end_time.strftime("%d/%m/%Y %H:%M")
+    @start_time = @contest.start_time.try(:strftime, "%d/%m/%Y %H:%M")
+    @end_time = @contest.end_time.try(:strftime, "%d/%m/%Y %H:%M")
   end
 
   # POST /contests
@@ -172,14 +174,43 @@ class ContestsController < ApplicationController
   end
 
   def start
+    if request.get? # show start code form
+    elsif request.put?
+      @contest = Contest.find(params[:id])
+      authorize @contest, :start?
+
+      respond_to do |format|
+        if @contest.start(current_user)
+          format.html { redirect_to(@contest, :notice => 'Contest started.') }
+        else
+          format.html { redirect_to(@contest, :alert => @contest.errors.full_messages_for(:contest).join(' ')) }
+        end
+      end
+    else
+      raise "ERROR"
+    end
+  end
+
+  def register
     @contest = Contest.find(params[:id])
-    authorize @contest, :start?
+
+    if request.put?
+      authorize @contest, :register?
+      user = current_user
+      redirect_path = contest_path(@contest)
+    elsif request.post?
+      authorize @contest, :register_user?
+      user = User.find_by(username: params[:username])
+      redirect_path = contestants_contest_path(@contest)
+    else
+      raise "ERROR"
+    end
 
     respond_to do |format|
-      if @contest.start(current_user.id)
-        format.html { redirect_to(@contest, :notice => 'Contest started.') }
+      if @contest.register(user)
+        format.html { redirect_to(redirect_path, :notice => "Registered #{params[:username]} for contest.") }
       else
-        format.html { redirect_to(@contest, :alert => @contest.errors.full_messages_for(:contest).join(' ')) }
+        format.html { redirect_to(redirect_path, :alert => @contest.errors.full_messages_for(:contest).join(' ')) }
       end
     end
   end

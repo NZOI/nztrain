@@ -3,14 +3,22 @@ class ContestPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
     def resolve
       if user.is_a?(User) && user.is_staff?
-        scope.all
-      elsif user.is_organiser?
-        scope.where( :owner_id => user.id )
+        return scope.all
+      end
+
+      # following uses advanced squeel
+      return scope.where do |contests|
+        registered = contests.id.in(user.contest_relations.select(:contest_id))
+        grouped = contests.id.in(GroupContest.where do |gc|
+          (gc.group_id >> user.groups.select(:id)) | (gc.group_id == 0)
+        end.select(:contest_id))
+        owned = contests.owner_id == user.id
+        registered | grouped | owned
       end
     end
   end
 
-  def contestant?
+  def registered?
     record.contestants.where(:id => user.id).exists?
   end
 
@@ -32,7 +40,7 @@ class ContestPolicy < ApplicationPolicy
   end
 
   def show?
-    user.is_staff? or contestant? or record.groups.where(:id => 0).exists? or record.groups.joins(:memberships).where(:memberships => {:member_id => user.id}).exists?
+    user.is_staff? or registered? or record.groups.where(:id => 0).exists? or record.groups.joins(:memberships).where(:memberships => {:member_id => user.id}).exists?
   end
 
   def scoreboard?
@@ -61,6 +69,14 @@ class ContestPolicy < ApplicationPolicy
 
     #!contestant? and show? and record.start_time <= DateTime.now and record.end_time > DateTime.now
     show?
+  end
+
+  def register? # (current_user)
+    start?
+  end
+
+  def register_user?
+    manage?
   end
 
   def access?

@@ -1,5 +1,9 @@
 module ApplicationHelper
 
+  def original_user
+    @original_user ||= in_su? ? User.find(session[:su][0]) : current_user
+  end
+
   def handle(user)
     if policy(user).inspect?
       if user.name && !user.name.empty?

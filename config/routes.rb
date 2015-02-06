@@ -66,10 +66,13 @@ NZTrain::Application.routes.draw do
       put 'start'
       put 'finalize'
       put 'unfinalize'
+      put 'register'
+      post 'register'
     end
   end
 
   # resources :contest_relations
+  resources :contest_relations, only: :destroy
 
   resources :submissions, :except => [:new,:create] do
     collection do

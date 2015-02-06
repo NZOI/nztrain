@@ -1,15 +1,15 @@
-<% if @contest.end_time >= DateTime.now() %>
+<% if !@contest.ended? %>
   <script type="text/javascript">
   <!--
-  <% if @contest.start_time >= DateTime.now() %>
+  <% if !@contest.started? && !@contest.start_time.nil? %>
     window.setTimeout("window.location.reload(true);", <%= ((@contest.start_time-Time.now())*1000).round %>);
-  <% else # contest currently running!!! %>
+  <% elsif @contest.is_running? # contest currently running!!! %>
     window.setTimeout("window.location.reload(true);", 60000);
   <% end %>
   //-->
   </script>
 <% end %>
-<% if @contest.start_time >= DateTime.now() %>
+<% if !@contest.started? %>
   <em>The contest has not started yet.</em>
 <% else %>
   <h2><%= @contest.finalized? ? "Final Results" : "Preliminary Results" %></h2>

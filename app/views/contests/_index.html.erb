@@ -25,8 +25,8 @@
     <tr>
   <% end %>
     <td><%= contest.name %></td>
-    <td><%= contest.start_time.strftime("%b %d, %H:%M") %></td>
-    <td><%= contest.end_time.strftime("%b %d, %H:%M") %></td>
+    <td><%= contest.start_time.strftime("%b %d, %H:%M") unless contest.start_time.nil? %></td>
+    <td><%= contest.end_time.strftime("%b %d, %H:%M") unless contest.end_time.nil? %></td>
     <td><%= contest.duration %></td>
     <td><%= contest.owner_id %></td>
     <td><%= contest.get_score(current_user.id) %></td>
