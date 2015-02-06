@@ -5,7 +5,10 @@ class Contest < ActiveRecord::Base
   has_many :problems, :through => :problem_set
   has_many :problem_associations, :through => :problem_set
   has_many :contest_relations, :dependent => :destroy
-  has_many :contestants, :through => :contest_relations, :source => :user
+  has_many :registrants, :through => :contest_relations, :source => :user
+
+  has_many :contestant_records, -> { where.not(started_at: nil) }, class_name: ContestRelation
+  has_many :contestants, :through => :contestant_records, :source => :user
 
   has_many :group_associations, class_name: GroupContest, inverse_of: :contest, dependent: :destroy
   has_many :groups, through: :group_associations
@@ -37,6 +40,10 @@ class Contest < ActiveRecord::Base
 
   def self.user_currently_in(user_id)
     joins(:contest_relations).where(:contest_relations => { :user_id => user_id }).where("contest_relations.started_at <= :time AND contest_relations.finish_at > :time",{:time => DateTime.now})
+  end
+
+  def num_contestants
+    ended? ? contestants.count : registrants.count
   end
 
   def get_relation(user_id)

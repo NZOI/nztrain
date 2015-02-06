@@ -6,7 +6,7 @@
 <% content_for :content do %>
   <table style="background-color: none; border: 0px; width: 100%; font-size: 150%;">
     <tr>
-      <td><span style="font-size: 200%"><%= @contest.contestants.count %> </span>contestants</td>
+      <td><span style="font-size: 200%"><%= @contest.num_contestants %> </span>contestants</td>
       <td><span style="font-size: 200%"><%= @contest.problem_set.problems.count %> </span>problems</td>
     </tr>
   </table>

@@ -19,7 +19,7 @@ class ContestPolicy < ApplicationPolicy
   end
 
   def registered?
-    record.contestants.where(:id => user.id).exists?
+    record.registrants.where(:id => user.id).exists?
   end
 
   def current_contestant?
