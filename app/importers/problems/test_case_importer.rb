@@ -51,7 +51,7 @@ module Problems
     end
 
     def load_spec
-      Psych.safe_load(read_spec)
+      Psych.safe_load(read_spec) || {}
     rescue Psych::SyntaxError => e
       raise ImportError, "YAML parse error: " + e.message
     end

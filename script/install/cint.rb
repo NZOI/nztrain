@@ -13,5 +13,5 @@ system("g++ #{scriptname}.cc -o #{scriptname}.exe")
 ARGV.shift 1
 args = ARGV.join(" ")
 
-exec "./#{scriptname}.exe " +  args
+exec "./#{scriptname}.exe " +  args, close_others: false
 
