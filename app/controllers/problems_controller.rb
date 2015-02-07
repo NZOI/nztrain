@@ -132,6 +132,8 @@ class ProblemsController < ApplicationController
     options = {:merge => params[:upload] == 'merge'}
     if !params[:import_file].nil?
       importdata = params[:import_file].path
+      options[:extension] = File.extname(params[:import_file].original_filename)
+      options.delete(:extension) if options[:extension].empty?
     elsif params[:import_yaml] && params[:import_yaml] != ""
       importdata = params[:import_yaml]
       options[:inline] = true
