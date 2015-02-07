@@ -158,7 +158,7 @@ class Submission < ActiveRecord::Base
       warnings = []
 
       if judge_data.status == :error || judge_data.score.nil? # evaluator (probably) errored
-        errors.add "Evaluator error (probably)"
+        errors.push "Evaluator error (probably)"
       else
         case classification
         when :model, :solution
