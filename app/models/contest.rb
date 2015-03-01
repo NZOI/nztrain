@@ -16,6 +16,9 @@ class Contest < ActiveRecord::Base
 
   belongs_to :owner, :class_name => :User
 
+  # public = everyone, protected = in group, private = competitors
+  OBSERVATION = Enumeration.new 0 => :public, 1 => :protected, 2 => :private
+
   before_save do # update the end time that was cached
     contest_relations.find_each do |relation|
       relation.finish_at = [end_time,relation.started_at.advance(:hours => duration.to_f)].min unless relation.started_at.nil?
@@ -109,6 +112,16 @@ class Contest < ActiveRecord::Base
     return "Running" if is_running?
     return finalized? ? "Finalized" : "Preliminary"
   end
+  
+  def status_text(user_id)
+    return "The contest has ended." if ended?
+
+    registrant = registrants.find_by(user_id: user_id)
+    return registrant.status_text unless registrant.nil?
+
+    return "The contest has not started yet." if !started?
+    return "The contest has started." if is_running?
+  end
 
   # user_id starting a contest
   def start(user)
@@ -135,6 +148,11 @@ class Contest < ActiveRecord::Base
     contest_relations.find_or_initialize_by(user_id: user.id) do |contest_relation|
       contest_relation.country_code = user.country_code
     end
+  end
+
+  def startcode=(code)
+    code = nil if !code.is_a?(String) || code.empty?
+    super(code)
   end
 
 end

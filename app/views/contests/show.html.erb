@@ -8,7 +8,9 @@
     <tr>
       <th width="35%">Problem</th>
       <th width="15%">Points</th>
-      <th width="25%">Score</th>
+      <% if @contest.has_competitor?(current_user) %>
+        <th width="25%">Score</th>
+      <% end %>
       <th width="25%"># Correct</th>
     </tr>
   </thead>
@@ -18,7 +20,9 @@
       <tr>
         <td><%= link_to problem.name, problem_path(problem) %></td>
         <td><%= problem_association.weighting %></td>
-        <td><%= progress_bar(@contest.problem_score(current_user, problem), problem_association.weighting) %></td>
+        <% if @contest.has_competitor?(current_user) %>
+          <td><%= progress_bar(@contest.problem_score(current_user, problem), problem_association.weighting) %></td>
+        <% end %>
         <td><%= @contest.num_solved(problem) %></td>
       </tr>
     <% end %>

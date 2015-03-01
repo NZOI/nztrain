@@ -6,7 +6,15 @@
   </script>
 <% end %>
 
-<b>Mode: </b>Closed book<br>
+<% if false && !@contest_relation.nil? %>
+  <h2>Contest Registration</h2>
+
+  <strong>Country: </strong><%= @contest_relation.country_code %>
+  <strong>School: </strong><%= @contest_relation.school.name %>
+<% end %>
+
+<h2>Contest Settings</h2>
+<b>Mode: </b>Closed book (you cannot access other problems on the site while competing)<br>
 <b>Judge feedback: </b>Real-time<br>
 <b>Scoreboard: </b>Live<br>
 

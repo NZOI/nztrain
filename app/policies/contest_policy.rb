@@ -13,7 +13,8 @@ class ContestPolicy < ApplicationPolicy
           (gc.group_id >> user.groups.select(:id)) | (gc.group_id == 0)
         end.select(:contest_id))
         owned = contests.owner_id == user.id
-        registered | grouped | owned
+        public_observation = contests.observation == Contest::OBSERVATION[:public]
+        registered | grouped | owned | public_observation
       end
     end
   end
@@ -40,7 +41,7 @@ class ContestPolicy < ApplicationPolicy
   end
 
   def show?
-    user.is_staff? or registered? or record.groups.where(:id => 0).exists? or record.groups.joins(:memberships).where(:memberships => {:member_id => user.id}).exists?
+    startable? or record.observation == Contest::OBSERVATION[:public]
   end
 
   def scoreboard?
@@ -63,12 +64,16 @@ class ContestPolicy < ApplicationPolicy
     user.is_admin?
   end
 
+  def startable?
+    user.is_staff? or registered? or record.groups.where(:id => 0).exists? or record.groups.joins(:memberships).where(:memberships => {:member_id => user.id}).exists?
+  end
+
   def start?
     # if double-start of clicking start at end of contest
     # Forbidden message is user un-friendly
 
     #!contestant? and show? and record.start_time <= DateTime.now and record.end_time > DateTime.now
-    show?
+    startable?
   end
 
   def register? # (current_user)
@@ -84,7 +89,11 @@ class ContestPolicy < ApplicationPolicy
   end
 
   def overview?
-    manage? or current_or_past_contestant?
+    show_details?
+  end
+
+  def show_details?
+    record.ended? or manage? or current_or_past_contestant?
   end
 end
 

@@ -9,11 +9,23 @@ class ContestRelation < ActiveRecord::Base
   scope :user, ->(u_id) { where(:user_id => u_id) }
 
   def active?
-    started? && (finish_at > DateTime.now)
+    started? && !ended?
   end
 
   def started?
     !started_at.nil? && started_at <= DateTime.now
+  end
+
+  def ended?
+    !finish_at.nil? && DateTime.now < finish_at
+  end
+
+  def status_text
+    return "Your time slot has ended." if ended?
+    return "You are currently competing." if active?
+    return "Click start to start your timer." if contest.started?
+
+    return "You have been registered, but the contest has not started yet." if !started?
   end
 
   def start!

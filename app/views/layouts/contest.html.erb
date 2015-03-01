@@ -1,15 +1,31 @@
 <% content_for :title, @contest.name %>
-<%= toolbox_push :start, start_contest_path(@contest), text: "Start Contest" if policy(@contest).start? && @contest.is_running? && !@contest.has_competitor?(current_user.id) %>
 <%= toolbox_push :edit, edit_contest_path(@contest) if policy(@contest).update? %>
 <%= toolbox_push :delete, @contest if policy(@contest).destroy? %>
 
 <% content_for :content do %>
-  <table style="background-color: none; border: 0px; width: 100%; font-size: 150%;">
-    <tr>
-      <td><span style="font-size: 200%"><%= @contest.num_contestants %> </span>contestants</td>
-      <td><span style="font-size: 200%"><%= @contest.problem_set.problems.count %> </span>problems</td>
-    </tr>
-  </table>
+  <div style="height: 40px;">
+    <div style="float: right;">
+      <% if policy(@contest).start? && @contest.is_running? && !@contest.has_competitor?(current_user.id) %>
+        <%= form_tag(start_contest_path(@contest), method: 'put', style: "text-align: center") do %>
+          <% if !@contest.startcode.nil? %>
+            <%= text_field_tag(:startcode, "", placeholder: "Startcode", style: 'width: 148px; height: 20px;') %><br>
+          <% end %>
+          <span class="box green">
+            <%= button_tag(type: :submit, style: 'width: 160px; height: 40px;') do %>
+              <i class="icon-time"></i>Start
+            <% end %>
+          </span>
+        <% end %>
+      <% end %>
+    </div>
+    <div style="font-size: 150%; width: 45%; float: left; height: 50px">
+      <span style="font-size: 200%"><%= @contest.num_contestants %> </span>contestants
+    </div>
+    <div style="font-size: 150%; float: left; height: 50px">
+      <span style="font-size: 200%"><%= @contest.problem_set.problems.count %> </span>problems
+    </div>
+  </div>
+  <br>
   <% if @contest.is_running? %>
     <% end_time = @contest.has_current_competitor?(current_user) ? @contest.get_relation(current_user).finish_at : @contest.end_time %>
     <% if !end_time.nil? %>

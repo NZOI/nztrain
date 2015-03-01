@@ -35,7 +35,7 @@
         <% if contest.has_current_competitor?(current_user.id) %>
           <%= link_to 'Continue Contest', contest %>
         <% elsif !contest.has_competitor?(current_user.id) %>
-          <%= link_to 'Start Contest', start_contest_path(contest), :method => :put %>
+          <%#= link_to 'Start Contest', start_contest_path(contest), :method => :put %>
           <% if policy(contest).show? %>
             <%= link_to 'Watch', contest %>
           <% end %>

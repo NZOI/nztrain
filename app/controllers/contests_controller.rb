@@ -1,7 +1,7 @@
 class ContestsController < ApplicationController
   def permitted_params
     @_permitted_params ||= begin
-      permitted_attributes = [:name, :start_time, :end_time, :duration, :problem_set_id]
+      permitted_attributes = [:name, :start_time, :end_time, :duration, :problem_set_id, :startcode, :observation]
       permitted_attributes << :owner_id if policy(@contest || Contest).transfer?
       params.require(:contest).permit(*permitted_attributes)
     end
@@ -67,6 +67,8 @@ class ContestsController < ApplicationController
     @contest = Contest.find(params[:id])
     authorize @contest, :show?
     @groups = Group.all
+    @contest_relation = @contest.get_relation(current_user.id)
+
     render :layout => 'contest'
   end
 
@@ -178,6 +180,11 @@ class ContestsController < ApplicationController
     elsif request.put?
       @contest = Contest.find(params[:id])
       authorize @contest, :start?
+
+      if !@contest.startcode.nil? && @contest.startcode != params[:startcode]
+        redirect_to(@contest, :alert => 'Incorrect start code.')
+        return
+      end
 
       respond_to do |format|
         if @contest.start(current_user)

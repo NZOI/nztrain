@@ -18,8 +18,16 @@
     <thead>
       <tr>
         <th style="min-width: 25%;"> User </th>
-        <% @contest.problem_set.problems.each do |problem|%>
-          <th style="min-width: 6em;"> <%= link_to problem.name, problem_path(problem) %> (<%= @weighting[problem.id] %>) </th>
+        <% @contest.problem_set.problems.each_with_index do |problem, prob_num|%>
+          <th style="min-width: 6em;">
+            <% if policy(@contest).show_details? %>
+              <%= link_to problem.name, problem_path(problem) %>
+            <% else %>
+              <% prob_num += 1 %>
+              Problem <% while !prob_num.zero? %><% prob_num, rem = (prob_num - 1).divmod(26) %><%= ('A'..'Z').to_a[rem] %><% end %>
+            <% end %>
+            (<%= @weighting[problem.id] %>)
+          </th>
         <% end %>
         <th style="text-align: right"> Score </th>
         <th> Time </th>

@@ -32,6 +32,14 @@
     <%= f.text_field :duration %>
   </div>
   <div class="field">
+    <%= f.label :observation %><br />
+    <%= f.select :observation, Contest::OBSERVATION.entries.invert %>
+  </div>
+  <div class="field">
+    <%= f.label :startcode %><br />
+    <%= f.text_field :startcode %>
+  </div>
+  <div class="field">
     <%= f.label :owner_id %><br />
     <% if policy(@contest).transfer? %>
       <%= f.text_field :owner_id %>
