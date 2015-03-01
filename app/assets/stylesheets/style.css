@@ -169,7 +169,7 @@ a.progress_link:hover {
   margin-right: -5px;
 }
 
-#main-toolbox > li, form span.box {
+#main-toolbox > li, span.buttonbox {
   display: inline-block;
   border: 2px solid rgba(0,0,0,0.5);
   background-color: #4040C0;
@@ -182,19 +182,23 @@ a.progress_link:hover {
   -moz-box-shadow: inset 0 3px 6px rgba(255,255,255,0.5), 0 1px 1px black;
 }
 
-#main-toolbox > li.blue, form span.box.blue {
+#main-toolbox > li.gray, span.buttonbox.gray {
+  background-color: #888888;
+}
+
+#main-toolbox > li.blue, span.buttonbox.blue {
   background-color: #4040C0;
 }
 
-#main-toolbox > li.green, form span.box.green {
+#main-toolbox > li.green, span.buttonbox.green {
   background-color: #30B030;
 }
 
-#main-toolbox > li.red, form span.box.red {
+#main-toolbox > li.red, span.buttonbox.red {
   background-color: #C04040;
 }
 
-#main-toolbox > li > a, form span.box > button {
+#main-toolbox > li > a, span.buttonbox > button {
   display: inline-block;
   font-weight: bold;
   color: white;
@@ -208,12 +212,12 @@ a.progress_link:hover {
   border: none;
 }
 
-#main-toolbox > li > a:hover, form span.box > button:hover {
+#main-toolbox > li > a:hover, span.buttonbox > button:hover {
   text-decoration: none;
   background-color: rgba(255,255,255,0.1);
 }
 
-#main-toolbox > li:hover, form span.box:hover {
+#main-toolbox > li:hover, span.buttonbox:hover {
   box-shadow: inset 0 3px 6px rgba(255,255,255,0.5), 0 0 0 black;
   -o-box-shadow: inset 0 3px 6px rgba(255,255,255,0.5), 0 0 0 black;
   -webkit-box-shadow: inset 0 3px 6px rgba(255,255,255,0.5), 0 0 0 black;
@@ -222,7 +226,7 @@ a.progress_link:hover {
   top: 1px;
 }
 
-#main-toolbox > li i:before, form span.box i:before {
+#main-toolbox > li i:before, span.buttonbox i:before {
   color: white;
   margin: 0 4px -2px -3px;
   vertical-align: 0%;
@@ -334,4 +338,8 @@ input[type="file"] {
 }
 .ui-datepicker td {
   padding: 0;
+}
+
+.countdown.large {
+  font-size: 36px;
 }

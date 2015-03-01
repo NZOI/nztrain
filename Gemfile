@@ -48,6 +48,8 @@ gem 'country_select'
 gem 'geocoder'
 gem 'hive_geoip2'
 gem 'world-flags'
+gem 'jquery-final_countdown-rails'
+gem 'ruby-duration'
 
 gem 'pg'
 gem 'backup'

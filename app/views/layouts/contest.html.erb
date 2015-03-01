@@ -5,16 +5,37 @@
 <% content_for :content do %>
   <div style="height: 40px;">
     <div style="float: right;">
-      <% if policy(@contest).start? && @contest.is_running? && !@contest.has_competitor?(current_user.id) %>
-        <%= form_tag(start_contest_path(@contest), method: 'put', style: "text-align: center") do %>
-          <% if !@contest.startcode.nil? %>
-            <%= text_field_tag(:startcode, "", placeholder: "Startcode", style: 'width: 148px; height: 20px;') %><br>
+      <% if policy(@contest).startable? %>
+        <% if !@contest.started? %>
+          <span class="buttonbox gray">
+          <%= button_tag(type: :button, style: 'width: 160px; height: 50px;') do %>
+            <i class="icon-time"></i>Start<br>
+            <div class="countdown" data-now="<%= DateTime.now %>" data-countdown="<%= @contest.start_time %>" data-format="(in %-D day%!D %H:%M:%S)" style="font-weight: normal">
+              <%= Duration.new(@contest.start_time-Time.now).format("(in %tdu %H:%M:%S)") %>
+            </div>
           <% end %>
-          <span class="box green">
-            <%= button_tag(type: :submit, style: 'width: 160px; height: 40px;') do %>
-              <i class="icon-time"></i>Start
-            <% end %>
           </span>
+        <% elsif @contest.has_current_competitor?(current_user.id) %>
+          <p>Contest time remaining:</p>
+          <div class="countdown large" data-now="<%= DateTime.now %>" data-countdown="<%= @contest.get_relation(current_user.id).finish_at %>" data-format="%th:%M:%S" style="color: #008800; text-align: right;">
+            <%= Duration.new(@contest.get_relation(current_user.id).finish_at-Time.now).format("%th:%M:%S") %>
+        </div>
+        <% elsif policy(@contest).start? && @contest.is_running? && !@contest.has_competitor?(current_user.id) %>
+          <%= form_tag(start_contest_path(@contest), method: 'put', style: "text-align: center") do %>
+            <% if !@contest.startcode.nil? %>
+              <%= text_field_tag(:startcode, "", placeholder: "Startcode", style: 'width: 148px; height: 20px;') %><br>
+            <% end %>
+            <span class="buttonbox green">
+              <%= button_tag(type: :submit, style: 'width: 160px; height: 50px;') do %>
+                <i class="icon-time"></i>Start
+              <% end %>
+            </span>
+            <div class="countdown" data-now="<%= DateTime.now %>" data-countdown="<%= @contest.end_time %>" data-format="%-D day%!D %H:%M:%S remaining">
+              <%= Duration.new(@contest.end_time-Time.now).format("%tdu %H:%M:%S remaining") %>
+            </div>
+          <% end %>
+        <% else %>
+          <p>Contest has ended</p>
         <% end %>
       <% end %>
     </div>
@@ -29,18 +50,9 @@
   <% if @contest.is_running? %>
     <% end_time = @contest.has_current_competitor?(current_user) ? @contest.get_relation(current_user).finish_at : @contest.end_time %>
     <% if !end_time.nil? %>
-      <%
-        seconds = (end_time-Time.now)
-        hours, minutes, seconds = (seconds/3600).floor, (seconds%3600/60).floor, (seconds%60).floor
-      %>
-      <div id="countDownTimer" style="width: 50%"><!--<%= distance_of_time_in_words(DateTime.now,end_time) %>--><%= "#{hours} hours, #{minutes} minutes, #{seconds} seconds" %> remaining</div>
-      <script>
-        $(document).ready(function(){
-          var datesec = <%= end_time.to_i %>;
-          var date = new Date(Number(datesec) * 1000);
-          $("#countDownTimer").countdown({until: date, layout: '{sn} {sl}, {mn} {ml}, {hn} {hl}, and {dn} {dl} remaining'});
-        });
-      </script>
+      <div class="countdown" data-now="<%= DateTime.now %>" data-countdown="<%= @contest.end_time %>" data-format="Contest ends in %-D day%!D, %-H hour%!H, %-M minute%!M, %-S second%!S">
+        <%= Duration.new(@contest.end_time-Time.now).format("Contest ends in %tdu, %h %~h, %m %~m, %s %~s") %>
+      </div>
     <% end %>
   <% end %>
   <p>

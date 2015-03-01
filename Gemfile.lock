@@ -133,6 +133,10 @@ GEM
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     i18n (0.7.0)
+    iso8601 (0.8.5)
+    jquery-final_countdown-rails (2.0.4)
+      railties (>= 3.0, < 5.0)
+      thor (>= 0.14, < 2.0)
     jquery-historyjs (0.2.3)
       railties (>= 3.0)
       thor (>= 0.14)
@@ -234,6 +238,10 @@ GEM
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
+    ruby-duration (3.2.1)
+      activesupport (>= 3.0.0)
+      i18n
+      iso8601
     ruby-rc4 (0.1.5)
     ruby_parser (3.2.2)
       sexp_processor (~> 4.1)
@@ -335,6 +343,7 @@ DEPENDENCIES
   geocoder
   has_scope
   hive_geoip2
+  jquery-final_countdown-rails
   jquery-historyjs (= 0.2.3)
   jquery-rails (~> 3.0.4)
   jquery-ui-rails (= 4.0.5)
@@ -361,6 +370,7 @@ DEPENDENCIES
   rmagick (= 2.13.2)
   rqrcode
   rspec-rails (~> 2.0)
+  ruby-duration
   ruby_parser
   rubyzip (= 1.1.0)
   simple-navigation (= 3.11.0)
