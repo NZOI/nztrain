@@ -10,7 +10,7 @@
           <span class="buttonbox gray">
           <%= button_tag(type: :button, style: 'width: 160px; height: 50px;') do %>
             <i class="icon-time"></i>Start<br>
-            <div class="countdown" data-now="<%= DateTime.now %>" data-countdown="<%= @contest.start_time %>" data-format="(in %-D day%!D %H:%M:%S)" style="font-weight: normal">
+            <div class="countdown" data-now="<%= DateTime.now %>" data-countdown="<%= @contest.start_time %>" data-format="(in %-D day%!D %H:%M:%S)" style="font-weight: normal; font-size: small">
               <%= Duration.new(@contest.start_time-Time.now).format("(in %tdu %H:%M:%S)") %>
             </div>
           <% end %>
