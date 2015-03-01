@@ -5,7 +5,7 @@ class ProblemSet < ActiveRecord::Base
   has_many :problems, through: :problem_associations
   has_many :group_associations, class_name: GroupProblemSet, inverse_of: :problem_set, dependent: :destroy
   has_many :groups, through: :group_associations
-  has_many :group_members, -> { uniq }, :through => :groups, :source => :users
+  has_many :group_memberships, -> { uniq }, :through => :groups, :source => :memberships
 
   has_many :contests
   has_many :contest_relations, :through => :contests, :source => :contest_relations
