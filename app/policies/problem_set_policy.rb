@@ -20,7 +20,7 @@ class ProblemSetPolicy < ApplicationPolicy
 
   def show?
     return true if user.is_staff?
-    return user.contest_relations.where{|relation| (relation.started_at <= DateTime.now) & (relation.finish_at > DateTime.now) & relation.contest_id >> record.contest_ids }.exists? if user.competing?
+    return user.contest_relations.where{|relation| (relation.started_at <= DateTime.now) & (relation.finish_at > DateTime.now) & (relation.contest_id >> record.contest_ids) }.exists? if user.competing?
     user.owns(record) or record.groups.where(:id => 0).exists? or record.group_memberships.where{|membership|(membership.member_id == user.id)}.exists?
   end
 
