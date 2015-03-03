@@ -100,6 +100,9 @@ describe "Authorization" do
         @relation.destroy
       end
       it 'cannot read/update other problems' do
+        @contest_user.should_not_be_permitted_to [:show], [@private_set]
+        @contest_user.should_not_be_permitted_to [:show], [@group_set]
+        @contest_user.should_not_be_permitted_to [:show], [@everyone_set]
         @contest_user.should_not_be_permitted_to [:index, :show, :update], [@private_set, @group_set, @everyone_set]
       end
     end
