@@ -94,20 +94,13 @@ describe "Authorization" do
     context 'user in contest' do
       before(:all) do
         @relation = FactoryGirl.create(:contest_relation, :user_id => users(:user).id, :contest_id => @contest.id, :started_at => DateTime.now.advance(:hours => -1))
-        @contest_user = users(:user)
+        @contest_user = users(:user).reload # refresh .competing?
       end
       after(:all) do
         @relation.destroy
+        users(:user).reload
       end
       it 'cannot read/update other problems' do
-        @contest_user.should_not_be_permitted_to [:show], [@private_set]
-        expect(@contest_user.competing?).to be_true
-        expect(@contest_user.is_staff?).to be_false
-        expect(@group_set.contest_ids.empty?).to be_true
-        expect(@contest_user.owns(@group_set)).to be_false
-        expect(Pundit.policy(@contest_user, @group_set).show?).to be_false
-        @contest_user.should_not_be_permitted_to [:show], [@group_set]
-        @contest_user.should_not_be_permitted_to [:show], [@everyone_set]
         @contest_user.should_not_be_permitted_to [:index, :show, :update], [@private_set, @group_set, @everyone_set]
       end
     end
