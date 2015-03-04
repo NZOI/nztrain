@@ -8,7 +8,20 @@ class JudgeSubmissionWorker < ApplicationWorker
   default_queue :judge
 
   def self.judge(submission, queue: nil, delay: 0)
-    self.put(id: submission.id, queue: queue, delay: delay)
+    rejudging = !submission.weighted_score.nil?
+    priority = rejudging ? 1 : 0
+    user = submission.user
+    if user.competing? && Pundit.policy(user, submission).show?
+      if rejudging # re-judging, later submissions are more important
+        later = Submission.where(problem_id: submission.problem_id, user_id: submission.user_id).where{created_at > submission.created_at}.count
+        priority = 18 - [later*2,10].min
+      else # first time judging, earlier submissions get better priority (so other people get a chance to have their stuff judged)
+        prev = Submission.where(problem_id: submission.problem_id, user_id: submission.user_id).where{created_at < submission.created_at}.count
+
+        priority = 20 - [prev,10].min
+      end
+    end
+    self.put({id: submission.id}, queue: queue, delay: delay, priority: priority)
   end
 
   def self.perform(job)
