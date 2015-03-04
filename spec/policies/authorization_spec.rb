@@ -101,6 +101,11 @@ describe "Authorization" do
       end
       it 'cannot read/update other problems' do
         @contest_user.should_not_be_permitted_to [:show], [@private_set]
+        @contest_user.competing?.should_be true
+        @contest_user.is_staff?.should_be false
+        @group_set.contest_ids.empty?.should_be true
+        @contest_user.owns(@group_set).should_be false
+        Pundit.policy(@contest_user, @group_set).show?.should_be false
         @contest_user.should_not_be_permitted_to [:show], [@group_set]
         @contest_user.should_not_be_permitted_to [:show], [@everyone_set]
         @contest_user.should_not_be_permitted_to [:index, :show, :update], [@private_set, @group_set, @everyone_set]

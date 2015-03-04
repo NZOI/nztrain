@@ -21,7 +21,7 @@ class JudgeSubmissionWorker < ApplicationWorker
         priority = 20 - [prev,10].min
       end
     end
-    self.put(id: submission.id, queue: queue, delay: delay, priority: priority)
+    self.put({id: submission.id}, queue: queue, delay: delay, priority: priority)
   end
 
   def self.perform(job)
