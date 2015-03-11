@@ -283,7 +283,7 @@ class JudgeSubmissionWorker < ApplicationWorker
       if maximum_points == 0
         result['score'] = 0
       else
-        result['score'] = (preres.nil? || preres['evaluation'] == 1) ? (result['evaluation']*100).floor.to_i : 0
+        result['score'] = (preres.nil? || preres['evaluation'] != 0) ? (result['evaluation']*100).floor.to_i : 0
       end
       result['evaluation'] = result['evaluation'].to_f # potential rounding issue
     end
