@@ -95,7 +95,7 @@ class JudgeSubmissionWorker < ApplicationWorker
       unless problem.prerequisite_sets.empty?
         result['prerequisites'] = preres = grade_prerequisites(result['test_sets'])
         return result.merge('status' => preres['status'], 'points' => 0) if preres['status'] != 0
-        return result.merge('status' => 0, 'points' => 0) if preres['evaluation'] != 1
+        return result.merge('status' => 0, 'points' => 0) if preres['evaluation'] == 0 # partial marks in all test cases fulfill prerequisite requirements
       end
 
       # test cases

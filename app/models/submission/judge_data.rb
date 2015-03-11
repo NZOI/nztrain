@@ -293,7 +293,7 @@ class Submission
     end
 
     def prefail?
-      !@presets.empty? and prerequisites and (prerequisites['status'] != 0 or prerequisites['evaluation'].to_f != 1)
+      !@presets.empty? and prerequisites and (prerequisites['status'] != 0 or prerequisites['evaluation'].to_f == 0)
     end
 
     def prerequisites
