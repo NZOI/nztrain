@@ -147,6 +147,7 @@ class Contest < ActiveRecord::Base
   def build_contest_relation(user)
     contest_relations.find_or_initialize_by(user_id: user.id) do |contest_relation|
       contest_relation.country_code = user.country_code
+      contest_relation.school_id = user.school_id
     end
   end
 

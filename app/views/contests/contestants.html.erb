@@ -8,6 +8,7 @@
   <thead>
     <tr>
       <th style="min-width: 25%;"> User </th>
+      <th> School </th>
       <th> Started At </th>
       <th> Finish At </th>
       <th style="text-align: right"> Score </th>
@@ -25,6 +26,7 @@
             <%= "Deleted User ID #{contest_relation[:user_id]}" %>
           <% end %>
         </td>
+        <td><%= contest_relation.school.try(:name) %></td>
         <td><%= contest_relation.started_at %></td>
         <td><%= contest_relation.finish_at %></td>
         <td style="text-align: right"><%= contest_relation.score %></td>

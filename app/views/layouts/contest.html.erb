@@ -10,14 +10,14 @@
           <span class="buttonbox gray">
           <%= button_tag(type: :button, style: 'width: 160px; height: 50px;') do %>
             <i class="icon-time"></i>Start<br>
-            <div class="countdown" data-now="<%= DateTime.now %>" data-countdown="<%= @contest.start_time %>" data-format="(in %-D day%!D %H:%M:%S)" style="font-weight: normal">
+            <div class="countdown" data-duration="<%= @contest.start_time - DateTime.now %>" data-format="(in %-D day%!D %H:%M:%S)" style="font-weight: normal">
               <%= Duration.new(@contest.start_time-Time.now).format("(in %tdu %H:%M:%S)") %>
             </div>
           <% end %>
           </span>
         <% elsif @contest.has_current_competitor?(current_user.id) %>
           <p>Contest time remaining:</p>
-          <div class="countdown large" data-now="<%= DateTime.now %>" data-countdown="<%= @contest.get_relation(current_user.id).finish_at %>" data-format="%th:%M:%S" style="color: #008800; text-align: right;">
+          <div class="countdown large" data-duration="<%= @contest.get_relation(current_user.id).finish_at - DateTime.now %>" data-format="%th:%M:%S" style="color: #008800; text-align: right;">
             <%= Duration.new(@contest.get_relation(current_user.id).finish_at-Time.now).format("%th:%M:%S") %>
         </div>
         <% elsif policy(@contest).start? && @contest.is_running? && !@contest.has_competitor?(current_user.id) %>
@@ -30,7 +30,7 @@
                 <i class="icon-time"></i>Start
               <% end %>
             </span>
-            <div class="countdown" data-now="<%= DateTime.now %>" data-countdown="<%= @contest.end_time %>" data-format="%-D day%!D %H:%M:%S remaining">
+            <div class="countdown" data-duration="<%= @contest.end_time - DateTime.now %>" data-format="%-D day%!D %H:%M:%S remaining">
               <%= Duration.new(@contest.end_time-Time.now).format("%tdu %H:%M:%S remaining") %>
             </div>
           <% end %>
@@ -50,7 +50,7 @@
   <% if @contest.is_running? %>
     <% end_time = @contest.has_current_competitor?(current_user) ? @contest.get_relation(current_user).finish_at : @contest.end_time %>
     <% if !end_time.nil? %>
-      <div class="countdown" data-now="<%= DateTime.now %>" data-countdown="<%= @contest.end_time %>" data-format="Contest ends in %-D day%!D, %-H hour%!H, %-M minute%!M, %-S second%!S">
+      <div class="countdown" data-duration="<%= @contest.end_time - DateTime.now %>" data-format="Contest ends in %-D day%!D, %-H hour%!H, %-M minute%!M, %-S second%!S">
         <%= Duration.new(@contest.end_time-Time.now).format("Contest ends in %tdu, %h %~h, %m %~m, %s %~s") %>
       </div>
     <% end %>

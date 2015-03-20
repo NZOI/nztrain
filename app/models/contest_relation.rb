@@ -4,6 +4,7 @@ class ContestRelation < ActiveRecord::Base
   belongs_to :user
   belongs_to :contest
   has_many :contest_scores, dependent: :destroy
+  belongs_to :school
 
   scope :active, -> { where{(started_at <= DateTime.now) & (finish_at > DateTime.now)} }
   scope :user, ->(u_id) { where(:user_id => u_id) }

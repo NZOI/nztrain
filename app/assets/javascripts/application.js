@@ -141,11 +141,14 @@ $(document).ready(function() {
   $(".jsnodisplay").hide().prop('disabled', true);
 
   $(".countdown").each(function() {
-    var finalDate = $(this).data('countdown'), format = $(this).data('format');
-    var now = $(this).data('now');
-    if (now == undefined) var adjdate = finalDate;
-    else var adjdate = new Date(new Date().getTime() + (new Date(finalDate) - new Date(now)));
-    $(this).countdown(adjdate, function(event) {
+    var finalDate, format = $(this).data('format');
+    if ($(this).data('duration') != undefined) {
+      finalDate = (new Date().valueOf() + parseFloat($(this).data('duration'))*1000);
+    }
+    else {
+      finalDate = $(this).data('countdown'); 
+    }
+    $(this).countdown(finalDate, function(event) {
       if (format.substring(0,3) == "%th") {
         var th = event.offset.totalDays*24 + event.offset.hours;
         $(this).html(th + event.strftime(format.substring(3)));
