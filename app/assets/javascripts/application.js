@@ -143,7 +143,7 @@ $(document).ready(function() {
   $(".countdown").each(function() {
     var finalDate, format = $(this).data('format');
     if ($(this).data('duration') != undefined) {
-      finalDate = (new Date().valueOf() + parseFloat($(this).data('duration'))*1000);
+      finalDate = (new Date().valueOf() + Math.floor(parseFloat($(this).data('duration'))*1000));
     }
     else {
       finalDate = $(this).data('countdown'); 
