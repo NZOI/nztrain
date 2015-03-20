@@ -214,7 +214,9 @@ class ContestsController < ApplicationController
     end
 
     respond_to do |format|
-      if @contest.register(user)
+      if user.nil?
+        format.html { redirect_to(redirect_path, :alert => "No such user exists.") }
+      elsif @contest.register(user)
         format.html { redirect_to(redirect_path, :notice => "Registered #{params[:username]} for contest.") }
       else
         format.html { redirect_to(redirect_path, :alert => @contest.errors.full_messages_for(:contest).join(' ')) }
