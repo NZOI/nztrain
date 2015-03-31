@@ -1,0 +1,108 @@
+#groups thead th {
+  background: #A1CCA1;
+  color: white;
+  padding: 10px;
+  border-bottom: 3px solid #232323;
+  font-size: 110%;
+}
+
+.topics thead th {
+  background: #A1CCA1;
+  color: white;
+  padding: 5px;
+  border-bottom: 3px solid #232323;
+  font-size: 110%;
+}
+
+.topic td.byline {
+  padding: 10px;
+}
+
+.topic .subject {
+  font-size: 20px;
+}
+
+.new_topic textarea {
+  width: 50%;
+  min-height: 250px;
+}
+
+#topic #menu {
+  margin-bottom: 10px;
+}
+
+#topic .moderation {
+  background: #FFED9E;
+}
+
+.post {
+  border: 1px solid #dedede;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  min-height: 70px;
+
+  .alert {
+    margin: 10px;
+  }
+
+  .contents {
+    border-left: 1px solid #ddd;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    min-height: inherit;
+
+    time {
+      font-size: 75%;
+      font-style: italic;
+      display: block;
+    }
+  }
+
+  .in-reply-to {
+    font-size: 85%;
+  }
+}
+
+.new_post textarea {
+  width: 50%;
+  min-height: 250px;
+}
+
+.forum td {
+  border-bottom: solid #888888 1px;
+  padding-top: 10px;
+}
+
+.forum .title {
+  font-size: 25px;
+  font-family: 'Ubuntu', Arial, sans-serif;
+}
+
+.forum #description {
+  display: block;
+  margin: 10px 0px;
+  padding: 5px;
+  background: #efefef;
+}
+
+.forums thead th {
+  background: #A1CCA1;
+  color: white;
+  padding: 10px;
+  border-bottom: 3px solid #232323;
+  font-size: 110%;
+}
+
+.forums .last_post {
+  font-style: italic;
+
+  time {
+    color: #aaa;
+    font-size: 75%;
+  }
+}
+
+#forum #forum_topic_links {
+  margin-bottom: 10px;
+}
+

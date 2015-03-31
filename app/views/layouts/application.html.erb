@@ -45,35 +45,35 @@
         <tr>
           <td style="width:100%">
             <ul<%= ' id=left-menu' if user_signed_in? %> class="sf-menu nav-theme">
-              <li><a href="<%= root_path %>">dashboard</a></li>
+              <li><a href="<%= main_app.root_path %>">dashboard</a></li>
               <% if user_signed_in? %>
                 <li><a href="#" onClick="return false;">contests</a>
                   <ul>
-                    <li><a href="<%= active_contests_path %>">active</a></li>
-                    <li><a href="<%= current_contests_path %>">current</a></li>
-                    <li><a href="<%= upcoming_contests_path %>">upcoming</a></li>
-                    <li><a href="<%= past_contests_path %>">past</a></li>
+                    <li><a href="<%= main_app.active_contests_path %>">active</a></li>
+                    <li><a href="<%= main_app.current_contests_path %>">current</a></li>
+                    <li><a href="<%= main_app.upcoming_contests_path %>">upcoming</a></li>
+                    <li><a href="<%= main_app.past_contests_path %>">past</a></li>
                   </ul>
                 </li>
-                <li><a href="<%= browse_groups_path %>">groups</a>
+                <li><a href="<%= main_app.browse_groups_path %>">groups</a>
                 </li>
                 <li><a href="#" onClick="return false;">my stuff</a>
                   <ul>
-                    <li><a href="<%= my_submissions_path %>">submissions</a></li>
+                    <li><a href="<%= main_app.my_submissions_path %>">submissions</a></li>
                     <% if policy(Problem.new(:owner_id => current_user.id)).manage? %>
-                      <li><a href="<%= my_problems_path %>">problems</a></li>
+                      <li><a href="<%= main_app.my_problems_path %>">problems</a></li>
                     <% end %>
                     <% if policy(ProblemSet.new(:owner_id => current_user.id)).manage? %>
-                      <li><a href="<%= my_problem_sets_path %>">problem sets</a></li>
+                      <li><a href="<%= main_app.my_problem_sets_path %>">problem sets</a></li>
                     <% end %>
                     <% if policy(Contest.new(:owner_id => current_user.id)).manage? %>
-                      <li><a href="<%= my_contests_path %>">contests</a></li>
+                      <li><a href="<%= main_app.my_contests_path %>">contests</a></li>
                     <% end %>
                     <% if policy(Group.new(:owner_id => current_user.id)).manage? %>
-                      <li><a href="<%= my_groups_path %>">groups</a></li>
+                      <li><a href="<%= main_app.my_groups_path %>">groups</a></li>
                     <% end %>
                     <% if policy(FileAttachment.new(:owner_id => current_user.id)).manage? %>
-                      <li><a href="<%= my_file_attachments_path %>">file attachments</a></li>
+                      <li><a href="<%= main_app.my_file_attachments_path %>">file attachments</a></li>
                     <% end %>
                   </ul>
                 </li>
@@ -81,39 +81,44 @@
                   <li><a href="#" onClick="return false;">manage</a>
                     <ul>
                       <% if policy(Submission.new).index? %>
-                        <li><a href="<%= submissions_path %>">submissions</a></li>
+                        <li><a href="<%= main_app.submissions_path %>">submissions</a></li>
                       <% end %>
                       <% if policy(Problem.new).manage? %>
-                        <li><a href="<%= problems_path %>">problems</a></li>
+                        <li><a href="<%= main_app.problems_path %>">problems</a></li>
                       <% end %>
                       <% if policy(ProblemSet.new).manage? %>
-                        <li><a href="<%= problem_sets_path %>">problem sets</a></li>
+                        <li><a href="<%= main_app.problem_sets_path %>">problem sets</a></li>
                       <% end %>
                       <% if policy(Contest.new).manage? %>
-                        <li><a href="<%= contests_path %>">contests</a></li>
+                        <li><a href="<%= main_app.contests_path %>">contests</a></li>
                       <% end %>
                       <% if policy(Group.new).manage? %>
-                        <li><a href="<%= groups_path %>">groups</a></li>
+                        <li><a href="<%= main_app.groups_path %>">groups</a></li>
                       <% end %>
                       <% if policy(Evaluator.new).index? %>
-                        <li><a href="<%= evaluators_path %>">evaluators</a></li>
+                        <li><a href="<%= main_app.evaluators_path %>">evaluators</a></li>
                       <% end %>
                       <% if policy(FileAttachment.new).manage? %>
-                        <li><a href="<%= file_attachments_path %>">file attachments</a></li>
+                        <li><a href="<%= main_app.file_attachments_path %>">file attachments</a></li>
                       <% end %>
                       <% if policy(Product).index? %>
-                        <li><a href="<%= products_path %>">products</a></li>
+                        <li><a href="<%= main_app.products_path %>">products</a></li>
                       <% end %>
                       <% if policy(Item).index? %>
-                        <li><a href="<%= items_path %>">library</a></li>
+                        <li><a href="<%= main_app.items_path %>">library</a></li>
                       <% end %>
                     </ul>
                   </li>
                 <% end %>
-                <li><a href="<%= users_path %>">users</a>
+                <li><a href="#" onClick="return false;">community</a>
                   <ul>
-                    <li><a href="<%= newest_users_path %>">newest</a></li>
-                    <% if policy(User.new).inspect? %><li><a href="<%= online_users_path %>">online</a></li><% end %>
+                    <li><a href="<%= main_app.users_path %>">users</a>
+                      <ul>
+                        <li><a href="<%= main_app.newest_users_path %>">newest</a></li>
+                        <% if policy(User.new).inspect? %><li><a href="<%= main_app.online_users_path %>">online</a></li><% end %>
+                      </ul>
+                    </li>
+                    <li><a href="<%= forem.root_path %>">forum</a></li>
                   </ul>
                 </li>
                 <% if current_user && current_user.is_admin? %>
@@ -122,14 +127,14 @@
                       <% if policy(NZIC::Info).index? %>
                         <li><a>NZIC</a>
                           <ul>
-                            <li><a href="<%= nzic_infos_path %>">info pages</a></li>
-                            <li><a href="<%= nzic_menu_items_path %>">menu</a></li>
+                            <li><a href="<%= main_app.nzic_infos_path %>">info pages</a></li>
+                            <li><a href="<%= main_app.nzic_menu_items_path %>">menu</a></li>
                           </ul>
                         </li>
                       <% end %>
-                      <% if policy(Role).index? %><li><a href="<%= roles_path %>">roles</a></li><% end %>
-                      <% if policy(Setting).index? %><li><a href="<%= settings_path %>">settings</a></li><% end %>
-                      <li><a href="<%= qless_path %>">qless</a></li>
+                      <% if policy(Role).index? %><li><a href="<%= main_app.roles_path %>">roles</a></li><% end %>
+                      <% if policy(Setting).index? %><li><a href="<%= main_app.settings_path %>">settings</a></li><% end %>
+                      <li><a href="<%= main_app.qless_path %>">qless</a></li>
                     </ul>
                   </li>
                 <% end %>
@@ -141,24 +146,24 @@
             <ul<%= ' id=right-menu' if user_signed_in? %> class="sf-menu nav-theme">
               <li<%= raw ' class="masknav"' if in_su? %>>
               <% if user_signed_in? %>
-                <span id="current_user_username"><a href="<%= user_path(current_user) %>"><%= current_user.username %></a></span>
+                <span id="current_user_username"><a href="<%= main_app.user_path(current_user) %>"><%= current_user.username %></a></span>
                 <ul>
                   <table class="invis" style="min-width: 250px">
                     <tr>
                       <td style="padding: 3px"><img src="<%= current_user.avatar.small.url %>" style="background: #a1cca1; padding: 3px;"></td>
                       <td style="padding: 3px; padding-left: 0; width: 100%">
                         <% if in_su? %>
-                          <li><%= link_to "exit su", suexit_users_path, :method => 'post' %></li>
+                          <li><%= link_to "exit su", main_app.suexit_users_path, :method => 'post' %></li>
                         <% end %>
                         <li><a href="/accounts/settings/edit">edit profile</a></li>
-                        <li><a href="<%= accounts_requests_path %>">requests</a></li>
-                        <li><%= link_to "sign out", destroy_user_session_path, :method => :delete, :id => 'sign_out' %></li>
+                        <li><a href="<%= main_app.accounts_requests_path %>">requests</a></li>
+                        <li><%= link_to "sign out", main_app.destroy_user_session_path, :method => :delete, :id => 'sign_out' %></li>
                       </td>
                     </tr>
                   </table>
                 </ul>
               <% else %>
-                <%= link_to "sign in", new_user_session_path, :id => 'sign_in' %>
+                <%= link_to "sign in", main_app.new_user_session_path, :id => 'sign_in' %>
               <% end %>
               </li>
               <li style="display: none;"><%# patch superfish v1.6 bug %></li>

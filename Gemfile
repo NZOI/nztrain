@@ -18,6 +18,9 @@ gem 'jquery-ui-rails', '4.0.5'
 gem 'jquery-historyjs', '0.2.3'
 gem 'superfish-rails', '~> 1.6.0'
 
+gem 'forem', github: 'radar/forem', branch: 'rails4'
+gem 'forem-redcarpet', github: 'NZOI/forem-redcarpet'
+
 gem "nokogiri", '~> 1.6.0'
 gem 'redcarpet'
 gem 'rmagick', '2.13.2'
@@ -98,9 +101,9 @@ end
 # Gems used only for assets and not required  
 # in production environments by default.  
 #group :assets do  
-#gem 'sass'
-#gem 'sass-rails'
-#gem 'coffee-rails'
+gem 'sass'
+gem 'sass-rails'
+gem 'coffee-rails'
 gem 'uglifier', '>=1.0.3'
 gem 'libv8', '~> 3.3'
 gem 'therubyracer', '~> 0.11' # required for the execjs gem (dependency)

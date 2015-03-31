@@ -49,6 +49,50 @@ class User < ActiveRecord::Base
     self.where("email = ?", conditions[:email]).limit(1).first
   end
 
+  def forem_name
+    username
+  end
+
+  def forem_admin?
+    is_admin? || self.has_role?(:forum_admin)
+  end
+
+  def forem_avatar
+    avatar.small.url
+  end
+
+  def can_read_forem_category?(category)
+    true
+  end
+
+  def can_read_forem_forums?
+    true
+  end
+
+  def can_read_forem_forum?(forum)
+    true
+  end
+
+  def can_create_forem_topics?(forum)
+    if forum.category.name == "Announcements"
+      forem_admin?
+    else
+      persisted?
+    end
+  end
+
+  def can_reply_to_forem_topic?(topic)
+    persisted?
+  end
+
+  def can_edit_forem_posts?(forum)
+    persisted?
+  end
+
+  def can_destroy_forem_posts?(forum)
+    persisted?
+  end
+
   def get_solved
     solved = []
     @solved_problems = Problem.select("problems.*, (SELECT MAX(score) FROM submissions WHERE problem_id = problems.id AND user_id = #{self.id}) as score")

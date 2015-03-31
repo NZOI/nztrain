@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150206053259) do
+ActiveRecord::Schema.define(version: 20150330223567) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -140,6 +140,103 @@ ActiveRecord::Schema.define(version: 20150206053259) do
 
   add_index "filelinks", ["file_attachment_id"], name: "index_filelinks_on_file_attachment_id", using: :btree
   add_index "filelinks", ["root_id", "filepath"], name: "index_filelinks_on_root_id_and_filepath", using: :btree
+
+  create_table "forem_categories", force: true do |t|
+    t.string   "name",                   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "slug"
+    t.integer  "position",   default: 0
+  end
+
+  add_index "forem_categories", ["slug"], name: "index_forem_categories_on_slug", unique: true, using: :btree
+
+  create_table "forem_forums", force: true do |t|
+    t.string  "name"
+    t.text    "description"
+    t.integer "category_id"
+    t.integer "views_count", default: 0
+    t.string  "slug"
+    t.integer "position",    default: 0
+  end
+
+  add_index "forem_forums", ["slug"], name: "index_forem_forums_on_slug", unique: true, using: :btree
+
+  create_table "forem_groups", force: true do |t|
+    t.string "name"
+  end
+
+  add_index "forem_groups", ["name"], name: "index_forem_groups_on_name", using: :btree
+
+  create_table "forem_memberships", force: true do |t|
+    t.integer "group_id"
+    t.integer "member_id"
+  end
+
+  add_index "forem_memberships", ["group_id"], name: "index_forem_memberships_on_group_id", using: :btree
+
+  create_table "forem_moderator_groups", force: true do |t|
+    t.integer "forum_id"
+    t.integer "group_id"
+  end
+
+  add_index "forem_moderator_groups", ["forum_id"], name: "index_forem_moderator_groups_on_forum_id", using: :btree
+
+  create_table "forem_posts", force: true do |t|
+    t.integer  "topic_id"
+    t.text     "text"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "reply_to_id"
+    t.string   "state",       default: "pending_review"
+    t.boolean  "notified",    default: false
+  end
+
+  add_index "forem_posts", ["reply_to_id"], name: "index_forem_posts_on_reply_to_id", using: :btree
+  add_index "forem_posts", ["state"], name: "index_forem_posts_on_state", using: :btree
+  add_index "forem_posts", ["topic_id"], name: "index_forem_posts_on_topic_id", using: :btree
+  add_index "forem_posts", ["user_id"], name: "index_forem_posts_on_user_id", using: :btree
+
+  create_table "forem_subscriptions", force: true do |t|
+    t.integer "subscriber_id"
+    t.integer "topic_id"
+  end
+
+  create_table "forem_topics", force: true do |t|
+    t.integer  "forum_id"
+    t.integer  "user_id"
+    t.string   "subject"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "locked",       default: false,            null: false
+    t.boolean  "pinned",       default: false
+    t.boolean  "hidden",       default: false
+    t.datetime "last_post_at"
+    t.string   "state",        default: "pending_review"
+    t.integer  "views_count",  default: 0
+    t.string   "slug"
+  end
+
+  add_index "forem_topics", ["forum_id"], name: "index_forem_topics_on_forum_id", using: :btree
+  add_index "forem_topics", ["slug"], name: "index_forem_topics_on_slug", unique: true, using: :btree
+  add_index "forem_topics", ["state"], name: "index_forem_topics_on_state", using: :btree
+  add_index "forem_topics", ["user_id"], name: "index_forem_topics_on_user_id", using: :btree
+
+  create_table "forem_views", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "viewable_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "count",             default: 0
+    t.string   "viewable_type"
+    t.datetime "current_viewed_at"
+    t.datetime "past_viewed_at"
+  end
+
+  add_index "forem_views", ["updated_at"], name: "index_forem_views_on_updated_at", using: :btree
+  add_index "forem_views", ["user_id"], name: "index_forem_views_on_user_id", using: :btree
+  add_index "forem_views", ["viewable_id"], name: "index_forem_views_on_viewable_id", using: :btree
 
   create_table "group_contests", force: true do |t|
     t.integer "group_id"
@@ -403,8 +500,8 @@ ActiveRecord::Schema.define(version: 20150206053259) do
   add_index "user_problem_relations", ["user_id", "problem_id"], name: "index_user_problem_relations_on_user_id_and_problem_id", unique: true, using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "email",                              default: "",    null: false
-    t.string   "encrypted_password",     limit: 128, default: "",    null: false
+    t.string   "email",                              default: "",               null: false
+    t.string   "encrypted_password",     limit: 128, default: "",               null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -417,8 +514,8 @@ ActiveRecord::Schema.define(version: 20150206053259) do
     t.datetime "updated_at"
     t.integer  "brownie_points",                     default: 0
     t.string   "name"
-    t.string   "username",                                           null: false
-    t.boolean  "can_change_username",                default: false, null: false
+    t.string   "username",                                                      null: false
+    t.boolean  "can_change_username",                default: false,            null: false
     t.string   "avatar"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
@@ -428,6 +525,9 @@ ActiveRecord::Schema.define(version: 20150206053259) do
     t.integer  "school_id"
     t.string   "country_code",           limit: 3
     t.date     "school_graduation"
+    t.boolean  "forem_admin",                        default: false
+    t.string   "forem_state",                        default: "pending_review"
+    t.boolean  "forem_auto_subscribe",               default: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
