@@ -7,7 +7,7 @@
 ### VARIABLES ###
 PRE_PACK="libc6 libpcre3 libpcre3-dev libpcrecpp0 libssl0.9.8 libssl-dev zlib1g zlib1g-dev lsb-base" # nginx dependencies
 
-VER="1.3.14"
+VER="1.9.3"
 
 INSTALL_DIR="/usr/local/nginx"
 PROG_NAME="nginx"
@@ -20,10 +20,10 @@ CONFIGURE_OPTIONS="--prefix=$INSTALL_DIR-$VER
                    --with-http_gzip_static_module
                    --with-http_mp4_module"
 
-# add passenger as a module if it is installed on the system
-if [ `which passenger-config` ] ; then
-  CONFIGURE_OPTIONS="$CONFIGURE_OPTIONS --add-module=`passenger-config --root`/ext/nginx"
-fi
+## add passenger as a module if it is installed on the system
+#if [ `which passenger-config` ] ; then
+#  CONFIGURE_OPTIONS="$CONFIGURE_OPTIONS --add-module=`passenger-config --root`/ext/nginx"
+#fi
 
 TEMP_DIR="/tmp/nginx-src"
 RAILS_ROOT=`dirname $0`/../..
