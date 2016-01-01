@@ -6,7 +6,7 @@ Items:
   </thead>
   <tbody>
     <% @items.each do |item| %>
-      <tr><td><%= item.id %></td><td><%= item.product.name %></td><td><%= item.status ? Item::STATUS[item.status].to_s.titleize : "" %></td><td><%= item.holder ? item.holder.name : "None" %></td><td><%= item.organisation.name %></td><td><%= link_to "Show", item %></td></tr>
+      <tr><td><%= item.id %></td><td><%= item.product.name %></td><td><%= item.status ? Item::STATUS[item.status].to_s.titleize : "" %></td><td><%= item.holder ? (link_to item.holder.name, item.holder) : "None" %></td><td><%= item.organisation.name %></td><td><%= link_to "Show", item %></td></tr>
     <% end %>
   </tbody>
 </table>

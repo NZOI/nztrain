@@ -27,7 +27,7 @@ Item History:
   </thead>
   <tbody>
     <% @item.item_histories.each do |item_history| %>
-      <tr><td><%= item_history.active %></td><td><%= ItemHistory::ACTION[item_history.action] %></td><td><%= item_history.holder.name %></td><td><%= item_history.acted_at %></td></tr>
+      <tr><td><%= item_history.active %></td><td><%= ItemHistory::ACTION[item_history.action] %></td><td><%= link_to item_history.holder.name, item_history.holder %></td><td><%= item_history.acted_at %></td></tr>
     <% end %>
   </tbody>
 </table>
