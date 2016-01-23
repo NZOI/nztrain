@@ -47,9 +47,13 @@ class ContestRelation < ActiveRecord::Base
     self.contest_without_update=(contest)
     update_finish_at
   end
+  def extra_time=(extra_time)
+    self[:extra_time]=(extra_time)
+    update_finish_at
+  end
   alias_method_chain :contest=, :update
   def update_finish_at
-    self.finish_at = [contest.end_time,started_at.advance(:hours => contest.duration.to_f)].min unless contest.nil? or started_at.nil?
+    self.finish_at = [contest.end_time,started_at.advance(:hours => contest.duration.to_f)].min.advance(:seconds => extra_time) unless contest.nil? or started_at.nil?
   end
 
   def update_score_and_save
@@ -59,5 +63,16 @@ class ContestRelation < ActiveRecord::Base
       self.time_taken = lastsubmit ? lastsubmit.in_time_zone - self.started_at : 0
       self.save
     end
+  end
+
+  def recalculate_contest_scores_and_save
+    contest.problem_set.problems.each do |problem|
+      ContestScore.find_or_initialize_by_contest_relation_id_and_problem_id(self.id, problem.id).recalculate_and_save
+    end
+    self.reload
+  end
+
+  after_save do
+    recalculate_contest_scores_and_save if contest.finalized_at.nil? && extra_time_changed?
   end
 end
