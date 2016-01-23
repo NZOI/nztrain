@@ -88,7 +88,13 @@
         </tr>
         <% set_data.test_cases.to_a.shuffle(random: Random.new(Random.new(@submission.id+id).rand(@db_settings["submissions/shuffle"].to_i*id))).each_with_index do |(case_id, case_data), j| %>
           <tr class="test_case status_<%= case_data.status %>">
-            <td class="test_name">Case #<%= sprintf("%d.%#{set_data.test_cases.size.to_s.size}d",i+1,j+1) %></td>
+            <td class="test_name">
+              Case #<%= sprintf("%d.%#{set_data.test_cases.size.to_s.size}d",i+1,j+1) %>
+              <% if policy(@submission).inspect? %>
+                <% test_case = @submission.problem.test_cases.find_by_id(case_id) %>
+                <%= " - \"#{test_case.name}\"" %>
+              <% end %>
+            </td>
             <td class="test_time"><%= case_data.print_time %></td>
             <td class="test_memory"><%= case_data.meta.memory %></td>
             <td class="judgement"><%= case_data.judgement %></td>
@@ -108,7 +114,6 @@
                     <% end %>
                   </tr>
                 </table>
-                <% test_case = @submission.problem.test_cases.find(case_id) %>
                 <table class="inspect_output">
                   <tr>
                     <th>Actual Output</th>

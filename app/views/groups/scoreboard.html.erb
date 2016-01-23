@@ -20,7 +20,7 @@
   <tbody>
     <% @members.each do |member| %>
       <tr>
-        <td><%= member.username %></td>
+        <td><%= link_to handle(member), member %></td>
         <% @problem_set_associations.each do |association|%>
           <% association.problem_set.problem_associations.each do |problem_association| %>
             <% problem = problem_association.problem %>
