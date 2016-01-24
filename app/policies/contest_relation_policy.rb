@@ -12,7 +12,14 @@ class ContestRelationPolicy < ApplicationPolicy
 
   def destroy?
     return true if user.is_superadmin?
-    record.started_at.nil? && policy(record.contest).manage?
+    !record.started? && (policy(record.contest).manage? || supervise?)
+  end
+
+  def supervise?
+    record.contest.contest_supervisors.where(user_id: user.id).each do |contest_supervisor|
+      return true if contest_supervisor.can_supervise?(record)
+    end
+    false
   end
 end
 

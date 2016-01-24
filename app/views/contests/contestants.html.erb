@@ -1,40 +1,133 @@
-<%= form_tag(register_contest_path(@contest)) do %>
-  <strong>Registration:</strong>
-  <%= label_tag :username %> <%= text_field_tag :username %>
-  <%= submit_tag "Register" %>
+<% if policy(@contest).manage? %>
+  <%= form_tag(register_contest_path(@contest)) do %>
+    <strong>Registration:</strong>
+    <%= label_tag :username %> <%= text_field_tag :username %>
+    <%= submit_tag "Register" %>
+  <% end %>
 <% end %>
-
-<table class="main_table" >
-  <thead>
-    <tr>
-      <th style="min-width: 25%;"> User </th>
-      <th> School </th>
-      <th> Started At </th>
-      <th> Finish At </th>
-      <th style="text-align: right"> Score </th>
-      <th> Time </th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @contest_relations.each do |contest_relation| %>
-      <tr>
-        <td>
-          <% if contest_relation.user %>
-            <%= link_to handle(contest_relation.user), contest_relation.user %>
-          <% else %>
-            <%= "Deleted User ID #{contest_relation[:user_id]}" %>
+<% if policy(@contest).supervise? %>
+  <% @contest.contest_supervisors.where(user_id: current_user.id).each do |contest_supervisor| %>
+    <h3><%= contest_supervisor.site_name %></h3>
+    <h4>Registered contestants</h4>
+    <%= form_tag(supervise_contest_path(@contest)) do %>
+      <%= hidden_field_tag "contest_supervisor", contest_supervisor.id %>
+      <table class="main_table" >
+        <thead>
+          <tr>
+            <th>Start/End</th>
+            <th style="min-width: 10%;"> Username </th>
+            <th style="min-width: 15%;"> Name </th>
+            <th>Year Level</th>
+            <th>School Graduation</th>
+            <th>Started At</th>
+            <th>Finish At</th>
+            <th>Extra Time</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% contest_supervisor.contest_relations.order(finish_at: :desc, started_at: :desc).each do |contest_relation| %>
+            <tr>
+              <td><%= check_box_tag("selected[]", contest_relation.id, false, disabled: contest_relation.ended?) %></td>
+              <td><%= contest_relation.user.username %></td>
+              <td><%= contest_relation.user.name %></td>
+              <td><%= contest_relation.school_year %></td>
+              <td><%= contest_relation.user.school_graduation %></td>
+              <td><%= contest_relation.started_at %></td>
+              <td><%= contest_relation.finish_at %></td>
+              <td><%= text_field(:extra_time, contest_relation.id, value: contest_relation.extra_time, size: 2)  %> s</td>
+              <td>
+                <%= link_to 'Delete', contest_relation, :data => { :confirm => 'Are you sure?' }, :method => :delete if policy(contest_relation).destroy? %>
+              </td>
+            </tr>
           <% end %>
-        </td>
-        <td><%= contest_relation.school.try(:name) %></td>
-        <td><%= contest_relation.started_at %></td>
-        <td><%= contest_relation.finish_at %></td>
-        <td style="text-align: right"><%= contest_relation.score %></td>
-        <td> <%= format("%d:%02d:%02d",contest_relation.time_taken.to_i/3600,contest_relation.time_taken.to_i/60%60,contest_relation.time_taken.to_i%60) %> </td>
-        <td>
-          <%= link_to 'Delete', contest_relation, :data => { :confirm => 'Are you sure?' }, :method => :delete if policy(contest_relation).destroy? %>
-        </td>
-      </tr>
+          <tr>
+            <td colspan="7">
+              <%= submit_tag "Start Contest", name: :start_contest %>
+              <%= submit_tag "End Contest", name: :end_contest %>
+            </td>
+            <td colspan="2">
+              <%= submit_tag "Update Extra Time", name: :update %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     <% end %>
-  </tbody>
-</table>
+    <h4>Potential contestants</h4>
+    <table class="main_table" >
+      <thead>
+        <tr>
+          <th style="min-width: 10%;"> Username </th>
+          <th style="min-width: 15%;"> Name </th>
+          <th> (Estimated) Year Level </th>
+          <th> School Graduation Date </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% contest_supervisor.potential_contestants.order(school_graduation: :asc).each do |user| %>
+          <tr>
+            <td><%= user.username %></td>
+            <td><%= user.name %></td>
+            <td><%= user.estimated_year_level(@contest.end_time) %></td>
+            <td><%= user.school_graduation %></td>
+            <td>
+              <% if contest_supervisor.is_user_eligible?(user) %>
+                <%= form_tag(register_contest_path(@contest)) do %>
+                  <%= hidden_field_tag :username, user.username %>
+                  <%= hidden_field_tag :contest_supervisor_id, contest_supervisor.id %>
+                  <%= submit_tag "Register" %>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+  <p>Please make sure that students filled out the correct fields in their profile before registering them for the contest:</p>
+  <ul>
+    <li>They have put the correct school in their profile</li>
+    <li>They have filled out their full (first and last) name</li>
+    <li>They have correctly filled out their school graduation date (so that their year level appears correctly)</li>
+  </ul>
+<% end %>
+<% if policy(@contest).manage? %>
+    <h3>Manage Contestants</h3>
+  <table class="main_table" >
+    <thead>
+      <tr>
+        <th style="min-width: 25%;"> User </th>
+        <th> School </th>
+        <th> School Year </th>
+        <th> Started At </th>
+        <th> Finish At </th>
+        <th style="text-align: right"> Score </th>
+        <th> Time </th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @contest_relations.each do |contest_relation| %>
+        <tr>
+          <td>
+            <% if contest_relation.user %>
+              <%= link_to handle(contest_relation.user), contest_relation.user %>
+            <% else %>
+              <%= "Deleted User ID #{contest_relation[:user_id]}" %>
+            <% end %>
+          </td>
+          <td><%= contest_relation.school.try(:name) %></td>
+          <td><%= contest_relation.school_year %></td>
+          <td><%= contest_relation.started_at %></td>
+          <td><%= contest_relation.finish_at %></td>
+          <td style="text-align: right"><%= contest_relation.score %></td>
+          <td> <%= format("%d:%02d:%02d",contest_relation.time_taken.to_i/3600,contest_relation.time_taken.to_i/60%60,contest_relation.time_taken.to_i%60) %> </td>
+          <td>
+            <%= link_to 'Delete', contest_relation, :data => { :confirm => 'Are you sure?' }, :method => :delete if policy(contest_relation).destroy? %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

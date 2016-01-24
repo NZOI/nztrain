@@ -69,6 +69,8 @@ NZTrain::Application.routes.draw do
       get 'info'
       get 'scoreboard'
       get 'contestants'
+      get 'supervisors'
+      post 'supervise'
 
       #get 'start'
       put 'start'
@@ -81,6 +83,8 @@ NZTrain::Application.routes.draw do
 
   # resources :contest_relations
   resources :contest_relations, only: :destroy
+
+  resources :contest_supervisors, only: [:create, :destroy]
 
   resources :submissions, :except => [:new,:create] do
     collection do

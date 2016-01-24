@@ -14,7 +14,8 @@ class ContestPolicy < ApplicationPolicy
         end.select(:contest_id))
         owned = contests.owner_id == user.id
         public_observation = contests.observation == Contest::OBSERVATION[:public]
-        registered | grouped | owned | public_observation
+        supervising = contests.id.in(user.contest_supervising.select(:contest_id))
+        registered | grouped | owned | public_observation | supervising
       end
     end
   end
@@ -40,8 +41,12 @@ class ContestPolicy < ApplicationPolicy
     super or user.is_organiser? && (record == Contest || user.owns(record))
   end
 
+  def supervise?
+    manage? or record.contest_supervisors.where(user_id: user.id).any? # or has registrar relation
+  end
+
   def show?
-    startable? or record.observation == Contest::OBSERVATION[:public]
+    startable? or record.observation == Contest::OBSERVATION[:public] or record.contest_supervisors.where(user_id: user.id).any?
   end
 
   def scoreboard?
@@ -49,7 +54,7 @@ class ContestPolicy < ApplicationPolicy
   end
 
   def contestants?
-    manage?
+    manage? or supervise?
   end
 
   def create?

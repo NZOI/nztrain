@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150330223567) do
+ActiveRecord::Schema.define(version: 20160124011836) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,14 +64,16 @@ ActiveRecord::Schema.define(version: 20150330223567) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "finish_at"
-    t.integer  "score",                  default: 0,   null: false
-    t.float    "time_taken",             default: 0.0, null: false
+    t.integer  "score",                   default: 0,   null: false
+    t.float    "time_taken",              default: 0.0, null: false
     t.integer  "school_id"
-    t.integer  "status",                 default: 0
-    t.integer  "extra_time",             default: 0
+    t.integer  "status",                  default: 0
+    t.integer  "extra_time",              default: 0
     t.datetime "start_time"
     t.datetime "end_time"
-    t.string   "country_code", limit: 2
+    t.string   "country_code",  limit: 2
+    t.integer  "school_year"
+    t.integer  "supervisor_id"
   end
 
   add_index "contest_relations", ["contest_id", "score", "time_taken"], name: "index_contest_relations_on_contest_id_and_score_and_time_taken", order: {"score"=>:desc}, using: :btree
@@ -89,6 +91,15 @@ ActiveRecord::Schema.define(version: 20150330223567) do
   end
 
   add_index "contest_scores", ["contest_relation_id", "problem_id"], name: "index_contest_scores_on_contest_relation_id_and_problem_id", using: :btree
+
+  create_table "contest_supervisors", force: true do |t|
+    t.integer  "contest_id"
+    t.integer  "user_id"
+    t.string   "site_type"
+    t.integer  "site_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "contests", force: true do |t|
     t.string   "name"

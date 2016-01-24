@@ -5,6 +5,7 @@ class ContestRelation < ActiveRecord::Base
   belongs_to :contest
   has_many :contest_scores, dependent: :destroy
   belongs_to :school
+  belongs_to :supervisor, class_name: :User
 
   scope :active, -> { where{(started_at <= DateTime.now) & (finish_at > DateTime.now)} }
   scope :user, ->(u_id) { where(:user_id => u_id) }
@@ -18,7 +19,7 @@ class ContestRelation < ActiveRecord::Base
   end
 
   def ended?
-    !finish_at.nil? && DateTime.now < finish_at
+    !finish_at.nil? && DateTime.now > finish_at
   end
 
   def status_text
@@ -31,6 +32,12 @@ class ContestRelation < ActiveRecord::Base
 
   def start!
     self.started_at = DateTime.now
+    return self.save
+  end
+
+  def stop!
+    return false if ended? || !started?
+    self.extra_time += (-(self.finish_at - DateTime.now)).ceil
     return self.save
   end
 

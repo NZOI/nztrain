@@ -10,6 +10,9 @@ class Contest < ActiveRecord::Base
   has_many :contestant_records, -> { where.not(started_at: nil) }, class_name: ContestRelation
   has_many :contestants, :through => :contestant_records, :source => :user
 
+  has_many :contest_supervisors, :dependent => :destroy
+  has_many :supervisors, :through => :contest_supervisors, source: :user
+
   has_many :group_associations, class_name: GroupContest, inverse_of: :contest, dependent: :destroy
   has_many :groups, through: :group_associations
   has_many :group_members, -> { uniq }, :through => :groups, :source => :users
@@ -148,6 +151,7 @@ class Contest < ActiveRecord::Base
     contest_relations.find_or_initialize_by(user_id: user.id) do |contest_relation|
       contest_relation.country_code = user.country_code
       contest_relation.school_id = user.school_id
+      contest_relation.school_year = user.estimated_year_level(self.end_time)
     end
   end
 

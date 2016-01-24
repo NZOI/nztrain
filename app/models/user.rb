@@ -39,6 +39,8 @@ class User < ActiveRecord::Base
 
   belongs_to :school, counter_cache: true
 
+  has_many :contest_supervising, :class_name => :ContestSupervisor, :dependent => :destroy
+
   # Scopes
 
   scope :distinct, -> { select("distinct(users.id), users.*") }
@@ -167,6 +169,20 @@ class User < ActiveRecord::Base
       end
     else
       super
+    end
+  end
+
+  def estimated_year_level(on_this_date = DateTime.now)
+    if school_graduation.nil? || school_graduation <= on_this_date
+      "Graduated from school"
+    else
+      datetime = school_graduation
+      year = 14
+      while year >= 0 && datetime > on_this_date
+        datetime = datetime.advance(years: -1)
+        year = year - 1
+      end
+      year
     end
   end
 

@@ -1,0 +1,48 @@
+<%= form_for(@new_supervisor) do |f| %>
+  <% if @new_supervisor.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@new_supervisor.errors.count, "error") %> prohibited this contest admin from being created:</h2>
+      <ul>
+      <% @new_supervisor.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <strong>Create New Contest Supervisor:</strong>
+  <%= f.hidden_field :contest_id %>
+  <%= f.hidden_field :site_type, value: "School" %>
+  <%= f.label :username %> <%= f.text_field :username %>
+  <% @schools = School.all %>
+  <%= f.label :school %> <%= f.collection_select :site_id, @schools, :id, :name %>
+  <%= submit_tag "Create" %>
+<% end %>
+
+<% if policy(@contest).manage? %>
+  <table class="main_table" >
+    <thead>
+      <tr>
+        <th style="min-width: 25%;"> User </th>
+        <th> Site </th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @contest_supervisors.each do |contest_supervisor| %>
+        <tr>
+          <td>
+            <% if contest_supervisor.user %>
+              <%= link_to handle(contest_supervisor.user), contest_supervisor.user %>
+            <% else %>
+              <%= "Deleted User ID #{contest_supervisor[:user_id]}" %>
+            <% end %>
+          </td>
+          <td><%= contest_supervisor.site_name %></td>
+          <td>
+            <%= link_to 'Delete', contest_supervisor, :data => { :confirm => 'Are you sure?' }, :method => :delete if policy(contest_supervisor).destroy? %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

@@ -75,6 +75,7 @@
     menu.item :info, "info", info_contest_path(@contest) if policy(@contest).show?
     menu.item :problems, "problems", contest_path(@contest) if policy(@contest).overview?
     menu.item :contestants, "contestants", contestants_contest_path(@contest) if policy(@contest).contestants?
+    menu.item :supervisors, "supervisors", supervisors_contest_path(@contest) if policy(@contest).manage?
     menu.item :scoreboard, "scoreboard", scoreboard_contest_path(@contest) if policy(@contest).show?
 #  end.render
   end
@@ -83,7 +84,7 @@
     <%= yield %>
   <% end %>
   <% if policy(@contest).update? %>
-    <%= render 'admin' %>
+    <%= render 'contests/admin' %>
   <% end %>
 <% end %>
 <%= render :template => 'layouts/scaffold' %>
