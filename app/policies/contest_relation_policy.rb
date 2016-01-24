@@ -16,6 +16,7 @@ class ContestRelationPolicy < ApplicationPolicy
   end
 
   def supervise?
+    return true if policy(record.contest).manage?
     record.contest.contest_supervisors.where(user_id: user.id).each do |contest_supervisor|
       return true if contest_supervisor.can_supervise?(record)
     end

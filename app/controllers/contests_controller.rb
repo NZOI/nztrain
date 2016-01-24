@@ -247,11 +247,13 @@ class ContestsController < ApplicationController
 
   def supervise
     @contest = Contest.find(params[:id])
-    @contest_supervisor = @contest.contest_supervisors.find_by_id(params[:contest_supervisor])
-    authorize @contest_supervisor, :use?
-    if params[:start_contest]
+    if params[:contest_supervisor] # not really necessary
+      @contest_supervisor = @contest.contest_supervisors.find_by_id(params[:contest_supervisor])
+      authorize @contest_supervisor, :use?
+    end
+    if params[:start_contest] && params[:selected]
       ContestRelation.transaction do
-        params[:extra_time].each do |relation_id, extra_time|
+        params[:selected].each do |relation_id|
           relation = @contest.contest_relations.find_by_id(relation_id)
           authorize relation, :supervise?
           relation.supervisor = current_user
@@ -259,25 +261,32 @@ class ContestsController < ApplicationController
         end
       end
       redirect_to contestants_contest_path(@contest), :notice => "Contest started for selected students"
-    elsif params[:end_contest]
+    elsif params[:end_contest] && params[:selected]
       ContestRelation.transaction do
-        params[:extra_time].each do |relation_id, extra_time|
+        params[:selected].each do |relation_id|
           relation = @contest.contest_relations.find_by_id(relation_id)
           authorize relation, :supervise?
           relation.stop! if relation.started? && !relation.ended?
         end
       end
-      redirect_to contestants_contest_path(@contest), :notice => "Contest started for selected students"
+      redirect_to contestants_contest_path(@contest), :notice => "Contest ended for selected students"
     elsif params[:update]
-      ContestRelation.transaction do
-        params[:extra_time].each do |relation_id, extra_time|
-          relation = @contest.contest_relations.find_by_id(relation_id)
-          authorize relation, :supervise?
-          relation.extra_time = extra_time
-          relation.save
+      if params[:extra_time]
+        ContestRelation.transaction do
+          params[:extra_time].each do |relation_id, extra_time|
+            relation = @contest.contest_relations.find_by_id(relation_id)
+            authorize relation, :supervise?
+            relation.extra_time = extra_time
+            relation.save
+          end
         end
+        redirect_to contestants_contest_path(@contest), :notice => "Extra time updated"
+      else
+        redirect_to contestants_contest_path(@contest), :alert => "Nothing to update."
+        return
       end
-      redirect_to contestants_contest_path(@contest), :notice => "Extra time updated"
+    else
+      redirect_to contestants_contest_path(@contest), :alert => "Could not start/end contest for any users as none were selected."
     end
   end
 
