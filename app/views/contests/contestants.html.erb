@@ -23,11 +23,16 @@
             <th>Started At</th>
             <th>Finish At</th>
             <th>Extra Time</th>
+            <th>Score</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <% contest_supervisor.contest_relations.order(finish_at: :desc, started_at: :desc).each do |contest_relation| %>
+          <% registered_contestants = contest_supervisor.contest_relations.order(finish_at: :desc, started_at: :desc) %>
+          <% if !registered_contestants.any? %>
+            <tr><td colspan="10">No contestants registered for this site</td></tr>
+          <% end %>
+          <% registered_contestants.each do |contest_relation| %>
             <tr>
               <td><%= check_box_tag("selected[]", contest_relation.id, false, disabled: contest_relation.ended?) %></td>
               <td><%= contest_relation.user.username %></td>
@@ -37,6 +42,7 @@
               <td><%= contest_relation.started_at %></td>
               <td><%= contest_relation.finish_at %></td>
               <td><%= text_field(:extra_time, contest_relation.id, value: contest_relation.extra_time, size: 2)  %> s</td>
+              <td style="text-align: right"><%= contest_relation.score %></td>
               <td>
                 <%= link_to 'Delete', contest_relation, :data => { :confirm => 'Are you sure?' }, :method => :delete if policy(contest_relation).destroy? %>
               </td>
@@ -47,7 +53,7 @@
               <%= submit_tag "Start Contest", name: :start_contest %>
               <%= submit_tag "End Contest", name: :end_contest %>
             </td>
-            <td colspan="2">
+            <td colspan="3">
               <%= submit_tag "Update Extra Time", name: :update %>
             </td>
           </tr>
