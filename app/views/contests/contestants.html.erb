@@ -39,7 +39,7 @@
               <td><%= contest_relation.user.name %></td>
               <td>
                 <%= contest_relation.school_year %>
-                <%= link_to '+', update_year_level_contest_relation_path(contest_relation, year_level: contest_relation.school_year+1), :method => :post %>/<%= link_to '-', update_year_level_contest_relation_path(contest_relation, year_level: contest_relation.school_year-1), :method => :post %>
+                <%= link_to '+', update_year_level_contest_relation_path(contest_relation, year_level: (contest_relation.school_year||14)+1), :method => :post %>/<%= link_to '-', update_year_level_contest_relation_path(contest_relation, year_level: (contest_relation.school_year||14)-1), :method => :post %>
               </td>
               <td><%= contest_relation.user.school_graduation %></td>
               <td><%= contest_relation.started_at %></td>
@@ -140,7 +140,7 @@
             <td><%= contest_relation.school.try(:name) %></td>
             <td>
               <%= contest_relation.school_year %>
-              <%= link_to '+', update_year_level_contest_relation_path(contest_relation, year_level: contest_relation.school_year+1), :method => :post %>/<%= link_to '-', update_year_level_contest_relation_path(contest_relation, year_level: contest_relation.school_year-1), :method => :post %>
+              <%= link_to '+', update_year_level_contest_relation_path(contest_relation, year_level: (contest_relation.school_year||14)+1), :method => :post %>/<%= link_to '-', update_year_level_contest_relation_path(contest_relation, year_level: (contest_relation.school_year||14)-1), :method => :post %>
             </td>
             <td><%= contest_relation.started_at %></td>
             <td><%= contest_relation.finish_at %></td>
