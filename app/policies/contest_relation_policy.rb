@@ -22,5 +22,11 @@ class ContestRelationPolicy < ApplicationPolicy
     end
     false
   end
+
+  def update_extra_time?
+    return true if policy(record.contest).manage?
+    return false if record.contest.ended?
+    supervise?
+  end
 end
 

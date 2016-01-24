@@ -275,8 +275,12 @@ class ContestsController < ApplicationController
         ContestRelation.transaction do
           params[:extra_time].each do |relation_id, extra_time|
             relation = @contest.contest_relations.find_by_id(relation_id)
-            authorize relation, :supervise?
+            authorize relation, :update_extra_time?
             relation.extra_time = extra_time
+            if extra_time.to_i > @contest.max_extra_time
+              redirect_to contestants_contest_path(@contest), :alert => "The maximum extra time that can be given is #{@contest.max_extra_time}."
+              return
+            end
             relation.save
           end
         end

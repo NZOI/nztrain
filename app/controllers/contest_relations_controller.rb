@@ -94,4 +94,19 @@ class ContestRelationsController < ApplicationController
       end
     end
   end
+
+  def update_year_level
+    @contest_relation = ContestRelation.find(params[:id])
+    authorize @contest_relation, :supervise?
+    if !params[:year_level].nil?
+      @contest_relation.school_year = [[params[:year_level].to_i,0].max,13].min
+    else
+      @contest_relation.school_year = nil
+    end
+    if @contest_relation.save
+      redirect_to(contestants_contest_path(@contest_relation.contest), :notice => 'Contestant year level updated')
+    else
+      redirect_to(contestants_contest_path(@contest_relation.contest), :alert => 'Could not update year level of contestant')
+    end
+  end
 end

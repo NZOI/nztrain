@@ -82,7 +82,11 @@ NZTrain::Application.routes.draw do
   end
 
   # resources :contest_relations
-  resources :contest_relations, only: :destroy
+  resources :contest_relations, only: :destroy do
+    member do
+      post 'update_year_level'
+    end
+  end
 
   resources :contest_supervisors, only: [:create, :destroy]
 

@@ -160,4 +160,8 @@ class Contest < ActiveRecord::Base
     super(code)
   end
 
+  def max_extra_time
+    (duration*3600).to_i
+  end
+
 end

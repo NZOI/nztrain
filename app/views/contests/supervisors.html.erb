@@ -13,7 +13,7 @@
   <%= f.hidden_field :contest_id %>
   <%= f.hidden_field :site_type, value: "School" %>
   <%= f.label :username %> <%= f.text_field :username %>
-  <% @schools = School.all %>
+  <% @schools = School.order(:name) %>
   <%= f.label :school %> <%= f.collection_select :site_id, @schools, :id, :name %>
   <%= submit_tag "Create" %>
 <% end %>
