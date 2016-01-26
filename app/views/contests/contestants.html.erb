@@ -45,7 +45,7 @@
               <td><%= contest_relation.started_at %></td>
               <td>
                 <% if contest_relation.active? %>
-                  <span style="font-size: 18px">in </span><span class="countdown medium" data-duration="<%= contest_relation.finish_at - DateTime.now %>" data-format="%-H:%M:%S" style="color: #008800; font-size: 24px; margin-left: 5px">
+                  <span style="font-size: 18px">in </span><span class="countdown medium" data-duration="<%= contest_relation.finish_at - DateTime.now %>" data-format="%th:%M:%S" style="color: #008800; font-size: 24px; margin-left: 5px">
                     <%= Duration.new(contest_relation.finish_at-Time.now).format("%th:%M:%S") %>
                   </div>
                 <% else %>
