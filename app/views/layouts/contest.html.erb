@@ -19,7 +19,7 @@
           <p>Contest time remaining:</p>
           <div class="countdown large" data-duration="<%= @contest.get_relation(current_user.id).finish_at - DateTime.now %>" data-format="%th:%M:%S" style="color: #008800; text-align: right;">
             <%= Duration.new(@contest.get_relation(current_user.id).finish_at-Time.now).format("%th:%M:%S") %>
-        </div>
+          </div>
         <% elsif policy(@contest).start? && @contest.is_running? && !@contest.has_competitor?(current_user.id) %>
           <%= form_tag(start_contest_path(@contest), method: 'put', style: "text-align: center") do %>
             <% if !@contest.startcode.nil? %>

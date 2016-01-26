@@ -36,7 +36,7 @@ class ContestSupervisor < ActiveRecord::Base
 
   def potential_contestants
     if site_type == "School"
-      User.where{|user|(user.school_id == site_id) & ((user.school_graduation >= contest.end_time) | ((user.school_graduation == nil) & (user.created_at >= DateTime.now.advance(years: -1)))) & (user.id << contest.contestants)}
+      User.where{|user|(user.school_id == site_id) & ((user.school_graduation >= contest.end_time) | ((user.school_graduation == nil) & (user.created_at >= DateTime.now.advance(years: -1)))) & (user.id << contest.registrants)}
     else
       [] # not implemented
     end

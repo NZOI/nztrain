@@ -31,6 +31,7 @@ class ContestRelation < ActiveRecord::Base
   end
 
   def start!
+    return false if started?
     self.started_at = DateTime.now
     return self.save
   end

@@ -252,6 +252,10 @@ class ContestsController < ApplicationController
       authorize @contest_supervisor, :use?
     end
     if params[:start_contest] && params[:selected]
+      if !@contest.is_running?
+        redirect_to contestants_contest_path(@contest), :alert => "The contest is not currently running"
+        return
+      end
       ContestRelation.transaction do
         params[:selected].each do |relation_id|
           relation = @contest.contest_relations.find_by_id(relation_id)
@@ -276,7 +280,7 @@ class ContestsController < ApplicationController
           params[:extra_time].each do |relation_id, extra_time|
             relation = @contest.contest_relations.find_by_id(relation_id)
             authorize relation, :update_extra_time?
-            relation.extra_time = extra_time
+            relation.extra_time = extra_time.to_i || 0
             if extra_time.to_i > @contest.max_extra_time
               redirect_to contestants_contest_path(@contest), :alert => "The maximum extra time that can be given is #{@contest.max_extra_time}."
               return

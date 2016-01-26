@@ -33,7 +33,7 @@
             <tr><td colspan="10">No contestants registered for this site</td></tr>
           <% end %>
           <% registered_contestants.each do |contest_relation| %>
-            <tr>
+            <tr class="<%= "emphasized" if contest_relation.active? %>">
               <td><%= check_box_tag("selected[]", contest_relation.id, false, disabled: contest_relation.ended?) %></td>
               <td><%= contest_relation.user.username %></td>
               <td><%= contest_relation.user.name %></td>
@@ -43,7 +43,15 @@
               </td>
               <td><%= contest_relation.user.school_graduation %></td>
               <td><%= contest_relation.started_at %></td>
-              <td><%= contest_relation.finish_at %></td>
+              <td>
+                <% if contest_relation.active? %>
+                  <span style="font-size: 18px">in </span><span class="countdown medium" data-duration="<%= contest_relation.finish_at - DateTime.now %>" data-format="%-H:%M:%S" style="color: #008800; font-size: 24px; margin-left: 5px">
+                    <%= Duration.new(contest_relation.finish_at-Time.now).format("%th:%M:%S") %>
+                  </div>
+                <% else %>
+                  <%= contest_relation.finish_at %>
+                <% end %>
+              </td>
               <td>
                 <% if policy(contest_relation).update_extra_time? %>
                   <%= text_field(:extra_time, contest_relation.id, value: contest_relation.extra_time, size: 2)  %> s
@@ -59,7 +67,7 @@
           <% end %>
           <tr>
             <td colspan="7">
-              <%= submit_tag "Start Contest", name: :start_contest %>
+              <%= submit_tag "Start Contest", name: :start_contest, disabled: !@contest.is_running? %>
               <%= submit_tag "End Contest", name: :end_contest %>
             </td>
             <td colspan="3">
