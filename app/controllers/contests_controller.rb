@@ -261,7 +261,7 @@ class ContestsController < ApplicationController
           relation = @contest.contest_relations.find_by_id(relation_id)
           authorize relation, :supervise?
           relation.supervisor = current_user
-          relation.start! unless relation.started?
+          relation.set_start_timer! 1.minute
         end
       end
       redirect_to contestants_contest_path(@contest), :notice => "Contest started for selected students"

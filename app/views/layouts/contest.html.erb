@@ -16,10 +16,23 @@
           <% end %>
           </span>
         <% elsif @contest.has_current_competitor?(current_user.id) %>
-          <p>Contest time remaining:</p>
-          <div class="countdown large" data-duration="<%= @contest.get_relation(current_user.id).finish_at - DateTime.now %>" data-format="%th:%M:%S" style="color: #008800; text-align: right;">
-            <%= Duration.new(@contest.get_relation(current_user.id).finish_at-Time.now).format("%th:%M:%S") %>
-          </div>
+          <% relation = @contest.get_relation(current_user.id) %>
+          <% if relation.started_at <= Time.now %>
+            <p>Contest time remaining:</p>
+            <div class="countdown large" data-duration="<%= relation.finish_at - DateTime.now %>" data-format="%th:%M:%S" style="color: #008800; text-align: right;">
+              <%= Duration.new(relation.finish_at-Time.now).format("%th:%M:%S") %>
+            </div>
+          <% else # user's time slot is set to begin %>
+            <p>Contest time slot begins in:</p>
+            <div class="countdown large" data-duration="<%= relation.started_at - DateTime.now %>" data-format="%th:%M:%S" style="color: #3F3F3F; text-align: right;">
+              <%= Duration.new(relation.started_at-Time.now).format("%th:%M:%S") %>
+            </div>
+            <script type="text/javascript">
+            <!--
+              window.setTimeout("window.location.reload(true);", <%= ((relation.started_at - DateTime.now)*1000).round %>);
+            //-->
+            </script>
+          <% end %>
         <% elsif policy(@contest).start? && @contest.is_running? && !@contest.has_competitor?(current_user.id) %>
           <%= form_tag(start_contest_path(@contest), method: 'put', style: "text-align: center") do %>
             <% if !@contest.startcode.nil? %>

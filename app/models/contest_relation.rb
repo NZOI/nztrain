@@ -36,6 +36,12 @@ class ContestRelation < ActiveRecord::Base
     return self.save
   end
 
+  def set_start_timer! time_to_start
+    return false if !!self.started_at
+    self.started_at = DateTime.now + time_to_start
+    return self.save
+  end
+
   def stop!
     return false if ended? || !started?
     self.extra_time += (-(self.finish_at - DateTime.now)).ceil
