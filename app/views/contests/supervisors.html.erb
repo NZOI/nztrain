@@ -24,6 +24,7 @@
       <tr>
         <th style="min-width: 25%;"> User </th>
         <th> Site </th>
+        <th> Scheduled Starting Time </th>
         <th></th>
       </tr>
     </thead>
@@ -38,6 +39,7 @@
             <% end %>
           </td>
           <td><%= contest_supervisor.site_name %></td>
+          <td><%= contest_supervisor.scheduled_start_time %></td>
           <td>
             <%= link_to 'Delete', contest_supervisor, :data => { :confirm => 'Are you sure?' }, :method => :delete if policy(contest_supervisor).destroy? %>
           </td>

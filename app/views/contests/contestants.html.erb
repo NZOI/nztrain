@@ -5,10 +5,17 @@
     <%= submit_tag "Register" %>
   <% end %>
 <% end %>
+
 <% @contest_supervision = @contest.contest_supervisors.where(user_id: current_user.id) %>
 <% if @contest_supervision.any? %>
   <% @contest_supervision.each do |contest_supervisor| %>
     <h3><%= contest_supervisor.site_name %></h3>
+    <%= form_for(contest_supervisor, url: {controller: :contest_supervisors, action: :update_scheduled_time, id: contest_supervisor}) do |f| %>
+      <% start_time = contest_supervisor.scheduled_start_time.try(:strftime, "%d/%m/%Y %H:%M") %>
+        <%= f.label :scheduled_start_time %>: 
+        <%= f.text_field :scheduled_start_time, :class => "date-picker", :value => start_time, placeholder: "dd/mm/yyyy hh:mm" %>
+      <%= f.submit "Update" %> (informational only)
+    <% end %>
     <h4>Registered contestants</h4>
     <%= form_tag(supervise_contest_path(@contest)) do %>
       <%= hidden_field_tag "contest_supervisor", contest_supervisor.id %>
@@ -48,8 +55,8 @@
                 <%= link_to '+', update_year_level_contest_relation_path(contest_relation, year_level: (contest_relation.school_year||14)+1), :method => :post %>/<%= link_to '-', update_year_level_contest_relation_path(contest_relation, year_level: (contest_relation.school_year||14)-1), :method => :post %>
               </td>
               <td><%= contest_relation.user.school_graduation %></td>
-              <td><%= contest_relation.started_at %></td>
-              <td>
+              <td style="color: #<%= contest_relation.checked_in ? "000000" : "808080" %>"><%= contest_relation.started_at %></td>
+              <td style="color: #<%= contest_relation.checked_in ? "000000" : "808080" %>">
                 <% if contest_relation.active? %>
                   <span style="font-size: 18px">in </span><span class="countdown medium" data-duration="<%= contest_relation.finish_at - DateTime.now %>" data-format="%th:%M:%S" style="color: #008800; font-size: 24px; margin-left: 5px">
                     <%= Duration.new(contest_relation.finish_at-Time.now).format("%th:%M:%S") %>
@@ -158,8 +165,8 @@
               <%= contest_relation.school_year %>
               <%= link_to '+', update_year_level_contest_relation_path(contest_relation, year_level: (contest_relation.school_year||14)+1), :method => :post %>/<%= link_to '-', update_year_level_contest_relation_path(contest_relation, year_level: (contest_relation.school_year||14)-1), :method => :post %>
             </td>
-            <td><%= contest_relation.started_at %></td>
-            <td><%= contest_relation.finish_at %></td>
+            <td style="color: #<%= contest_relation.checked_in ? "000000" : "808080" %>"><%= contest_relation.started_at %></td>
+            <td style="color: #<%= contest_relation.checked_in ? "000000" : "808080" %>"><%= contest_relation.finish_at %></td>
             <td style="text-align: right"><%= contest_relation.score %></td>
             <td> <%= format("%d:%02d:%02d",contest_relation.time_taken.to_i/3600,contest_relation.time_taken.to_i/60%60,contest_relation.time_taken.to_i%60) %> </td>
             <td><%= text_field(:extra_time, contest_relation.id, value: contest_relation.extra_time, size: 2)  %> s</td>

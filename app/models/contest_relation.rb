@@ -8,6 +8,7 @@ class ContestRelation < ActiveRecord::Base
   belongs_to :supervisor, class_name: :User
 
   scope :active, -> { where{(started_at <= DateTime.now) & (finish_at > DateTime.now)} }
+  scope :absent, -> { where(checked_in: false) }
   scope :user, ->(u_id) { where(:user_id => u_id) }
 
   def active?
@@ -30,14 +31,16 @@ class ContestRelation < ActiveRecord::Base
     return "You have been registered, but the contest has not started yet." if !started?
   end
 
-  def start!
+  def start! checkin = true
     return false if started?
+    self.checked_in = true
     self.started_at = DateTime.now
     return self.save
   end
 
   def set_start_timer! time_to_start
     return false if !!self.started_at
+    self.checked_in = false
     self.started_at = DateTime.now + time_to_start
     return self.save
   end

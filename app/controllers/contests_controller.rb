@@ -197,7 +197,7 @@ class ContestsController < ApplicationController
       end
 
       respond_to do |format|
-        if @contest.start(current_user)
+        if @contest.start(current_user, true)
           format.html { redirect_to(@contest, :notice => 'Contest started.') }
         else
           format.html { redirect_to(@contest, :alert => @contest.errors.full_messages_for(:contest).join(' ')) }

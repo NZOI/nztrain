@@ -88,7 +88,11 @@ NZTrain::Application.routes.draw do
     end
   end
 
-  resources :contest_supervisors, only: [:create, :destroy]
+  resources :contest_supervisors, only: [:create, :destroy] do
+    member do
+      patch 'update_scheduled_time'
+    end
+  end
 
   resources :submissions, :except => [:new,:create] do
     collection do

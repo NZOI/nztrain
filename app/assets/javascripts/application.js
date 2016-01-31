@@ -110,16 +110,16 @@ $(document).ready(function() {
     speed: 'fast'
   });
 
-  $('.date-picker').datetimepicker({ dateFormat: 'dd/mm/yy' });
-
   $('#menu').css({'min-width':$('#nav').width()+$('#controls').width() + 'px'});
+
+  $('.date-picker').blur(); // blur so that datetimepicker works properly in case it is already selected
+  $('.date-picker').datetimepicker({ dateFormat: 'dd/mm/yy' });
 
   $(".submission_details").click(function() {
     console.log("abc");
     $(this).find(".submission_details_hider").slideDown();
   });
   $(".submission_details_hider").hide();
-  $("#main").focus();
 
   $(".radio_input").click(function() {
     $(this).prevAll("input[type=radio]:first").prop("checked", true);
@@ -158,4 +158,5 @@ $(document).ready(function() {
     });
   });
 
+  $("#main").focus();
 });

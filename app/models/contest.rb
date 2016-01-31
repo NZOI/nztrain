@@ -7,7 +7,7 @@ class Contest < ActiveRecord::Base
   has_many :contest_relations, :dependent => :destroy
   has_many :registrants, :through => :contest_relations, :source => :user
 
-  has_many :contestant_records, -> { where.not(started_at: nil) }, class_name: ContestRelation
+  has_many :contestant_records, -> { where(checked_in: true).where.not(started_at: nil) }, class_name: ContestRelation
   has_many :contestants, :through => :contestant_records, :source => :user
 
   has_many :contest_supervisors, :dependent => :destroy
@@ -70,7 +70,7 @@ class Contest < ActiveRecord::Base
   end
 
   def scoreboard
-    scoreboard = self.contest_relations.where.not(started_at: nil).select([:score, :time_taken, :user_id]).order("contest_relations.score DESC, time_taken").includes(:user)
+    scoreboard = self.contestant_records.select([:score, :time_taken, :user_id]).order("contest_relations.score DESC, time_taken").includes(:user)
     problem_set.problems.each do |problem| # for each problem, query problem score as well
       scoreboard = scoreboard.select("scores_#{problem.id}.score AS score_#{problem.id}, scores_#{problem.id}.attempt AS attempt_#{problem.id}, scores_#{problem.id}.attempts AS attempts_#{problem.id}, scores_#{problem.id}.submission_id AS sub_#{problem.id}").joins("LEFT OUTER JOIN contest_scores AS scores_#{problem.id} ON scores_#{problem.id}.contest_relation_id = contest_relations.id AND scores_#{problem.id}.problem_id = #{problem.id}")
     end
@@ -127,14 +127,14 @@ class Contest < ActiveRecord::Base
   end
 
   # user_id starting a contest
-  def start(user)
+  def start(user, checkin = true)
     errors.add(:contest, "is not currently running.") if !self.is_running?
     errors.add(:contest, "has already been started.") if has_competitor?(user.id)
     return false unless errors.empty?
 
     contest_relation = build_contest_relation(user)
 
-    return contest_relation.start!
+    return contest_relation.start! checkin
   end
 
   def register(user)

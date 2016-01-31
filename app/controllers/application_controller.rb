@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
   layout "scaffold"
 
   before_filter :update_last_seen_at
+  before_filter :update_contest_checkin
   before_filter :read_settings
   before_filter :check_su_loss
   before_filter :wrong_site
@@ -82,6 +83,15 @@ class ApplicationController < ActionController::Base
     if user_signed_in?
       original_user.last_seen_at = DateTime.now
       original_user.save
+    end
+  end
+
+  def update_contest_checkin
+    if user_signed_in?
+      original_user.contest_relations.active.absent.each do |relation|
+        relation.checked_in = true
+        relation.save
+      end
     end
   end
 end
