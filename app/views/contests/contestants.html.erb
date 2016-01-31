@@ -110,7 +110,7 @@
             <tr>
               <td><%= user.username %></td>
               <td><%= user.name %></td>
-              <td><%= user.estimated_year_level(@contest.end_time) %></td>
+              <td><%= user.estimated_year_level(@contest.end_time) || "Graduated from school" %></td>
               <td><%= user.school_graduation %></td>
               <td>
                 <% if contest_supervisor.is_user_eligible?(user) %>

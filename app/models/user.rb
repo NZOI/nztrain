@@ -174,7 +174,7 @@ class User < ActiveRecord::Base
 
   def estimated_year_level(on_this_date = DateTime.now)
     if school_graduation.nil? || school_graduation <= on_this_date
-      "Graduated from school"
+      nil
     else
       datetime = school_graduation
       year = 14
