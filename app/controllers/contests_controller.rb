@@ -251,6 +251,14 @@ class ContestsController < ApplicationController
       @contest_supervisor = @contest.contest_supervisors.find_by_id(params[:contest_supervisor])
       authorize @contest_supervisor, :use?
     end
+    if params[:start_contest_all]
+      params[:start_contest] = params[:start_contest_all]
+      params[:selected] = []
+      @contest_supervisor.contest_relations.where(started_at: nil).each do |relation|
+        params[:selected] << relation.id if Time.now - relation.user.last_seen_at < 15.minutes
+      end
+      params[:selected] = nil if params[:selected].empty?
+    end
     if params[:start_contest] && params[:selected]
       if !@contest.is_running?
         redirect_to contestants_contest_path(@contest), :alert => "The contest is not currently running"
