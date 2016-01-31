@@ -80,11 +80,11 @@
           <% end %>
           <tr>
             <td colspan="3">
-              <%= submit_tag "Start Contest", name: :start_contest, disabled: !@contest.is_running? %>
+              <%= submit_tag "Start Contest*", name: :start_contest, disabled: !@contest.is_running? %>
               <%= submit_tag "End Contest", name: :end_contest %>
             </td>
             <td colspan="4">
-              <%= submit_tag "Start All if Online", name: :start_contest_all, disabled: !@contest.is_running? %>
+              <%= submit_tag "Start All if Online*", name: :start_contest_all, disabled: !@contest.is_running? %>
             </td>
             <td colspan="3">
               <%= submit_tag "Update Extra Time", name: :update %>
@@ -92,6 +92,7 @@
           </tr>
         </tbody>
       </table>
+      *Contest time slot starts after 1 minute
     <% end %>
     <% if !@contest.ended? %>
       <h4>Potential contestants</h4>
