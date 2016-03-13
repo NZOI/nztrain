@@ -4,7 +4,8 @@ module Loofah
     class EscapeWithCustomWhitelist < Loofah::Scrubbers::Escape
       CUSTOM_ALLOWED_ELEMENTS = {
         'object' => [
-          {'data' => /\A\/?(([#{URI::REGEXP::PATTERN::UNRESERVED}]|#{URI::REGEXP::PATTERN::ESCAPED})+\/)*([#{URI::REGEXP::PATTERN::UNRESERVED}]|#{URI::REGEXP::PATTERN::ESCAPED})+\z/, 'type' => /\Aimage\/svg\+xml\z/}
+          # svg objects
+          {'data' => /\A\/?(([#{URI::REGEXP::PATTERN::UNRESERVED}]|#{URI::REGEXP::PATTERN::ESCAPED})+\/)*([#{URI::REGEXP::PATTERN::UNRESERVED}]|#{URI::REGEXP::PATTERN::ESCAPED})+\.svg\z/, 'type' => /\Aimage\/svg\+xml\z/}
         ]
       }
 
@@ -24,7 +25,9 @@ module Loofah
             end
             if matching
               node.attributes.keys.each do |attr|
-                node.remove_attribute(attr) if !criteria.has_key?(attr)
+                unless criteria.has_key?(attr) || Loofah::HTML5::WhiteList::ACCEPTABLE_ATTRIBUTES.include?(attr)
+                  node.remove_attribute(attr)
+                end
               end
               return CONTINUE
             end
