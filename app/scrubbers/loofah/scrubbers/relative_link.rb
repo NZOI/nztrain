@@ -2,7 +2,7 @@ module Loofah
   module Scrubbers
     # rewrites all relative links relative to a root (or image src)
     class RelativeLink < Scrubber
-      CANDIDATE_ATTRIBUTES = {'a' => ['href'], 'img' => ['src']}
+      CANDIDATE_ATTRIBUTES = {'a' => ['href'], 'img' => ['src'], 'object' => ['data']}
 
       attr_accessor :relative_root
       def initialize(relative_root)

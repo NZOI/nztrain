@@ -33,7 +33,7 @@ module ProblemsHelper
     content = ProblemsHelper.markdown_renderer.render(str || "")
     content = Loofah.fragment(content)
       .scrub!(Loofah::Scrubbers::NoComment.new) # remove comments
-      .scrub!(:escape) # remove dangerous tags
+      .scrub!(Loofah::Scrubbers::EscapeWithCustomWhitelist.new) # remove dangerous tags
       .scrub!(Loofah::Scrubbers::NoForm.new) # remove forms
       .scrub!(Loofah::Scrubbers::MathJax.new) # add mathjax support
     unless relative_root.nil?
