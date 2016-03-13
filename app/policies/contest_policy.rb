@@ -98,7 +98,7 @@ class ContestPolicy < ApplicationPolicy
   end
 
   def show_details?
-    record.ended? or manage? or current_or_past_contestant?
+    record.ended? or manage? or user.is_staff? or current_or_past_contestant?
   end
 end
 
