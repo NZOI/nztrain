@@ -1,5 +1,6 @@
 NZTrain::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
+  config.force_ssl = true
   
   # Eager load all gems and libraries
   config.eager_load = true
