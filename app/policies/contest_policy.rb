@@ -117,7 +117,10 @@ class ContestPolicy < ApplicationPolicy
   end
 
   def show_details?
-    record.ended? or manage? or user.is_staff? or current_or_past_contestant?
+    return true if record.ended?
+    return false unless user # signed in
+
+    manage? or user.is_staff? or current_or_past_contestant?
   end
 end
 
