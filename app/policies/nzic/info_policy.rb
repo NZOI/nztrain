@@ -1,4 +1,4 @@
-class NZIC::InfoPolicy < ApplicationPolicy
+class NZIC::InfoPolicy < AuthenticatedPolicy
 
   class Scope < ApplicationPolicy::Scope
     def resolve

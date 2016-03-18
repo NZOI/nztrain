@@ -39,10 +39,10 @@
       <% rank = 1 %>
       <% previous_record = @scoreboard.first %>
       <% @scoreboard.each_with_index do |record,index| %>
-        <% if record.user.id != current_user.id and !policy(@contest).inspect? %>
+        <% if !user_signed_in? or record.user.id != current_user.id && !policy(@contest).inspect? %>
           <% next if record.score < median.score || (record.score == median.score && record.time_taken > median.time_taken) # no permission to view %>
         <% end %>
-        <tr <% if (record.id==current_user.id) %> class="emphasized"<% end %>>
+        <tr <% if user_signed_in? && record.id==current_user.id %> class="emphasized"<% end %>>
           <td>
             <% if record.user %>
               <%= link_to handle(record.user), record.user %>
@@ -50,16 +50,17 @@
               <%= "Deleted User ID #{record[:user_id]}" %>
             <% end %>
           </td>
+          <% link_to_submissions = user_signed_in? && (record.id == current_user.id || current_user.is_admin?) %>
           <% @problems.each do |prob|%>
             <td style="min-width: 5em;">
               <span style="float: left; width: 2em; text-align: right;">
-                <%= record["score_#{prob.id}"].nil? ? "-":link_to_if(record.id == current_user.id || current_user.is_admin?, record["score_#{prob.id}"], submission_path(record["sub_#{prob.id}"])) %>
+                <%= record["score_#{prob.id}"].nil? ? "-":link_to_if(link_to_submissions, record["score_#{prob.id}"], submission_path(record["sub_#{prob.id}"])) %>
               </span>
               <span style="float: left; width: 2.5em; text-align: right; font-size: 75%; line-height: 90%;">
                 <%= raw record["score_#{prob.id}"].nil? ? "&nbsp;":"#{record["attempt_#{prob.id}"].to_i.ordinalize}&nbsp;<br />try" %>
               </span>
               <span style="float: left; width: 2.5em; text-align: right;">
-                (<%= link_to_if (record.id == current_user.id || current_user.is_admin?), (record["attempts_#{prob.id}"] || 0), :controller => "submissions", :by_user => record[:user_id], :by_problem => prob.id %>)
+                (<%= link_to_if link_to_submissions, (record["attempts_#{prob.id}"] || 0), :controller => "submissions", :by_user => record[:user_id], :by_problem => prob.id %>)
               </span>
             </td>
           <% end %>

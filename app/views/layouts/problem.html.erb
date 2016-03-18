@@ -34,8 +34,8 @@
     menu.dom_class = :tab_menu
     menu.item :statement, "problem statement", problem_path(@problem)
     menu.item :files, "files", problem_files_path(@problem) if policy(@problem).update? || (@problem.filelinks.any? && policy(@problem).access?)
-    menu.item :submit, "submit", submit_problem_path(@problem), :highlights_on => :subpath if policy(@problem).submit?
-    menu.item :submissions, "submissions", submissions_problem_path(@problem)
+    menu.item :submit, "submit", submit_problem_path(@problem), :highlights_on => :subpath
+    menu.item :submissions, "submissions", submissions_problem_path(@problem) if policy(@problem).view_submissions?
     menu.item :test_cases, "test cases", problem_test_cases_path(@problem) if policy(@problem).inspect?
     menu.item :testing, "testing", testing_problem_path(@problem) if policy(@problem).inspect?
 #  end.render

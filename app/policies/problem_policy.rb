@@ -2,7 +2,9 @@ class ProblemPolicy < ApplicationPolicy
 
   class Scope < ApplicationPolicy::Scope
     def resolve
-      if user.is_staff?
+      if !user
+        scope.none
+      elsif user.is_staff?
         scope.all
       elsif user.competing?
         scope.none
@@ -18,17 +20,25 @@ class ProblemPolicy < ApplicationPolicy
   end
 
   def inspect?
+    return false unless user # signed in
     user.is_staff? or user.owns(record) && !user.competing?
   end
 
   def manage?
+    return false unless user # signed in
     super or user.owns(record) && (user.is_staff? || !user.competing?)
   end
 
   def show?
-    return true if user.is_staff?
-    return record.contest_relations.where{|relation|(relation.user_id == user.id) & (relation.started_at <= DateTime.now) & (relation.finish_at > DateTime.now)}.exists? if user.competing?
-    user.owns(record) or record.groups.where(:id => 0).exists? or record.group_memberships.where{|membership|(membership.member_id == user.id)}.exists?
+    return true if user && user.is_staff?
+
+    if user && user.competing?
+      return record.contest_relations.where{|relation|(relation.user_id == user.id) & (relation.started_at <= DateTime.now) & (relation.finish_at > DateTime.now)}.exists?
+    end
+
+    return true if record.groups.where(:id => 0).exists?
+    return false unless user # signed in
+    user.owns(record) or record.group_memberships.where{|membership|(membership.member_id == user.id)}.exists?
   end
 
   def access?
@@ -36,7 +46,11 @@ class ProblemPolicy < ApplicationPolicy
   end
 
   def submit?
-    show?
+    user && show?
+  end
+
+  def view_submissions?
+    user && show?
   end
 
   def submit_source?

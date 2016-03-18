@@ -1,24 +1,26 @@
 <% content_for :title, "Dashboard" %>
 
 <div style="padding: 0px; padding-right: 250px">
-  <div style="float: right; width: 240px; margin: 0px; margin-right: -250px">
-    <h2 style="padding-bottom: 10px; border-bottom: 1px solid black; margin-top: 0;">My Groups</h2>
-    <% if @mygroups.empty? %>
-    <i>You are not in any groups</i>
-    <% end %>
-    <% @mygroups.each do |group| %>
-      <div style="margin-top: 3px; border-bottom: 1px solid black; text-align: right;">
-        <div style="float: left;"><b><%= link_to group.name, group_path(group) %></b></div>
-        <i><!--x problems, progress bar-->&nbsp;</i>
-      </div>
-    <% end %>
-  </div>
+  <% if user_signed_in? %>
+    <div style="float: right; width: 240px; margin: 0px; margin-right: -250px">
+      <h2 style="padding-bottom: 10px; border-bottom: 1px solid black; margin-top: 0;">My Groups</h2>
+      <% if @mygroups.empty? %>
+      <i>You are not in any groups</i>
+      <% end %>
+      <% @mygroups.each do |group| %>
+        <div style="margin-top: 3px; border-bottom: 1px solid black; text-align: right;">
+          <div style="float: left;"><b><%= link_to group.name, group_path(group) %></b></div>
+          <i><!--x problems, progress bar-->&nbsp;</i>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
   <div style="width: 100%">
     <% if @contests.any? %>
       <h2>Upcoming and Current Contests</h2>
       <%= render 'contests/index' %>
     <% end %>
-    <% if !current_user.competing? %>
+    <% unless user_signed_in? && current_user.competing? %>
       <h2>Public Problems</h2>
       <%= render 'groups/problem_sets' %>
     <% end %>

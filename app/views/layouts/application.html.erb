@@ -46,15 +46,17 @@
           <td style="width:100%">
             <ul<%= ' id=left-menu' if user_signed_in? %> class="sf-menu nav-theme">
               <li><a href="<%= main_app.root_path %>">dashboard</a></li>
-              <% if user_signed_in? %>
-                <li><a href="#" onClick="return false;">contests</a>
-                  <ul>
+              <li><a href="#" onClick="return false;">contests</a>
+                <ul>
+                  <% if user_signed_in? %>
                     <li><a href="<%= main_app.active_contests_path %>">active</a></li>
-                    <li><a href="<%= main_app.current_contests_path %>">current</a></li>
-                    <li><a href="<%= main_app.upcoming_contests_path %>">upcoming</a></li>
-                    <li><a href="<%= main_app.past_contests_path %>">past</a></li>
-                  </ul>
-                </li>
+                  <% end %>
+                  <li><a href="<%= main_app.current_contests_path %>">current</a></li>
+                  <li><a href="<%= main_app.upcoming_contests_path %>">upcoming</a></li>
+                  <li><a href="<%= main_app.past_contests_path %>">past</a></li>
+                </ul>
+              </li>
+              <% if user_signed_in? %>
                 <li><a href="<%= main_app.browse_groups_path %>">groups</a>
                 </li>
                 <li><a href="#" onClick="return false;">my stuff</a>

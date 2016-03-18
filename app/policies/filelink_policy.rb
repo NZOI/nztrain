@@ -1,7 +1,9 @@
 class FilelinkPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
     def resolve
-      if user.is_staff?
+      if !user
+        scope.none
+      elsif user.is_staff?
         scope.all
       else
         scope.none
@@ -18,10 +20,10 @@ class FilelinkPolicy < ApplicationPolicy
   end
 
   def show?
-    return true if user.is_staff?
+    return true if user && user.is_staff?
     if policy(record.root).access?
       return true if record.visibility == Filelink::VISIBILITY[:public]
-      return (!user.competing? && record.visibility == Filelink::VISIBILITY[:protected])
+      return (user && !user.competing? && record.visibility == Filelink::VISIBILITY[:protected])
     end
     false
   end

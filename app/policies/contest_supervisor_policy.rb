@@ -1,4 +1,4 @@
-class ContestSupervisorPolicy < ApplicationPolicy
+class ContestSupervisorPolicy < AuthenticatedPolicy
 
   class Scope < ApplicationPolicy::Scope
     def resolve

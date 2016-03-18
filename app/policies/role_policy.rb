@@ -1,4 +1,4 @@
-class RolePolicy < ApplicationPolicy
+class RolePolicy < AuthenticatedPolicy
 
   class Scope < ApplicationPolicy::Scope
     def resolve

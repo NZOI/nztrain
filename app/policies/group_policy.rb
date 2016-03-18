@@ -1,4 +1,4 @@
-class GroupPolicy < ApplicationPolicy
+class GroupPolicy < AuthenticatedPolicy
 
   class Scope < ApplicationPolicy::Scope
     def resolve(source = nil)

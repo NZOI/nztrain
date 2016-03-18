@@ -5,7 +5,7 @@ module ApplicationHelper
   end
 
   def handle(user)
-    if policy(user).inspect?
+    if user_signed_in? && policy(user).inspect?
       if user.name && !user.name.empty?
         return "#{user.username} \"#{user.name}\""
       else

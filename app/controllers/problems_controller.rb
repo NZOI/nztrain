@@ -74,7 +74,9 @@ class ProblemsController < ApplicationController
       format.html { render :layout => "problem" }
     end
 
-    UserProblemRelation.where(:user_id => current_user.id, :problem_id => params[:id]).first_or_create!.view! unless in_su?
+    if user_signed_in?
+      UserProblemRelation.where(:user_id => current_user.id, :problem_id => params[:id]).first_or_create!.view! unless in_su?
+    end
   end
 
   def submit
@@ -104,7 +106,7 @@ class ProblemsController < ApplicationController
 
   def submissions
     @problem = Problem.find(params[:id])
-    authorize @problem, :show?
+    authorize @problem, :view_submissions?
     @problem = Problem.find(params[:id])
     if current_user.openbook?
       @submissions = @problem.submission_history(current_user)

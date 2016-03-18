@@ -1,6 +1,6 @@
 <%# local variables: problem_set, edit_links (edit/delete), name %>
 <% edit_links = nil unless defined? edit_links %>
-<% problems = problem_set.problems_with_scores_by_user(current_user.id) %>
+<% problems = problem_set.problems_with_scores_by_user(current_user.try(:id) || -1) %>
 <% weighted = problems.map{|p|p.weighting != 100}.any? %>
 <%# problems = problem_set.problems.score_by_user(current_user.id) %>
 <tr class="subheading">

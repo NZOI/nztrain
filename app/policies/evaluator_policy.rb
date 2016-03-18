@@ -1,4 +1,4 @@
-class EvaluatorPolicy < ApplicationPolicy
+class EvaluatorPolicy < AuthenticatedPolicy
 
   class Scope < ApplicationPolicy::Scope
     def resolve

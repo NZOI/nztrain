@@ -52,10 +52,12 @@ class ProblemSetsController < ApplicationController
   def show
     @problem_set = ProblemSet.find(params[:id])
     authorize @problem_set, :show?
-    if policy(Group.new).update?
-      @groups = Group.all
-    else
-      @groups = Group.where(:owner_id => current_user.id)
+    if user_signed_in?
+      if policy(Group.new).update?
+        @groups = Group.all
+      else
+        @groups = Group.where(:owner_id => current_user.id)
+      end
     end
     respond_to do |format|
       format.html # show.html.erb

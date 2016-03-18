@@ -2,21 +2,20 @@ class ApplicationPolicy
   attr_reader :user, :record
 
   def initialize(user, record)
-    raise Pundit::NotAuthorizedError, "must be logged in" unless user
     @user = user
     @record = record
   end
 
   def manage?
-    user.is_admin?
+    user && user.is_admin?
   end
 
   def index?
-    user.is_staff?
+    user && user.is_staff?
   end
 
   def inspect?
-    user.is_staff? or manage?
+    user && user.is_staff? or manage?
   end
 
   def show?
@@ -24,7 +23,7 @@ class ApplicationPolicy
   end
 
   def access?
-    manage? or user.is_staff?
+    manage? or user && user.is_staff?
   end
 
   def create?
@@ -52,7 +51,7 @@ class ApplicationPolicy
   end
 
   def transfer?
-    manage? and user.is_admin?
+    manage? and user && user.is_admin?
   end
 
   def scope
@@ -72,9 +71,9 @@ class ApplicationPolicy
     end
 
     def resolve
-      if user.is_staff?
+      if user && user.is_staff?
         scope.all
-      elsif not user.competing? # TODO check for owner association
+      elsif user and !user.competing? # TODO check for owner association
         scope.where(:owner_id => user.id)
       end
     end

@@ -1,7 +1,6 @@
 <% content_for :title, @problem_set.name %>
 <%= toolbox_push :edit, edit_problem_set_path(@problem_set) if policy(@problem_set).edit? %> 
 <%= toolbox_push :delete, @problem_set if policy(@problem_set).destroy? %> 
-
 <table class="main_table hoverable">
   <thead>
     <tr>

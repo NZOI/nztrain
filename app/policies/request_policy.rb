@@ -1,4 +1,4 @@
-class RequestPolicy < ApplicationPolicy
+class RequestPolicy < AuthenticatedPolicy
   class Scope < ApplicationPolicy::Scope
     def resolve
       if user.is_admin?

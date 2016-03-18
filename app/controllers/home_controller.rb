@@ -1,8 +1,6 @@
 class HomeController < ApplicationController
   def home
-    permission_denied if !user_signed_in?
-
-    @mygroups = current_user.groups
+    @mygroups = current_user.try(:groups)
 
     @problem_set_associations = Group.find(0).problem_set_associations
 

@@ -8,27 +8,39 @@ class ContestPolicy < ApplicationPolicy
 
       # following uses advanced squeel
       return scope.where do |contests|
-        registered = contests.id.in(user.contest_relations.select(:contest_id))
-        grouped = contests.id.in(GroupContest.where do |gc|
-          (gc.group_id >> user.groups.select(:id)) | (gc.group_id == 0)
-        end.select(:contest_id))
-        owned = contests.owner_id == user.id
         public_observation = contests.observation == Contest::OBSERVATION[:public]
-        supervising = contests.id.in(user.contest_supervising.select(:contest_id))
-        registered | grouped | owned | public_observation | supervising
+        grouped = contests.id.in(GroupContest.where do |gc|
+          group_contests = (gc.group_id == 0)
+          group_contests |= (gc.group_id >> user.groups.select(:id)) if user
+          group_contests
+        end.select(:contest_id))
+        visible_contests = public_observation | grouped
+
+        if user
+          registered = contests.id.in(user.contest_relations.select(:contest_id))
+          owned = contests.owner_id == user.id
+          supervising = contests.id.in(user.contest_supervising.select(:contest_id))
+          visible_contests |= registered | owned | supervising
+        end
+
+
+        visible_contests
       end
     end
   end
 
   def registered?
+    return false unless user # signed in
     record.registrants.where(:id => user.id).exists?
   end
 
   def current_contestant?
+    return false unless user # signed in
     record.contest_relations.where{ |relation| (relation.user_id == user.id) & (relation.started_at <= DateTime.now) & (relation.finish_at > DateTime.now) }.exists?
   end
 
   def current_or_past_contestant?
+    return false unless user # signed in
     record.contest_relations.where{ |relation| (relation.user_id == user.id) & (relation.started_at <= DateTime.now) }.exists?
   end
 
@@ -38,15 +50,20 @@ class ContestPolicy < ApplicationPolicy
   end
 
   def manage?
+    return false unless user # signed in
     super or user.is_organiser? && (record == Contest || user.owns(record))
   end
 
   def supervise?
+    return false unless user # signed in
     manage? or record.contest_supervisors.where(user_id: user.id).any? # or has registrar relation
   end
 
   def show?
-    startable? or record.observation == Contest::OBSERVATION[:public] or record.contest_supervisors.where(user_id: user.id).any?
+    return true if record.observation == Contest::OBSERVATION[:public] or record.groups.where(:id => 0).exists? 
+    return false unless user # signed in
+
+    startable? or record.contest_supervisors.where(user_id: user.id).any?
   end
 
   def scoreboard?
@@ -58,6 +75,7 @@ class ContestPolicy < ApplicationPolicy
   end
 
   def create?
+    return false unless user # signed in
     super or user.is_any?([:staff, :organiser])
   end
 
@@ -66,10 +84,11 @@ class ContestPolicy < ApplicationPolicy
   end
 
   def unfinalize?
-    user.is_admin?
+    user && user.is_admin?
   end
 
   def startable?
+    return false unless user # signed in
     user.is_staff? or registered? or record.groups.where(:id => 0).exists? or record.groups.joins(:memberships).where(:memberships => {:member_id => user.id}).exists?
   end
 

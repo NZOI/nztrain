@@ -31,6 +31,7 @@ class ContestsController < ApplicationController
 
     case params[:filter].to_s
     when 'active'
+      raise Pundit::NotAuthorizedError unless user_signed_in?
       @contests = Contest.joins(:contest_relations).where{ (contest_relations.user_id == my{current_user.id}) & (contest_relations.finish_at > Time.now) }.order("end_time ASC")
     when 'current'
       @contests = visible_contests.where{(start_time < Time.now+30.minutes) & (end_time > Time.now)}.order("end_time ASC")
@@ -67,7 +68,7 @@ class ContestsController < ApplicationController
     @contest = Contest.find(params[:id])
     authorize @contest, :show?
     @groups = Group.all
-    @contest_relation = @contest.get_relation(current_user.id)
+    @contest_relation = @contest.get_relation(current_user.id) if user_signed_in?
 
     render :layout => 'contest'
   end

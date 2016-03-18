@@ -1,4 +1,4 @@
-class FileAttachmentPolicy < ApplicationPolicy
+class FileAttachmentPolicy < AuthenticatedPolicy
 
   class Scope < ApplicationPolicy::Scope
     def resolve

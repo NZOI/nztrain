@@ -1,4 +1,4 @@
-class NZIC::MenuItemPolicy < ApplicationPolicy
+class NZIC::MenuItemPolicy < AuthenticatedPolicy
 
   class Scope < ApplicationPolicy::Scope
     def resolve
