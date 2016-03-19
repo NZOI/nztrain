@@ -256,7 +256,8 @@ class ContestsController < ApplicationController
       params[:start_contest] = params[:start_contest_all]
       params[:selected] = []
       @contest_supervisor.contest_relations.where(started_at: nil).each do |relation|
-        params[:selected] << relation.id if Time.now - relation.user.last_seen_at < 15.minutes
+        last_seen_at = relation.user.last_seen_at
+        params[:selected] << relation.id if last_seen_at && Time.now - last_seen_at < 15.minutes
       end
       params[:selected] = nil if params[:selected].empty?
     end
