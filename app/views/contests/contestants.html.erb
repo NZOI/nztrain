@@ -44,7 +44,8 @@
               <td><%= check_box_tag("selected[]", contest_relation.id, false, disabled: contest_relation.ended?) %></td>
               <td>
                 <% if @contest.is_running? %>
-                  <% user_online = Time.now - contest_relation.user.last_seen_at < 15.minutes %>
+                  <% last_seen_at = contest_relation.user.last_seen_at %>
+                  <% user_online = last_seen_at && Time.now - last_seen_at < 15.minutes %>
                   <div style="vertical-align: middle; border-radius: 50%; width: 10px; height: 10px; background-color: #<%= user_online ? "00C000" : "808080" %>; display: inline-block"></div>
                 <% end %>
                 <%= contest_relation.user.username %>

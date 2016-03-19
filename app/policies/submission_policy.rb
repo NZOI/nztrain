@@ -16,11 +16,11 @@ class SubmissionPolicy < AuthenticatedPolicy
   end
 
   def inspect?
-    super or (record.is_a?(Submission) && policy(record.problem).inspect? && !user.competing?)
+    super or (record.is_a?(Submission) && policy(record.problem).try(:inspect?) && !user.competing?)
   end
 
   def update?
-    super or (record.is_a?(Submission) && policy(record.problem).update? && !user.competing?)
+    super or (record.is_a?(Submission) && policy(record.problem).try(:update?) && !user.competing?)
   end
 
   def index?
