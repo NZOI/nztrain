@@ -139,25 +139,25 @@ if [ ! -f "$ISOLATE_ROOT/usr/bin/cint.rb" ] ; then
   $cmd
 fi
 
-# gcc 4.8.1 on Precise (will not be needed when we use trusty tahr)
+# gcc 4.9.3 on Precise (will not be needed when we use trusty tahr)
 echo "$chroot_cmd add-apt-repository ppa:ubuntu-toolchain-r/test -y"
 chroot "$ISOLATE_ROOT" add-apt-repository ppa:ubuntu-toolchain-r/test -y
 
 echo "$chroot_cmd apt-get update"
 chroot "$ISOLATE_ROOT" apt-get update
 
-echo "$chroot_cmd apt-get install gcc-4.8"
-chroot "$ISOLATE_ROOT" apt-get install gcc-4.8
+echo "$chroot_cmd apt-get install gcc-4.9"
+chroot "$ISOLATE_ROOT" apt-get install gcc-4.9
 
-echo "$chroot_cmd apt-get install g++-4.8"
-chroot "$ISOLATE_ROOT" apt-get install g++-4.8
+echo "$chroot_cmd apt-get install g++-4.9"
+chroot "$ISOLATE_ROOT" apt-get install g++-4.9
 
-echo "$chroot_cmd update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50"
-chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50
+echo "$chroot_cmd update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 75"
+chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 75
 
-echo "$chroot_cmd update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50"
-chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
-# gcc 4.8.1 done
+echo "$chroot_cmd update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 75"
+chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 75
+# gcc 4.9.3 done
 
 # let user know that chroot installs are finished
 
