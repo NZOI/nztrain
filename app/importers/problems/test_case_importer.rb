@@ -29,7 +29,7 @@ module Problems
       import_spec_cases(spec['test_cases'] || {})
       import_sets(spec['test_sets'] || {})
       import_prerequisites(spec['prerequisites']) if spec.has_key?('prerequisites')
-      import_samples(spec['samples']) if spec.has_key?('samples')
+      import_samples(spec['samples']) if spec.has_key?('samples') && spec['samples']
     end
 
     def import_prerequisites(set_names)
