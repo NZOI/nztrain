@@ -9,7 +9,7 @@ File.open("#{scriptname}.cc","w") do |f|
         f.write("\n")
 end
 
-system("g++ #{scriptname}.cc -o #{scriptname}.exe")
+system("g++ #{scriptname}.cc -o #{scriptname}.exe -std=gnu++11")
 ARGV.shift 1
 args = ARGV.join(" ")
 
