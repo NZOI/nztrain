@@ -1,0 +1,18 @@
+Schools:
+
+<table class="main_table">
+  <thead>
+    <tr><th>ID</td><th>Name</th><th>Users</th></tr>
+  </thead>
+  <tbody>
+    <% @schools.each do |school| %>
+      <tr>
+        <td><%= school.id %></td>
+        <td><%= link_to school.name, school %></td>
+        <td><%= school.users_count %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+

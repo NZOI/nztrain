@@ -109,6 +109,9 @@
                       <% if policy(Item).index? %>
                         <li><a href="<%= main_app.items_path %>">library</a></li>
                       <% end %>
+                      <% if policy(School).index? %>
+                        <li><a href="<%= main_app.schools_path %>">schools</a></li>
+                      <% end %>
                     </ul>
                   </li>
                 <% end %>

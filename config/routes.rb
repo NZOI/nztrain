@@ -239,6 +239,8 @@ NZTrain::Application.routes.draw do
     end
   end
 
+  resources :schools, only: [:index, :show]
+
   resources :items, only: :index
   resources :item, except: [:index, :create, :new] do
     member do

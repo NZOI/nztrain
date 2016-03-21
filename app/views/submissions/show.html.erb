@@ -39,7 +39,7 @@
 
 <p>
 <b>User:</b>
-<%= @submission.user.username %>
+<%= link_to @submission.user.username, @submission.user %>
 </p>
 
 <% if policy(@submission).inspect? %>

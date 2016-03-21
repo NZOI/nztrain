@@ -1,0 +1,18 @@
+<b>School: </b><%= @school.name %><br>
+
+Users:
+
+<table class="main_table">
+  <thead>
+    <tr><th>User</th><th>School Graduation Date</th><th>School Year</th></tr>
+  </thead>
+  <tbody>
+    <% @school.users.each do |user| %>
+      <tr>
+        <td><%= link_to handle(user), user %></td>
+        <td><%= user.school_graduation %></td>
+        <td><%= user.estimated_year_level %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

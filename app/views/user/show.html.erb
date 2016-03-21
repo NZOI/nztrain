@@ -9,13 +9,21 @@
   <% end %>
 
   <b>Brownie Points:</b><%= @user.brownie_points %><br>
+  <% if policy(@user).inspect? %>
+    <b>School: </b><%= link_to @user.school.name, @user.school if @user.school %><br>
+    <b>School Graduation Date: </b><%= @user.school_graduation %><br>
+  <% end %>
 </div>
 
 <b> <%= @solved_problems.size %> solved problems: </b>
 <ul>
 <% @solved_problems.each do |prob| %>
   <li>
-  <%= link_to prob.name, problem_path(prob.problem_id) %>
+    <% if policy(prob.problem).show? %>
+      <%= link_to prob.name, problem_path(prob.problem_id) %>
+    <% else %>
+      ???
+    <% end %>
   </li>
 <% end %>
 </ul>
