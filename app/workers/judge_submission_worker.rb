@@ -205,7 +205,7 @@ class JudgeSubmissionWorker < ApplicationWorker
         file.chmod(0700)
         file.write(problem.evaluator.source.gsub(/\r\n?/, "\n"))
       end
-      resource_limits = { :mem => 262144, :time => time_limit*3+9, :wall_time => time_limit*3+30 }
+      resource_limits = { :mem => 524288, :time => time_limit*3+15, :wall_time => time_limit*3+30 }
       box.fopen("actual","w") { |f| f.write(actual) } # DEPRECATED
       box.fopen("input","w") { |f| f.write(test_case.input) } # DEPRECATED
       box.fopen("expected","w") { |f| f.write(expected) } # DEPRECATED
