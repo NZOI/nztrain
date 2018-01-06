@@ -23,7 +23,8 @@ gem 'forem-redcarpet', github: 'NZOI/forem-redcarpet'
 
 gem "nokogiri", '~> 1.6.0'
 gem 'redcarpet'
-gem 'rmagick', '2.13.2'
+#gem 'rmagick', '2.13.2'
+gem 'rmagick'
 gem 'carrierwave', '0.9.0'
 gem 'will_paginate'
 gem 'has_scope'
@@ -57,12 +58,10 @@ gem 'ruby-duration'
 gem 'pg'
 gem 'backup'
 
-# Use unicorn as the web server
-gem 'unicorn'
-
 # Redis and Background Processing
-gem 'redis'
-gem 'qless', :github => 'ronalchn/qless', :branch => 'nztrain'
+gem 'redis', '< 4.0'
+gem 'rake', '< 11.0' # pinned to avoid last_comment issue
+gem 'qless'#, :github => 'ronalchn/qless', :branch => 'nztrain'
 gem 'connection_pool'
 gem 'sinatra'
 
