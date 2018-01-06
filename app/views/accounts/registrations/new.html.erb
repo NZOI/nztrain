@@ -38,7 +38,7 @@
   </p>
 
   <p>
-    <%= recaptcha_tags :public_key => @db_settings["recaptcha/public_key"] if @db_settings["recaptcha/public_key"] && !@db_settings["recaptcha/public_key"].empty? %>
+    <%= recaptcha_tags :site_key => @db_settings["recaptcha/public_key"] if @db_settings["recaptcha/public_key"] && !@db_settings["recaptcha/public_key"].empty? %>
   </p>
   <p><%= f.submit "Sign up" %></p>
 <% end %>
