@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe TestSetsController do
   before(:all) do
-    @test_set = FactoryGirl.create(:test_set, :problem => problems(:problem))
+    @test_set = FactoryBot.create(:test_set, :problem => problems(:problem))
   end
   after(:all) do
     @test_set.destroy

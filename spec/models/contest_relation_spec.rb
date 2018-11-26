@@ -20,8 +20,8 @@ describe ContestRelation do
     end
   end
   before(:all) do
-    @contest = FactoryGirl.create(:contest)
-    @relation = FactoryGirl.create(:contest_relation, :contest => @contest, :user => users(:user))
+    @contest = FactoryBot.create(:contest)
+    @relation = FactoryBot.create(:contest_relation, :contest => @contest, :user => users(:user))
   end
   after(:all) do
     @relation.destroy
@@ -33,7 +33,7 @@ describe ContestRelation do
     @relation.should finish_at_correct_time
   end
   it "updates finish_at when contest changes" do
-    @anothercontest = FactoryGirl.build(:contest, :start_time => @relation.started_at.advance(:hours => -1), :end_time => @relation.started_at.advance(:hours => 1))
+    @anothercontest = FactoryBot.build(:contest, :start_time => @relation.started_at.advance(:hours => -1), :end_time => @relation.started_at.advance(:hours => 1))
     @relation.contest = @anothercontest
     @relation.should finish_at_correct_time
     @relation.contest_id = @contest.id

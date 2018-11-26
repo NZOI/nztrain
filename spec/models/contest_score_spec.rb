@@ -2,15 +2,15 @@ require 'spec_helper'
 
 describe ContestRelation do
   before(:all) do
-    @problem_set = FactoryGirl.build(:problem_set)
-    @contest = FactoryGirl.build(:contest, :duration => 5.0, :start_time => "01/01/2012 9:00:00", :end_time => "01/01/2012 18:00:00", :problem_set => @problem_set, :finalized_at => nil)
-    @user = FactoryGirl.create(:user, :username => "contest_score_spec.model.user")
-    @relation = FactoryGirl.create(:contest_relation, :contest => @contest, :user => @user, :started_at => @contest.start_time.advance(:hours => 2))
-    @problem_stub = FactoryGirl.create(:problem, :problem_sets => [@problem_set])
-    @submission_stub = FactoryGirl.create(:submission, :user => @user, :problem => @problem_stub, :maximum_points => 100, :points => 14, :created_at => @relation.started_at.advance(:hours => 1))
-    @adding_problem = FactoryGirl.create(:adding_problem, :problem_sets => [@problem_set])
-    @adding_submission = FactoryGirl.create(:adding_submission, :user => @user, :problem => @adding_problem, :created_at => @relation.started_at.advance(:hours => 1), :maximum_points => 100)
-    #@contestscore = FactoryGirl.create(:contest_score
+    @problem_set = FactoryBot.build(:problem_set)
+    @contest = FactoryBot.build(:contest, :duration => 5.0, :start_time => "01/01/2012 9:00:00", :end_time => "01/01/2012 18:00:00", :problem_set => @problem_set, :finalized_at => nil)
+    @user = FactoryBot.create(:user, :username => "contest_score_spec.model.user")
+    @relation = FactoryBot.create(:contest_relation, :contest => @contest, :user => @user, :started_at => @contest.start_time.advance(:hours => 2))
+    @problem_stub = FactoryBot.create(:problem, :problem_sets => [@problem_set])
+    @submission_stub = FactoryBot.create(:submission, :user => @user, :problem => @problem_stub, :maximum_points => 100, :points => 14, :created_at => @relation.started_at.advance(:hours => 1))
+    @adding_problem = FactoryBot.create(:adding_problem, :problem_sets => [@problem_set])
+    @adding_submission = FactoryBot.create(:adding_submission, :user => @user, :problem => @adding_problem, :created_at => @relation.started_at.advance(:hours => 1), :maximum_points => 100)
+    #@contestscore = FactoryBot.create(:contest_score
   end
   after(:all) do
     @adding_submission.destroy
@@ -34,15 +34,15 @@ describe ContestRelation do
     ContestScore.where(:submission_id => @submission_stub.id).count.should == 0
   end
   it "finds submission with maximum score" do
-    FactoryGirl.create(:submission, :user => @user, :problem => @problem_stub, :maximum_points => 100, :points => 13, :created_at => @relation.started_at.advance(:hours => 2))
+    FactoryBot.create(:submission, :user => @user, :problem => @problem_stub, :maximum_points => 100, :points => 13, :created_at => @relation.started_at.advance(:hours => 2))
     ContestScore.where(:contest_relation_id => @relation.id, :problem_id => @problem_stub.id).first.try(:score).should == 14
-    FactoryGirl.create(:submission, :user => @user, :problem => @problem_stub, :points => 28, :maximum_points => 50, :created_at => @relation.started_at.advance(:hours => 1.5))
+    FactoryBot.create(:submission, :user => @user, :problem => @problem_stub, :points => 28, :maximum_points => 50, :created_at => @relation.started_at.advance(:hours => 1.5))
     ContestScore.where(:contest_relation_id => @relation.id, :problem_id => @problem_stub.id).first.try(:score).should == 56
   end
   it "only considers submissions during time when contest_relation is valid" do
-    FactoryGirl.create(:submission, :user => @user, :problem => @problem_stub, :points => 100, :maximum_points => 100, :created_at => @relation.started_at.advance(:hours => -0.5))
+    FactoryBot.create(:submission, :user => @user, :problem => @problem_stub, :points => 100, :maximum_points => 100, :created_at => @relation.started_at.advance(:hours => -0.5))
     ContestScore.where(:contest_relation_id => @relation.id, :problem_id => @problem_stub.id).first.try(:score).should == 14
-    FactoryGirl.create(:submission, :user => @user, :problem => @problem_stub, :points => 56, :maximum_points => 100, :created_at => @relation.finish_at.advance(:hours => 0.5))
+    FactoryBot.create(:submission, :user => @user, :problem => @problem_stub, :points => 56, :maximum_points => 100, :created_at => @relation.finish_at.advance(:hours => 0.5))
     ContestScore.where(:contest_relation_id => @relation.id, :problem_id => @problem_stub.id).first.try(:score).should == 14
   end
   it "has automatically updates contest_relation score and time_taken" do

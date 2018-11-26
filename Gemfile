@@ -88,10 +88,10 @@ group :development, :test do
   gem 'capybara'
   gem 'capybara-email'
 
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
 
   gem 'byebug'
-  gem 'factory_girl'#, '~> 4.0'
+  gem 'factory_bot'#, '~> 4.0'
 
   gem 'ruby_parser' # for declarative_authorization
 end

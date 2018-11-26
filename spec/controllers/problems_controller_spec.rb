@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe ProblemsController do
   before(:all) do
-    @group = FactoryGirl.create(:group, :name => "Special Group", :members => [users(:admin),users(:user)])
-    @group_set = FactoryGirl.create(:problem_set, :name => "Set in Group", :groups => [@group])
-    @group_problem = FactoryGirl.create(:adding_problem, :problem_sets => [@group_set])
+    @group = FactoryBot.create(:group, :name => "Special Group", :members => [users(:admin),users(:user)])
+    @group_set = FactoryBot.create(:problem_set, :name => "Set in Group", :groups => [@group])
+    @group_problem = FactoryBot.create(:adding_problem, :problem_sets => [@group_set])
   end
   after(:all) do
     [@group, @group_set, @group_problem].each { |object| object.destroy }
@@ -17,8 +17,8 @@ describe ProblemsController do
 
   context "as admin" do
     before(:all) do
-      @owned_problem = FactoryGirl.create(:problem, :owner => users(:admin))
-      @unowned_problem = FactoryGirl.create(:problem)
+      @owned_problem = FactoryBot.create(:problem, :owner => users(:admin))
+      @unowned_problem = FactoryBot.create(:problem)
     end
     after(:all) do
       @unowned_problem.destroy
@@ -33,8 +33,8 @@ describe ProblemsController do
 
   context "as a normal user" do
     before(:all) do
-      @owned_problem = FactoryGirl.create(:problem, :owner => users(:user))
-      @unowned_problem = FactoryGirl.create(:problem)
+      @owned_problem = FactoryBot.create(:problem, :owner => users(:user))
+      @unowned_problem = FactoryBot.create(:problem)
     end
     after(:all) do
       @unowned_problem.destroy
