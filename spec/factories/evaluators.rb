@@ -3,8 +3,8 @@
 FactoryBot.define do
   factory :evaluator do
     sequence(:name) {|n| "Evaluator #{n}" }
-    description "Evaluator description"
-    source "Shell source code"
-    owner_id 0
+    description { "Evaluator description" }
+    source { "Shell source code" }
+    owner_id { 0 }
   end
 end
