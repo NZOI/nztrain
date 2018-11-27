@@ -23,8 +23,8 @@ ActiveRecord::Schema.define(version: 20160131000430) do
     t.text     "record"
     t.integer  "score_1"
     t.integer  "score_2"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "iteration"
     t.text     "judge_output"
   end
@@ -40,8 +40,8 @@ ActiveRecord::Schema.define(version: 20160131000430) do
     t.text     "sample_ai"
     t.text     "statement"
     t.text     "judge"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "iterations"
     t.integer  "iterations_preview"
   end
@@ -51,8 +51,8 @@ ActiveRecord::Schema.define(version: 20160131000430) do
     t.string   "language"
     t.integer  "user_id"
     t.integer  "ai_contest_id"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "name"
     t.boolean  "active",        default: false
   end
@@ -138,8 +138,8 @@ ActiveRecord::Schema.define(version: 20160131000430) do
     t.string   "name"
     t.string   "file_attachment"
     t.integer  "owner_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "filelinks", force: true do |t|
@@ -310,8 +310,8 @@ ActiveRecord::Schema.define(version: 20160131000430) do
     t.string   "identifier"
     t.string   "name"
     t.integer  "current_language_id"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "language_groups", ["identifier"], name: "index_language_groups_on_identifier", unique: true, using: :btree
@@ -320,8 +320,8 @@ ActiveRecord::Schema.define(version: 20160131000430) do
     t.string   "identifier"
     t.string   "compiler"
     t.boolean  "interpreted"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "extension"
     t.boolean  "compiled"
     t.string   "name"
@@ -399,8 +399,8 @@ ActiveRecord::Schema.define(version: 20160131000430) do
     t.integer  "status",       default: 0,        null: false
     t.integer  "requestee_id"
     t.datetime "expired_at",   default: Infinity, null: false
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "roles", force: true do |t|
@@ -464,8 +464,8 @@ ActiveRecord::Schema.define(version: 20160131000430) do
   create_table "test_case_relations", force: true do |t|
     t.integer  "test_case_id"
     t.integer  "test_set_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "test_case_relations", ["test_case_id"], name: "index_test_case_relations_on_test_case_id", using: :btree
@@ -513,22 +513,22 @@ ActiveRecord::Schema.define(version: 20160131000430) do
   add_index "user_problem_relations", ["user_id", "problem_id"], name: "index_user_problem_relations_on_user_id_and_problem_id", unique: true, using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "email",                              default: "",               null: false
-    t.string   "encrypted_password",     limit: 128, default: "",               null: false
+    t.string   "email",                            default: "",               null: false
+    t.string   "encrypted_password",               default: "",               null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                      default: 0
+    t.integer  "sign_in_count",                    default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "brownie_points",                     default: 0
+    t.integer  "brownie_points",                   default: 0
     t.string   "name"
-    t.string   "username",                                                      null: false
-    t.boolean  "can_change_username",                default: false,            null: false
+    t.string   "username",                                                    null: false
+    t.boolean  "can_change_username",              default: false,            null: false
     t.string   "avatar"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
@@ -538,9 +538,9 @@ ActiveRecord::Schema.define(version: 20160131000430) do
     t.integer  "school_id"
     t.string   "country_code",           limit: 3
     t.date     "school_graduation"
-    t.boolean  "forem_admin",                        default: false
-    t.string   "forem_state",                        default: "pending_review"
-    t.boolean  "forem_auto_subscribe",               default: false
+    t.boolean  "forem_admin",                      default: false
+    t.string   "forem_state",                      default: "pending_review"
+    t.boolean  "forem_auto_subscribe",             default: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
