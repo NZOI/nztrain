@@ -17,7 +17,8 @@ do
     esac
 done
 
-SUITE=precise
+SUITE=xenial
+
 
 new_debootstrap=false
 
@@ -83,8 +84,8 @@ chroot "$ISOLATE_ROOT" apt-get install build-essential # C/C++ (g++, gcc)
 echo "$chroot_install ruby"
 chroot "$ISOLATE_ROOT" apt-get install ruby # Ruby (ruby)
 
-echo "$chroot_install ghc6"
-chroot "$ISOLATE_ROOT" apt-get install ghc6 # Haskell (ghc)
+echo "$chroot_install ghc"
+chroot "$ISOLATE_ROOT" apt-get install ghc # Haskell (ghc)
 
 echo "$chroot_install default-jdk"
 chroot "$ISOLATE_ROOT" apt-get install default-jdk # Java
