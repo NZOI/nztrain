@@ -23,13 +23,15 @@
 <% if (policy(@problem).use?) && !@problem_sets.nil? && @problem_sets.size>0 %>
   <p>
   <b> Problem Sets: </b>
-  <ul>
-    <% @problem.problem_sets.each do |ps| %>
-      <li> <%= link_to ps.name, ps %> </li>
-    <% end %>
-  </ul>
-  <% if @problem_sets.size==0 %>
-     This problem in not in any problem set.
+  <% if @problem.problem_sets.size > 0 %>
+    <ul>
+      <% @problem.problem_sets.each do |ps| %>
+        <li> <%= link_to ps.name, ps %> </li>
+      <% end %>
+    </ul>
+  <% else %>
+     <br>
+     This problem in not in any problem sets.
   <% end %>
   <%= form_tag(problem_problem_set_add_path, :method => :put) do %>
     <%= hidden_field_tag :problem_id, @problem.id %>
