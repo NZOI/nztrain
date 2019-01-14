@@ -34,9 +34,15 @@
     </tr>
   <% end %>
 </table>
-
+<br>
 <% if policy(@problem_set).use? %>
   <p>
+  <b> Groups: </b>
+  <ul>
+    <% @problem_set.groups.each do |g| %>
+      <li> <%= link_to g.name, g %> </li>
+    <% end %>
+  </ul>
   <%= form_tag(group_problem_set_add_path(:problem_set_id => @problem_set), :method => :put) do %>
     <%= collection_select :problem_set, :group_ids, @groups, :id, :name %>
     <%= submit_tag "Give group access" %>
