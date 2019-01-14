@@ -33,10 +33,15 @@
      <br>
      This problem in not in any problem sets.
   <% end %>
-  <%= form_tag(problem_problem_set_add_path, :method => :put) do %>
-    <%= hidden_field_tag :problem_id, @problem.id %>
-    <%= collection_select :problem, :problem_set_ids, @problem_sets, :id, :name %>
-    <%= submit_tag 'Add to problem set' %>
+  <% problem_sets_not_in = @problem_sets.reject {|ps| @problem.problem_sets.include? ps} %>
+  <% if problem_sets_not_in.size > 0 %>
+    <%= form_tag(problem_problem_set_add_path, :method => :put) do %>
+      <%= hidden_field_tag :problem_id, @problem.id %>
+      <%= collection_select :problem, :problem_set_ids, problem_sets_not_in, :id, :name %>
+      <%= submit_tag 'Add to problem set' %>
+    <% end %>
+  <% else %>
+      A member of all problem sets.
   <% end %>
   </p>
 <% end %>
