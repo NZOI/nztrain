@@ -117,6 +117,8 @@ NZTrain::Application.routes.draw do
       post 'import'
 
       get 'testing'
+
+      put 'remove_from_problem_set'
     end
     resources :test_cases, :module => :problems, :only => [:index] do
       patch '', action: :update, on: :collection
