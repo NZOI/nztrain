@@ -20,13 +20,16 @@
   </table>
   <br />
 <% end %>
-<% if (policy(@problem).use?) && !@problem_sets.nil? && @problem_sets.size>0 %>
+<% if (policy(@problem).use?) && !@problem_sets.nil? && @problem_sets.size > 0 %>
   <p>
   <b> Problem Sets: </b>
   <% if @problem.problem_sets.size > 0 %>
     <ul>
       <% @problem.problem_sets.each do |ps| %>
-        <li> <%= link_to ps.name, ps %> </li>
+        <li>
+          <%= link_to ps.name, ps %> -
+          <%= link_to 'Remove', remove_from_problem_set_problem_path(@problem, :problem_set_id => ps.id), :method => "put" %>
+        </li>
       <% end %>
     </ul>
   <% else %>
