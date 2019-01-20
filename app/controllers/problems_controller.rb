@@ -252,10 +252,10 @@ class ProblemsController < ApplicationController
 
   # Remove the current problem from the selected problem set and refresh the page
   def remove_from_problem_set
-    @problem_set = ProblemSet.find(params[:problem_set_id])
+    problem_set = ProblemSet.find(params[:problem_set_id])
     @problem = Problem.find(params[:id])
-    @problem_set.problems.delete(@problem)
-    redirect_to(@problem, :notice => "Removed from the '#{@problem_set.name}' problem set.")
+    problem_set.problems.delete(@problem)
+    redirect_to(@problem, :notice => "Removed from the '#{problem_set.name}' problem set.")
   end
 
   private
