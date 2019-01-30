@@ -43,9 +43,10 @@ if [[ "$ISOLATE_ROOT" != "/" ]] && [[ ! -d "$ISOLATE_ROOT" ]]; then
   ln --force /etc/resolv.conf "$ISOLATE_ROOT/etc/resolv.conf"
 fi
 
-if ${update:=true} || ${new_debootstrap:=true} ; then
-  chroot "$ISOLATE_ROOT" apt-get update
-fi
+# commented out because apt-get update is run unconditionally later
+#if ${update:=true} || ${new_debootstrap:=true} ; then
+#  chroot "$ISOLATE_ROOT" apt-get update
+#fi
 
 chroot_cmd="$ chroot \"$ISOLATE_ROOT\""
 chroot_install="$chroot_cmd apt-get install"
