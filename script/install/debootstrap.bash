@@ -32,12 +32,12 @@ if [[ "$ISOLATE_ROOT" != "/" ]] && [[ ! -d "$ISOLATE_ROOT" ]]; then
   debootstrap $SUITE "$ISOLATE_ROOT" http://archive.ubuntu.com/ubuntu
 
   # add sources
-  echo deb http://archive.ubuntu.com/ubuntu/ $SUITE-updates main restricted >> /srv/chroot/nztrain/etc/apt/sources.list
-  echo deb http://archive.ubuntu.com/ubuntu/ $SUITE universe >> /srv/chroot/nztrain/etc/apt/sources.list
-  echo deb http://security.ubuntu.com/ubuntu $SUITE-security main restricted >> /srv/chroot/nztrain/etc/apt/sources.list
-  echo deb http://nz.archive.ubuntu.com/ubuntu/ $SUITE multiverse >> /srv/chroot/nztrain/etc/apt/sources.list
-  echo deb-src http://nz.archive.ubuntu.com/ubuntu/ $SUITE multiverse >> /srv/chroot/nztrain/etc/apt/sources.list
-  echo deb http://nz.archive.ubuntu.com/ubuntu/ $SUITE-updates multiverse >> /srv/chroot/nztrain/etc/apt/sources.list
+  echo deb http://archive.ubuntu.com/ubuntu/ $SUITE-updates main restricted >> "$ISOLATE_ROOT"/etc/apt/sources.list
+  echo deb http://archive.ubuntu.com/ubuntu/ $SUITE universe >> "$ISOLATE_ROOT"/etc/apt/sources.list
+  echo deb http://security.ubuntu.com/ubuntu $SUITE-security main restricted >> "$ISOLATE_ROOT"/etc/apt/sources.list
+  echo deb http://nz.archive.ubuntu.com/ubuntu/ $SUITE multiverse >> "$ISOLATE_ROOT"/etc/apt/sources.list
+  echo deb-src http://nz.archive.ubuntu.com/ubuntu/ $SUITE multiverse >> "$ISOLATE_ROOT"/etc/apt/sources.list
+  echo deb http://nz.archive.ubuntu.com/ubuntu/ $SUITE-updates multiverse >> "$ISOLATE_ROOT"/etc/apt/sources.list
 
   # link /etc/resolv.conf
   ln --force /etc/resolv.conf "$ISOLATE_ROOT/etc/resolv.conf"
