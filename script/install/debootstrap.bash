@@ -53,6 +53,16 @@ chroot_install="$chroot_cmd apt-get install"
 
 mount -o bind /proc "$ISOLATE_ROOT/proc"
 
+echo "$chroot_cmd apt-get update"
+chroot "$ISOLATE_ROOT" apt-get update
+
+echo "$chroot_install software-properties-common"
+chroot "$ISOLATE_ROOT" apt-get install software-properties-common # provides add-apt-repository
+
+# only for <= 12.04
+echo "$chroot_install python-software-properties"
+chroot "$ISOLATE_ROOT" apt-get install python-software-properties # provides add-apt-repository
+
 [ -z "$TRAVIS" ] && { # if not in Travis-CI
   # python ppa
   echo "$chroot_cmd add-apt-repository ppa:fkrull/deadsnakes -y"
@@ -61,23 +71,16 @@ mount -o bind /proc "$ISOLATE_ROOT/proc"
   # ruby ppa
   echo "$chroot_cmd add-apt-repository ppa:brightbox/ruby-ng -y"
   chroot "$ISOLATE_ROOT" add-apt-repository ppa:brightbox/ruby-ng -y
-}
 
-echo "$chroot_cmd apt-get update"
-chroot "$ISOLATE_ROOT" apt-get update
+  echo "$chroot_cmd apt-get update"
+  chroot "$ISOLATE_ROOT" apt-get update
+}
 
 # utilities
 echo "$chroot_install wget"
 chroot "$ISOLATE_ROOT" apt-get install wget
 
 # end utilities
-
-echo "$chroot_install software-properties-common"
-chroot "$ISOLATE_ROOT" apt-get install software-properties-common # provides add-apt-repository
-
-# only for <= 12.04
-echo "$chroot_install python-software-properties"
-chroot "$ISOLATE_ROOT" apt-get install python-software-properties # provides add-apt-repository
 
 echo "$chroot_install build-essential"
 chroot "$ISOLATE_ROOT" apt-get install build-essential # C/C++ (g++, gcc)
