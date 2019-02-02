@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -o pipefail # to detect failure in 'bundle ... | sed ...' (see 'man bash')
 
 lastupdate=`cat script/update.time` # get time of last update
 
