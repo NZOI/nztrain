@@ -3,12 +3,12 @@
 min_version=1.9.2
 ruby -e 'puts RUBY_VERSION' 2>/dev/null | bash script/check_version.bash $min_version || {
   echo "Ruby $min_version+ required!"
-  echo Select an install option for Ruby 1.9.3
+  echo "Select an install option for Ruby 2.3.8"
 
   # detect RVM
-  rvm --version && rvm_option="Install Ruby using RVM" || rvm_option="Install RVM (Single User)"
-  rbenv --version && rbenv_option="Install Ruby using rbenv" || rbenv_option="Install rbenv (Single User on Desktop with ruby-build)"
-  select INSTALL_OPTION in "Don't install" "System MRI Ruby from source" "$rvm_option" "$rbenv_option";
+  rvm --version &>/dev/null && rvm_option="Install Ruby using RVM" || rvm_option="Install RVM (single user)"
+  rbenv --version &>/dev/null && rbenv_option="Install Ruby using rbenv" || rbenv_option="Install rbenv (single user with ruby-build)"
+  select INSTALL_OPTION in "Exit without installing" "System MRI Ruby from source" "$rvm_option" "$rbenv_option";
   do
     case $REPLY in
       1)

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-ruby_version=2.0.0
+ruby_version=2.3.8
 
 # detect rvm
 rvm --version &> /dev/null && {
