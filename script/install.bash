@@ -22,6 +22,10 @@ do
     esac
 done
 
+if [ ! -f script/update.time ]; then
+  echo 2000-01-01+00:00:00 > script/update.time
+fi
+
 bash script/install/ruby.bash || exit 1 # check ruby version
 
 bash script/install/postgresql.bash || exit 1 # create user & db if it doesn't exist
