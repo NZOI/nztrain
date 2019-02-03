@@ -4,7 +4,7 @@ class CreateSettings < ActiveRecord::Migration
       t.string :key
       t.string :value
     end
-    add_index :settings, :key, :unique => true, :null => false
+    add_index :settings, :key, :unique => true
   end
 
   def self.down
