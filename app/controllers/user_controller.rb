@@ -92,7 +92,7 @@ class UserController < ApplicationController
         sign_in @user
         redirect_to root_url, :notice => "su #{@user.username}"
       else
-        redirect_to request.referrer, :alert => "Password incorrect"
+        redirect_to request.referrer || '/', :alert => "Password incorrect"
       end
     else
       render "users/su", :layout => !request.xhr?
