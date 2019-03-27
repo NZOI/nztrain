@@ -34,12 +34,28 @@
     </tr>
   <% end %>
 </table>
-
+<br>
 <% if policy(@problem_set).use? %>
   <p>
-  <%= form_tag(group_problem_set_add_path(:problem_set_id => @problem_set), :method => :put) do %>
-    <%= collection_select :problem_set, :group_ids, @groups, :id, :name %>
-    <%= submit_tag "Give group access" %>
+  <b> Groups: </b>
+  <% if @problem_set.groups.size > 0 %>
+    <ul>
+      <% @problem_set.groups.each do |g| %>
+        <li> <%= link_to g.name, g %> </li>
+      <% end %>
+    </ul>
+  <% else %>
+      <br>
+      This problem set is not in any group.
+  <% end %>
+  <% groups_not_in = @groups.reject {|g| @problem_set.groups.include? g} %>
+  <% if groups_not_in.size > 0 %>
+    <%= form_tag(group_problem_set_add_path(:problem_set_id => @problem_set), :method => :put) do %>
+        <%= collection_select :problem_set, :group_ids, groups_not_in, :id, :name %>
+        <%= submit_tag "Give group access" %>
+    <% end %>
+  <% else %>
+      A member of all groups.
   <% end %>
   </p>
 

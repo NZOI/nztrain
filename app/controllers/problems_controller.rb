@@ -250,6 +250,14 @@ class ProblemsController < ApplicationController
     end
   end
 
+  # Remove the current problem from the selected problem set and refresh the page
+  def remove_from_problem_set
+    problem_set = ProblemSet.find(params[:problem_set_id])
+    @problem = Problem.find(params[:id])
+    problem_set.problems.delete(@problem)
+    redirect_to(@problem, :notice => "Removed from the '#{problem_set.name}' problem set.")
+  end
+
   private
   def validate(problem)
     if policy(problem).maximum_memory_limit < (params.require(:problem)[:memory_limit].to_f || 0)
