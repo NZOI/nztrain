@@ -43,7 +43,7 @@ rbenv --version &> /dev/null || {
   if ! grep -q 'PATH.*\.rbenv/bin' ~/.bashrc; then
     # looks like it hasn't been configured yet
     if bash script/confirm.bash "Configure ~/.bashrc"; then
-	configure_bashrc=true
+      configure_bashrc=true
     fi
   else
     # looks like is has already been configured
