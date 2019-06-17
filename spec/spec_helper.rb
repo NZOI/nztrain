@@ -39,6 +39,15 @@ RSpec.configure do |config|
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = true
 
+  # Automatically mix in support functions into tests based on their file
+  # location. The alternative is to explicitly tag specs with their type, e.g.
+  #
+  #     RSpec.describe UserController, :type => :controller do
+  #       # ...
+  #     end
+  #
+  config.infer_spec_type_from_file_location!
+
   config.before(:suite) do
     FixturesSpecHelper.initialize
   end
