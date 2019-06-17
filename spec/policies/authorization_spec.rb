@@ -28,7 +28,7 @@ describe "Authorization" do
     @everyone_contest = FactoryGirl.create(:contest, :group_ids => [0], :problem_set => @contest_set, :start_time => DateTime.now.advance(:hours => -100), :end_time => DateTime.now.advance(:hours => 100))
   end
   after(:all) do
-    [@member, @group, @private_problem, @group_set ,@everyone_set, @group_problem, @user_problem, @admin_problem, @everyone_problem, @contest_set, @contest, @contest_problem, @private_set, @private_contest, @past_contest, @future_contest, @everyone_contest].each { |obj| obj.destroy }
+    [@member, @group, @organiser_group, @private_problem, @group_set, @everyone_set, @group_problem, @user_problem, @admin_problem, @everyone_problem, @contest_set, @contest, @contest_problem, @private_set, @private_contest, @past_contest, @future_contest, @everyone_contest].each { |obj| obj.destroy }
   end
   describe 'on models' do
     it 'superadmin can manage all objects' do
