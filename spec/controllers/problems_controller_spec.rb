@@ -7,7 +7,7 @@ describe ProblemsController do
     @group_problem = FactoryGirl.create(:adding_problem, :problem_sets => [@group_set])
   end
   after(:all) do
-    [@group, @group_set, @group_problem].each { |object| object.destroy }
+    [@group, @group_set, @group_problem].reverse_each { |object| object.destroy }
   end
   shared_examples "for any user" do
     can_index :problems, :params => { :filter => 'my' }
