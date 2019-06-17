@@ -15,7 +15,7 @@ describe Accounts::RegistrationsController do
     newuser.should_not be_nil
     newuser.name.should == "Mr. SignUp"
     newuser.email.should == "signup@nztrain.com"
-    newuser.valid_password?("password").should be_true
+    newuser.valid_password?("password").should be true
     # check email confirmation email sent
     (mail = ActionMailer::Base.deliveries.last).should_not be_nil
     mail.to.should == ["signup@nztrain.com"] # email sent to right place
@@ -55,7 +55,7 @@ describe Accounts::RegistrationsController do
 
     it "can update password" do
       put :update, :type => "password", :user => { :password => "anewpass", :password_confirmation => "anewpass", :current_password => "registration password" }
-      @user.reload.valid_password?("anewpass").should be_true
+      @user.reload.valid_password?("anewpass").should be true
     end
 
     it "can update email" do
