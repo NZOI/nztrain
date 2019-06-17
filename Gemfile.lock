@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/NZOI/forem-redcarpet.git
+  remote: https://github.com/NZOI/forem-redcarpet.git
   revision: b9908439463723071d9f2f50290af84ca37042a4
   specs:
     forem-redcarpet (1.0.2)
@@ -8,7 +8,7 @@ GIT
       redcarpet (~> 3.2.2)
 
 GIT
-  remote: git://github.com/NZOI/nzic_models.git
+  remote: https://github.com/NZOI/nzic_models.git
   revision: 0afa31e8bb8b045d12951a36032b15a768a3c868
   specs:
     nzic_models (0.0.2)
@@ -17,14 +17,14 @@ GIT
       redcarpet
 
 GIT
-  remote: git://github.com/mixonic/ranked-model.git
+  remote: https://github.com/mixonic/ranked-model.git
   revision: 5fd725bb07a331e0fb10ba3f1b0bee15dad8a47f
   specs:
     ranked-model (0.4.0)
       activerecord (>= 3.1.12)
 
 GIT
-  remote: git://github.com/radar/forem.git
+  remote: https://github.com/radar/forem.git
   revision: fb37858a51cfc8fe2ccd113e61af42546091fd27
   branch: rails4
   specs:
