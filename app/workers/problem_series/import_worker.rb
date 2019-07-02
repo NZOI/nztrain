@@ -49,7 +49,10 @@ class ProblemSeries
               problem.problem_sets << problem_set
 
               # set problem weighting in official problem set
-              ProblemSetProblem.find_by(problem_set_id: problem_set.id, problem_id: problem.id).update_attributes(weighting: manager.get_maxscore)
+              # can't use problem.problem_set_associations.find_by(problem_set_id: ...) because it
+              # operates on the database rather than the cache, and the problem might not have been
+              # saved yet
+              problem.problem_set_associations.select{ |assoc| assoc.problem_set_id == problem_set.id }.first.update_attributes(weighting: manager.get_maxscore)
             end
 
             next if job.data['disposition'] == 'missing' and problem.persisted? # in this mode, stuff is done only if the problem is missing completely

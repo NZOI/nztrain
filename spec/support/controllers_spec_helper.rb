@@ -41,7 +41,7 @@ module ControllersSpecHelper
         get options[:action], (process_hash options[:params])
         expect(response).to be_success
         collection = assigns(options[:resources_name])
-        expect(collection.is_a?(ActiveRecord::Relation) || collection.is_a?(Array)).to be_true
+        expect(collection.is_a?(ActiveRecord::Relation) || collection.is_a?(Array)).to be true
       end
     end
     def can_browse resource, options ={}

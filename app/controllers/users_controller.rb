@@ -23,6 +23,6 @@ class UsersController < ApplicationController
     end
     old_user = current_user.username
     sign_in User.find(session[:su].pop)
-    redirect_to request.referrer, :notice => "exit su #{old_user}"
+    redirect_to request.referrer || '/', :notice => "exit su #{old_user}"
   end
 end

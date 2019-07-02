@@ -7,6 +7,7 @@ describe ContestsController do
   end
   after(:all) do
     @contest.destroy
+    @problem_set.destroy
   end
 
   context "as admin" do

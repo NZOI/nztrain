@@ -3,8 +3,8 @@
   <head>
       <link rel="shortcut icon" href="/favicon.ico">
       <%= stylesheet_link_tag "application" %>
-      <%= javascript_include_tag "application", :async => true %>
-      <%= javascript_include_tag "//cdn.mathjax.org/mathjax/2.1-latest/MathJax.js?config=TeX-AMS_HTML", :async => true %>
+      <%= javascript_include_tag "application", :async => Rails.env.production? %>
+      <%= javascript_include_tag "//cdnjs.cloudflare.com/ajax/libs/mathjax/2.1.0/MathJax.js?config=TeX-AMS_HTML", :async => true %>
       <%= stylesheet_link_tag "//fonts.googleapis.com/css?family=Ubuntu:400italic,Ubuntu:400"%>
       <noscript><style type="text/css">.js_only { display: none; }</style></noscript>
       <%= csrf_meta_tag %>
@@ -151,7 +151,7 @@
             <ul<%= ' id=right-menu' if user_signed_in? %> class="sf-menu nav-theme">
               <li<%= raw ' class="masknav"' if in_su? %>>
               <% if user_signed_in? %>
-                <span id="current_user_username"><a href="<%= main_app.user_path(current_user) %>"><%= current_user.username %></a></span>
+                <a href="<%= main_app.user_path(current_user) %>" id="current_user_username"><%= current_user.username %></a>
                 <ul>
                   <table class="invis" style="min-width: 250px">
                     <tr>

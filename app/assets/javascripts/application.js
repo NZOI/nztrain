@@ -6,6 +6,7 @@
 //= require jquery.event.hover-1.0
 //= require jquery.countdown
 //= require jquery.url
+//= require hoverIntent
 //= require superfish
 //= require history
 //= require jquery.facebox

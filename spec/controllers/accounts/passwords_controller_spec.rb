@@ -41,7 +41,7 @@ describe Accounts::PasswordsController do
 
     it "can update password" do
       post :update, :user => {:reset_password_token => @reset_token, :password => "newpassword", :password_confirmation => "newpassword"}
-      expect(@resetuser.reload.valid_password?("newpassword")).to be_true
+      expect(@resetuser.reload.valid_password?("newpassword")).to be true
     end
   end
 end
