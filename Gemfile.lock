@@ -40,7 +40,7 @@ GIT
       workflow (= 1.0.0)
 
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     Ascii85 (1.0.2)
     actionmailer (4.0.13)
