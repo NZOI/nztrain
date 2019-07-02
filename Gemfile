@@ -1,8 +1,9 @@
 source 'http://rubygems.org'
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem 'rails', '~> 4.0.0'
 
-gem 'nzic_models', git: 'https://github.com/NZOI/nzic_models.git'
+gem 'nzic_models', github: 'NZOI/nzic_models'
 #gem 'nzic_models', path: '../../nzic/nzic_models'
 
 gem 'devise', '~> 3.2.2'
@@ -18,8 +19,8 @@ gem 'jquery-ui-rails', '4.0.5'
 gem 'jquery-historyjs', '0.2.3'
 gem 'superfish-rails', '~> 1.6.0'
 
-gem 'forem', git: 'https://github.com/radar/forem.git', branch: 'rails4'
-gem 'forem-redcarpet', git: 'https://github.com/NZOI/forem-redcarpet.git'
+gem 'forem', github: 'radar/forem', branch: 'rails4'
+gem 'forem-redcarpet', github: 'NZOI/forem-redcarpet'
 
 gem "nokogiri", '~> 1.6.0'
 gem 'redcarpet'
@@ -40,7 +41,7 @@ gem 'facebox-rails'
 gem 'strong_presenter', '~> 0.2.2'
 gem 'render_anywhere'
 gem 'pygments.rb', '0.5.4'
-gem 'ranked-model', :git => 'https://github.com/mixonic/ranked-model.git'
+gem 'ranked-model', :github => 'mixonic/ranked-model'
 gem 'pdf-reader'
 gem 'mechanize'
 gem 'prawn'
@@ -61,7 +62,7 @@ gem 'backup'
 # Redis and Background Processing
 gem 'redis', '< 4.0'
 gem 'rake', '< 11.0' # pinned to avoid last_comment issue
-gem 'qless'#, :git => 'https://github.com/ronalchn/qless.git', :branch => 'nztrain'
+gem 'qless'#, :github => 'ronalchn/qless', :branch => 'nztrain'
 gem 'connection_pool'
 gem 'sinatra'
 
