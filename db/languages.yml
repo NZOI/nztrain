@@ -23,6 +23,10 @@ c++:
       :name: "C++11"
       :compiler: /usr/bin/g++
       :compiler_command: "%{compiler} -std=gnu++11 -O2 -o %{output} %{source} -lm"
+    c++14:
+      :name: "C++14"
+      :compiler: /usr/bin/g++
+      :compiler_command: "%{compiler} -std=gnu++14 -O2 -o %{output} %{source} -lm"
 c:
   :name: C
   :lexer: c

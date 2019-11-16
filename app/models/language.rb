@@ -54,7 +54,8 @@ class Language < ActiveRecord::Base
   def self.submission_options
     latest = LanguageGroup.where(identifier: %w[c++ c python haskell java ruby j]).pluck(:current_language_id)
     old = Language.where(identifier: %w[c++03 python2]).pluck(:id)
-    languages = Language.where(:id => latest).order(:identifier) + Language.where(:id => old).order(:identifier)
+    experimental = Language.where(identifier: %w[c++14]).pluck(:id)
+    languages = Language.where(:id => latest).order(:identifier) + Language.where(:id => old + experimental).order(:identifier)
     Hash[languages.map{ |language| ["#{language.group.name} (#{language.name})", language.id] }]
   end
 
