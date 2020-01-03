@@ -15,3 +15,6 @@
 <p>
 <%= link_to "Email as admin", admin_email_user_path(@user) if policy(@user).email? %>
 </p>
+<p>
+<%= link_to "View submissions", :controller => "submissions", :by_user => @user %>
+</p>

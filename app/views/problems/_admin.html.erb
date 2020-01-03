@@ -1,5 +1,5 @@
 <% if policy(@problem).inspect? %>
-  <b>Users that have submitted:</b>
+  <b>Users that have submitted <%= link_to "(all submissions)", :controller => "submissions", :by_problem => @problem %>:</b>
   <table class="main_table">
     <thead>
       <tr>

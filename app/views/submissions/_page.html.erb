@@ -44,10 +44,10 @@
         <td><%= submission.language.name %></td>
       <td><%= submission.score %></td>
       <% if params[:by_user].nil? %>
-        <td><% if submission.user %><%= handle(submission.user) %><% end %></td>
+        <td><% if submission.user %><%= link_to handle(submission.user), submission.user %><% end %></td>
       <% end %>
       <% if params[:by_problem].nil? %>
-        <td><%= submission.problem.name %></td>
+        <td><%= link_to submission.problem.name, submission.problem %></td>
       <% end %>
       <td><%= link_to 'Show', submission %></td>
       <% if policy(submission).update? %>
