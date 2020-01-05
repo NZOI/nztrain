@@ -130,7 +130,7 @@ class Submission < ActiveRecord::Base
   end
 
   def weighted_score(weighting = 100)
-    points.nil? ? nil : (self.points*weighting/(self.maximum_points || 100)).to_i
+    (points.nil? || self.maximum_points == 0) ? nil : (self.points*weighting/(self.maximum_points || 100)).to_i
   end
 
   def score
