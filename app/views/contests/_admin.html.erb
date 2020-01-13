@@ -1,3 +1,4 @@
+<br>
 <b>Admin</b>
 
 <%= form_tag( add_contest_groups_path(:contest_id => @contest), :method => :put) do %>
@@ -5,4 +6,13 @@
   <%= submit_tag "Give group access" %>
 <% end %>
 
+<br>
+<b> Groups with access:</b>
+<ul>
+<% @contest.groups.each do |group| %>
+  <li>
+  <%= group.name %> (<%= link_to("remove", remove_contest_group_path(group, :contest_id => @contest.id ), :method => "put") %>)
+  </li>
+<% end %>
+</ul>
 

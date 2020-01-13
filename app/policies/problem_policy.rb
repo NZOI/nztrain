@@ -54,7 +54,7 @@ class ProblemPolicy < ApplicationPolicy
   end
 
   def submit_source?
-    manage?
+    user && show?
   end
 
   def create?

@@ -79,19 +79,25 @@
       <th>Result</th>
       <th>Score</th>
     </tbody>
+    <% sample_ids = @submission.problem.sample_cases.ids %>
+    <% sample_sets = 0 %>
     <% @judge_data.test_sets.each_with_index do |(id, set_data), i| %>
+      <% is_sample_set = (set_data.test_cases.keys - sample_ids).empty? %>
+      <% if is_sample_set then sample_sets += 1 end %>
       <tbody class="test_set status_<%= set_data.status %>">
         <tr>
-          <th class="test_name">Test Set #<%= i+1 %><%= ' - Prerequisite' if set_data.prerequisite? %></th>
+          <th class="test_name"><%= is_sample_set ? "Sample Set ##{sample_sets}" : "Test Set ##{i+1-sample_sets}" %><%= ' - Prerequisite' if set_data.prerequisite? %></th>
           <th colspan="3">&nbsp;</th>
           <th class="judgement"><%= set_data.judgement %></th>
         </tr>
-        <% set_data.test_cases.to_a.shuffle(random: Random.new(Random.new(@submission.id+id).rand(@db_settings["submissions/shuffle"].to_i*id))).each_with_index do |(case_id, case_data), j| %>
+        <% test_cases = set_data.test_cases.to_a %>
+        <% if !is_sample_set then test_cases = test_cases.shuffle(random: Random.new(Random.new(@submission.id+id).rand(@db_settings["submissions/shuffle"].to_i*id))) end %>
+        <% test_cases.each_with_index do |(case_id, case_data), j| %>
           <tr class="test_case status_<%= case_data.status %>">
             <td class="test_name">
-              Case #<%= sprintf("%d.%#{set_data.test_cases.size.to_s.size}d",i+1,j+1) %>
+              <%= is_sample_set ? 'Sample' : 'Case' %> #<%= sprintf("%d.%#{set_data.test_cases.size.to_s.size}d", is_sample_set ? sample_sets : i+1-sample_sets, j+1) %>
+              <% if policy(@submission).inspect? || is_sample_set then test_case = @submission.problem.test_cases.find_by_id(case_id) end %>
               <% if policy(@submission).inspect? %>
-                <% test_case = @submission.problem.test_cases.find_by_id(case_id) %>
                 <%= " - \"#{test_case.name}\"" %>
               <% end %>
             </td>
@@ -100,34 +106,42 @@
             <td class="judgement"><%= case_data.judgement %></td>
             <td></td>
           </tr>
-          <% if ![:pending,:cancelled].include?(case_data.status) && policy(@submission).inspect? %>
-            <tr class="inspect_test">
+          <% if ![:pending,:cancelled].include?(case_data.status) && (policy(@submission).inspect? || is_sample_set) %>
+            <tr class="inspect_test status_<%= case_data.status %>">
               <td colspan="5">
-                <table>
-                  <tr>
-                    <% if case_data.status == :timeout %>
-                      <th>Time (<%= case_data.killed? ? "killed" : "exited" %>):</th><td><%= case_data.meta.print_time %></td>
-                    <% end %>
-                    <th>Wall time:</th><td><%= case_data.meta.walltime %></td>
-                    <% if [:signal, :runtime, :timeout, :memory].include? case_data.status %>
-                      <th>Sandbox message:</th><td><%= case_data.meta.status + ": " + case_data.meta.message %></td>
-                    <% end %>
-                  </tr>
-                </table>
+                <% if policy(@submission).inspect? %>
+                  <table>
+                    <tr>
+                      <% if case_data.status == :timeout %>
+                        <th>Time (<%= case_data.killed? ? "killed" : "exited" %>):</th><td><%= case_data.meta.print_time %></td>
+                      <% end %>
+                      <th>Wall time:</th><td><%= case_data.meta.walltime %></td>
+                      <% if [:signal, :runtime, :timeout, :memory].include? case_data.status %>
+                        <th>Sandbox message:</th><td><%= case_data.meta.status + ": " + case_data.meta.message %></td>
+                      <% end %>
+                    </tr>
+                  </table>
+                <% end %>
                 <table class="inspect_output">
                   <tr>
+                    <th>Input</th><th class="output_stats">Size: <%= number_to_human_size(test_case.input.bytesize) %></th>
                     <th>Actual Output</th>
                     <th class="output_stats">
                       <%= "Size: #{number_to_human_size(case_data.output_size)}" unless case_data.output_size.nil? %>
                     </th>
                     <th>Expected Output</th><th class="output_stats">Size: <%= number_to_human_size(test_case.output.bytesize) %></th>
                     <% evaluation = case_data.evaluator.evaluation %>
-                    <th>Evaluator Log</th><th class="output_stats"><%= "Evaluation: #{evaluation ? sprintf("%.2f",evaluation) : "nil"}/1.00" %></th>
+                    <% if policy(@submission).inspect? %>
+                      <th>Evaluator Log</th><th class="output_stats"><%= "Evaluation: #{evaluation ? sprintf("%.2f",evaluation) : "nil"}/1.00" %></th>
+                    <% end %>
                   </tr>
                   <tr>
+                    <td colspan="2"><%= predisplay test_case.truncated_input, type: :kbd %></td>
                     <td colspan="2"><%= predisplay case_data.output, type: :samp %></td>
                     <td colspan="2"><%= predisplay test_case.truncated_output, type: :kbd %></td>
-                    <td colspan="2"><span class="code"><%= case_data.evaluator.info %></span></td>
+                    <% if policy(@submission).inspect? %>
+                      <td colspan="2"><span class="code"><%= case_data.evaluator.info %></span></td>
+                    <% end %>
                   </tr>
                 </table>
               </td>

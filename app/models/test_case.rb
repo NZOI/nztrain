@@ -25,6 +25,10 @@ class TestCase < ActiveRecord::Base
     super(text.encode(text.encoding, universal_newline: true))
   end
 
+  def truncated_input
+    JudgeSubmissionWorker.truncate_output(input)
+  end
+
   def truncated_output
     JudgeSubmissionWorker.truncate_output(output)
   end

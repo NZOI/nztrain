@@ -4,9 +4,11 @@
 <%= render 'form' %>
 
 <b> Contests this group has access to:</b>
+<ul>
 <% @group.contests.each do |contest| %>
   <li>
   <%= contest.name %> (<%= link_to("remove", remove_contest_group_path(@group, :contest_id => contest.id ), :method => "put") %>)
   </li>
 <% end %>
+</ul>
 </p>

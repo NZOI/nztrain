@@ -230,7 +230,7 @@ class Submission
       end
 
       def print_score
-        sprintf "%.2f", score
+        score == nil ? "0.00" : sprintf("%.2f", score)
       end
     end
 
