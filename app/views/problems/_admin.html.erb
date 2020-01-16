@@ -28,7 +28,7 @@
       <% @problem.problem_sets.each do |ps| %>
         <li>
           <%= link_to ps.name, ps %> -
-          <%= link_to 'Remove', remove_from_problem_set_problem_path(@problem, :problem_set_id => ps.id), :method => "put" %>
+          <%= link_to 'Remove', remove_from_problem_set_problem_path(@problem, :problem_set_id => ps.id), :data => { :confirm => 'Are you sure?' }, :method => "put" %>
         </li>
       <% end %>
     </ul>
