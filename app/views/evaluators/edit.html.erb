@@ -1,6 +1,4 @@
 <% content_for :title, "Editing Evaluator" %>
+<% toolbox_push :back, @evaluator %>
 
 <%= render 'form' %>
-
-<%= link_to 'Show', @evaluator %> |
-<%= link_to 'Back', evaluators_path %>

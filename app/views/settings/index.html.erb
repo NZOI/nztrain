@@ -1,4 +1,5 @@
 <% content_for :title, "Settings" %>
+<% toolbox_push :new, new_setting_path %>
 
 <table class="main_table hoverable selectable">
   <thead>
@@ -22,7 +23,3 @@
     <% end %>
   </tbody>
 </table>
-
-<br />
-
-<%= link_to 'New Setting', new_setting_path %>

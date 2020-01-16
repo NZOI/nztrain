@@ -1,5 +1,4 @@
 <% content_for :title, "New Problem Set" %>
+<% toolbox_push :back, problem_sets_path %>
 
 <%= render 'form' %>
-
-<%= link_to 'Back', problem_sets_path %>

@@ -1,6 +1,4 @@
 <% content_for :title, "Editing setting" %>
+<% toolbox_push :back, @setting %>
 
 <%= render 'form' %>
-
-<%= link_to 'Show', @setting %> |
-<%= link_to 'Back', settings_path %>

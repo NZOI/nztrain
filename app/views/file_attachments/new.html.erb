@@ -1,5 +1,4 @@
 <% content_for :title, "New File Attachment" %>
+<% toolbox_push :back, file_attachments_path %>
 
 <%= render 'form' %>
-
-<%= link_to 'Back', file_attachments_path %>

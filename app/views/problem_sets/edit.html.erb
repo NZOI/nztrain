@@ -1,5 +1,4 @@
 <% content_for :title, "Editing Problem Set #{@problem_set.name}" %>
+<% toolbox_push :back, @problem_set %>
 
 <%= render 'form' %>
-
-<%= link_to 'Show', @problem_set %>

@@ -1,5 +1,4 @@
 <% content_for :title, "New Product" %>
+<% toolbox_push :back, products_path %>
 
 <%= render 'form' %>
-
-<%= link_to 'Back', products_path %>

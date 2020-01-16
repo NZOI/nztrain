@@ -1,5 +1,9 @@
 <p id="notice"><%= notice %></p>
 
+<% content_for :title, "Setting #{@setting.key}" %>
+<% toolbox_push :edit, edit_setting_path(@setting) %>
+<% toolbox_push :back, settings_path %>
+
 <p>
   <b>Key:</b>
   <%= @setting.key %>
@@ -9,7 +13,3 @@
   <b>Value:</b>
   <%= @setting.value %>
 </p>
-
-
-<%= link_to 'Edit', edit_setting_path(@setting) %> |
-<%= link_to 'Back', settings_path %>

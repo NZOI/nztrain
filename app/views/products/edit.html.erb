@@ -1,6 +1,4 @@
 <% content_for :title, "Editing product" %>
+<% toolbox_push :back, @product %>
 
 <%= render 'form' %>
-
-<%= link_to 'Show', @product %> |
-<%= link_to 'Back', products_path %>
