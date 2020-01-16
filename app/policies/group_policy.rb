@@ -36,6 +36,10 @@ class GroupPolicy < AuthenticatedPolicy
     user.is_staff? or record.id == 0 or member? or user.owns(record)
   end
 
+  def add_user?
+    user.is_admin?
+  end
+
   def join?
     record.id != 0 && (user.is_admin? || user.owns(record) || record.membership == Group::MEMBERSHIP[:open] || record.invitations.pending.where(:target_id => user.id).any?) && !member?
   end

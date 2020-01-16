@@ -197,6 +197,8 @@ NZTrain::Application.routes.draw do
         scope as: :members do
           get '', action: :index, as: ''
 
+          post 'add'
+
           get 'invites'
           post 'invites'
           get 'join_requests'
