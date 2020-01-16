@@ -198,6 +198,7 @@ NZTrain::Application.routes.draw do
           get '', action: :index, as: ''
 
           post 'add'
+          put 'remove'
 
           get 'invites'
           post 'invites'

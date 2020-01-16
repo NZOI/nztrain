@@ -35,6 +35,14 @@ class Groups::MembersController < ApplicationController
     end
   end
 
+  def remove
+    @group = Group.find(params[:id])
+    authorize @group, :remove_user?
+    @user = User.find(params[:user_id])
+    @group.members.delete(@user)
+    redirect_to(members_group_path(@group), :notice => "#{@user.username} has been removed from this group")
+  end
+
   def join
     @group = Group.find(params[:id])
     authorize @group, :join?
