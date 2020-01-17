@@ -1,8 +1,11 @@
+require 'base_exporter'
+
 module Problems
-  class TestCaseExporter < BaseExporter
+  class TestCaseExporter < Exporters::BaseExporter
     include RenderAnywhere
     # Problems::TestCaseExporter.export(Problem.find(1), '/home/ronald/sample/sample.zip')
     def export(path, options = {})
+      problem = subject
       inpath = File.expand_path('inputs', path)
       outpath = File.expand_path('outputs', path)
       dir.mkdir(inpath)

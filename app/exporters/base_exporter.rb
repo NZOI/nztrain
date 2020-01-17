@@ -1,9 +1,9 @@
 require 'zip/filesystem'
 
-module Problems
+module Exporters
   class BaseExporter
-    def self.export(problem, path, options = {})
-      exporter = self.new(problem)
+    def self.export(subject, path, options = {})
+      exporter = self.new(subject)
       # redirect to export zip etc if zip path etc
       extension = File.extname(path)
       context = case extension
@@ -17,10 +17,10 @@ module Problems
       end
     end
 
-    attr_accessor :problem, :dir, :file
+    attr_accessor :subject, :dir, :file
 
-    def initialize(problem)
-      self.problem = problem
+    def initialize(subject)
+      self.subject = subject
       self.dir = Dir
       self.file = File
       self.tempfiles = []

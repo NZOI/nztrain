@@ -72,6 +72,8 @@ NZTrain::Application.routes.draw do
       get 'supervisors'
       post 'supervise'
 
+      get 'export'
+
       #get 'start'
       put 'start'
       put 'finalize'
