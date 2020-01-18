@@ -54,8 +54,11 @@ mount -o bind /proc "$ISOLATE_ROOT/proc"
 
 [ -z "$TRAVIS" ] && { # if not in Travis-CI
   # python ppa
-  echo "$chroot_cmd add-apt-repository ppa:fkrull/deadsnakes -y"
-  chroot "$ISOLATE_ROOT" add-apt-repository ppa:fkrull/deadsnakes -y
+  if ! chroot "$ISOLATE_ROOT" apt-cache show python3.4 &>/dev/null ||
+      ! chroot "$ISOLATE_ROOT" apt-cache show python3.8 &>/dev/null; then
+    echo "$chroot_cmd add-apt-repository ppa:deadsnakes/ppa -y"
+    chroot "$ISOLATE_ROOT" add-apt-repository ppa:deadsnakes/ppa -y
+  fi
 
   # ruby ppa
   echo "$chroot_cmd add-apt-repository ppa:brightbox/ruby-ng -y"
@@ -103,6 +106,9 @@ chroot "$ISOLATE_ROOT" apt-get install openjdk-11-jdk # Java
 
   echo "$chroot_install python3.4"
   chroot "$ISOLATE_ROOT" apt-get install python3.4 # Python 3.4
+  echo "$chroot_install python3.8"
+  chroot "$ISOLATE_ROOT" apt-get install python3.8 # Python 3.8
+  # note: when updating these Python versions, also update the check for adding the PPA above
 
   echo "$chroot_install ruby2.2"
   chroot "$ISOLATE_ROOT" apt-get install ruby2.2
