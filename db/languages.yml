@@ -7,22 +7,28 @@ c++:
   :lexer: c++
   :compiled: yes
   :interpreted: no
-  :current: c++11
+  :current: c++17
   :extension: .cpp
   :source_filename: program
   :exe_extension: .exe
   :processes: 1
   :variants:
-    c++03:
-      :name: "C++03"
+    c++03:  # depreciated
+      :name: "C++03 (GCC 9)"
       :compiler: /usr/bin/g++
       :compiler_command: "%{compiler} -std=gnu++03 -O2 -o %{output} %{source} -lm"
-#      upgrade: c++11 # submissions will be upgraded if possible, if support is removed, it will be force-upgraded
-#      note: probably will never happen for this particular example... (or at least not for the next 10 years)
     c++11:
-      :name: "C++11"
+      :name: "C++11 (GCC 9)"
       :compiler: /usr/bin/g++
       :compiler_command: "%{compiler} -std=gnu++11 -O2 -o %{output} %{source} -lm"
+    c++14:  # Changes since C++11: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p1319r0.html
+      :name: "C++14 (GCC 9)"
+      :compiler: /usr/bin/g++
+      :compiler_command: "%{compiler} -std=gnu++14 -O2 -o %{output} %{source} -lm"
+    c++17:  # Changes since C++14: https://isocpp.org/files/papers/p0636r0.html
+      :name: "C++17 (GCC 9)"
+      :compiler: /usr/bin/g++
+      :compiler_command: "%{compiler} -std=gnu++17 -O2 -o %{output} %{source} -lm"
 c:
   :name: C
   :lexer: c
@@ -34,10 +40,15 @@ c:
   :exe_extension: .exe
   :processes: 1
   :variants:
-    c99:
-      :name: C99
+    c99: # depreciated
+      :name: C99 (GCC 9)
       :compiler: /usr/bin/gcc
       :compiler_command: '%{compiler} -std=gnu99 -O2 -o %{output} %{source} -lm'
+    c11:  # Changes since c99: https://en.wikipedia.org/wiki/C11_(C_standard_revision)
+      :name: C11 (GCC 9)
+      :compiler: /usr/bin/gcc
+      :compiler_command: '%{compiler} -std=gnu11 -O2 -o %{output} %{source} -lm'
+
 java:
   :name: Java
   :lexer: java
