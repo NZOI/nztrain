@@ -171,5 +171,79 @@ echo "$chroot_cmd update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 
 chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 75
 # gcc 9 done
 
-# let user know that chroot installs are finished
+# JavaScript V8 engine compile and install
+echo "Preparing to compile and install the JavaScript V8 engine."
+echo ""
+echo "If this fails, visit https://v8.dev/docs/build and follow the instructions."
+echo "This may take a while ..."
+echo ""
 
+echo "Making temporary directory"
+echo "$chroot_cmd cd /"
+chroot "$ISOLATE_ROOT" cd /
+echo "$chroot_cmd mkdir v8-tools"
+chroot "$ISOLATE_ROOT" mkdir v8-tools
+echo "$chroot_cmd cd v8-tools"
+chroot "$ISOLATE_ROOT" cd v8-tools
+echo ""
+
+echo "Getting V8 source"
+echo "$chroot_cmd git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git"
+chroot "$ISOLATE_ROOT" git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+echo "$chroot_cmd export PATH=`pwd`/depot_tools:\"$PATH\""
+chroot "$ISOLATE_ROOT" export PATH=`pwd`/depot_tools:"$PATH"
+echo "$chroot_cmd cd .."
+chroot "$ISOLATE_ROOT" cd ..
+echo "$chroot_cmd mkdir v8"
+chroot "$ISOLATE_ROOT" mkdir v8
+echo "$chroot_cmd cd v8"
+chroot "$ISOLATE_ROOT" cd v8
+echo "$chroot_cmd fetch v8"
+chroot "$ISOLATE_ROOT" fetch v8
+echo ""
+
+echo "Syncing and checking out"
+echo "$chroot_cmd cd v8"
+chroot "$ISOLATE_ROOT" cd v8
+echo "$chroot_cmd gclient sync"
+chroot "$ISOLATE_ROOT" gclient sync
+echo ""
+
+echo "Installing dependencies needed to build V8"
+echo "$chroot_cmd ./build/install-build-deps.sh"
+chroot "$ISOLATE_ROOT" ./build/install-build-deps.sh
+
+echo "Syncing again"
+echo "$chroot_cmd git pull origin master"
+chroot "$ISOLATE_ROOT" git pull origin master
+echo "$chroot_cmd gclient sync"
+chroot "$ISOLATE_ROOT" gclient sync
+echo ""
+
+echo "Compile time!"
+echo "$chroot_cmd ./tools/dev/gm.py x64.release"
+chroot "$ISOLATE_ROOT" ./tools/dev/gm.py x64.release
+echo ""
+
+echo "Moving executable into place"
+echo "$chroot_cmd mv ./out/x64.release/d8 /usr/bin/d8"
+chroot "$ISOLATE_ROOT" mv ./out/x64.release/d8 /usr/bin/d8
+echo "$chroot_cmd mv ./out/x64.release/snapshot_blob.bin /usr/bin/snapshot_blob.bin"
+chroot "$ISOLATE_ROOT" mv ./out/x64.release/snapshot_blob.bin /usr/bin/snapshot_blob.bin
+echo ""
+
+echo "Removing source files"
+echo "$chroot_cmd cd /"
+chroot "$ISOLATE_ROOT" cd /
+echo "$chroot_cmd rm -r v8"
+chroot "$ISOLATE_ROOT" rm -r v8
+echo "$chroot_cmd rm -r v8-tools"
+chroot "$ISOLATE_ROOT" rm -r v8-tools
+
+echo "Yay! JavaScript hopefully installed."
+echo "Do /usr/bin/d8 from chroot to test it out."
+echo ""
+# JavaScript done
+
+# let user know that chroot installs are finished
+echo "Finished chroot installs!"
