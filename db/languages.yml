@@ -40,7 +40,7 @@ c:
   :exe_extension: .exe
   :processes: 1
   :variants:
-    c99: # deprecated
+    c99:  # deprecated
       :name: C99
       :compiler: /usr/bin/gcc
       :compiler_command: "%{compiler} --version | head -n 1 1>&2 && %{compiler} -std=gnu99 -O2 -o %{output} %{source} -lm"
@@ -54,16 +54,22 @@ java:
   :lexer: java
   :compiled: yes
   :interpreted: yes
-  :current: java6
+  :current: java11
   :extension: .java
   :source_filename: Main
   :exe_extension: .jar
   :processes: 0
   :variants:
     java6:
-      :name: Java 1.6
+      :name: Java 1.6  # deprecated (note: uses '-source 1.6', which will be removed in a future JDK release)
       :compiler: /usr/bin/javac;/usr/bin/jar
       :compiler_command: '%{compiler[0]} -version | head -n 1 1>&2 && %{compiler[0]} -O -source 1.6 -J-Xms16m -J-Xmx256m %{source} && %{compiler[1]} cfe %{output} Main -C %{source_dir} Main.class'
+      :interpreter: /usr/bin/java
+      :interpreter_command: '%{interpreter} -jar %{source}'
+    java11:
+      :name: Java 11
+      :compiler: /usr/bin/javac;/usr/bin/jar
+      :compiler_command: '%{compiler[0]} -version | head -n 1 1>&2 && %{compiler[0]} -O -source 11 -J-Xms16m -J-Xmx256m %{source} && %{compiler[1]} cfe %{output} Main -C %{source_dir} Main.class'
       :interpreter: /usr/bin/java
       :interpreter_command: '%{interpreter} -jar %{source}'
 haskell:
@@ -128,4 +134,3 @@ j:
     j8:
       :name: "J 8.0.3"
       :interpreter: /usr/bin/ijconsole-8.0.3
-
