@@ -8,8 +8,9 @@
     </ul>
   </div>
 <% end %>
+<h2>Upload file</h2>
 <%= form_for @submission, :html => {:multipart => true}, :url => submit_problem_path(@problem) do |f| %>
-  <div class="field">
+  <div class="subfield">
     Language: 
     <%= f.select :language_id, Language.submission_options %>
   </div>
@@ -17,24 +18,26 @@
     Source file: 
     <%= f.file_field :source_file %>
   </div>
-  <div class="actions">
+  <div class="subactions">
     <%= f.submit 'Submit' %>
   </div>
 <% end %>
 <% if policy(@problem).submit_source? %>
-  <center><b>or submit source directly:</b></center>
+  <br>
+  <hr>
+  <br>
+  <h2>Or paste code</h2>
   <%= form_for @submission, :url => submit_problem_path(@problem) do |f| %>
-    <div class="field">
+    <div class="subfield">
       Language: 
       <%= f.select :language_id, Language.submission_options %>
+    </div>
+    <div class="subactions">
+      <%= f.submit 'Submit' %>
     </div>
     <div class="field">
       <%= f.label :source %><br />
       <%= f.text_area :source, :style => "width: 100%", :cols => 60 %>
     </div>
-    <div class="actions">
-      <%= f.submit 'Submit' %>
-    </div>
   <% end %>
 <% end %>
-
