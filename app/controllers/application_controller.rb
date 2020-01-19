@@ -76,7 +76,7 @@ class ApplicationController < ActionController::Base
 
   protected
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) << :username << :name << :email << :country_code << :school_id << {school_graduation: [:enabled, :month, :year]} << {school: [:name, :country_code]}
+    devise_parameter_sanitizer.for(:sign_up) << :username << :name << :email << :country_code << :school_id << {school_graduation: [:enabled, :month, :year]} << {school: [:name, :country_code]} << :default_language_id
 
     if user_signed_in? && current_user.can_change_username?
       devise_parameter_sanitizer.for(:account_update) << :username

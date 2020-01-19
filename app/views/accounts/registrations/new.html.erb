@@ -18,6 +18,9 @@
   <p><%= f.label :password_confirmation %><br />
   <%= f.password_field :password_confirmation %></p>
 
+  <p><%= f.label :default_language_id, "Default Language" %><br />
+  <%= f.select :default_language_id, grouped_options_for_select(Language.grouped_submission_options, resource.default_language_id || Language.default.id) %></p>
+
   <p><%= f.label :country_code, "Country" %><br />
   <%= f.country_select(:country_code, selected: @user.country_code || request.location.try(:country_code), priority_countries: ["NZ", "AU"]) %></p>
 
