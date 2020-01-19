@@ -173,3 +173,32 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
 
 # let user know that chroot installs are finished
 
+# add C# with mono
+# https://www.mono-project.com/download/stable/#download-lin
+echo "Adding C# mono"
+. /etc/lsb-release
+if [[ $(lsb_release -rs) == "16.04" ]]; then
+  echo "$chroot_cmd apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF"
+  chroot "$ISOLATE_ROOT" apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+  echo "$chroot_cmd apt install apt-transport-https ca-certificates"
+  chroot "$ISOLATE_ROOT" apt install apt-transport-https ca-certificates
+  echo "deb https://download.mono-project.com/repo/ubuntu stable-xenial main" | chroot "$ISOLATE_ROOT" tee /etc/apt/sources.list.d/mono-official-stable.list
+
+  echo "$chroot_cmd apt update"
+  chroot "$ISOLATE_ROOT" apt update
+  echo "$chroot_cmd apt install mono-complete"
+  chroot "$ISOLATE_ROOT" apt install mono-complete
+elif [[$(lsb_release -rs) == "18.04" ]]
+  echo "$chroot_cmd apt install gnupg ca-certificates"
+  chroot "$ISOLATE_ROOT" apt install gnupg ca-certificates
+  echo "$chroot_cmd apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF"
+  chroot "$ISOLATE_ROOT" apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+  echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | chroot "$ISOLATE_ROOT" tee /etc/apt/sources.list.d/mono-official-stable.list
+
+  echo "$chroot_cmd apt update"
+  chroot "$ISOLATE_ROOT" apt update
+  echo "$chroot_cmd apt install mono-complete"
+  chroot "$ISOLATE_ROOT" apt install mono-complete
+else
+  echo "I don't know how to install mono for your Ubuntu version. See https://www.mono-project.com/download/stable/#download-lin"
+fi
