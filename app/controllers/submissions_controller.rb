@@ -2,7 +2,7 @@ class SubmissionsController < ApplicationController
 
   def permitted_params
     @_permitted_params ||= begin
-      permitted_attributes = [:problem_id, :source, :language]
+      permitted_attributes = [:problem_id, :source, :language_id]
       permitted_attributes << :classification if policy(@submission).allowed_classifications.include?(params[:submission][:classification].to_i)
       params.require(:submission).permit(*permitted_attributes)
     end
