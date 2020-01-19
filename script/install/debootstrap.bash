@@ -84,8 +84,13 @@ chroot "$ISOLATE_ROOT" apt-get install build-essential # C/C++ (g++, gcc)
 echo "$chroot_install ruby"
 chroot "$ISOLATE_ROOT" apt-get install ruby # Ruby (ruby)
 
-echo "$chroot_install ghc"
-chroot "$ISOLATE_ROOT" apt-get install ghc # Haskell (ghc)
+echo "Getting Stack for Haskell"
+echo "$chroot_cmd curl -sSL https://get.haskellstack.org/ | sh"
+chroot "$ISOLATE_ROOT" curl -sSL https://get.haskellstack.org/ | sh
+echo "$chroot_cmd stack update"
+chroot "$ISOLATE_ROOT" stack update
+echo "$chroot_cmd stack install ghc"
+chroot "$ISOLATE_ROOT" stack install ghc # Haskell (ghc)
 
 echo "$chroot_install default-jdk"
 chroot "$ISOLATE_ROOT" apt-get install default-jdk # Java
