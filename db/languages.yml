@@ -34,7 +34,7 @@ c:
   :lexer: c
   :compiled: yes
   :interpreted: no
-  :current: c99
+  :current: c11
   :extension: .c
   :source_filename: program
   :exe_extension: .exe
