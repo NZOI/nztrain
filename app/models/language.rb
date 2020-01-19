@@ -58,6 +58,10 @@ class Language < ActiveRecord::Base
     Hash[languages.map{ |language| ["#{language.name}", language.id] }]
   end
 
+  def self.default
+    LanguageGroup.find_by(identifier: 'c++').current_language
+  end
+
   def self.infer(ext)
     case ext
     when *%w[.cpp]
