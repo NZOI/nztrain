@@ -138,3 +138,19 @@ j:
     j8:
       :name: "J 8.0.3"
       :interpreter: /usr/bin/ijconsole-8.0.3
+
+csharp:
+  :name: CSharp
+  :lexer: csharp
+  :compiled: yes
+  :interpreted: no
+  :current: csharp
+  :extension: .cs
+  :source_filename: main
+  :exe_extension: .exe
+  :processes: 0
+  :variants:
+    csharp8:
+      :name: "C# 8.0"
+      :compiler: /usr/bin/csc;/usr/bin/mono
+      :compiler_command: '%{compiler[0]} %{source} -optimize+ -out:%{output} -langversion:8.0 && %{compiler[1]} %{output}
