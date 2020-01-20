@@ -77,10 +77,6 @@ chroot "$ISOLATE_ROOT" apt-get install wget
 echo "$chroot_install software-properties-common"
 chroot "$ISOLATE_ROOT" apt-get install software-properties-common # provides add-apt-repository
 
-# only for <= 12.04
-echo "$chroot_install python-software-properties"
-chroot "$ISOLATE_ROOT" apt-get install python-software-properties # provides add-apt-repository
-
 echo "$chroot_install build-essential"
 chroot "$ISOLATE_ROOT" apt-get install build-essential # C/C++ (g++, gcc)
 
