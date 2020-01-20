@@ -69,7 +69,7 @@ java:
     java11:
       :name: Java 11
       :compiler: /usr/bin/javac;/usr/bin/jar
-      :compiler_command: '%{compiler[0]} -version | head -n 1 1>&2 && %{compiler[0]} -O -source 11 -J-Xms16m -J-Xmx256m %{source} && %{compiler[1]} cfe %{output} Main -C %{source_dir} Main.class'
+      :compiler_command: '%{compiler[0]} -version | head -n 1 1>&2 && %{compiler[0]} -O -J-Xms16m -J-Xmx256m %{source} && %{compiler[1]} cfe %{output} Main -C %{source_dir} Main.class'
       :interpreter: /usr/bin/java
       :interpreter_command: '%{interpreter} -jar %{source}'
 haskell:
