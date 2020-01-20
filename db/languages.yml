@@ -99,12 +99,12 @@ python:
   :interpreter_command: '%{interpreter} %{source}'
   :compiler_command: '%{interpreter} -m py_compile %{source}'
   :variants:
-    python2:  # depreciated - in late 2019 support for the Python 2 language ended
+    python2:  # deprecated - in late 2019 support for the Python 2 language ended
       :name: "Python 2.7"
-      :interpreter: /usr/bin/python
-    python3.4:  # depreciated
+      :interpreter: /usr/bin/python2
+    python3.4:  # deprecated
       :name: "Python 3.4"
-      :interpreter: /usr/bin/python3.8  # since 3.8 is backwards compatable, not point installing another version
+      :interpreter: /usr/bin/python3.4
     python3.8:
       :name: "Python 3.8"
       :interpreter: /usr/bin/python3.8

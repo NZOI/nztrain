@@ -74,10 +74,6 @@ chroot "$ISOLATE_ROOT" apt-get install wget
 echo "$chroot_install software-properties-common"
 chroot "$ISOLATE_ROOT" apt-get install software-properties-common # provides add-apt-repository
 
-# only for <= 12.04
-# echo "$chroot_install python-software-properties"
-# chroot "$ISOLATE_ROOT" apt-get install python-software-properties # provides add-apt-repository
-
 echo "$chroot_install build-essential"
 chroot "$ISOLATE_ROOT" apt-get install build-essential # C/C++ (g++, gcc)
 
@@ -102,9 +98,18 @@ chroot "$ISOLATE_ROOT" apt-get install openjdk-11-jdk # Java
 [ -z "$TRAVIS" ] && { # if not in Travis-CI
 
   echo "$chroot_install python3.8"
+  
   # if on older OS version
-  # sudo add-apt-repository ppa:deadsnakes/ppa
-  # sudo apt update
+  if [! chroot "$ISOLATE_ROOT" apt-cache show python3.4 &>/dev/null] || 
+     [! chroot "$ISOLATE_ROOT" apt-cache show python3.8 &>/dev/null]; then
+    echo "$chroot_install add-apt-repository ppa:deadsnakes/ppa"
+    chroot "$ISOLATE_ROOT" add-apt-repository ppa:deadsnakes/ppa
+    echo "$chroot_install apt update"
+    chroot "$ISOLATE_ROOT" apt update
+  fi
+  echo "$chroot_install apt-get install python3.4"
+  chroot "$ISOLATE_ROOT" apt-get install python3.4 # Python 3.4
+  echo "$chroot_install apt-get install python3.8"
   chroot "$ISOLATE_ROOT" apt-get install python3.8 # Python 3.8
 
   echo "$chroot_install ruby2.2"
