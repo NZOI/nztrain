@@ -86,7 +86,7 @@ haskell:
     haskell2010:
       :name: "Haskell 2010"
       :compiler: /usr/bin/ghc
-      :compiler_command: '%{compiler} --make -O2 -o %{output} %{source} -lm'
+      :compiler_command: '%{compiler} --version 1>&2 && %{compiler} --make -O2 -o %{output} %{source} -lm'
 python:
   :name: Python
   :lexer: python
