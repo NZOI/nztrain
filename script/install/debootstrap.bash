@@ -83,8 +83,18 @@ chroot "$ISOLATE_ROOT" apt-get install build-essential # C/C++ (g++, gcc)
 echo "$chroot_install ruby"
 chroot "$ISOLATE_ROOT" apt-get install ruby # Ruby (ruby)
 
-echo "$chroot_install ghc"
-chroot "$ISOLATE_ROOT" apt-get install ghc # Haskell (ghc)
+# add haskell ppa
+echo "$chroot_cmd add-apt-repository ppa:hvr/ghc -y"
+chroot "$ISOLATE_ROOT" add-apt-repository ppa:hvr/ghc -y
+
+echo "$chroot_cmd apt-get update"
+chroot "$ISOLATE_ROOT" apt-get update
+
+echo "$chroot_install ghc-8.8.2"
+chroot "$ISOLATE_ROOT" apt-get install ghc-8.8.2 # Haskell (ghc)
+
+echo "$chroot_cmd update-alternatives --install /usr/bin/ghc ghc /opt/ghc/8.8.2/bin/ghc 75"
+chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/ghc ghc /opt/ghc/8.8.2/bin/ghc 75
 
 if ! chroot "$ISOLATE_ROOT" apt-cache show openjdk-11-jdk &>/dev/null; then
   # add java ppa
