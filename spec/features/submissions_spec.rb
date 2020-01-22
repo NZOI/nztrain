@@ -9,8 +9,8 @@ feature 'submission' do
     visit submit_problem_path(@problem)
     
     expect do
-      within '#new_submission' do
-        find(:select,'submission_language_id').find(:xpath, "//option[@value=#{LanguageGroup.find_by_identifier("c++").current_language.id}]").select_option
+      within first('#new_submission') do
+        first(:select, 'submission_language_id').first(:xpath, "//option[@value=#{LanguageGroup.find_by_identifier("c++").current_language.id}]").select_option
         attach_file 'submission_source_file', Rails.root.join('spec/fixtures/files/adding.cpp')
         click_on 'Submit'
       end
