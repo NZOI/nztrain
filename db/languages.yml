@@ -136,5 +136,5 @@ j:
   :interpreter_command: '%{interpreter} %{source}'
   :variants:
     j8:
-      :name: "J 8.0.3"
+      :name: "J 8.03"
       :interpreter: /usr/bin/ijconsole-8.0.3
