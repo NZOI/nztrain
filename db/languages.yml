@@ -138,3 +138,23 @@ j:
     j8:
       :name: "J 8.03"
       :interpreter: /usr/bin/ijconsole-8.0.3
+
+csharp:
+  :name: CSharp
+  :lexer: csharp
+  :compiled: yes
+  :interpreted: yes
+  :current: csharp8
+  :extension: .cs
+  :source_filename: program
+  :processes: 2
+  :interpreter: 'dotnet exec --runtimeconfig /usr/share/dotnet-config.json'
+  :variants:
+    csharp8:
+      :name: "C# 8.0"
+      :compiler: /usr/bin/dotnet /usr/share/dotnet/sdk/*/Roslyn/bincore/csc.dll
+      # Note: csc already prints the version number when executed
+      :compiler_command: >
+        'REF=/usr/share/dotnet/sdk/*/ref/netstandard.dll
+        %{compiler} %{source} -reference:$REF -optimize+ -out:%{output} -langversion:8.0 >&2'
+      :interpreter_command: '%{interpreter} %{source}'
