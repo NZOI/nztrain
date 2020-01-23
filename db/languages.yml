@@ -147,14 +147,12 @@ csharp:
   :current: csharp8
   :extension: .cs
   :source_filename: program
-  :processes: 2
-  :interpreter: 'dotnet exec --runtimeconfig /usr/share/dotnet-config.json'
+  :processes: 10
+  :interpreter: /usr/bin/csr  # custom shell script
   :variants:
     csharp8:
       :name: "C# 8.0"
-      :compiler: /usr/bin/dotnet /usr/share/dotnet/sdk/*/Roslyn/bincore/csc.dll
+      :compiler: /usr/bin/csc  # custom shell script
       # Note: csc already prints the version number when executed
-      :compiler_command: >
-        'REF=/usr/share/dotnet/sdk/*/ref/netstandard.dll
-        %{compiler} %{source} -reference:$REF -optimize+ -out:%{output} -langversion:8.0 >&2'
+      :compiler_command: "%{compiler} %{source} -optimize+ -out:%{output} -langversion:8.0"
       :interpreter_command: '%{interpreter} %{source}'

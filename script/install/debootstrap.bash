@@ -216,12 +216,22 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
   # https://stackoverflow.com/questions/46065777/is-it-possible-to-compile-a-single-c-sharp-code-file-with-the-net-core-roslyn-c
 
   RUNTIME_CONFIG_PATH="/usr/share/dotnet-config.json"  # used in the compile command
-  RUNTIME_CONFIG_TEMPL="script/csharp-runtime-config-template.json"
+  RUNTIME_CONFIG_TEMPL="script/csharp/dotnet-config-template.json"
 
   # referenced in RUNTIME_CONFIG_TEMPL file
   DOTNET_FW_VERSION=$(dotnet --version | sed -r "s/([0-9].[0-9].[0-9])[0-9]*/\1/") \
   DOTNET_FW_NAME="Microsoft.NETCore.App" \
   envsubst < $RUNTIME_CONFIG_TEMPL | cat > $RUNTIME_CONFIG_PATH
+
+  : Moving shell scripts into place
+  
+  cp "script/csharp/compile-command.sh" "/usr/local/csc.sh"
+  ln "/usr/local/csc.sh" "/usr/bin/csc"
+  chmod +x "/usr/bin/csc"
+
+  cp "script/csharp/run-command.sh" "/usr/local/csr.sh"
+  ln "/usr/local/csr.sh" "/usr/bin/csr"
+  chmod +x "/usr/bin/csr"
 
   set +x
 }
