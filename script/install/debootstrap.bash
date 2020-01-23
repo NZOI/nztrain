@@ -192,5 +192,39 @@ echo "$chroot_cmd update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 
 chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 75
 # gcc 9 done
 
+[ -z "$TRAVIS" ] && bash script/confirm.bash 'Install .Net Core (C#)' && {
+  set -x
+
+  : Installing .Net Core for C#
+  # https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1604
+
+  : Downloading package info from Microsoft
+  UBUNTU_VERSION=$(lsb_release --release --short)
+  wget -q "https://packages.microsoft.com/config/ubuntu/${UBUNTU_VERSION}/packages-microsoft-prod.deb" -O packages-microsoft-prod.deb
+  dpkg -i packages-microsoft-prod.deb
+  rm packages-microsoft-prod.deb
+  ["$UBUNTU_VERSION" == "18.04"] && sudo add-apt-repository universe
+  apt-get install -y apt-transport-https
+  apt-get update
+
+  : Installing dotnet 3.1
+  apt-get install -y dotnet-sdk-3.1
+
+  : Creating runtime config file
+  # The dotnet command will not execute the compiled .exe unless there is a config file
+  # which tells it what runtime framework to use.
+  # https://stackoverflow.com/questions/46065777/is-it-possible-to-compile-a-single-c-sharp-code-file-with-the-net-core-roslyn-c
+
+  RUNTIME_CONFIG_PATH="/usr/share/dotnet-config.json"  # used in the compile command
+  RUNTIME_CONFIG_TEMPL="script/csharp-runtime-config-template.json"
+
+  # referenced in RUNTIME_CONFIG_TEMPL file
+  DOTNET_FW_VERSION=$(dotnet --version | sed -r "s/([0-9].[0-9].[0-9])[0-9]*/\1/") \
+  DOTNET_FW_NAME="Microsoft.NETCore.App" \
+  envsubst < $RUNTIME_CONFIG_TEMPL | cat > $RUNTIME_CONFIG_PATH
+
+  set +x
+}
+
 # let user know that chroot installs are finished
 
