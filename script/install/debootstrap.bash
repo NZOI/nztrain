@@ -203,7 +203,7 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
   wget -q "https://packages.microsoft.com/config/ubuntu/${UBUNTU_VERSION}/packages-microsoft-prod.deb" -O packages-microsoft-prod.deb
   dpkg -i packages-microsoft-prod.deb
   rm packages-microsoft-prod.deb
-  ["$UBUNTU_VERSION" == "18.04"] && sudo add-apt-repository universe
+  [ "$UBUNTU_VERSION" == "18.04" ] && sudo add-apt-repository universe
   apt-get install -y apt-transport-https
   apt-get update
 
@@ -237,4 +237,3 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
 }
 
 # let user know that chroot installs are finished
-
