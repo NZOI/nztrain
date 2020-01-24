@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This script does two things
 #   1. Redirects all output to stderr
