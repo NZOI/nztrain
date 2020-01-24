@@ -215,7 +215,7 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
   # which tells it what runtime framework to use.
   # https://stackoverflow.com/questions/46065777/is-it-possible-to-compile-a-single-c-sharp-code-file-with-the-net-core-roslyn-c
 
-  RUNTIME_CONFIG_PATH="/usr/share/dotnet-config.json"  # used in the compile command
+  RUNTIME_CONFIG_PATH="$ISOLATE_ROOT/usr/share/dotnet-config.json"  # used in the compile command
   RUNTIME_CONFIG_TEMPL="script/csharp/dotnet-config-template.json"
 
   # referenced in RUNTIME_CONFIG_TEMPL file
