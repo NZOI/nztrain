@@ -106,7 +106,8 @@ class Submission
         case status
         when :timeout; "Time Limit Exceeded"
         when :walltime; "Time Limit Exceeded (Wall)"
-        when :runtime; "Runtime Error"
+        # Report runtime errors as compilation errors when executing the compile command
+        when :runtime; "Compilation Error"
         when :signal; "Fatal Signal"
         when :memory; "Memory Limit Exceeded"
         when :pending; "Pending"
