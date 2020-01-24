@@ -147,6 +147,7 @@ csharp:
   :current: csharp8
   :extension: .cs
   :source_filename: program
+  :exe_extension: .exe
   :processes: 10
   :interpreter: /usr/bin/csr  # custom shell script
   :variants:
