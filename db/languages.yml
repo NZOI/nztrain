@@ -140,7 +140,7 @@ j:
       :interpreter: /usr/bin/ijconsole-8.0.3
 
 csharp:
-  :name: CSharp
+  :name: "C#"
   :lexer: csharp
   :compiled: yes
   :interpreted: yes
