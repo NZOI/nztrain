@@ -234,6 +234,5 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
   chroot "$ISOLATE_ROOT" chmod +x "/usr/bin/csr"
 
   set +x
+  echo ".Net Core (C#) was installed"
 }
-
-# let user know that chroot installs are finished
