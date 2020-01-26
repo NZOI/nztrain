@@ -96,6 +96,13 @@ chroot "$ISOLATE_ROOT" apt-get install ruby # Ruby (ruby)
 
   echo "$chroot_cmd update-alternatives --install /usr/bin/ghc ghc /opt/ghc/8.8.2/bin/ghc 75"
   chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/ghc ghc /opt/ghc/8.8.2/bin/ghc 75
+
+  # Note: Running ghc requires /proc to be mounted. The isolate command mounts
+  # it, but it might not be mounted if running ghc manually in the chroot.
+  # (To find shared libraries, the ghc binary has a RUNPATH attribute with
+  # paths that are relative to $ORIGIN. The dynamic linker uses /proc/self/exe
+  # to expand $ORIGIN. It can be overridden using the environment variable
+  # LD_ORIGIN_PATH.)
 }
 
 if ! chroot "$ISOLATE_ROOT" apt-cache show openjdk-11-jdk &>/dev/null; then
