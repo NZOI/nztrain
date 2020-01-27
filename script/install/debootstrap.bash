@@ -200,9 +200,9 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
 
   : Downloading package info from Microsoft
   UBUNTU_VERSION=$(lsb_release --release --short)
-  chroot "$ISOLATE_ROOT" wget -q "https://packages.microsoft.com/config/ubuntu/${UBUNTU_VERSION}/packages-microsoft-prod.deb" -O packages-microsoft-prod.deb
-  chroot "$ISOLATE_ROOT" dpkg -i packages-microsoft-prod.deb
-  chroot "$ISOLATE_ROOT" rm packages-microsoft-prod.deb
+  chroot "$ISOLATE_ROOT" wget -q "https://packages.microsoft.com/config/ubuntu/${UBUNTU_VERSION}/packages-microsoft-prod.deb" -O /tmp/packages-microsoft-prod.deb
+  chroot "$ISOLATE_ROOT" dpkg -i /tmp/packages-microsoft-prod.deb
+  chroot "$ISOLATE_ROOT" rm /tmp/packages-microsoft-prod.deb
   [ "$UBUNTU_VERSION" == "18.04" ] && chroot "$ISOLATE_ROOT" sudo add-apt-repository universe
   chroot "$ISOLATE_ROOT" apt-get install -y apt-transport-https
   chroot "$ISOLATE_ROOT" apt-get update
