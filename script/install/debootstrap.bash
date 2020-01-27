@@ -83,8 +83,27 @@ chroot "$ISOLATE_ROOT" apt-get install build-essential # C/C++ (g++, gcc)
 echo "$chroot_install ruby"
 chroot "$ISOLATE_ROOT" apt-get install ruby # Ruby (ruby)
 
-echo "$chroot_install ghc"
-chroot "$ISOLATE_ROOT" apt-get install ghc # Haskell (ghc)
+[ -z "$TRAVIS" ] && { # if not in Travis-CI
+  # add haskell ppa
+  echo "$chroot_cmd add-apt-repository ppa:hvr/ghc -y"
+  chroot "$ISOLATE_ROOT" add-apt-repository ppa:hvr/ghc -y
+
+  echo "$chroot_cmd apt-get update"
+  chroot "$ISOLATE_ROOT" apt-get update
+
+  echo "$chroot_install ghc-8.8.2"
+  chroot "$ISOLATE_ROOT" apt-get install ghc-8.8.2 # Haskell (ghc)
+
+  echo "$chroot_cmd update-alternatives --install /usr/bin/ghc ghc /opt/ghc/8.8.2/bin/ghc 75"
+  chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/ghc ghc /opt/ghc/8.8.2/bin/ghc 75
+
+  # Note: Running ghc requires /proc to be mounted. The isolate command mounts
+  # it, but it might not be mounted if running ghc manually in the chroot.
+  # (To find shared libraries, the ghc binary has a RUNPATH attribute with
+  # paths that are relative to $ORIGIN. The dynamic linker uses /proc/self/exe
+  # to expand $ORIGIN. It can be overridden using the environment variable
+  # LD_ORIGIN_PATH.)
+}
 
 if ! chroot "$ISOLATE_ROOT" apt-cache show openjdk-11-jdk &>/dev/null; then
   # add java ppa
