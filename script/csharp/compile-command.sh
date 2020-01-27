@@ -7,5 +7,5 @@
 # Actually compile:
 # [dotnet] [csc.dll] -reference:[stdlib.dll] [...passed in args...]
 VERSION=$(dotnet --version)
-/usr/bin/dotnet "/usr/share/dotnet/sdk/"$VERSION"/Roslyn/bincore/csc.dll" \
--reference:"/usr/share/dotnet/sdk/"$VERSION"/ref/netstandard.dll" "$@" 1>&2
+/usr/bin/dotnet "/usr/share/dotnet/sdk/$VERSION/Roslyn/bincore/csc.dll" \
+  -reference:"/usr/share/dotnet/sdk/$VERSION/ref/netstandard.dll" "$@" 1>&2
