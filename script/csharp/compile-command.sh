@@ -9,5 +9,3 @@
 VERSION=$(dotnet --version)
 /usr/bin/dotnet "/usr/share/dotnet/sdk/"$VERSION"/Roslyn/bincore/csc.dll" \
 -reference:"/usr/share/dotnet/sdk/"$VERSION"/ref/netstandard.dll" "$@" 1>&2
-
-exit ${PIPESTATUS[0]}
