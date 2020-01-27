@@ -199,7 +199,7 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
   # https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1604
 
   : Downloading package info from Microsoft
-  UBUNTU_VERSION=$(lsb_release --release --short)
+  UBUNTU_VERSION=$(chroot "$ISOLATE_ROOT" lsb_release --release --short)
   chroot "$ISOLATE_ROOT" wget -q "https://packages.microsoft.com/config/ubuntu/${UBUNTU_VERSION}/packages-microsoft-prod.deb" -O /tmp/packages-microsoft-prod.deb
   chroot "$ISOLATE_ROOT" dpkg -i /tmp/packages-microsoft-prod.deb
   chroot "$ISOLATE_ROOT" rm /tmp/packages-microsoft-prod.deb
