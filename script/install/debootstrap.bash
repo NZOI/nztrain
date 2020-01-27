@@ -225,12 +225,10 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
 
   : Moving shell scripts into place
 
-  cp "script/csharp/compile-command.sh" "$ISOLATE_ROOT/usr/local/csc.sh"
-  chroot "$ISOLATE_ROOT" ln "/usr/local/csc.sh" "/usr/bin/csc"
+  cp "script/csharp/compile-command.sh" "$ISOLATE_ROOT/usr/bin/csc"
   chroot "$ISOLATE_ROOT" chmod +x "/usr/bin/csc"
 
-  cp "script/csharp/run-command.sh" "$ISOLATE_ROOT/usr/local/csr.sh"
-  chroot "$ISOLATE_ROOT" ln "/usr/local/csr.sh" "/usr/bin/csr"
+  cp "script/csharp/run-command.sh" "$ISOLATE_ROOT/usr/bin/csr"
   chroot "$ISOLATE_ROOT" chmod +x "/usr/bin/csr"
 
   set +x
