@@ -192,10 +192,10 @@ echo "$chroot_cmd update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 
 chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 75
 # gcc 9 done
 
-[ -z "$TRAVIS" ] && bash script/confirm.bash 'Install .Net Core (C#)' && {
+[ -z "$TRAVIS" ] && bash script/confirm.bash 'Install .NET Core (C#)' && {
   set -x
 
-  : Installing .Net Core for C#
+  : Installing .NET Core for C#
   # https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1604
 
   : Downloading package info from Microsoft
@@ -224,7 +224,7 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
   envsubst < $RUNTIME_CONFIG_TEMPL | cat > $RUNTIME_CONFIG_PATH
 
   : Moving shell scripts into place
-  
+
   cp "script/csharp/compile-command.sh" "$ISOLATE_ROOT/usr/local/csc.sh"
   chroot "$ISOLATE_ROOT" ln "/usr/local/csc.sh" "/usr/bin/csc"
   chroot "$ISOLATE_ROOT" chmod +x "/usr/bin/csc"
@@ -234,5 +234,5 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
   chroot "$ISOLATE_ROOT" chmod +x "/usr/bin/csr"
 
   set +x
-  echo ".Net Core (C#) was installed"
+  echo ".NET Core (C#) was installed"
 }
