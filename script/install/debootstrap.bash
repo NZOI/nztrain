@@ -223,7 +223,7 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
     DOTNET_FW_NAME="Microsoft.NETCore.App" \
     envsubst < $RUNTIME_CONFIG_TEMPL > $RUNTIME_CONFIG_PATH
 
-  : Moving shell scripts into place
+  : Copying shell scripts into place
 
   cp "script/csharp/compile-command.sh" "$ISOLATE_ROOT/usr/bin/csc"
   chroot "$ISOLATE_ROOT" chmod +x "/usr/bin/csc"
