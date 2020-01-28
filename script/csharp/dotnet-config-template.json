@@ -1,7 +1,7 @@
 {
     "runtimeOptions": {
         "framework": {
-            "name": "$DOTNET_FW_NAME",
+            "name": "Microsoft.NETCore.App",
             "version": "$DOTNET_FW_VERSION"
         }
     }
