@@ -160,8 +160,6 @@ EOF
 
 }
 
-umount "$ISOLATE_ROOT/proc"
-
 if [ ! -f "$ISOLATE_ROOT/usr/bin/cint.rb" ] ; then
   cmd="cp `dirname $0`/cint.rb $ISOLATE_ROOT/usr/bin"
   echo "$cmd"
@@ -234,3 +232,5 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
   set +x
   echo ".NET Core (C#) was installed"
 }
+
+umount "$ISOLATE_ROOT/proc"
