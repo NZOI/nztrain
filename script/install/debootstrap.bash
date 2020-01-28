@@ -217,7 +217,7 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
   RUNTIME_CONFIG_TEMPL="script/csharp/dotnet-config-template.json"
 
   # referenced in RUNTIME_CONFIG_TEMPL file
-  DOTNET_FW_VERSION=$(chroot "$ISOLATE_ROOT" dotnet --version | sed 's/[0-9][0-9]$//') \
+  DOTNET_FW_VERSION=$(chroot "$ISOLATE_ROOT" dotnet --version | sed 's/\.[0-9]\+$/.0/') \
     DOTNET_FW_NAME="Microsoft.NETCore.App" \
     envsubst < $RUNTIME_CONFIG_TEMPL > $RUNTIME_CONFIG_PATH
 
