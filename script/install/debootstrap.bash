@@ -225,10 +225,7 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
   : Copying shell scripts into place
 
   cp "script/install/csharp/compile-command.sh" "$ISOLATE_ROOT/usr/bin/csc"
-  chroot "$ISOLATE_ROOT" chmod +x "/usr/bin/csc"
-
   cp "script/install/csharp/run-command.sh" "$ISOLATE_ROOT/usr/bin/csr"
-  chroot "$ISOLATE_ROOT" chmod +x "/usr/bin/csr"
 
   set +x
   echo ".NET Core (C#) was installed"
