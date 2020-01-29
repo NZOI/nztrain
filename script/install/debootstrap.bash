@@ -209,8 +209,9 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
   chroot "$ISOLATE_ROOT" apt-get install -y dotnet-sdk-3.1
 
   : Creating runtime config file
-  # The dotnet command will not execute the compiled .exe unless there is a config file
-  # which tells it what runtime framework to use.
+  # The dotnet command requires executables to have a corresponding file
+  # [appname].runtimeconfig.json that specifies which runtime framework to use.
+  # We create such a file and set it using the --runtimeconfig option.
   # https://stackoverflow.com/questions/46065777/is-it-possible-to-compile-a-single-c-sharp-code-file-with-the-net-core-roslyn-c
 
   RUNTIME_CONFIG_PATH="$ISOLATE_ROOT/usr/share/dotnet-config.json"  # used in the compile command
