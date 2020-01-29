@@ -67,10 +67,6 @@ class Language < ActiveRecord::Base
       "Other" => Hash[other_options] }
   end
 
-  def self.default
-    LanguageGroup.find_by(identifier: 'c++').current_language
-  end
-
   def self.infer(ext)
     case ext
     when *%w[.cpp]
