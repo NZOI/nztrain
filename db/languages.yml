@@ -149,11 +149,11 @@ csharp:
   :source_filename: program
   :exe_extension: .exe
   :processes: 10
-  :interpreter: /usr/bin/csr  # custom shell script
+  :interpreter: /usr/bin/dotnet-exec  # custom shell script
   :variants:
     csharp8:
       :name: "C# 8.0"
-      :compiler: /usr/bin/csc  # custom shell script
+      :compiler: /usr/bin/dotnet-csc  # custom shell script
       # Note: csc already prints the version number when executed
       :compiler_command: "%{compiler} %{source} -optimize+ -out:%{output} -langversion:8.0 -nologo"
       :interpreter_command: '%{interpreter} %{source}'

@@ -224,8 +224,8 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
 
   : Copying shell scripts into place
 
-  cp "script/install/csharp/compile-command.sh" "$ISOLATE_ROOT/usr/bin/csc"
-  cp "script/install/csharp/run-command.sh" "$ISOLATE_ROOT/usr/bin/csr"
+  cp "script/install/csharp/dotnet-csc" "$ISOLATE_ROOT/usr/bin"
+  cp "script/install/csharp/dotnet-exec" "$ISOLATE_ROOT/usr/bin"
 
   set +x
   echo ".NET Core (C#) was installed"
