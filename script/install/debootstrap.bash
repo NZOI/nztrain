@@ -220,14 +220,14 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
   # The major and minor versions are the same (https://docs.microsoft.com/en-us/dotnet/core/versions/).
   # The patch version should be set to 0 (https://github.com/dotnet/designs/blob/master/accepted/runtime-binding.md).
   DOTNET_FW_VERSION=$(chroot "$ISOLATE_ROOT" dotnet --version | sed 's/\.[0-9]\+$/.0/') \
-    envsubst < script/csharp/runtimeconfig-template.json > "$RUNTIMECONFIG_PATH"
+    envsubst < script/install/csharp/runtimeconfig-template.json > "$RUNTIMECONFIG_PATH"
 
   : Copying shell scripts into place
 
-  cp "script/csharp/compile-command.sh" "$ISOLATE_ROOT/usr/bin/csc"
+  cp "script/install/csharp/compile-command.sh" "$ISOLATE_ROOT/usr/bin/csc"
   chroot "$ISOLATE_ROOT" chmod +x "/usr/bin/csc"
 
-  cp "script/csharp/run-command.sh" "$ISOLATE_ROOT/usr/bin/csr"
+  cp "script/install/csharp/run-command.sh" "$ISOLATE_ROOT/usr/bin/csr"
   chroot "$ISOLATE_ROOT" chmod +x "/usr/bin/csr"
 
   set +x
