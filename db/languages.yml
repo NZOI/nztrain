@@ -153,11 +153,6 @@ csharp:
   :variants:
     csharp8:
       :name: "C# 8.0"
-<<<<<<< HEAD
-      :compiler: /usr/bin/dotnet-csc  # custom shell script (prints version number when executed)
-      :compiler_command: "%{compiler} %{source} -optimize+ -out:%{output} -langversion:8.0 -nologo"
-=======
-      :compiler: /usr/local/bin/dotnet-csc  # custom shell script (prints version number when executed)
+      :compiler: /usr/local/bin/dotnet-csc  # custom shell script (also prints SDK version number)
       :compiler_command: "%{compiler} %{source} -optimize+ -out:%{output} -langversion:8.0"
->>>>>>> 7048a65... Install scripts into /usr/local/bin instead of /usr/bin
       :interpreter_command: '%{interpreter} %{source}'
