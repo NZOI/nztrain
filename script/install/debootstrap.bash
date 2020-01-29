@@ -216,7 +216,6 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
   RUNTIME_CONFIG_PATH="$ISOLATE_ROOT/usr/share/dotnet-config.json"  # used in the compile command
   RUNTIME_CONFIG_TEMPL="script/csharp/dotnet-config-template.json"
 
-  # referenced in RUNTIME_CONFIG_TEMPL file
   # Compute the .NET Core Runtime version from the .NET Core SDK version
   # The major and minor versions are the same (https://docs.microsoft.com/en-us/dotnet/core/versions/).
   # The patch version should be set to 0 (https://github.com/dotnet/designs/blob/master/accepted/runtime-binding.md).
