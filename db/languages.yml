@@ -153,7 +153,6 @@ csharp:
   :variants:
     csharp8:
       :name: "C# 8.0"
-      :compiler: /usr/bin/dotnet-csc  # custom shell script
-      # Note: csc already prints the version number when executed
+      :compiler: /usr/bin/dotnet-csc  # custom shell script (prints version number when executed)
       :compiler_command: "%{compiler} %{source} -optimize+ -out:%{output} -langversion:8.0 -nologo"
       :interpreter_command: '%{interpreter} %{source}'
