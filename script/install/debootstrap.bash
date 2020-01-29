@@ -214,7 +214,7 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
   # We create such a file and set it using the --runtimeconfig option.
   # https://stackoverflow.com/questions/46065777/is-it-possible-to-compile-a-single-c-sharp-code-file-with-the-net-core-roslyn-c
 
-  RUNTIME_CONFIG_PATH="$ISOLATE_ROOT/usr/share/dotnet-config.json"  # used in the compile command
+  RUNTIME_CONFIG_PATH="$ISOLATE_ROOT/usr/share/dotnet-config.json"  # used in the interpreter command
 
   # Compute the .NET Core Runtime version from the .NET Core SDK version
   # The major and minor versions are the same (https://docs.microsoft.com/en-us/dotnet/core/versions/).
