@@ -8,8 +8,8 @@ class CreateRequests < ActiveRecord::Migration
       t.integer :status, :null => false, :default => 0
       t.references :requestee
       t.datetime :expired_at, :null => false, :default => :infinity
- 
-      t.timestamps
+
+      t.timestamps null: false
     end
   end
 end

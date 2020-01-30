@@ -5,7 +5,7 @@ class CreateFileAttachments < ActiveRecord::Migration
       t.string :file_attachment, :string
       t.references :owner
 
-      t.timestamps
+      t.timestamps null: false
     end
 
     create_table :group_file_attachments do |t|

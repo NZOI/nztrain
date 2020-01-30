@@ -9,7 +9,7 @@ class CreateProblems < ActiveRecord::Migration
       t.decimal :time_limit
       t.integer :user_id
 
-      t.timestamps
+      t.timestamps null: true
     end
   end
 

@@ -7,7 +7,7 @@ class CreateTestCases < ActiveRecord::Migration
       t.string :description
       t.integer :problem_id
 
-      t.timestamps
+      t.timestamps null: true
     end
   end
 

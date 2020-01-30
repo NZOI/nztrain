@@ -8,7 +8,7 @@ class CreateAiContestGames < ActiveRecord::Migration
       t.integer :score_1
       t.integer :score_2
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

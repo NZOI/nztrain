@@ -7,7 +7,7 @@ class CreateContests < ActiveRecord::Migration
       t.decimal :duration
       t.integer :user_id
 
-      t.timestamps
+      t.timestamps null: true
     end
   end
 
