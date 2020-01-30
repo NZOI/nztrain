@@ -23,8 +23,8 @@ ActiveRecord::Schema.define(version: 20160131000430) do
     t.text     "record"
     t.integer  "score_1"
     t.integer  "score_2"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
     t.integer  "iteration"
     t.text     "judge_output"
   end
@@ -40,8 +40,8 @@ ActiveRecord::Schema.define(version: 20160131000430) do
     t.text     "sample_ai"
     t.text     "statement"
     t.text     "judge"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
     t.integer  "iterations"
     t.integer  "iterations_preview"
   end
@@ -51,8 +51,8 @@ ActiveRecord::Schema.define(version: 20160131000430) do
     t.string   "language"
     t.integer  "user_id"
     t.integer  "ai_contest_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
     t.string   "name"
     t.boolean  "active",        default: false
   end
@@ -138,8 +138,8 @@ ActiveRecord::Schema.define(version: 20160131000430) do
     t.string   "name"
     t.string   "file_attachment"
     t.integer  "owner_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
   create_table "filelinks", force: true do |t|
@@ -310,8 +310,8 @@ ActiveRecord::Schema.define(version: 20160131000430) do
     t.string   "identifier"
     t.string   "name"
     t.integer  "current_language_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
   end
 
   add_index "language_groups", ["identifier"], name: "index_language_groups_on_identifier", unique: true, using: :btree
@@ -320,8 +320,8 @@ ActiveRecord::Schema.define(version: 20160131000430) do
     t.string   "identifier"
     t.string   "compiler"
     t.boolean  "interpreted"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
     t.string   "extension"
     t.boolean  "compiled"
     t.string   "name"
@@ -399,8 +399,8 @@ ActiveRecord::Schema.define(version: 20160131000430) do
     t.integer  "status",       default: 0,        null: false
     t.integer  "requestee_id"
     t.datetime "expired_at",   default: Infinity, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
   end
 
   create_table "roles", force: true do |t|
@@ -464,8 +464,8 @@ ActiveRecord::Schema.define(version: 20160131000430) do
   create_table "test_case_relations", force: true do |t|
     t.integer  "test_case_id"
     t.integer  "test_set_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
   add_index "test_case_relations", ["test_case_id"], name: "index_test_case_relations_on_test_case_id", using: :btree
