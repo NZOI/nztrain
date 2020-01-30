@@ -6,7 +6,7 @@ class CreateContestSupervisors < ActiveRecord::Migration
       t.string :site_type
       t.integer :site_id
 
-      t.timestamps
+      t.timestamps null: true
     end
   end
 end

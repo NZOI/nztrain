@@ -7,7 +7,7 @@ class CreateSubmissions < ActiveRecord::Migration
       t.integer :user_id
       t.integer :problem_id
 
-      t.timestamps
+      t.timestamps null: true
     end
   end
 

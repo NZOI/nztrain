@@ -33,7 +33,7 @@ class CreateUserProblemRelation < ActiveRecord::Migration
 
       t.timestamp :last_viewed_at
       t.timestamp :first_viewed_at
-      t.timestamps
+      t.timestamps null: true
     end
 
     add_index :user_problem_relations, [:user_id, :problem_id], unique: true

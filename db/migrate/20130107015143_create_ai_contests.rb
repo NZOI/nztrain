@@ -10,7 +10,7 @@ class CreateAiContests < ActiveRecord::Migration
       t.text :statement
       t.string :judge
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end
