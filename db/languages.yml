@@ -15,19 +15,19 @@ c++:
   :variants:
     c++03:  # deprecated
       :name: "C++03"
-      :compiler: /usr/bin/g++
+      :compiler: g++
       :compiler_command: "%{compiler} --version | head -n 1 1>&2 && %{compiler} -std=gnu++03 -O2 -o %{output} %{source} -lm"
     c++11:
       :name: "C++11"
-      :compiler: /usr/bin/g++
+      :compiler: g++
       :compiler_command: "%{compiler} --version | head -n 1 1>&2 && %{compiler} -std=gnu++11 -O2 -o %{output} %{source} -lm"
     c++14:  # Changes since C++11: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p1319r0.html
       :name: "C++14"
-      :compiler: /usr/bin/g++
+      :compiler: g++
       :compiler_command: "%{compiler} --version | head -n 1 1>&2 && %{compiler} -std=gnu++14 -O2 -o %{output} %{source} -lm"
     c++17:  # Changes since C++14: https://isocpp.org/files/papers/p0636r0.html
       :name: "C++17"
-      :compiler: /usr/bin/g++
+      :compiler: g++
       :compiler_command: "%{compiler} --version | head -n 1 1>&2 && %{compiler} -std=gnu++17 -O2 -o %{output} %{source} -lm"
 c:
   :name: "C"
@@ -42,11 +42,11 @@ c:
   :variants:
     c99:  # deprecated
       :name: C99
-      :compiler: /usr/bin/gcc
+      :compiler: gcc
       :compiler_command: "%{compiler} --version | head -n 1 1>&2 && %{compiler} -std=gnu99 -O2 -o %{output} %{source} -lm"
     c11:  # Changes since c99: https://en.wikipedia.org/wiki/C11_(C_standard_revision)
       :name: C11
-      :compiler: /usr/bin/gcc
+      :compiler: gcc
       :compiler_command: "%{compiler} --version | head -n 1 1>&2 && %{compiler} -std=gnu11 -O2 -o %{output} %{source} -lm"
 
 java:
@@ -62,13 +62,13 @@ java:
   :variants:
     java6:
       :name: Java 1.6  # deprecated (note: uses '-source 1.6', which will be removed in a future JDK release)
-      :compiler: /usr/bin/javac;/usr/bin/jar
+      :compiler: javac;jar
       :compiler_command: '%{compiler[0]} -version | head -n 1 1>&2 && %{compiler[0]} -O -source 1.6 -J-Xms16m -J-Xmx256m %{source} && %{compiler[1]} cfe %{output} Main -C %{source_dir} .'
       :interpreter: /usr/bin/java
       :interpreter_command: '%{interpreter} -jar %{source}'
     java11:
       :name: Java 11
-      :compiler: /usr/bin/javac;/usr/bin/jar
+      :compiler: javac;jar
       :compiler_command: '%{compiler[0]} -version | head -n 1 1>&2 && %{compiler[0]} -O -source 11 -J-Xms16m -J-Xmx256m %{source} && %{compiler[1]} cfe %{output} Main -C %{source_dir} .'
       :interpreter: /usr/bin/java
       :interpreter_command: '%{interpreter} -jar %{source}'
@@ -85,7 +85,7 @@ haskell:
   :variants:
     haskell2010:
       :name: "Haskell 2010"
-      :compiler: /usr/bin/ghc
+      :compiler: ghc
       :compiler_command: '%{compiler} --version 1>&2 && %{compiler} --make -O2 -o %{output} %{source} -lm'
 python:
   :name: Python
