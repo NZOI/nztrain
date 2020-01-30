@@ -155,5 +155,5 @@ csharp:
       :name: "C# 8.0"
       :compiler: /usr/bin/csc  # custom shell script
       # Note: csc already prints the version number when executed
-      :compiler_command: "%{compiler} %{source} -optimize+ -out:%{output} -langversion:8.0"
+      :compiler_command: "%{compiler} %{source} -optimize+ -out:%{output} -langversion:8.0 -nologo"
       :interpreter_command: '%{interpreter} %{source}'
