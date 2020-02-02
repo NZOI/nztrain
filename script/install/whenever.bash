@@ -7,3 +7,4 @@ if [[ "$lastupdate" < "$lastmodified" ]] ; then
   echo '$ whenever --update-crontab '`basename \`pwd\``
   bundle exec whenever --update-crontab `basename \`pwd\``
 fi
+
