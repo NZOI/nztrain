@@ -29,7 +29,7 @@ cd v8
 
 : Installing additional build dependencies
 gclient sync --no-history
-./build/install-build-deps.sh
+./build/install-build-deps.sh --no-syms --no-arm --no-chromeos-fonts --no-nacl
 
 : Compiling V8
 ./tools/dev/v8gen.py x64.release -- v8_use_external_startup_data=false
