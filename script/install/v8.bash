@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
-# builds V8 (JavaScript engine) from source
 
+echo "Preparing to compile and install the V8 JavaScript Engine."
+echo
+echo "If this fails, visit https://v8.dev/docs/build and follow the instructions."
+echo "This may take a while..."
+echo
 set -x
 
 : Making temporary directory
@@ -35,3 +39,5 @@ sudo mv ./out.gn/x64.release/d8 "$ISOLATE_ROOT"/usr/local/bin/d8 && {
 }
 
 set +x
+echo "JavaScript V8 installed into $ISOLATE_ROOT/usr/local/bin/d8"
+echo
