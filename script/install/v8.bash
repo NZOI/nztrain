@@ -17,18 +17,18 @@ mkdir ~/v8-build
 cd ~/v8-build
 
 : Installing depot_tools
-git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+git clone --depth 1 https://chromium.googlesource.com/chromium/tools/depot_tools.git
 export PATH="$PATH:$PWD/depot_tools"
 gclient --version
 
 : Getting V8 source code
 mkdir v8
 cd v8
-fetch v8
+fetch --no-history v8
 cd v8
 
 : Installing additional build dependencies
-gclient sync
+gclient sync --no-history
 ./build/install-build-deps.sh
 
 : Compiling V8
