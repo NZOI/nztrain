@@ -180,7 +180,7 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
 
   bash script/install/v8.bash
 
-  echo "JavaScript V8 installed into $ISOLATE_ROOT/usr/bin/d8"
+  echo "JavaScript V8 installed into $ISOLATE_ROOT/usr/local/bin/d8"
   echo
 }
 

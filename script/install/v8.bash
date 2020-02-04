@@ -27,7 +27,7 @@ gclient sync
 ninja -C out.gn/x64.release d8
 
 : Moving executable into place
-sudo mv ./out.gn/x64.release/d8 "$ISOLATE_ROOT"/usr/bin/d8 && {
+sudo mv ./out.gn/x64.release/d8 "$ISOLATE_ROOT"/usr/local/bin/d8 && {
 
   : Cleaning up # only if mv succeeded, so user can inspect build errors
   cd ~
