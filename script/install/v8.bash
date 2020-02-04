@@ -8,9 +8,9 @@ echo
 set -x
 
 : Installing dependencies
-apt-get install python -y
-apt-get install git -y
-apt-get install wget -y
+sudo apt-get install python -y
+sudo apt-get install git -y
+sudo apt-get install wget -y
 
 : Making temporary directory
 mkdir ~/v8-build
