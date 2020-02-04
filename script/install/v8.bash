@@ -31,7 +31,7 @@ mv ./out.gn/x64.release/d8 "$ISOLATE_ROOT"/usr/bin/d8 && {
 
   : Cleaning up # only if mv succeeded, so user can inspect build errors
   cd ~
-  rm -r v8-build
+  rm -rf v8-build
 }
 
 set +x
