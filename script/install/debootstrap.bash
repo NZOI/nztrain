@@ -139,8 +139,6 @@ EOF
 
 }
 
-umount "$ISOLATE_ROOT/proc"
-
 if [ ! -f "$ISOLATE_ROOT/usr/bin/cint.rb" ] ; then
   cmd="cp `dirname $0`/cint.rb $ISOLATE_ROOT/usr/bin"
   echo "$cmd"
@@ -174,5 +172,7 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
 [ -z "$TRAVIS" ] && bash script/confirm.bash 'Install the V8 JavaScript Engine (submissions in JavaScript will fail without this!)' && {
   bash script/install/v8.bash
 }
+
+umount "$ISOLATE_ROOT/proc"
 
 echo 'Finished chroot installs!'
