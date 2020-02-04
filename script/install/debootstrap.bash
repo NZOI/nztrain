@@ -171,12 +171,11 @@ echo "$chroot_cmd update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 
 chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 75
 # gcc 9 done
 
-[ -z "$TRAVIS" ] && bash script/confirm.bash 'Install JavaScript V8 (submissions in V8 will fail without this!)' && {
-  # JavaScript V8 engine compile and install
-  echo "Preparing to compile and install the JavaScript V8 engine."
+[ -z "$TRAVIS" ] && bash script/confirm.bash 'Install V8 JavaScript Engine (submissions in JavaScript will fail without this!)' && {
+  echo "Preparing to compile and install the V8 JavaScript Engine."
   echo
   echo "If this fails, visit https://v8.dev/docs/build and follow the instructions."
-  echo "This may take a while ..."
+  echo "This may take a while..."
   echo
   set -x
 
