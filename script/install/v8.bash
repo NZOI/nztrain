@@ -26,8 +26,8 @@ gclient sync
 ./tools/dev/v8gen.py x64.release -- v8_use_external_startup_data=false
 ninja -C out.gn/x64.release d8
 
-: Copying executable into place
-cp ./out.gn/x64.release/d8 "$ISOLATE_ROOT"/usr/bin/d8
+: Moving executable into place
+mv ./out.gn/x64.release/d8 "$ISOLATE_ROOT"/usr/bin/d8
 
 : Cleaning up
 cd ~
