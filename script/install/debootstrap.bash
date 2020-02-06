@@ -170,7 +170,7 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
 # gcc 9 done
 
 [ -z "$TRAVIS" ] && bash script/confirm.bash 'Install the V8 JavaScript Engine (submissions in JavaScript will fail without this!)' && {
-  chroot "$ISOLATE_ROOT" bash < script/install/v8.bash
+  HOME=/root chroot "$ISOLATE_ROOT" bash < script/install/v8.bash
 }
 
 umount "$ISOLATE_ROOT/proc"
