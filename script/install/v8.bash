@@ -13,8 +13,9 @@ sudo apt-get install git -y
 sudo apt-get install wget -y
 
 : Making temporary directory
-mkdir ~/v8-build
-cd ~/v8-build || exit
+build="$HOME/v8-build"
+mkdir "$build"
+cd "$build" || exit
 
 : Installing depot_tools
 git clone --depth 1 https://chromium.googlesource.com/chromium/tools/depot_tools.git
@@ -39,8 +40,7 @@ ninja -C out.gn/x64.release d8
 sudo mv ./out.gn/x64.release/d8 "$ISOLATE_ROOT"/usr/local/bin/d8 && {
 
   : Cleaning up # only if mv succeeded, so user can inspect build errors
-  cd ~
-  rm -rf ~/v8-build
+  rm -rf "$build"
 }
 
 set +x
