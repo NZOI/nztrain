@@ -14,7 +14,7 @@ sudo apt-get install wget -y
 
 : Making temporary directory
 mkdir ~/v8-build
-cd ~/v8-build
+cd ~/v8-build || exit
 
 : Installing depot_tools
 git clone --depth 1 https://chromium.googlesource.com/chromium/tools/depot_tools.git
