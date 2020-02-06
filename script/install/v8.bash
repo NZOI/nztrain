@@ -16,6 +16,9 @@ sudo apt-get install wget -y
 build="$HOME/v8-build"
 mkdir "$build"
 cd "$build" || exit
+# The build process creates things in $HOME (.vpython_cipd_cache and .vpython-root).
+# Set $HOME to the build directory so they will be cleaned up.
+HOME="$build"
 
 : Installing depot_tools
 git clone --depth 1 https://chromium.googlesource.com/chromium/tools/depot_tools.git
