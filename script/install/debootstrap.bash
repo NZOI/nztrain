@@ -206,6 +206,7 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
   chroot "$ISOLATE_ROOT" apt-get update
 
   : Installing dotnet 3.1
+  export DOTNET_CLI_TELEMETRY_OPTOUT=1
   chroot "$ISOLATE_ROOT" apt-get install -y dotnet-sdk-3.1
 
   : Creating runtime config file

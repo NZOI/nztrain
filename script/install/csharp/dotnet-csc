@@ -6,6 +6,7 @@
 
 # Actually compile:
 # [dotnet] [csc] -reference:[stdlib.dll] [...passed in args...]
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
 VERSION=$(dotnet --version)
 echo ".NET Core SDK $VERSION" 1>&2
 dotnet "/usr/share/dotnet/sdk/$VERSION/Roslyn/bincore/csc.dll" \
