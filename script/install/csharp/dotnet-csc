@@ -4,10 +4,10 @@
 #   1. Redirects all output to stderr
 #   2. Supplies .dll references to the csc command
 
-# Actually compile:
-# [dotnet] [csc] -reference:[stdlib.dll] [...passed in args...]
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 VERSION=$(dotnet --version)
 echo ".NET Core SDK $VERSION" 1>&2
+# Actually compile:
+# [dotnet] [csc] -reference:[stdlib.dll] [...passed in args...]
 dotnet "/usr/share/dotnet/sdk/$VERSION/Roslyn/bincore/csc.dll" \
   -reference:"/usr/share/dotnet/sdk/$VERSION/ref/netstandard.dll" "$@" 1>&2
