@@ -214,7 +214,6 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
   # [appname].runtimeconfig.json that specifies which runtime framework to use.
   # We create such a file and set it using the --runtimeconfig option.
   # https://stackoverflow.com/questions/46065777/is-it-possible-to-compile-a-single-c-sharp-code-file-with-the-net-core-roslyn-c
-
   RUNTIMECONFIG_PATH="$ISOLATE_ROOT/usr/share/dotnet-runtimeconfig.json"  # used in the interpreter command
 
   # Compute the .NET Core Runtime version from the .NET Core SDK version
