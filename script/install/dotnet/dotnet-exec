@@ -2,4 +2,4 @@
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 # pass in config file to specify runtime version
-dotnet exec --runtimeconfig /usr/share/dotnet-runtimeconfig.json "$@"
+exec dotnet exec --runtimeconfig /usr/share/dotnet-runtimeconfig.json "$@"
