@@ -194,6 +194,19 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
   HOME=/root ISOLATE_ROOT= chroot "$ISOLATE_ROOT" bash < script/install/v8.bash
 }
 
+[ -z "$TRAVIS" ] && bash script/confirm.bash 'Install .NET Core (C#)' && {
+  # check kernel version
+  uname -r | bash script/check_version.bash 4.14.0 || {
+    echo "Warning: Linux kernel $(uname -r) detected, .NET Core requires kernel >= 4.14"
+    echo "(see https://github.com/NZOI/nztrain/pull/64#issuecomment-582379819)"
+    echo "On Ubuntu 16.04.5, a newer kernel can be installed using"
+    echo "  sudo apt-get install linux-generic-hwe-16.04"
+    bash script/confirm.bash "Install .NET Core anyway"
+  }
+} && {
+  bash script/install/dotnet.bash
+}
+
 umount "$ISOLATE_ROOT/proc"
 
 echo 'Finished chroot installs!'

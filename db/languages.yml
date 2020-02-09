@@ -138,6 +138,7 @@ j:
     j8:
       :name: "J 8.03"
       :interpreter: /usr/bin/ijconsole-8.0.3
+
 javascript:
   :name: JavaScript
   :lexer: javascript
@@ -152,3 +153,21 @@ javascript:
       :name: "JavaScript (V8 8.1)"
       :interpreter: /usr/local/bin/d8
       :processes: 9
+
+csharp:
+  :name: "C#"
+  :lexer: csharp
+  :compiled: yes
+  :interpreted: yes
+  :current: csharp8
+  :extension: .cs
+  :source_filename: program
+  :exe_extension: .exe
+  :processes: 5
+  :interpreter: /usr/local/bin/dotnet-exec  # custom shell script
+  :variants:
+    csharp8:
+      :name: "C# 8.0"
+      :compiler: /usr/local/bin/dotnet-csc  # custom shell script (also prints SDK version number)
+      :compiler_command: '%{compiler} %{source} -optimize+ -out:%{output} -langversion:8.0 -nologo'
+      :interpreter_command: '%{interpreter} %{source}'

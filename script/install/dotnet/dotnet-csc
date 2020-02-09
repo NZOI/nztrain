@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+VERSION=$(dotnet --version)
+echo ".NET Core SDK $VERSION" 1>&2
+# [dotnet] [csc] -reference:[stdlib] [...passed in args...]
+dotnet "/usr/share/dotnet/sdk/$VERSION/Roslyn/bincore/csc.dll" \
+  -reference:"/usr/share/dotnet/sdk/$VERSION/ref/netstandard.dll" "$@" 1>&2
