@@ -190,6 +190,10 @@ echo "$chroot_cmd update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 
 chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 75
 # gcc 9 done
 
+[ -z "$TRAVIS" ] && bash script/confirm.bash 'Install the V8 JavaScript Engine (submissions in JavaScript will fail without this!)' && {
+  HOME=/root ISOLATE_ROOT= chroot "$ISOLATE_ROOT" bash < script/install/v8.bash
+}
+
 [ -z "$TRAVIS" ] && bash script/confirm.bash 'Install .NET Core (C#)' && {
   # check kernel version
   uname -r | bash script/check_version.bash 4.14.0 || {
@@ -204,3 +208,5 @@ chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g
 }
 
 umount "$ISOLATE_ROOT/proc"
+
+echo 'Finished chroot installs!'

@@ -139,6 +139,21 @@ j:
       :name: "J 8.03"
       :interpreter: /usr/bin/ijconsole-8.0.3
 
+javascript:
+  :name: JavaScript
+  :lexer: javascript
+  :compiled: no
+  :interpreted: yes
+  :current: v8_8
+  :extension: .js
+  :source_filename: program
+  :interpreter_command: '%{interpreter} %{source}'
+  :variants:
+    v8_8:
+      :name: "JavaScript (V8 8.1)"
+      :interpreter: /usr/local/bin/d8
+      :processes: 9
+
 csharp:
   :name: "C#"
   :lexer: csharp
