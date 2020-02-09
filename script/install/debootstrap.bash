@@ -160,8 +160,6 @@ EOF
 
 }
 
-umount "$ISOLATE_ROOT/proc"
-
 if [ ! -f "$ISOLATE_ROOT/usr/bin/cint.rb" ] ; then
   cmd="cp `dirname $0`/cint.rb $ISOLATE_ROOT/usr/bin"
   echo "$cmd"
@@ -192,5 +190,10 @@ echo "$chroot_cmd update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 
 chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 75
 # gcc 9 done
 
-# let user know that chroot installs are finished
+[ -z "$TRAVIS" ] && bash script/confirm.bash 'Install the V8 JavaScript Engine (submissions in JavaScript will fail without this!)' && {
+  HOME=/root ISOLATE_ROOT= chroot "$ISOLATE_ROOT" bash < script/install/v8.bash
+}
 
+umount "$ISOLATE_ROOT/proc"
+
+echo 'Finished chroot installs!'

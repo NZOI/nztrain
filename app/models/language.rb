@@ -58,7 +58,7 @@ class Language < ActiveRecord::Base
 
   # for the selection dropdown
   def self.grouped_submission_options
-    current = ["c++", "c", "python", "java", "haskell", "ruby", "j"]  # language group identifiers, order is preserved
+    current = ["c++", "c", "python", "java", "javascript", "haskell", "ruby", "j"]  # language group identifiers, order is preserved
     other = ["c++14", "c99"]  # language identifiers, ordered by language name
     current_langs = LanguageGroup.where(:identifier => current).preload(:current_language).map(&:current_language)
     current_options = current_langs.sort_by { |lang| current.index(lang.group.identifier) }.map { |lang| [lang.name, lang.id] }
