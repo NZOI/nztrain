@@ -31,12 +31,12 @@ RUNTIMECONFIG_PATH="$ISOLATE_ROOT/usr/share/dotnet-runtimeconfig.json"  # used i
 # The major and minor versions are the same (https://docs.microsoft.com/en-us/dotnet/core/versions/).
 # The patch version should be set to 0 (https://github.com/dotnet/designs/blob/master/accepted/runtime-binding.md).
 DOTNET_FW_VERSION=$(chroot "$ISOLATE_ROOT" dotnet --version | sed 's/\.[0-9]\+$/.0/') \
-  envsubst < script/install/csharp/dotnet-runtimeconfig-template.json > "$RUNTIMECONFIG_PATH"
+  envsubst < script/install/dotnet/dotnet-runtimeconfig-template.json > "$RUNTIMECONFIG_PATH"
 
 : Copying shell scripts into place
 
-cp "script/install/csharp/dotnet-csc" "$ISOLATE_ROOT/usr/local/bin"
-cp "script/install/csharp/dotnet-exec" "$ISOLATE_ROOT/usr/local/bin"
+cp "script/install/dotnet/dotnet-csc" "$ISOLATE_ROOT/usr/local/bin"
+cp "script/install/dotnet/dotnet-exec" "$ISOLATE_ROOT/usr/local/bin"
 
 set +x
 echo ".NET Core (C#) was installed"
