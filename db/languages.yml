@@ -163,7 +163,7 @@ csharp:
   :extension: .cs
   :source_filename: program
   :exe_extension: .exe
-  :processes: 10
+  :processes: 5
   :interpreter: /usr/local/bin/dotnet-exec  # custom shell script
   :variants:
     csharp8:
