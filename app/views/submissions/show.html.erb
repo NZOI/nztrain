@@ -107,7 +107,7 @@
             <td></td>
           </tr>
           <% if ![:pending,:cancelled].include?(case_data.status) && (policy(@submission).inspect? || is_sample_set) %>
-            <tr class="inspect_test status_<%= case_data.status %>">
+            <tr class="inspect_test status_<%= case_data.status %><%= " sample_case" if is_sample_set %>">
               <td colspan="5">
                 <% if policy(@submission).inspect? %>
                   <table>
