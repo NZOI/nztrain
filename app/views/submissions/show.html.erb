@@ -93,7 +93,7 @@
         <% test_cases = set_data.test_cases.to_a %>
         <% if !is_sample_set then test_cases = test_cases.shuffle(random: Random.new(Random.new(@submission.id+id).rand(@db_settings["submissions/shuffle"].to_i*id))) end %>
         <% test_cases.each_with_index do |(case_id, case_data), j| %>
-          <tr class="test_case status_<%= case_data.status %>">
+          <tr class="test_case status_<%= case_data.status %><%= " sample_case" if is_sample_set %>">
             <td class="test_name">
               <%= is_sample_set ? 'Sample' : 'Case' %> #<%= sprintf("%d.%#{set_data.test_cases.size.to_s.size}d", is_sample_set ? sample_sets : i+1-sample_sets, j+1) %>
               <% if policy(@submission).inspect? || is_sample_set then test_case = @submission.problem.test_cases.find_by_id(case_id) end %>
