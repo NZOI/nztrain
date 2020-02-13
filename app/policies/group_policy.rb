@@ -41,7 +41,7 @@ class GroupPolicy < AuthenticatedPolicy
   end
 
   def remove_user?
-    user.is_admin?
+    user.is_admin? or user.owns(record)
   end
 
   def join?
