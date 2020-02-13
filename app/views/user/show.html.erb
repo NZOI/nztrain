@@ -1,5 +1,6 @@
 <% content_for :title, @user_presenter.username %>
 <% toolbox_push :edit, edit_user_path(@user) if policy(@user).update? %>
+<% toolbox_push :edit, accounts_settings_edit_path if !policy(@user).update? && @user == current_user %>
 <% toolbox_push :back, :back %>
 
 <div style="float: left; height: 150px;"><%= @user_presenter.avatar %></div>
