@@ -105,7 +105,9 @@ module ApplicationHelper
       :apply => { :icon => :mail, :color => :blue, :method => :put },
       :join => { :icon => :login, :color => :green, :method => :put },
       :leave => { :icon => :logout, :color => :red, :method => :put, :data => { :confirm => "Are you sure you want to leave this group?" } },
-      :start => { :icon => :time, :color => :green, :method => :put }
+      :start => { :icon => :time, :color => :green, :method => :put },
+      :previous => { :icon => :back, :color => :blue },
+      :next => { :icon => "right-big", :color => :blue }
     }
     map[symbol]
   end

@@ -1,7 +1,6 @@
-<p>
-  <b>Name:</b>
-  <%= @product.name %>
-</p>
+<% content_for :title, @product.name %>
+<% toolbox_push :edit, edit_product_path(@product) %>
+<% toolbox_push :back, products_path %>
 
 <p>
   <b>GTIN:</b>
@@ -16,7 +15,3 @@ Items:
     <tr><td><%= item.id %></td><td><%= item.status %></td><td><%= item.holder ? item.holder.name : "None" %></td><td><%= item.organisation.name %></td><td><%= link_to "Show", item %></td></tr>
   <% end %>
 </table>
-
-
-<%= link_to 'Edit', edit_product_path(@product) %> |
-<%= link_to 'Back', products_path %>

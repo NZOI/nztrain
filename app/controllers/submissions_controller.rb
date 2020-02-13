@@ -15,6 +15,9 @@ class SubmissionsController < ApplicationController
   # GET /submissions.xml
   def index
     params[:by_user] = current_user.id if params[:filter] == 'my'
+    if !params[:by_user].nil? && params[:by_user] != current_user.id
+      authorize User.find(params[:by_user]), :inspect?
+    end
     authorize Submission.new, :show? if params[:by_user].nil?
     if current_user.openbook? || policy(Problem.new).show?
       authorize Problem.find(params[:by_problem]), :show? unless params[:by_problem].nil?

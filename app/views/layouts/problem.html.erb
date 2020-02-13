@@ -2,6 +2,13 @@
 <%= toolbox_push :edit, edit_problem_path(@problem) if policy(@problem).edit? %> 
 <%= toolbox_push :delete, @problem if policy(@problem).destroy? %> 
 
+<% if current_user.try(:competing?) %>
+  <% problems = current_user.contest_relations.active.first.contest.problem_set.problems %>
+  <% current_problem = problems.index(@problem) %>
+  <%= toolbox_push :previous, problem_path(problems[current_problem-1]) if !current_problem.nil? && current_problem > 0 %>
+  <%= toolbox_push :next, problem_path(problems[current_problem+1]) if !current_problem.nil? && current_problem < problems.length - 1 %>
+<% end %>
+
 <% content_for :content do %>
 <% if policy(@problem).inspect? %>
   <% if !@problem.test_submissions.any? %>

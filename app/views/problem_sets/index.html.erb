@@ -1,9 +1,4 @@
 <% content_for :title, "Problem Sets" %>
+<% toolbox_push :new, new_problem_set_path if policy(ProblemSet).create? %>
 
 <%= render 'index' %>
-
-<br />
-
-<% if policy(ProblemSet).create? %>
-  <%= link_to 'New Problem set', new_problem_set_path %>
-<% end %>

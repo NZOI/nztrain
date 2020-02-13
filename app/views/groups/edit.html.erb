@@ -7,7 +7,7 @@
 <ul>
 <% @group.contests.each do |contest| %>
   <li>
-  <%= contest.name %> (<%= link_to("remove", remove_contest_group_path(@group, :contest_id => contest.id ), :method => "put") %>)
+  <%= contest.name %> (<%= link_to("remove", remove_contest_group_path(@group, :contest_id => contest.id), :data => { :confirm => 'Are you sure?' }, :method => "put") %>)
   </li>
 <% end %>
 </ul>

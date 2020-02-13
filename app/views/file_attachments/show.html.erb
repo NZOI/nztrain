@@ -1,6 +1,7 @@
 <% content_for :title, @file_attachment.filename %>
+<% toolbox_push :edit, edit_file_attachment_path(@file_attachment) %>
+
 <p>
 <%= link_to @file_attachment.filename, download_file_attachment_path(@file_attachment) %><br>
 <b>Owner: </b><%= @file_attachment.owner.username %><br>
 </p>
-<%= link_to "Edit", edit_file_attachment_path(@file_attachment) %>

@@ -19,6 +19,8 @@ class Contest < ActiveRecord::Base
 
   belongs_to :owner, :class_name => :User
 
+  validates :name, :presence => true
+
   # public = everyone, protected = in group, private = competitors
   OBSERVATION = Enumeration.new 0 => :public, 1 => :protected, 2 => :private
 

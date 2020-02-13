@@ -1,4 +1,5 @@
 <% content_for :title, "Roles" %>
+<% toolbox_push :new, new_role_path %>
 
 <table class="main_table hoverable selectable">
   <thead>
@@ -28,7 +29,3 @@
     <% end %>
   </tbody>
 </table>
-
-<br />
-
-<%= link_to 'New Role', new_role_path %>
