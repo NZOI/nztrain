@@ -13,7 +13,8 @@ install:
 script:
 - > 
   docker run --privileged --network host 
-  nztrain:latest /bin/bash -c "
+  --env-file <(env) nztrain:latest 
+  /bin/bash -c "
   service redis start;
   service postgresql start;
   bundle exec rake db:test:load; 
