@@ -13,6 +13,7 @@ install:
 script:
 - > 
   docker run --privileged --network host 
+  --env-file <(env | grep TRAVIS)
   nztrain:latest /bin/bash -c "
   service redis start;
   service postgresql start;
