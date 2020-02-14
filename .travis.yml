@@ -1,21 +1,24 @@
-language: ruby
-rvm:
-  - "2.3.8"
-services:
-  - redis-server
-  - postgresql
+language: minimal
 
-# uncomment this line if your project needs to run something other than `rake`:
-#before_script: # for Selenium RSpec tests
-#  - "export DISPLAY=:99.0"
-#  - "sh -e /etc/init.d/xvfb start"
+cache:
+  directories:
+  - docker
 
 before_install:
-  - bash script/install/maxmind.bash
+- docker load -i docker/images.tar || true
 
-before_script:
-  - RAILS_ENV=test DATABASE_USERNAME=postgres DATABASE= TEST_DATABASE=nztraintest REDIS_INSTALL=false REDIS_PASS= SCHEDULE_BACKUPS=0 ISOLATE_ROOT=/ ISOLATE_CGROUPS=false ISOLATE_BRANCH=nztrain.travis.ci bash script/install/config.bash --defaults
-  - AUTOCONFIRM=true script/install.bash --skip-update
-  - bundle exec rake db:test:load
-script: bundle exec rspec
+install:
+- docker build . -t nztrain:latest
+
+script:
+- > 
+  docker run --privileged --network host 
+  nztrain:latest /bin/bash -c "
+  service redis start;
+  service postgresql start;
+  bundle exec rake db:test:load; 
+  bundle exec rspec"
+
+before_cache:
+- docker save -o docker/images.tar $(docker images -a -q)
 
