@@ -1,15 +1,76 @@
 == NZTrain
-Status: {<img src="https://secure.travis-ci.org/NZOI/nztrain.png?branch=master" alt="Build Status" />}[http://travis-ci.org/NZOI/nztrain] {<img src="https://coveralls.io/repos/NZOI/nztrain/badge.png" alt="Coverage Status" />}[https://coveralls.io/r/NZOI/nztrain] {<img src="https://codeclimate.com/github/NZOI/nztrain.png" />}[https://codeclimate.com/github/NZOI/nztrain]
-Workflow: {<img src="https://badge.waffle.io/NZOI/nztrain.png" alt="WIP Issues" />}[http://waffle.io/NZOI/nztrain]
+{<img src="https://secure.travis-ci.org/NZOI/nztrain.png?branch=master" alt="Build Status" />}[http://travis-ci.org/NZOI/nztrain] {<img src="https://coveralls.io/repos/NZOI/nztrain/badge.png" alt="Coverage Status" />}[https://coveralls.io/r/NZOI/nztrain] {<img src="https://codeclimate.com/github/NZOI/nztrain.png" />}[https://codeclimate.com/github/NZOI/nztrain]
 
-=== Installation
-Run `script/install.bash` to install dependencies.
+=== Docker Installation
+This requires the Docker engine. 
 
-`script/update.bash` will pull changes from origin and recompile various things. This includes assets - assuming that it is for production purposes.
+First, build the image:
 
-Both scripts depends on `script/install.cfg`, which is built using `script/install/config.bash` automatically. If `script/install.cfg` is incomplete (eg. new configuration is added), `script/install.bash` and `script/update.bash` will prompt for the new configurations required.
+  $ docker build --memory-swap -1 . -t nztrain:latest
+
+Then, execute the image:
+
+  $ docker --privileged --network host -it nztrain:latest
+
+The website will be served over port +3000+.
+
+=== Manual Installation
+This requires Ubuntu Xenial (16.04).
+
+Invoke the installation script within this repository:
+
+  $ git clone https://github.com/NZOI/nztrain.git
+  $ cd nztrain
+  $ ./script/install.bash
+
+Select all default configuration options by pressing enter repeatedly.
+
+You will be prompted to select an option to install Ruby. Choose to install +rbenv+ (the fourth option). Then, restart the session and invoke the installation script again:
+
+  $ bash
+  $ ./script/install.bash
+
+You will be prompted to select an option to install Ruby *again*. Choose to install either +RVM+ or +rbenv+. All prompts after this are package installation prompts. You may wish to quit the installation script and invoke it with +yes+.
+
+  $ yes | ./script/install.bash
+
+Finally, run the website:
+
+  $ bundle exec rails server
+  $ bundle exec rake qless:work
+
+Each of these commands must be kept alive. This can be achieved by running each command in a separate terminal session. Otherwise, you may wish to daemonize (run in the background) the commands:
+
+  $ bundle exec rails server -d
+
+The website will be served over port +3000+.
+
+=== System User
+This setups a system user for the website.
+
+First open a Ruby console:
+
+  $ bundle exec rails console
+
+Then, create a new user with these commands:
+
+  user = User.find(0)
+  Role.find_by_name("superadmin").users.push(user)
+  user.confirm!
+  require 'io/console'
+  user.reset_password!(STDIN.getpass("Password: "), STDIN.getpass("Confirm: "))
+
+You will be prompted to enter a password twice. The invocation should return true if the user creation was successful. Otherwise, the password may be too short.
+
+=== Updating
+The update script will recompile and pull changes from origin:
+
+  $ cd nztrain
+  $ ./script/update.bash
+
+Both the installation and update script depends on the configuration script: +script/install.cfg+ which is built using +script/install/config.bash+ automatically. If +script/install.cfg+ is incomplete (for example, a new configuration is added) then new configurations will be prompted.
 
 === Development Tools
-- `spring` instead of `bundle exec` to keep a background copy of rails running, and avoid startup time.
-- `unicorn` starts of a development server (instead of Webrick).
+- Use +spring+ instead of bundle to keep a background copy of Rails running and avoid startup time.
+- +unicorn+ starts a development server (instead of Webrick).
 
