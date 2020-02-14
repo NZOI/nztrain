@@ -109,10 +109,9 @@ a.progress_link:hover {
 
 #main {
   top: 30px;
-  left: 200px;
+  margin-left: 200px;
   right: 0;
   bottom: 0;
-  position: fixed;
   overflow-y: auto;
 }
 
