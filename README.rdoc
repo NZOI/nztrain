@@ -4,15 +4,23 @@
 === Docker Installation
 This requires the Docker engine. 
 
-First, build the image:
+First build the image:
 
   $ docker build --memory-swap -1 . -t nztrain:latest
 
-Then, execute the image:
+Then execute the image:
 
-  $ docker --privileged --network host -it nztrain:latest
+  $ docker run --privileged --network host -it nztrain:latest
 
 The website will be served over port +3000+.
+
+To inspect the running container identify the container name:
+
+  $ docker ps
+
+Then execute an interactive bash shell in the container:
+
+  $ docker exec -it <container> /bin/bash
 
 === Manual Installation
 This requires Ubuntu Xenial (16.04).
