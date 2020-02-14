@@ -9,7 +9,14 @@
 # <C-p> <C-q> to detach
 
 FROM drecom/ubuntu-ruby:2.3.8
-RUN apt-get update && apt-get install -y sudo git libpq-dev software-properties-common
+RUN apt-get update && apt-get install -y sudo git libpq-dev software-properties-common locales
+
+# Replace Japanese locale with English
+RUN echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen && locale-gen
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+
 # Services cannot be started within Docker build environment
 RUN printf "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
 
