@@ -65,9 +65,9 @@ var duration = 250;
 function shrink() {
   createCookie("expanded", "false", 31);
   $("#side").animate({width:'50px'}, duration);
-  $('#main-menu').animate({'left':'50px'}, duration);
+  $('#main-menu').animate({'margin-left':'50px'}, duration);
   $('#side-minify').html("&#9654;");
-  $('#main').animate({'left':'50px'}, duration);
+  $('#main').animate({'margin-left':'50px'}, duration);
   $('#side-expanded').animate({'opacity':'0'},duration);
   $('#side-contracted').animate({'opacity':'1'}, duration);
 }
@@ -75,9 +75,9 @@ function shrink() {
 function expand() {
   createCookie("expanded", "true", 31);
   $("#side").animate({width:'200px'}, duration);
-  $('#main-menu').animate({'left':'200px'}, duration);
+  $('#main-menu').animate({'margin-left':'200px'}, duration);
   $('#side-minify').html("&#9664;");
-  $('#main').animate({'left':'200px'}, duration);
+  $('#main').animate({'margin-left':'200px'}, duration);
   $('#side-expanded').animate({'opacity':'1'},duration);
   $('#side-contracted').animate({'opacity':'0'}, duration);
 }
