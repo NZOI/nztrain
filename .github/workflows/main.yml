@@ -1,0 +1,35 @@
+name: Docker Build
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: whoan/docker-build-with-cache-action@v3
+      with:
+        # Secrets are specified in the repository settings
+        # A Docker account is required for registry caching
+        username: "${{ secrets.DOCKER_USERNAME }}"
+        password: "${{ secrets.DOCKER_PASSWORD }}"
+        image_name: "${{ secrets.DOCKER_USERNAME }}/nztrain"
+
+    - name: Run tests
+      run: >
+        docker run --privileged --network host --name container 
+        "${{ secrets.DOCKER_USERNAME }}/nztrain:latest"
+        /bin/bash -l -c "
+        service redis start;
+        service postgresql start;
+        bundle exec rake db:test:load; 
+        bundle exec rspec"
+
+    - name: Copy coverage data
+      run: docker cp container:/nztrain/coverage/lcov/nztrain.lcov .
+
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: ./nztrain.lcov
+
