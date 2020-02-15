@@ -5,25 +5,34 @@
 # Execution invocation:
 # Privileged mode is required for control groups
 # Must be invoked with '--network host' for port exposure
-# docker --privileged --network host -it nztrain:latest
+# docker run --privileged --network host -it nztrain:latest
 # <C-p> <C-q> to detach
 
-FROM drecom/ubuntu-ruby:2.3.8
-RUN apt-get update && apt-get install -y sudo git libpq-dev software-properties-common locales
-
-# Replace Japanese locale with English
-RUN echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen && locale-gen
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+FROM ubuntu:xenial
 
 # Services cannot be started within Docker build environment
 RUN printf "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
+RUN apt-get update && apt-get install -y sudo git \
+    libpq-dev software-properties-common curl
+
+# Install RVM
+RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys \
+    409B6B1796C275462A1703113804BB82D39DC0E3 \
+    7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+RUN curl -L https://get.rvm.io | bash -s stable
+ENV PATH="/usr/local/rvm/bin/:${PATH}"
+SHELL ["/bin/bash", "-l", "-c"]
+
+# Install Ruby 2.3.8
+RUN rvm requirements
+RUN rvm install 2.3.8
+RUN gem install bundler --no-ri --no-rdoc
 
 WORKDIR /nztrain
 COPY Gemfile* ./
 COPY script ./script
 RUN bash script/install/maxmind.bash
+RUN yes | bash script/install/imagemagick.bash
 
 # Bundle installation is invoked in advance to avoid
 # prompt at installation script
