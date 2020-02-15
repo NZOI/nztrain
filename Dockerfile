@@ -13,7 +13,14 @@ FROM ubuntu:xenial
 # Services cannot be started within Docker build environment
 RUN printf "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
 RUN apt-get update && apt-get install -y sudo git \
-    libpq-dev software-properties-common curl
+    libpq-dev software-properties-common curl locales
+
+# Set locales for database
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+RUN echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen && locale-gen
+RUN update-locale LANG=en_US.UTF-8
 
 # Install RVM
 RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys \
@@ -29,24 +36,22 @@ RUN rvm install 2.3.8
 RUN gem install bundler --no-ri --no-rdoc
 
 WORKDIR /nztrain
-COPY Gemfile* ./
 COPY script ./script
 RUN bash script/install/maxmind.bash
 RUN yes | bash script/install/imagemagick.bash
 
-# Bundle installation is invoked in advance to avoid
-# prompt at installation script
-RUN bundle install --deployment
-
+COPY config ./config
 RUN RAILS_ENV=development DATABASE_USERNAME=root DATABASE=nztrain \
     TEST_DATABASE=nztraintest APP_NAME=nztrain USER=root \
     APP_USER=root UNICORN_PORT= REDIS_HOST=localhost REDIS_PORT=6379 \
     REDIS_PASS=@/etc/redis/redis.conf REDIS_INSTALL=true \
     SERVER_NAME=_ bash script/install/config.bash --defaults
-
-COPY config ./config
 # Avoid updating as database servers are not live yet
 RUN yes | update=false bash script/install.bash
+
+COPY Gemfile* ./
+# Bundle installation is invoked in advance to avoid prompt 
+RUN bundle install --deployment
 
 COPY . .
 RUN service postgresql start; \
