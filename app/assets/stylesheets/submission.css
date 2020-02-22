@@ -13,6 +13,11 @@ table.results {
   vertical-align: top;
 }
 
+.results .inspect_output th {
+  padding: 0;
+  font-size: 0.95em;
+}
+
 .results tbody.headings {
   border: 2px solid black;
   border-bottom: 0px;
