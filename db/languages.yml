@@ -168,6 +168,6 @@ csharp:
   :variants:
     csharp8:
       :name: "C# 8.0"
-      :compiler: /usr/local/bin/dotnet-csc  # custom shell script (also prints SDK version number)
+      :compiler: dotnet-csc  # custom shell script (also prints SDK version number)
       :compiler_command: '%{compiler} %{source} -optimize+ -out:%{output} -langversion:8.0 -nologo'
       :interpreter_command: '%{interpreter} %{source}'
