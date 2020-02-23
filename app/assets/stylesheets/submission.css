@@ -133,6 +133,10 @@ table.results {
   display: table-row;
 }
 
+.results .inspect_test table.inspect_output th {
+  padding-right: 10px;
+}
+
 .results .output_stats {
   float: right;
   font-weight: normal;
