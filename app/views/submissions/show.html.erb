@@ -127,23 +127,24 @@
                 <% end %>
                 <table class="inspect_output">
                   <tr>
-                    <th>Input</th><th class="output_stats">Size: <%= number_to_human_size(test_case.input.bytesize) %></th>
-                    <th>Actual Output</th>
-                    <th class="output_stats">
-                      <%= "Size: #{number_to_human_size(case_data.output_size)}" unless case_data.output_size.nil? %>
+                    <th>Input<span class="output_stats">Size: <%= number_to_human_size(test_case.input.bytesize) %></span></th>
+                    <th>Actual Output
+                      <% if !case_data.output_size.nil? %>
+                        <span class="output_stats">Size: <%= number_to_human_size(case_data.output_size) %></span>
+                      <% end %>
                     </th>
-                    <th>Expected Output</th><th class="output_stats">Size: <%= number_to_human_size(test_case.output.bytesize) %></th>
+                    <th>Expected Output <span class="output_stats">Size: <%= number_to_human_size(test_case.output.bytesize) %></span></th>
                     <% evaluation = case_data.evaluator.evaluation %>
                     <% if policy(@submission).inspect? %>
-                      <th>Evaluator Log</th><th class="output_stats"><%= "Evaluation: #{evaluation ? sprintf("%.2f",evaluation) : "nil"}/1.00" %></th>
+                      <th>Evaluator Log <span class="output_stats"><%= "Evaluation: #{evaluation ? sprintf("%.2f",evaluation) : "nil"}/1.00" %></span></th>
                     <% end %>
                   </tr>
                   <tr>
-                    <td colspan="2"><%= predisplay test_case.truncated_input, type: :kbd %></td>
-                    <td colspan="2"><%= predisplay case_data.output, type: :samp %></td>
-                    <td colspan="2"><%= predisplay test_case.truncated_output, type: :kbd %></td>
+                    <td><%= predisplay test_case.truncated_input, type: :kbd %></td>
+                    <td><%= predisplay case_data.output, type: :samp %></td>
+                    <td><%= predisplay test_case.truncated_output, type: :kbd %></td>
                     <% if policy(@submission).inspect? %>
-                      <td colspan="2"><span class="code"><%= case_data.evaluator.info %></span></td>
+                      <td><span class="code"><%= case_data.evaluator.info %></span></td>
                     <% end %>
                   </tr>
                 </table>
