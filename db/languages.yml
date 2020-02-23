@@ -2,6 +2,9 @@
 # database stores the variants and their language group
 # programs will reference a language variant, and will be upgraded if their behaviour is the same across multiple versions
 
+# compiler_command is a shell command executed using bash (see Language#compile)
+# interpreter_command is executed directly using 'isolate' (so the first argument must be the full path to the interpreter)
+
 c++:
   :name: "C++"
   :lexer: c++
