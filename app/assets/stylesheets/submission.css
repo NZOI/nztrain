@@ -108,6 +108,10 @@ table.results {
   width: 100%;
 }
 
+.results .inspect_test table td, .results .inspect_test table th {
+  padding: 2px 10px 2px 10px;
+}
+
 .results .inspect_test table.inspect_output {
   width: 100%;
   border-spacing: 5px;
@@ -131,10 +135,6 @@ table.results {
 
 .results tr.test_case:hover + tr.inspect_test, .results tr.inspect_test:hover, .results tr.sample_case + tr.inspect_test:not(.status_correct) {
   display: table-row;
-}
-
-.results .inspect_test table.inspect_output th {
-  padding-right: 10px;
 }
 
 .results .output_stats {
