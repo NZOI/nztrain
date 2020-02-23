@@ -108,14 +108,14 @@ table.results {
   width: 100%;
 }
 
-.results .inspect_test table td, .results .inspect_test table th {
-  padding: 2px 10px 2px 10px;
-}
-
 .results .inspect_test table.inspect_output {
   width: 100%;
   border-spacing: 5px;
   table-layout: fixed;
+}
+
+.results .inspect_test table.inspect_output th {
+  padding-left: 0px;
 }
 
 .results .inspect_test table.inspect_output td {
