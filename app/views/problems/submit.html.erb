@@ -27,7 +27,7 @@
   <hr>
   <br>
   <h2>Paste code</h2>
-  <%= form_for @submission, :url => submit_problem_path(@problem) do |f| %>
+  <%= form_for @submission, :url => submit_problem_path(@problem), :namespace => "paste" do |f| %>
     <div class="subfield">
       Language: 
       <%= f.select :language_id, grouped_options_for_select(Language.grouped_submission_options, @submission.language_id || current_user.submissions.last.try(:language_id)) %>
