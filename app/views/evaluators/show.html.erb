@@ -1,7 +1,6 @@
-<p>
-  <b>Name:</b>
-  <%= @evaluator.name %>
-</p>
+<% content_for :title, @evaluator.name %>
+<% toolbox_push :edit, edit_evaluator_path(@evaluator) if policy(@evaluator).edit? %>
+<% toolbox_push :back, evaluators_path %>
 
 <p>
   <b>Description:</b>
@@ -10,9 +9,7 @@
 <% if policy(@evaluator).inspect? %>
   <p>
     <b>Source:</b>
-    <pre>
-    <%= @evaluator.source %>
-    </pre>
+    <pre><%= @evaluator.source %></pre>
   </p>
 <% end %>
 
@@ -20,7 +17,3 @@
   <b>User:</b>
   <%= @evaluator.owner_id %>
 </p>
-
-
-<%= link_to 'Edit', edit_evaluator_path(@evaluator) if policy(@evaluator).edit? %> 
-<%= link_to 'Back', evaluators_path %>

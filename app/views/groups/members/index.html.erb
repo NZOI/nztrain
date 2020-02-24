@@ -1,10 +1,21 @@
 <%= render 'menu' %>
 
+<% if policy(@group).add_user? %>
+  <%= form_tag add_members_group_path, :id => :add_member_form, :method => :post do %>
+    <%= label_tag :username, 'Username:' %>
+    <%= text_field_tag :username %>
+    <%= submit_tag 'Add' %>
+  <% end %>
+<% end %>
+
 <table class="main_table" >
   <thead>
     <tr>
-      <th width="50%">Username</th>
-      <th width="50%">Joined on</th>
+      <th width="45%">Username</th>
+      <th width="45%">Joined on</th>
+      <% if policy(@group).remove_user? %>
+        <th width="10%"></th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
@@ -12,6 +23,9 @@
       <tr>
         <td><%= link_to membership.member.username, membership.member %></td>
         <td><%= membership.created_at %></td>
+        <% if policy(@group).remove_user? %>
+          <td><%= link_to("Remove", remove_members_group_path(@group, :user_id => membership.member.id), :data => { :confirm => 'Are you sure?' }, :method => "put") %></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>

@@ -19,12 +19,14 @@ class Contest < ActiveRecord::Base
 
   belongs_to :owner, :class_name => :User
 
+  validates :name, :presence => true
+
   # public = everyone, protected = in group, private = competitors
   OBSERVATION = Enumeration.new 0 => :public, 1 => :protected, 2 => :private
 
   before_save do # update the end time that was cached
     contest_relations.find_each do |relation|
-      relation.finish_at = [end_time,relation.started_at.advance(:hours => duration.to_f)].min unless relation.started_at.nil?
+      relation.finish_at = [end_time,relation.started_at.advance(:hours => duration.to_f)].min.advance(:seconds => relation.extra_time) unless relation.started_at.nil?
       relation.save
     end if duration_changed? || end_time_changed?
 

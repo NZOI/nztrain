@@ -1,4 +1,5 @@
 <% content_for :title, "Products" %>
+<% toolbox_push :new, new_product_path %>
 
 <table class="main_table hoverable selectable">
   <thead>
@@ -24,5 +25,3 @@
 </table>
 
 <br />
-
-<%= link_to 'New Product', new_product_path %>

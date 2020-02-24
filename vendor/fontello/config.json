@@ -5,8 +5,6 @@
   "hinting": true,
   "units_per_em": 1000,
   "ascent": 850,
-  "copyright": "undefined",
-  "fullname": "undefined",
   "glyphs": [
     {
       "uid": "9dd9e835aebe1060ba7190ad2b2ed951",
@@ -223,6 +221,12 @@
       "css": "ok",
       "code": 59426,
       "src": "websymbols"
+    },
+    {
+      "uid": "ad6b3fbb5324abe71a9c0b6609cbb9f1",
+      "css": "right-big",
+      "code": 59428,
+      "src": "fontawesome"
     }
   ]
 }

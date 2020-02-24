@@ -34,7 +34,7 @@ if [[ "$ISOLATE_ROOT" != "/" ]] && [[ ! -d "$ISOLATE_ROOT" ]]; then
   # add sources
   echo deb http://archive.ubuntu.com/ubuntu/ $SUITE-updates main restricted >> "$ISOLATE_ROOT"/etc/apt/sources.list
   echo deb http://archive.ubuntu.com/ubuntu/ $SUITE universe >> "$ISOLATE_ROOT"/etc/apt/sources.list
-  echo deb http://security.ubuntu.com/ubuntu $SUITE-security main restricted >> "$ISOLATE_ROOT"/etc/apt/sources.list
+  echo deb http://security.ubuntu.com/ubuntu $SUITE-security main restricted universe >> "$ISOLATE_ROOT"/etc/apt/sources.list
   echo deb http://nz.archive.ubuntu.com/ubuntu/ $SUITE multiverse >> "$ISOLATE_ROOT"/etc/apt/sources.list
   echo deb-src http://nz.archive.ubuntu.com/ubuntu/ $SUITE multiverse >> "$ISOLATE_ROOT"/etc/apt/sources.list
   echo deb http://nz.archive.ubuntu.com/ubuntu/ $SUITE-updates multiverse >> "$ISOLATE_ROOT"/etc/apt/sources.list
@@ -59,14 +59,13 @@ chroot "$ISOLATE_ROOT" apt-get update
 echo "$chroot_install software-properties-common"
 chroot "$ISOLATE_ROOT" apt-get install software-properties-common # provides add-apt-repository
 
-# only for <= 12.04
-echo "$chroot_install python-software-properties"
-chroot "$ISOLATE_ROOT" apt-get install python-software-properties # provides add-apt-repository
-
 [ -z "$TRAVIS" ] && { # if not in Travis-CI
   # python ppa
-  echo "$chroot_cmd add-apt-repository ppa:fkrull/deadsnakes -y"
-  chroot "$ISOLATE_ROOT" add-apt-repository ppa:fkrull/deadsnakes -y
+  if ! chroot "$ISOLATE_ROOT" apt-cache show python3.4 &>/dev/null ||
+      ! chroot "$ISOLATE_ROOT" apt-cache show python3.8 &>/dev/null; then
+    echo "$chroot_cmd add-apt-repository ppa:deadsnakes/ppa -y"
+    chroot "$ISOLATE_ROOT" add-apt-repository ppa:deadsnakes/ppa -y
+  fi
 
   # ruby ppa
   echo "$chroot_cmd add-apt-repository ppa:brightbox/ruby-ng -y"
@@ -88,16 +87,49 @@ chroot "$ISOLATE_ROOT" apt-get install build-essential # C/C++ (g++, gcc)
 echo "$chroot_install ruby"
 chroot "$ISOLATE_ROOT" apt-get install ruby # Ruby (ruby)
 
-echo "$chroot_install ghc"
-chroot "$ISOLATE_ROOT" apt-get install ghc # Haskell (ghc)
+[ -z "$TRAVIS" ] && { # if not in Travis-CI
+  # add haskell ppa
+  echo "$chroot_cmd add-apt-repository ppa:hvr/ghc -y"
+  chroot "$ISOLATE_ROOT" add-apt-repository ppa:hvr/ghc -y
 
-echo "$chroot_install default-jdk"
-chroot "$ISOLATE_ROOT" apt-get install default-jdk # Java
+  echo "$chroot_cmd apt-get update"
+  chroot "$ISOLATE_ROOT" apt-get update
+
+  echo "$chroot_install ghc-8.8.2"
+  chroot "$ISOLATE_ROOT" apt-get install ghc-8.8.2 # Haskell (ghc)
+
+  echo "$chroot_cmd update-alternatives --install /usr/bin/ghc ghc /opt/ghc/8.8.2/bin/ghc 75"
+  chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/ghc ghc /opt/ghc/8.8.2/bin/ghc 75
+
+  # Note: Running ghc requires /proc to be mounted. The isolate command mounts
+  # it, but it might not be mounted if running ghc manually in the chroot.
+  # (To find shared libraries, the ghc binary has a RUNPATH attribute with
+  # paths that are relative to $ORIGIN. The dynamic linker uses /proc/self/exe
+  # to expand $ORIGIN. It can be overridden using the environment variable
+  # LD_ORIGIN_PATH.)
+}
+
+if ! chroot "$ISOLATE_ROOT" apt-cache show openjdk-11-jdk &>/dev/null; then
+  # add java ppa
+  echo "$chroot_cmd add-apt-repository ppa:openjdk-r/ppa -y"
+  chroot "$ISOLATE_ROOT" add-apt-repository ppa:openjdk-r/ppa -y
+
+  echo "$chroot_cmd apt-get update"
+  chroot "$ISOLATE_ROOT" apt-get update
+fi
+
+echo "$chroot_install openjdk-11-jdk"
+chroot "$ISOLATE_ROOT" apt-get install openjdk-11-jdk # Java
 
 [ -z "$TRAVIS" ] && { # if not in Travis-CI
 
+  # echo "$chroot_install python"
+  # chroot "$ISOLATE_ROOT" apt-get install python # Python 2 (deprecated)
   echo "$chroot_install python3.4"
   chroot "$ISOLATE_ROOT" apt-get install python3.4 # Python 3.4
+  echo "$chroot_install python3.8"
+  chroot "$ISOLATE_ROOT" apt-get install python3.8 # Python 3.8
+  # note: when updating these Python versions, also update the check for adding the PPA above
 
   echo "$chroot_install ruby2.2"
   chroot "$ISOLATE_ROOT" apt-get install ruby2.2
@@ -132,8 +164,6 @@ EOF
 
 }
 
-umount "$ISOLATE_ROOT/proc"
-
 if [ ! -f "$ISOLATE_ROOT/usr/bin/cint.rb" ] ; then
   cmd="cp `dirname $0`/cint.rb $ISOLATE_ROOT/usr/bin"
   echo "$cmd"
@@ -144,25 +174,43 @@ if [ ! -f "$ISOLATE_ROOT/usr/bin/cint.rb" ] ; then
   $cmd
 fi
 
-# gcc 4.9.3 on Precise (will not be needed when we use trusty tahr)
+# gcc 9
 echo "$chroot_cmd add-apt-repository ppa:ubuntu-toolchain-r/test -y"
 chroot "$ISOLATE_ROOT" add-apt-repository ppa:ubuntu-toolchain-r/test -y
 
 echo "$chroot_cmd apt-get update"
 chroot "$ISOLATE_ROOT" apt-get update
 
-echo "$chroot_cmd apt-get install gcc-4.9"
-chroot "$ISOLATE_ROOT" apt-get install gcc-4.9
+echo "$chroot_cmd apt-get install gcc-9"
+chroot "$ISOLATE_ROOT" apt-get install gcc-9
 
-echo "$chroot_cmd apt-get install g++-4.9"
-chroot "$ISOLATE_ROOT" apt-get install g++-4.9
+echo "$chroot_cmd apt-get install g++-9"
+chroot "$ISOLATE_ROOT" apt-get install g++-9
 
-echo "$chroot_cmd update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 75"
-chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 75
+echo "$chroot_cmd update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 75"
+chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 75
 
-echo "$chroot_cmd update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 75"
-chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 75
-# gcc 4.9.3 done
+echo "$chroot_cmd update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 75"
+chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 75
+# gcc 9 done
 
-# let user know that chroot installs are finished
+[ -z "$TRAVIS" ] && bash script/confirm.bash 'Install the V8 JavaScript Engine (submissions in JavaScript will fail without this!)' && {
+  HOME=/root ISOLATE_ROOT= chroot "$ISOLATE_ROOT" bash < script/install/v8.bash
+}
 
+[ -z "$TRAVIS" ] && bash script/confirm.bash 'Install .NET Core (C#)' && {
+  # check kernel version
+  uname -r | bash script/check_version.bash 4.14.0 || {
+    echo "Warning: Linux kernel $(uname -r) detected, .NET Core requires kernel >= 4.14"
+    echo "(see https://github.com/NZOI/nztrain/pull/64#issuecomment-582379819)"
+    echo "On Ubuntu 16.04.5, a newer kernel can be installed using"
+    echo "  sudo apt-get install linux-generic-hwe-16.04"
+    bash script/confirm.bash "Install .NET Core anyway"
+  }
+} && {
+  bash script/install/dotnet.bash
+}
+
+umount "$ISOLATE_ROOT/proc"
+
+echo 'Finished chroot installs!'

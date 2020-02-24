@@ -51,11 +51,20 @@ class Language < ActiveRecord::Base
     {key => path}.merge Hash[(0...elements.size).map{|i|"#{key}[#{i}]".to_sym}.zip(elements)]
   end
 
+  # for validating submissions
   def self.submission_options
-    latest = LanguageGroup.where(identifier: %w[c++ c python haskell java ruby j]).pluck(:current_language_id)
-    old = Language.where(identifier: %w[c++03 python2]).pluck(:id)
-    languages = Language.where(:id => latest).order(:identifier) + Language.where(:id => old).order(:identifier)
-    Hash[languages.map{ |language| ["#{language.group.name} (#{language.name})", language.id] }]
+    grouped_submission_options.values.reduce(:merge)
+  end
+
+  # for the selection dropdown
+  def self.grouped_submission_options
+    current = ["c++", "c", "python", "csharp", "java", "javascript", "haskell", "ruby", "j"]  # language group identifiers, order is preserved
+    other = ["c++14", "c99"]  # language identifiers, ordered by language name
+    current_langs = LanguageGroup.where(:identifier => current).preload(:current_language).map(&:current_language)
+    current_options = current_langs.sort_by { |lang| current.index(lang.group.identifier) }.map { |lang| [lang.name, lang.id] }
+    other_options = Language.where(:identifier => other).order(:name).pluck(:name, :id)
+    { "Current" => Hash[current_options],
+      "Other" => Hash[other_options] }
   end
 
   def self.infer(ext)

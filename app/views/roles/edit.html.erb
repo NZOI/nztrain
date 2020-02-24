@@ -1,6 +1,4 @@
 <% content_for :title, "Editing role" %>
+<% toolbox_push :back, @role %>
 
 <%= render 'form' %>
-
-<%= link_to 'Show', @role %> |
-<%= link_to 'Back', roles_path %>

@@ -129,7 +129,7 @@ table.results {
   display: none;
 }
 
-.results tr.test_case:hover + tr.inspect_test, .results tr.inspect_test:hover {
+.results tr.test_case:hover + tr.inspect_test, .results tr.inspect_test:hover, .results tr.sample_case + tr.inspect_test:not(.status_correct) {
   display: table-row;
 }
 

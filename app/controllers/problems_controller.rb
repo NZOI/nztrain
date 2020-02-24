@@ -43,6 +43,7 @@ class ProblemsController < ApplicationController
       @problem = Problem.new
       @problems = Problem.score_by_user(current_user.id).select('*')
     end
+    @problems = @problems.order(id: :desc)
     authorize @problem, :update?
 
     @problems_presenter = ProblemPresenter::Collection.new(@problems).permit!(*visible_attributes)

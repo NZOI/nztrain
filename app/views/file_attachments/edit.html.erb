@@ -1,5 +1,4 @@
-<% content_for :title, "Editing #{@file_attachment.name}" %>
+<% content_for :title, "Editing #{@file_attachment.filename}" %>
+<% toolbox_push :back, @file_attachment %>
 
 <%= render 'form' %>
-
-<%= link_to 'Show', @file_attachment %>

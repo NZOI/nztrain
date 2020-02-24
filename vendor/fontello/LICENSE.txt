@@ -3,20 +3,11 @@ Font license info
 
 ## Font Awesome
 
-   Copyright (C) 2012 by Dave Gandy
+   Copyright (C) 2016 by Dave Gandy
 
    Author:    Dave Gandy
    License:   SIL ()
    Homepage:  http://fortawesome.github.com/Font-Awesome/
-
-
-## Web Symbols
-
-   Copyright (c) 2011 by Just Be Nice studio. All rights reserved.
-
-   Author:    Just Be Nice studio
-   License:   SIL (http://scripts.sil.org/OFL)
-   Homepage:  http://www.justbenicestudio.com/
 
 
 ## Iconic
@@ -28,6 +19,15 @@ Font license info
    Homepage:  http://somerandomdude.com/work/iconic/
 
 
+## Elusive
+
+   Copyright (C) 2013 by Aristeides Stathopoulos
+
+   Author:    Aristeides Stathopoulos
+   License:   SIL (http://scripts.sil.org/OFL)
+   Homepage:  http://aristeides.com/
+
+
 ## Modern Pictograms
 
    Copyright (c) 2012 by John Caserta. All rights reserved.
@@ -37,12 +37,12 @@ Font license info
    Homepage:  http://thedesignoffice.org/project/modern-pictograms/
 
 
-## Elusive
+## Web Symbols
 
-   Copyright (C) 2013 by Aristeides Stathopoulos
+   Copyright (c) 2011 by Just Be Nice studio. All rights reserved.
 
-   Author:    Aristeides Stathopoulos
+   Author:    Just Be Nice studio
    License:   SIL (http://scripts.sil.org/OFL)
-   Homepage:  http://aristeides.com/
+   Homepage:  http://www.justbenicestudio.com/
 
 

@@ -1,8 +1,8 @@
+<% content_for :title, @role.name %>
+<% toolbox_push :edit, edit_role_path(@role) %>
+<% toolbox_push :back, roles_path %>
+
 <p>
   <b>Name:</b>
   <%= @role.name %>
 </p>
-
-
-<%= link_to 'Edit', edit_role_path(@role) %> |
-<%= link_to 'Back', roles_path %>

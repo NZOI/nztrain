@@ -7,52 +7,69 @@ c++:
   :lexer: c++
   :compiled: yes
   :interpreted: no
-  :current: c++11
+  :current: c++17
   :extension: .cpp
   :source_filename: program
   :exe_extension: .exe
   :processes: 1
   :variants:
-    c++03:
+    c++03:  # deprecated
       :name: "C++03"
       :compiler: /usr/bin/g++
-      :compiler_command: "%{compiler} -std=gnu++03 -O2 -o %{output} %{source} -lm"
-#      upgrade: c++11 # submissions will be upgraded if possible, if support is removed, it will be force-upgraded
-#      note: probably will never happen for this particular example... (or at least not for the next 10 years)
+      :compiler_command: "%{compiler} --version | head -n 1 1>&2 && %{compiler} -std=gnu++03 -O2 -o %{output} %{source} -lm"
     c++11:
       :name: "C++11"
       :compiler: /usr/bin/g++
-      :compiler_command: "%{compiler} -std=gnu++11 -O2 -o %{output} %{source} -lm"
+      :compiler_command: "%{compiler} --version | head -n 1 1>&2 && %{compiler} -std=gnu++11 -O2 -o %{output} %{source} -lm"
+    c++14:  # Changes since C++11: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p1319r0.html
+      :name: "C++14"
+      :compiler: /usr/bin/g++
+      :compiler_command: "%{compiler} --version | head -n 1 1>&2 && %{compiler} -std=gnu++14 -O2 -o %{output} %{source} -lm"
+    c++17:  # Changes since C++14: https://isocpp.org/files/papers/p0636r0.html
+      :name: "C++17"
+      :compiler: /usr/bin/g++
+      :compiler_command: "%{compiler} --version | head -n 1 1>&2 && %{compiler} -std=gnu++17 -O2 -o %{output} %{source} -lm"
 c:
-  :name: C
+  :name: "C"
   :lexer: c
   :compiled: yes
   :interpreted: no
-  :current: c99
+  :current: c11
   :extension: .c
   :source_filename: program
   :exe_extension: .exe
   :processes: 1
   :variants:
-    c99:
+    c99:  # deprecated
       :name: C99
       :compiler: /usr/bin/gcc
-      :compiler_command: '%{compiler} -std=gnu99 -O2 -o %{output} %{source} -lm'
+      :compiler_command: "%{compiler} --version | head -n 1 1>&2 && %{compiler} -std=gnu99 -O2 -o %{output} %{source} -lm"
+    c11:  # Changes since c99: https://en.wikipedia.org/wiki/C11_(C_standard_revision)
+      :name: C11
+      :compiler: /usr/bin/gcc
+      :compiler_command: "%{compiler} --version | head -n 1 1>&2 && %{compiler} -std=gnu11 -O2 -o %{output} %{source} -lm"
+
 java:
   :name: Java
   :lexer: java
   :compiled: yes
   :interpreted: yes
-  :current: java6
+  :current: java11
   :extension: .java
   :source_filename: Main
   :exe_extension: .jar
   :processes: 0
   :variants:
     java6:
-      :name: Java 1.6
+      :name: Java 1.6  # deprecated (note: uses '-source 1.6', which will be removed in a future JDK release)
       :compiler: /usr/bin/javac;/usr/bin/jar
-      :compiler_command: '%{compiler[0]} -O -source 1.6 -J-Xms16m -J-Xmx256m %{source} && %{compiler[1]} cfe %{output} Main -C %{source_dir} Main.class'
+      :compiler_command: '%{compiler[0]} -version | head -n 1 1>&2 && %{compiler[0]} -O -source 1.6 -J-Xms16m -J-Xmx256m %{source} && %{compiler[1]} cfe %{output} Main -C %{source_dir} .'
+      :interpreter: /usr/bin/java
+      :interpreter_command: '%{interpreter} -jar %{source}'
+    java11:
+      :name: Java 11
+      :compiler: /usr/bin/javac;/usr/bin/jar
+      :compiler_command: '%{compiler[0]} -version | head -n 1 1>&2 && %{compiler[0]} -O -source 11 -J-Xms16m -J-Xmx256m %{source} && %{compiler[1]} cfe %{output} Main -C %{source_dir} .'
       :interpreter: /usr/bin/java
       :interpreter_command: '%{interpreter} -jar %{source}'
 haskell:
@@ -69,25 +86,29 @@ haskell:
     haskell2010:
       :name: "Haskell 2010"
       :compiler: /usr/bin/ghc
-      :compiler_command: '%{compiler} --make -O2 -o %{output} %{source} -lm'
+      :compiler_command: '%{compiler} --version 1>&2 && %{compiler} --make -O2 -o %{output} %{source} -lm'
 python:
   :name: Python
   :lexer: python
   :compiled: no
   :interpreted: yes
-  :current: python3.4
+  :current: python3.8
   :extension: .py
   :source_filename: program
   :processes: 1
   :interpreter_command: '%{interpreter} %{source}'
   :compiler_command: '%{interpreter} -m py_compile %{source}'
   :variants:
-    python2:
+    python2:  # deprecated - Python 2 reached end-of-life in late 2019
       :name: "Python 2.7"
-      :interpreter: /usr/bin/python
-    python3.4:
+      :interpreter: /usr/bin/python2
+    python3.4:  # deprecated
       :name: "Python 3.4"
       :interpreter: /usr/bin/python3.4
+    python3.8:
+      :name: "Python 3.8"
+      :interpreter: /usr/bin/python3.8
+
 ruby:
   :name: Ruby
   :lexer: ruby
@@ -115,6 +136,38 @@ j:
   :interpreter_command: '%{interpreter} %{source}'
   :variants:
     j8:
-      :name: "J 8.0.3"
+      :name: "J 8.03"
       :interpreter: /usr/bin/ijconsole-8.0.3
 
+javascript:
+  :name: JavaScript
+  :lexer: javascript
+  :compiled: no
+  :interpreted: yes
+  :current: v8_8
+  :extension: .js
+  :source_filename: program
+  :interpreter_command: '%{interpreter} %{source}'
+  :variants:
+    v8_8:
+      :name: "JavaScript (V8 8.1)"
+      :interpreter: /usr/local/bin/d8
+      :processes: 9
+
+csharp:
+  :name: "C#"
+  :lexer: csharp
+  :compiled: yes
+  :interpreted: yes
+  :current: csharp8
+  :extension: .cs
+  :source_filename: program
+  :exe_extension: .exe
+  :processes: 5
+  :interpreter: /usr/local/bin/dotnet-exec  # custom shell script
+  :variants:
+    csharp8:
+      :name: "C# 8.0"
+      :compiler: /usr/local/bin/dotnet-csc  # custom shell script (also prints SDK version number)
+      :compiler_command: '%{compiler} %{source} -optimize+ -out:%{output} -langversion:8.0 -nologo'
+      :interpreter_command: '%{interpreter} %{source}'

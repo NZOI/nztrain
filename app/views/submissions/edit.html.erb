@@ -1,6 +1,4 @@
 <% content_for :title, "Editing submission" %>
+<% toolbox_push :back, @submission %>
 
 <%= render 'form' %>
-
-<%= link_to 'Show', @submission %> |
-<%= link_to 'Back', submissions_path %>
