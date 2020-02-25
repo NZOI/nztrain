@@ -10,7 +10,7 @@
 #  } || exit 1
 #}
 
-cmd="sudo apt-get install openjdk-8-jdk" # java required by yui-compressor gem
+cmd="sudo apt-get install default-jre-headless" # java required by yui-compressor gem
 echo "$ $cmd"
 $cmd
 [[ $? -le 1 ]] || exit 1 # apt-get exit 0 = success, 1 = decline, otherwise unknown error
