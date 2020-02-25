@@ -113,17 +113,20 @@ chroot "$ISOLATE_ROOT" apt-get install ruby # Ruby (ruby)
   # LD_ORIGIN_PATH.)
 }
 
-if ! chroot "$ISOLATE_ROOT" apt-cache show openjdk-11-jdk-headless &>/dev/null; then
-  # add java ppa
-  echo "$chroot_cmd add-apt-repository ppa:openjdk-r/ppa -y"
-  chroot "$ISOLATE_ROOT" add-apt-repository ppa:openjdk-r/ppa -y
+[ -z "$CI" ] && { # if not in CI
+  # Java
+  if ! chroot "$ISOLATE_ROOT" apt-cache show openjdk-11-jdk-headless &>/dev/null; then
+    # add java ppa
+    echo "$chroot_cmd add-apt-repository ppa:openjdk-r/ppa -y"
+    chroot "$ISOLATE_ROOT" add-apt-repository ppa:openjdk-r/ppa -y
 
-  echo "$chroot_cmd apt-get update"
-  chroot "$ISOLATE_ROOT" apt-get update
-fi
+    echo "$chroot_cmd apt-get update"
+    chroot "$ISOLATE_ROOT" apt-get update
+  fi
 
-echo "$chroot_install openjdk-11-jdk-headless"
-chroot "$ISOLATE_ROOT" apt-get install openjdk-11-jdk-headless # Java
+  echo "$chroot_install openjdk-11-jdk-headless"
+  chroot "$ISOLATE_ROOT" apt-get install openjdk-11-jdk-headless # Java
+}
 
 [ -z "$CI" ] && { # if not in CI
 
