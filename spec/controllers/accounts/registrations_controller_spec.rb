@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Accounts::RegistrationsController do
   it "can get signup form" do
     get :new
-    response.should be_success
+    expect(response).to be_success
   end
 
   it 'can signup (create action)' do
@@ -12,13 +12,13 @@ describe Accounts::RegistrationsController do
     end.to change{User.count}.by(1)
     # check signup attributes saved
     newuser = User.find_by_username("signup_username")
-    newuser.should_not be_nil
-    newuser.name.should == "Mr. SignUp"
-    newuser.email.should == "signup@nztrain.com"
-    newuser.valid_password?("password").should be true
+    expect(newuser).not_to be_nil
+    expect(newuser.name).to eq("Mr. SignUp")
+    expect(newuser.email).to eq("signup@nztrain.com")
+    expect(newuser.valid_password?("password")).to be true
     # check email confirmation email sent
-    (mail = ActionMailer::Base.deliveries.last).should_not be_nil
-    mail.to.should == ["signup@nztrain.com"] # email sent to right place
+    expect(mail = ActionMailer::Base.deliveries.last).not_to be_nil
+    expect(mail.to).to eq(["signup@nztrain.com"]) # email sent to right place
     expect(mail).to have_link('Confirm') # email includes confirmation link
   end
 
@@ -35,12 +35,12 @@ describe Accounts::RegistrationsController do
 
     it "can get edit password form" do
       get :edit, :type => "password"
-      response.should be_success
+      expect(response).to be_success
     end
 
     it "can get edit email form" do
       get :edit, :type => "email"
-      response.should be_success
+      expect(response).to be_success
     end
   end
 
@@ -55,12 +55,12 @@ describe Accounts::RegistrationsController do
 
     it "can update password" do
       put :update, :type => "password", :user => { :password => "anewpass", :password_confirmation => "anewpass", :current_password => "registration password" }
-      @user.reload.valid_password?("anewpass").should be true
+      expect(@user.reload.valid_password?("anewpass")).to be true
     end
 
     it "can update email" do
       put :update, :type => "email", :user => { :email => "unconfirmed@nztrain.com", :current_password => "registration password" }
-      @user.reload.unconfirmed_email.should == "unconfirmed@nztrain.com"
+      expect(@user.reload.unconfirmed_email).to eq("unconfirmed@nztrain.com")
 
       expect(mail = ActionMailer::Base.deliveries.last).to_not be_nil
       expect(mail.to).to eq ["unconfirmed@nztrain.com"] # email sent to right place
