@@ -35,13 +35,9 @@
       </tr>
     </thead>
     <tbody>
-      <% median = @scoreboard[@scoreboard.length/2-1] %>
       <% rank = 1 %>
       <% previous_record = @scoreboard.first %>
       <% @scoreboard.each_with_index do |record,index| %>
-        <% if !user_signed_in? or record.user && record.user.id != current_user.id && !policy(@contest).inspect? %>
-          <% next if record.score < median.score || (record.score == median.score && record.time_taken > median.time_taken) # no permission to view %>
-        <% end %>
         <tr <% if user_signed_in? && record.user && record.user.id == current_user.id %> class="emphasized"<% end %>>
           <td>
             <% if record.user %>
