@@ -14,59 +14,83 @@
 <% else %>
   <h2><%= @contest.finalized? ? "Final Results" : "Preliminary Results" %></h2>
 
-  <table class="main_table" >
+  <table class="main_table">
     <thead>
       <tr>
-        <th style="min-width: 25%;"> User </th>
-        <% @contest.problem_set.problems.each_with_index do |problem, prob_num|%>
-          <th style="min-width: 6em;">
-            <% if policy(@contest).show_details? %>
-              <%= link_to problem.name, problem_path(problem) %>
-            <% else %>
-              <% prob_num += 1 %>
-              Problem <% while !prob_num.zero? %><% prob_num, rem = (prob_num - 1).divmod(26) %><%= ('A'..'Z').to_a[rem] %><% end %>
-            <% end %>
-            (<%= @weighting[problem.id] %>)
-          </th>
+        <th style="width:1%"> # </th>
+        <th style="padding-left:0;padding-right:0;border-right:0"></th>
+        <th style="">Username</th>
+        <% if @contest.live_scoreboard %>
+          <% @contest.problem_set.problems.each_with_index do |problem, prob_num|%>
+            <th >
+              <% if policy(@contest).show_details? %>
+                <%= link_to problem.name, problem_path(problem) %>
+              <% else %>
+                <% prob_num += 1 %>
+                Problem <% while !prob_num.zero? %><% prob_num, rem = (prob_num - 1).divmod(26) %><%= ('A'..'Z').to_a[rem] %><% end %>
+              <% end %>
+              (<%= @weighting[problem.id] %>)
+            </th>
+          <% end %>
         <% end %>
-        <th style="text-align: right"> Score </th>
-        <th> Time </th>
-        <th> Rank </th>
+        <th style="width:1%; text-align: right"> Score </th>
+        <th style="width:1%"> Time </th>
       </tr>
     </thead>
     <tbody>
       <% rank = 1 %>
+      <% num_unofficial = 0 %>
       <% previous_record = @scoreboard.first %>
       <% @scoreboard.each_with_index do |record,index| %>
-        <tr <% if user_signed_in? && record.user && record.user.id == current_user.id %> class="emphasized"<% end %>>
-          <td>
-            <% if record.user %>
+        <% is_official = true %>
+        <% if @contest.show_unofficial_competitors and record.user %>
+          <% is_official = record.user.estimated_year_level(@contest.end_time) %>
+        <% end %>
+        <% num_unofficial = num_unofficial + 1 unless is_official %>
+        <tr class="<% if user_signed_in? && record.user && record.user.id == current_user.id %>emphasized<% end %><% if !is_official%> unofficial <%end%>">
+          <% rank = index + 1 unless previous_record.score == record.score and previous_record.time_taken == record.time_taken%>
+          <% previous_record = record %>
+          <td align="right"> <%= rank - (is_official ? num_unofficial : 0)%> </td>
+          <% if record.user %>   
+          <td style="width:1%;text-align:left;padding-left:0;padding-right:0;">
+              <%= flag_list(24){ flag(record.user.country_code.downcase, record.user.country_name, title: true) } if record.user.country_code %>
+            </td> 
+            <td style="">
               <%= link_to handle(record.user), record.user %>
-            <% else %>
-              <%= "Deleted User ID #{record[:user_id]}" %>
-            <% end %>
-          </td>
-          <% link_to_submissions = user_signed_in? && record.user && (record.user.id == current_user.id || current_user.is_admin?) %>
-          <% @problems.each do |prob|%>
-            <td style="min-width: 5em;">
-              <span style="float: left; width: 2em; text-align: right;">
-                <%= record["score_#{prob.id}"].nil? ? "-":link_to_if(link_to_submissions, record["score_#{prob.id}"], submission_path(record["sub_#{prob.id}"])) %>
-              </span>
-              <span style="float: left; width: 2.5em; text-align: right; font-size: 75%; line-height: 90%;">
-                <%= raw record["score_#{prob.id}"].nil? ? "&nbsp;":"#{record["attempt_#{prob.id}"].to_i.ordinalize}&nbsp;<br />try" %>
-              </span>
-              <span style="float: left; width: 2.5em; text-align: right;">
-                (<%= link_to_if link_to_submissions, (record["attempts_#{prob.id}"] || 0), :controller => "submissions", :by_user => record[:user_id], :by_problem => prob.id %>)
-              </span>
             </td>
+            
+          <% else %>
+            <td style="border-right:0;padding-right:0"><%= "Deleted User ID #{record[:user_id]}" %></td>
+            <td style="border-left:0;padding-left:1em"></td>
+          <% end %>
+          <% link_to_submissions = user_signed_in? && record.user && (record.user.id == current_user.id || current_user.is_admin?) %>
+          <% if @contest.live_scoreboard %>
+            <% @problems.each do |prob|%>
+              <td>
+                <span style="float: left; width: 2em; text-align: right;">
+                  <%= record["score_#{prob.id}"].nil? ? "-":link_to_if(link_to_submissions, record["score_#{prob.id}"], submission_path(record["sub_#{prob.id}"])) %>
+                </span>
+                <span style="float: left; width: 2.5em; text-align: right; font-size: 75%; line-height: 90%;">
+                  <%= raw record["score_#{prob.id}"].nil? ? "&nbsp;":"#{record["attempt_#{prob.id}"].to_i.ordinalize}&nbsp;<br />try" %>
+                </span>
+                <span style="float: left; width: 2.5em; text-align: right;">
+                  (<%= link_to_if link_to_submissions, (record["attempts_#{prob.id}"] || 0), :controller => "submissions", :by_user => record[:user_id], :by_problem => prob.id %>)
+                </span>
+              </td>
+            <% end %>
           <% end %>
           <td style="text-align: right"> <%= record.score %> </td>
           <td> <%= format("%d:%02d:%02d",record.time_taken.to_i/3600,record.time_taken.to_i/60%60,record.time_taken.to_i%60) %> </td>
-          <% rank = index + 1 unless previous_record.score == record.score and previous_record.time_taken == record.time_taken %>
-          <% previous_record = record %>
-          <td align="right"> <%= rank %> </td>
         </tr>
       <% end %>
     </tbody>
   </table>
+  <br>
+  <b> Key </b>
+  <table class="main_table">
+    <tbody>
+      <tr><td>Official competitor</td></tr>
+      <tr class="unofficial"><td>Unofficial competitor</td></tr>
+    </tbody>
+  <table>
 <% end %>

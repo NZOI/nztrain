@@ -87,7 +87,6 @@
 #  SimpleNavigation::ItemContainer.new do |menu|
   render_navigation do |menu|
     menu.dom_class = :tab_menu
-    menu.item :info, "info", info_contest_path(@contest) if policy(@contest).show?
     menu.item :problems, "problems", contest_path(@contest) if policy(@contest).overview?
     menu.item :contestants, "contestants", contestants_contest_path(@contest) if policy(@contest).contestants?
     menu.item :supervisors, "supervisors", supervisors_contest_path(@contest) if policy(@contest).manage?

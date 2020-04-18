@@ -4,12 +4,3 @@
 <p>
 <%= render 'form' %>
 </p>
-<% if false # COMMENTED %>
-<p>
-<b> Problems: </b>
-<% @problems.each do |problem| %>
-  <%= link_to problem.name, problem_path(problem) %>
-  (<%= link_to "remove", :controller => "problem_contest", :action => "remove", :method => "post", :problem_id => problem, :contest_id => @contest %>)
-<% end %>
-</p>
-<% end %>
