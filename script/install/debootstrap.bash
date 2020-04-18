@@ -136,9 +136,8 @@ chroot "$ISOLATE_ROOT" apt-get install openjdk-11-jdk # Java
   chroot "$ISOLATE_ROOT" apt-get install python3.8 # Python 3.8
   # note: when updating these Python versions, also update the check for adding the PPA above
 
-  # PyPy https://www.pypy.org
-  # Python 3.6 is the latest version of Python compatible with pypy
-  # https://launchpad.net/~pypy/+archive/ubuntu/ppa (added earlier)
+  # PyPy
+  # https://www.pypy.org
   echo "$chroot_install pypy3"
   chroot "$ISOLATE_ROOT" apt-get install pypy3
 
