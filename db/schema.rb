@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160131000430) do
+ActiveRecord::Schema.define(version: 20200418113601) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -114,9 +114,11 @@ ActiveRecord::Schema.define(version: 20160131000430) do
     t.integer  "problem_set_id"
     t.datetime "finalized_at"
     t.string   "startcode"
-    t.integer  "observation",    default: 1
-    t.integer  "registration",   default: 0
-    t.integer  "affiliation",    default: 0
+    t.integer  "observation",                 default: 1
+    t.integer  "registration",                default: 0
+    t.integer  "affiliation",                 default: 0
+    t.boolean  "live_scoreboard",             default: true
+    t.boolean  "show_unofficial_competitors", default: false
   end
 
   create_table "entities", force: true do |t|

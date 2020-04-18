@@ -71,8 +71,7 @@
   <p>
     <b>Start time:</b>  <%= @contest.start_time %><br>
     <b>End time:</b>    <%= @contest.end_time %><br>
-    <b>Duration:</b>    <%= @contest.duration %><br>
-    <b>Owner:</b> <%= @contest.owner_id %><br>
+    <b>Duration:</b>    <%= @contest.duration %> <%= @contest.duration == 1.0 ? "hour" : "hours"%><br>
   </p>
   <% if @contest.ended? and @contest.finalized_at.nil? and policy(@contest).update? %>
     <%= link_to "Finalize results", finalize_contest_path(@contest), :data => { :confirm => 'Are you sure?' }, :method => :put %>
@@ -85,7 +84,6 @@
 #  SimpleNavigation::ItemContainer.new do |menu|
   render_navigation do |menu|
     menu.dom_class = :tab_menu
-    menu.item :info, "info", info_contest_path(@contest) if policy(@contest).show?
     menu.item :problems, "problems", contest_path(@contest) if policy(@contest).overview?
     menu.item :contestants, "contestants", contestants_contest_path(@contest) if policy(@contest).contestants?
     menu.item :supervisors, "supervisors", supervisors_contest_path(@contest) if policy(@contest).manage?
