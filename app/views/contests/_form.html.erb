@@ -29,11 +29,18 @@
   </div>
   <div class="field">
     <%= f.label :duration %><br />
-    <%= f.text_field :duration %>
+    <%= f.text_field :duration, :value=>3.0 %> hours
   </div>
   <div class="field">
     <%= f.label :observation %><br />
-    <%= f.select :observation, Contest::OBSERVATION.entries.invert %>
+    <%= f.select :observation, Contest::OBSERVATION.entries.invert %><br />
+    Students can only join a contest if they belong to a group that the contest also belongs to.
+    <ul>
+        <li> Public: Anyone can see the contest. </li>
+        <li> Protected: Only those in one of the contest's groups can see the contest. </li>
+        <li> Private: Only those explicitly added as competitors can see the contest. </li>
+    </ul>
+
   </div>
   <div class="field">
     <%= f.label :startcode %><br />
