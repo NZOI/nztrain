@@ -67,10 +67,9 @@ chroot "$ISOLATE_ROOT" apt-get install software-properties-common # provides add
     chroot "$ISOLATE_ROOT" add-apt-repository ppa:deadsnakes/ppa -y
   fi
 
-  if ! chroot "$ISOLATE_ROOT" apt-cache show pypy3 &>/dev/null; then
-    echo "$chroot_cmd add-apt-repository ppa:pypy/ppa -y"
-    chroot "$ISOLATE_ROOT" add-apt-repository ppa:pypy/ppa -y
-  fi
+  # pypy ppa
+  echo "$chroot_cmd add-apt-repository ppa:pypy/ppa -y"
+  chroot "$ISOLATE_ROOT" add-apt-repository ppa:pypy/ppa -y
 
   # ruby ppa
   echo "$chroot_cmd add-apt-repository ppa:brightbox/ruby-ng -y"
