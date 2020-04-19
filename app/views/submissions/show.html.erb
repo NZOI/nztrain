@@ -11,13 +11,17 @@
   </p>
 <% else %>
   <div id="submission_judged" class="score_<%= (@submission.score/10).to_i %>x">
-    <%= @submission.score %>% - <%= case
-                                   when @submission.score == 100; "All done. Nice."
-                                   when @submission.score >= 80; "Close, but not quite."
-                                   when @submission.score >= 40; "There's room for improvement"
-                                   else; "Sorry, try again."
-                                   end
-                               %>
+    <%= @submission.score %>% - <%=
+    case
+      when @submission.score == 100; ["Top marks!", "One hundo!", "Smashed it!", "Phenomenal.", "Like a boss.", "Top stuff.", "Touch down!"].sample
+      when @submission.score >= 90; ["Fantastic! Soooooooo close!", "So close!"].sample
+      when @submission.score >= 75; ["Great! Keep working at it.", "Nice one! Keep pondering."].sample
+      when @submission.score >= 50; ["Good work! Keep thinking.", "Solid.", "Keep it up!"].sample
+      when @submission.score >= 25; ["Nice!", "Sweet.", "In the bag."].sample
+      when @submission.score > 0; "Points on the board!"
+      else; ["Ah well. Give it another go.", "Oops. Give it another go.", "Keep trying."].sample
+    end
+  %>
   </div>
 <% end %>
 <p><%= link_to "Rejudge", rejudge_submission_path(@submission), :data => { :confirm => 'Are you sure?' }, :method => "post" if policy(@submission).rejudge? %></p>
