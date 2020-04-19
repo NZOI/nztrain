@@ -134,13 +134,35 @@ table.results {
   display: none;
 }
 
+.results .inspect_test table.inspect_output th,
+.results .inspect_test table.inspect_info th {
+  padding-left: 0px;
+}
+
+.results .inspect_test table.inspect_info th {
+  text-align:right;
+  width:1%;
+  white-space: nowrap;
+  padding-right: 2px;
+}
+
+.results .inspect_test table.inspect_info td {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.results .inspect_test table.inspect_info {
+  width:100%;
+  border-spacing: 5px;
+}
+
 .results tr.test_case:hover + tr.inspect_test, .results tr.inspect_test:hover, .results tr.sample_case + tr.inspect_test:not(.status_correct) {
   display: table-row;
 }
 
-.results th.output_stats {
+.results .output_stats {
+  float: right;
   font-weight: normal;
   font-style: italic;
-  text-align: right;
   padding-right: 10px;
 }

@@ -23,36 +23,21 @@
 <p><%= link_to "Rejudge", rejudge_submission_path(@submission), :data => { :confirm => 'Are you sure?' }, :method => "post" if policy(@submission).rejudge? %></p>
 
 <p>
-<b>Problem:</b>
-<%= link_to @submission.problem.name, @submission.problem %>
+  <b>Problem:</b>
+  <%= link_to @submission.problem.name, @submission.problem %><br>
+  <b>Language:</b>
+  <%= @submission.language.name %><br>
+  <b>Score:</b>
+  <%= @submission.score %><br>
+  <b>User:</b>
+  <%= link_to @submission.user.username, @submission.user %><br>
+  <% if policy(@submission).inspect? %>
+    <b>Job:</b>
+    <%= link_to_if current_user.is_admin? && $qless.jobs[@submission.job], @submission.job, qless_job_path(@submission.job) %><br>
+    <b>Classification:</b>
+    <%= Submission::CLASSIFICATION[@submission.classification].to_s.humanize %><br>
+  <% end %>
 </p>
-
-<p>
-<b>Language:</b>
-<%= @submission.language.name %>
-</p>
-
-<p>
-<b>Score:</b>
-<%= @submission.score %>
-</p>
-
-<p>
-<b>User:</b>
-<%= link_to @submission.user.username, @submission.user %>
-</p>
-
-<% if policy(@submission).inspect? %>
-  <p>
-  <b>Job:</b>
-  <%= link_to_if current_user.is_admin? && $qless.jobs[@submission.job], @submission.job, qless_job_path(@submission.job) %>
-  </p>
-
-  <p>
-  <b>Classification:</b>
-  <%= Submission::CLASSIFICATION[@submission.classification].to_s.humanize %>
-  </p>
-<% end %>
 
 <% @judge_data = @submission.judge_data %>
 <table class="results">
@@ -109,8 +94,8 @@
           <% if ![:pending,:cancelled].include?(case_data.status) && (policy(@submission).inspect? || is_sample_set) %>
             <tr class="inspect_test status_<%= case_data.status %>">
               <td colspan="5">
-                <% if policy(@submission).inspect? %>
-                  <table>
+                <% if policy(@submission).inspect?%>
+                  <table class="inspect_info">
                     <tr>
                       <% if case_data.status == :timeout %>
                         <th>Time (<%= case_data.killed? ? "killed" : "exited" %>):</th><td><%= case_data.meta.print_time %></td>
@@ -124,23 +109,28 @@
                 <% end %>
                 <table class="inspect_output">
                   <tr>
-                    <th>Input</th><th class="output_stats">Size: <%= number_to_human_size(test_case.input.bytesize) %></th>
-                    <th>Actual Output</th>
-                    <th class="output_stats">
-                      <%= "Size: #{number_to_human_size(case_data.output_size)}" unless case_data.output_size.nil? %>
+                    <th>Input
+                      <span class="output_stats">Size: <%= number_to_human_size(test_case.input.bytesize) %></span>
                     </th>
-                    <th>Expected Output</th><th class="output_stats">Size: <%= number_to_human_size(test_case.output.bytesize) %></th>
+                    <th>Actual Output <span class="output_stats">
+                      <%= "Size: #{number_to_human_size(case_data.output_size)}" unless case_data.output_size.nil? %></span>
+                    </th>
+                    <th>Expected Output
+                      <span class="output_stats">Size: <%= number_to_human_size(test_case.output.bytesize) %></span>
+                    </th>
                     <% evaluation = case_data.evaluator.evaluation %>
-                    <% if policy(@submission).inspect? %>
-                      <th>Evaluator Log</th><th class="output_stats"><%= "Evaluation: #{evaluation ? sprintf("%.2f",evaluation) : "nil"}/1.00" %></th>
+                    <% if policy(@submission).inspect? && case_data.evaluator.info != "status:OK"%>
+                      <th>Evaluator
+                        <span class="output_stats"><%= "#{evaluation ? sprintf("%.2f",evaluation) : "nil"}/1.00" %></span>
+                      </th>
                     <% end %>
                   </tr>
                   <tr>
-                    <td colspan="2"><%= predisplay test_case.truncated_input, type: :kbd %></td>
-                    <td colspan="2"><%= predisplay case_data.output, type: :samp %></td>
-                    <td colspan="2"><%= predisplay test_case.truncated_output, type: :kbd %></td>
-                    <% if policy(@submission).inspect? %>
-                      <td colspan="2"><span class="code"><%= case_data.evaluator.info %></span></td>
+                    <td><%= predisplay test_case.truncated_input, type: :kbd %></td>
+                    <td><%= predisplay case_data.output, type: :samp %></td>
+                    <td><%= predisplay test_case.truncated_output, type: :kbd %></td>
+                    <% if policy(@submission).inspect? && case_data.evaluator.info != "status:OK"%>
+                      <td><span class="code"><%= case_data.evaluator.info %></span></td>
                     <% end %>
                   </tr>
                 </table>
