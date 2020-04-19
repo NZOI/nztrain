@@ -3,7 +3,7 @@ class CreateProblemSets < ActiveRecord::Migration
     create_table :problem_sets do |t|
       t.string :title
       t.integer :user_id
-      t.timestamps
+      t.timestamps null: true
     end
     # add association tables
     create_table :problem_sets_problems, :id => false do |t|

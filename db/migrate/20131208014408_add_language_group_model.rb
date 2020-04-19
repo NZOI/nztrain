@@ -4,7 +4,7 @@ class AddLanguageGroupModel < ActiveRecord::Migration
       t.string :identifier
       t.string :name
       t.references :current_language
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :language_groups, :identifier, :unique => true

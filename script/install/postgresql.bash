@@ -27,7 +27,7 @@ psql -U$DATABASE_USERNAME postgres -c '' &> /dev/null || {
     cmd="sudo -u postgres createuser --superuser $DATABASE_USERNAME"
     echo "$ $cmd"
     $cmd
-  }
+  } || exit 1
 }
 
 # setup database if required
@@ -37,7 +37,7 @@ if [[ $DATABASE ]] ; then
       cmd="sudo -u postgres createdb $DATABASE"
       echo "$ $cmd"
       $cmd
-    }
+    } || exit 1
   }
 fi
 
@@ -48,7 +48,7 @@ if [[ $TEST_DATABASE ]] ; then
       cmd="sudo -u postgres createdb $TEST_DATABASE"
       echo "$ $cmd"
       $cmd
-    }
+    } || exit
   }
 fi
 

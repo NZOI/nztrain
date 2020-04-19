@@ -5,7 +5,7 @@ class CreateTestSets < ActiveRecord::Migration
       t.integer :points
       t.string :name
 
-      t.timestamps
+      t.timestamps null: true
     end
     add_column :test_cases, :test_set_id, :integer
     TestCase.all.each do |tc|

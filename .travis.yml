@@ -1,8 +1,9 @@
 language: ruby
 rvm:
-  - "2.0.0"
+  - "2.3.8"
 services:
   - redis-server
+  - postgresql
 
 # uncomment this line if your project needs to run something other than `rake`:
 #before_script: # for Selenium RSpec tests

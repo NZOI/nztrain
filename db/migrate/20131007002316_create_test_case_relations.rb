@@ -3,7 +3,7 @@ class CreateTestCaseRelations < ActiveRecord::Migration
     create_table :test_case_relations do |t|
       t.integer :test_case_id
       t.integer :test_set_id
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

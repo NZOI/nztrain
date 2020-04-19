@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-# Installs the latest stable Ruby 2.0.x from source
-branch="ruby-2.0-stable"
+# Installs Ruby from source
+branch="2.3"
+version="ruby-2.3.8"
 tmpdir="ruby_install"
 
 # remember current directory
@@ -10,10 +11,9 @@ pdir=`pwd`
 # download and extract source
 cmd="mkdir /tmp/$tmpdir" ; echo "$ $cmd" ; $cmd || exit 1
 cmd="cd /tmp/$tmpdir" ; echo "$ $cmd" ; $cmd || exit 1
-cmd="wget http://ftp.ruby-lang.org/pub/ruby/$branch.tar.gz" ; echo "$ $cmd" ; $cmd || exit 1
+cmd="wget https://cache.ruby-lang.org/pub/ruby/$branch/$version.tar.gz" ; echo "$ $cmd" ; $cmd || exit 1
 cmd="mkdir src" ; echo "$ $cmd" ; $cmd
-cmd="tar xvf $branch.tar.gz -C src" ; echo "$ $cmd" ; $cmd || exit 1
-version=`ls src`
+cmd="tar xvf $version.tar.gz -C src" ; echo "$ $cmd" ; $cmd || exit 1
 cmd="mkdir build" ; echo "$ $cmd" ; $cmd || exit 1
 cmd="cd build" ; echo "$ $cmd" ; $cmd || exit 1
 

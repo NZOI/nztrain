@@ -5,7 +5,7 @@ class CreateLanguages < ActiveRecord::Migration
       t.string :compiler
       t.boolean :is_interpreted
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

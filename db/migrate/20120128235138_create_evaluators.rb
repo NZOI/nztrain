@@ -6,7 +6,7 @@ class CreateEvaluators < ActiveRecord::Migration
       t.text :source, :null => false, :default => ""
       t.integer :user_id, :null => false
 
-      t.timestamps
+      t.timestamps null: true
     end
 
     execute "INSERT INTO evaluators (name, source, user_id) SELECT title AS name, evaluator AS source, user_id FROM problems WHERE evaluator IS NOT NULL;"

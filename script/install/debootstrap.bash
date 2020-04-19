@@ -32,25 +32,32 @@ if [[ "$ISOLATE_ROOT" != "/" ]] && [[ ! -d "$ISOLATE_ROOT" ]]; then
   debootstrap $SUITE "$ISOLATE_ROOT" http://archive.ubuntu.com/ubuntu
 
   # add sources
-  echo deb http://archive.ubuntu.com/ubuntu/ $SUITE-updates main restricted >> /srv/chroot/nztrain/etc/apt/sources.list
-  echo deb http://archive.ubuntu.com/ubuntu/ $SUITE universe >> /srv/chroot/nztrain/etc/apt/sources.list
-  echo deb http://security.ubuntu.com/ubuntu $SUITE-security main restricted universe >> /srv/chroot/nztrain/etc/apt/sources.list
-  echo deb http://nz.archive.ubuntu.com/ubuntu/ $SUITE multiverse >> /srv/chroot/nztrain/etc/apt/sources.list
-  echo deb-src http://nz.archive.ubuntu.com/ubuntu/ $SUITE multiverse >> /srv/chroot/nztrain/etc/apt/sources.list
-  echo deb http://nz.archive.ubuntu.com/ubuntu/ $SUITE-updates multiverse >> /srv/chroot/nztrain/etc/apt/sources.list
+  echo deb http://archive.ubuntu.com/ubuntu/ $SUITE-updates main restricted >> "$ISOLATE_ROOT"/etc/apt/sources.list
+  echo deb http://archive.ubuntu.com/ubuntu/ $SUITE universe >> "$ISOLATE_ROOT"/etc/apt/sources.list
+  echo deb http://security.ubuntu.com/ubuntu $SUITE-security main restricted universe >> "$ISOLATE_ROOT"/etc/apt/sources.list
+  echo deb http://nz.archive.ubuntu.com/ubuntu/ $SUITE multiverse >> "$ISOLATE_ROOT"/etc/apt/sources.list
+  echo deb-src http://nz.archive.ubuntu.com/ubuntu/ $SUITE multiverse >> "$ISOLATE_ROOT"/etc/apt/sources.list
+  echo deb http://nz.archive.ubuntu.com/ubuntu/ $SUITE-updates multiverse >> "$ISOLATE_ROOT"/etc/apt/sources.list
 
   # link /etc/resolv.conf
   ln --force /etc/resolv.conf "$ISOLATE_ROOT/etc/resolv.conf"
 fi
 
-if ${update:=true} || ${new_debootstrap:=true} ; then
-  chroot "$ISOLATE_ROOT" apt-get update
-fi
+# commented out because apt-get update is run unconditionally later
+#if ${update:=true} || ${new_debootstrap:=true} ; then
+#  chroot "$ISOLATE_ROOT" apt-get update
+#fi
 
 chroot_cmd="$ chroot \"$ISOLATE_ROOT\""
 chroot_install="$chroot_cmd apt-get install"
 
 mount -o bind /proc "$ISOLATE_ROOT/proc"
+
+echo "$chroot_cmd apt-get update"
+chroot "$ISOLATE_ROOT" apt-get update
+
+echo "$chroot_install software-properties-common"
+chroot "$ISOLATE_ROOT" apt-get install software-properties-common # provides add-apt-repository
 
 [ -z "$TRAVIS" ] && { # if not in Travis-CI
   # python ppa
@@ -63,19 +70,16 @@ mount -o bind /proc "$ISOLATE_ROOT/proc"
   # ruby ppa
   echo "$chroot_cmd add-apt-repository ppa:brightbox/ruby-ng -y"
   chroot "$ISOLATE_ROOT" add-apt-repository ppa:brightbox/ruby-ng -y
-}
 
-echo "$chroot_cmd apt-get update"
-chroot "$ISOLATE_ROOT" apt-get update
+  echo "$chroot_cmd apt-get update"
+  chroot "$ISOLATE_ROOT" apt-get update
+}
 
 # utilities
 echo "$chroot_install wget"
 chroot "$ISOLATE_ROOT" apt-get install wget
 
 # end utilities
-
-echo "$chroot_install software-properties-common"
-chroot "$ISOLATE_ROOT" apt-get install software-properties-common # provides add-apt-repository
 
 echo "$chroot_install build-essential"
 chroot "$ISOLATE_ROOT" apt-get install build-essential # C/C++ (g++, gcc)

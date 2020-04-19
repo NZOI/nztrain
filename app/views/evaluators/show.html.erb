@@ -1,5 +1,3 @@
-<p id="notice"><%= notice %></p>
-
 <% content_for :title, @evaluator.name %>
 <% toolbox_push :edit, edit_evaluator_path(@evaluator) if policy(@evaluator).edit? %>
 <% toolbox_push :back, evaluators_path %>

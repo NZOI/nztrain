@@ -5,7 +5,7 @@ class CreateContestRelations < ActiveRecord::Migration
       t.integer :contest_id
       t.datetime :started_at
 
-      t.timestamps
+      t.timestamps null: true
     end
   end
 

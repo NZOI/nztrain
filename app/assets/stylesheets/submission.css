@@ -32,63 +32,44 @@ table.results {
   text-align: right;
 }
 
-.results tbody.compilation.status_success, .results tbody.test_set.status_correct, .results tbody.summary.status_correct {
+.results tbody.compilation, .results tbody.test_set, .results tbody.summary {
+  border-width: 2px;
+  border-style: solid;
+}
+
+.results .compilation.status_success, .results .status_correct {
   background-color: #60C040; /* green */
-  border: 2px solid #306020;
+  border-color: #306020;
 }
 
-.results tbody.compilation.status_pending, .results tbody.test_set.status_pending, .results tbody.summary.status_pending {
+.results .status_pending {
   background-color: #6060FF; /* blue */
-  border: 2px solid #303080;
+  border-color: #303080;
 }
 
-.results tbody.test_set.status_cancelled, .results tbody.summary.status_cancelled {
+.results .status_cancelled {
   background-color: #B0B0C0; /* grey/blue */
-  border: 2px solid #555560;
+  border-color: #555560;
 }
 
-.results tbody.test_set.status_partial, .results tbody.summary.status_partial {
+.results .status_partial {
   background-color: #C0C000; /* yellow */
-  border: 2px solid #606000;
+  border-color: #606000;
 }
 
-.results tbody.compilation.status_error, .results tbody.test_set.status_error, .results tbody.summary.status_error {
+.results .status_error {
   background-color: #FFA000; /* orange */
-  border: 2px solid #805000;
+  border-color: #805000;
 }
 
-.results tbody.compilation.status_signal, .results tbody.compilation.status_runtime {
+.results .status_signal, .results .status_runtime {
   background-color: #A00000; /* dark red */
-  border: 2px solid #500000;
+  border-color: #500000;
 }
 
-.results tbody.test_set.status_wrong, .results tbody.compilation.status_timeout, .results tbody.compilation.status_walltime, .results tbody.compilation.status_memory, .results tbody.summary.status_wrong {
+.results .status_wrong, .results .status_timeout, .results .status_walltime, .results .status_memory {
   background-color: #E03030; /* red */
-  border: 2px solid #681818;
-}
-
-.results tr.test_case.status_correct {
-  background-color: #60C040; /* green */
-}
-
-.results tr.test_case.status_pending {
-  background-color: #6060FF; /* blue */
-}
-
-.results tr.test_case.status_partial {
-  background-color: #C0C000; /* yellow */
-}
-
-.results tr.test_case.status_error {
-  background-color: #FFA000; /* orange */
-}
-
-.results tr.test_case.status_runtime, .results tr.test_case.status_signal {
-  background-color: #A00000; /* dark red */
-}
-
-.results tr.test_case.status_wrong, .results tr.test_case.status_timeout, .results tr.test_case.status_walltime, .results tr.test_case.status_memory {
-  background-color: #E03030; /* red */
+  border-color: #681818;
 }
 
 .results tr.test_case td {

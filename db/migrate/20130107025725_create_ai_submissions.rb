@@ -6,7 +6,7 @@ class CreateAiSubmissions < ActiveRecord::Migration
       t.integer :user_id
       t.integer :ai_contest_id
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

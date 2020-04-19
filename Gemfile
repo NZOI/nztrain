@@ -1,4 +1,5 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem 'rails', '~> 4.0.0'
 
@@ -11,9 +12,9 @@ gem 'psych', '~> 2.0.2' # part of stdlib, need newer version for safe_load
 # change back to cookie-based store (encrypted)
 gem 'activerecord-session_store'
 
-gem 'rubyzip', '1.1.0'
+gem 'rubyzip', '1.3.0'
 
-gem 'jquery-rails', '~> 3.0.4'
+gem 'jquery-rails', '~> 3.1.3'
 gem 'jquery-ui-rails', '4.0.5'
 gem 'jquery-historyjs', '0.2.3'
 gem 'superfish-rails', '~> 1.6.0'
@@ -21,7 +22,7 @@ gem 'superfish-rails', '~> 1.6.0'
 gem 'forem', github: 'radar/forem', branch: 'rails4'
 gem 'forem-redcarpet', github: 'NZOI/forem-redcarpet'
 
-gem "nokogiri", '~> 1.6.0'
+gem "nokogiri", '~> 1.10.8'
 gem 'redcarpet'
 #gem 'rmagick', '2.13.2'
 gem 'rmagick'

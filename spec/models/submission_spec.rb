@@ -11,7 +11,7 @@ describe Submission do
       @unsigned_submission = FactoryGirl.create(:adding_unsigned_submission, :problem => @problem, :user => @user)
     end
     after(:all) do
-      [@user, @problem, @submission, @char_submission, @unsigned_submission].each { |object| object.destroy }
+      [@user, @problem, @submission, @char_submission, @unsigned_submission].reverse_each { |object| object.destroy }
     end
     it 'judges submission' do
       @submission.score.should be_nil

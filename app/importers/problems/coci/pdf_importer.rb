@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Problems
   module COCI
     class PDFImporter
@@ -273,8 +274,8 @@ module Problems
           mark_options.push options
           section_text_start.push(full_text.length)
         end
-        def begin_marked_content
-          begin_marked_content_with_pl(nil, {})
+        def begin_marked_content(tag)
+          begin_marked_content_with_pl(tag, {})
         end
         def end_marked_content
           tag = marked_content.pop

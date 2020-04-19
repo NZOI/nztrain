@@ -513,22 +513,22 @@ ActiveRecord::Schema.define(version: 20160131000430) do
   add_index "user_problem_relations", ["user_id", "problem_id"], name: "index_user_problem_relations_on_user_id_and_problem_id", unique: true, using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "email",                              default: "",               null: false
-    t.string   "encrypted_password",     limit: 128, default: "",               null: false
+    t.string   "email",                            default: "",               null: false
+    t.string   "encrypted_password",               default: "",               null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                      default: 0
+    t.integer  "sign_in_count",                    default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "brownie_points",                     default: 0
+    t.integer  "brownie_points",                   default: 0
     t.string   "name"
-    t.string   "username",                                                      null: false
-    t.boolean  "can_change_username",                default: false,            null: false
+    t.string   "username",                                                    null: false
+    t.boolean  "can_change_username",              default: false,            null: false
     t.string   "avatar"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
@@ -538,9 +538,9 @@ ActiveRecord::Schema.define(version: 20160131000430) do
     t.integer  "school_id"
     t.string   "country_code",           limit: 3
     t.date     "school_graduation"
-    t.boolean  "forem_admin",                        default: false
-    t.string   "forem_state",                        default: "pending_review"
-    t.boolean  "forem_auto_subscribe",               default: false
+    t.boolean  "forem_admin",                      default: false
+    t.string   "forem_state",                      default: "pending_review"
+    t.boolean  "forem_auto_subscribe",             default: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

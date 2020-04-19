@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-ruby_version=2.0.0
+ruby_version=2.3.8
 
 # detect rvm
 rvm --version &> /dev/null && {
@@ -24,10 +24,15 @@ rvm --version &> /dev/null && {
     $cmd
   }
 
+  # Import GPG signing keys (key IDs from https://rvm.io/)
+  cmd="gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB"
+  echo "$ $cmd"
+  $cmd
+
   echo "$ \\curl -L https://get.rvm.io | bash -s stable"
-  \curl -L https://get.rvm.io | bash -s stable
-  echo 'echo "source $HOME/.rvm/scripts/rvm" >> ~/.bashrc'
-  echo "source $HOME/.rvm/scripts/rvm" >> ~/.bashrc
+  \curl -sSL https://get.rvm.io | bash -s stable || exit 1
+  echo '$ echo '\''source "$HOME/.rvm/scripts/rvm"'\'' >> ~/.bashrc'
+  echo 'source "$HOME/.rvm/scripts/rvm"' >> ~/.bashrc
   echo "RVM installed, now restart the session and re-run this script"
   exit 1
 }
