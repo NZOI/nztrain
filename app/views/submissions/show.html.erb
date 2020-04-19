@@ -13,7 +13,7 @@
   <div id="submission_judged" class="score_<%= (@submission.score/10).to_i %>x">
     <%= @submission.score %>% - <%=
     case
-      when @submission.score == 100; ["Top marks!", "One hundo!", "Smashed it!", "Phenomenal.", "Like a boss.", "Top stuff.", "Touch down!"].sample
+      when @submission.score == 100; ["All done. Nice.", "Top marks!", "One hundo!", "Smashed it!", "Phenomenal.", "Like a boss.", "Top stuff.", "Touch down!"].sample
       when @submission.score >= 90; ["Fantastic! Soooooooo close!", "So close!"].sample
       when @submission.score >= 75; ["Great! Keep working at it.", "Nice one! Keep pondering."].sample
       when @submission.score >= 50; ["Good work! Keep thinking.", "Solid.", "Keep it up!"].sample
