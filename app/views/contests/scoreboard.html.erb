@@ -13,7 +13,6 @@
   <em>The contest has not started yet.</em>
 <% else %>
   <h2><%= @contest.finalized? ? "Final Results" : "Preliminary Results" %></h2>
-
   <table class="main_table">
     <thead>
       <tr>
@@ -42,15 +41,12 @@
       <% num_unofficial = 0 %>
       <% previous_record = @scoreboard.first %>
       <% @scoreboard.each_with_index do |record,index| %>
-        <% is_official = true %>
-        <% if @contest.show_unofficial_competitors and record.user %>
-          <% is_official = record.user.estimated_year_level(@contest.end_time) %>
-        <% end %>
-        <% num_unofficial = num_unofficial + 1 unless is_official %>
-        <tr class="<% if user_signed_in? && record.user && record.user.id == current_user.id %>emphasized<% end %><% if !is_official%> unofficial <%end%>">
-          <% rank = index + 1 unless previous_record.score == record.score and previous_record.time_taken == record.time_taken%>
+        <% is_unofficial = @contest.show_unofficial_competitors && (record.school.nil? || record.school_year.nil? || record.user&.country_code != "NZ") %>
+        <tr class="<% if user_signed_in? && record.user && record.user.id == current_user.id %>emphasized<% end %><% if is_unofficial %> unofficial<% end %>">
+          <% num_unofficial += 1 if is_unofficial %>
+          <% rank = index + 1 - num_unofficial unless previous_record.score == record.score && previous_record.time_taken == record.time_taken %>
           <% previous_record = record %>
-          <td align="right"> <%= rank - (is_official ? num_unofficial : 0)%> </td>
+          <td align="right"> <%= rank unless is_unofficial %> </td>
           <% if record.user %>   
             <td style="width:1%;text-align:left;padding-left:0;padding-right:0;">
               <%= flag_list(24){ flag(record.user.country_code.downcase, record.user.country_name, title: true) } if record.user.country_code %>
