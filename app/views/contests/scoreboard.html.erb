@@ -42,7 +42,7 @@
         <% if !user_signed_in? or record.user && record.user.id != current_user.id && !policy(@contest).inspect? %>
           <% next if record.score < median.score || (record.score == median.score && record.time_taken > median.time_taken) # no permission to view %>
         <% end %>
-        <tr <% if user_signed_in? && record.id==current_user.id %> class="emphasized"<% end %>>
+        <tr <% if user_signed_in? && record.user.id == current_user.id %> class="emphasized"<% end %>>
           <td>
             <% if record.user %>
               <%= link_to handle(record.user), record.user %>
@@ -50,7 +50,7 @@
               <%= "Deleted User ID #{record[:user_id]}" %>
             <% end %>
           </td>
-          <% link_to_submissions = user_signed_in? && (record.id == current_user.id || current_user.is_admin?) %>
+          <% link_to_submissions = user_signed_in? && (record.user.id == current_user.id || current_user.is_admin?) %>
           <% @problems.each do |prob|%>
             <td style="min-width: 5em;">
               <span style="float: left; width: 2em; text-align: right;">
