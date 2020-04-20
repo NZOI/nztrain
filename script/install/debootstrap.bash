@@ -67,6 +67,10 @@ chroot "$ISOLATE_ROOT" apt-get install software-properties-common # provides add
     chroot "$ISOLATE_ROOT" add-apt-repository ppa:deadsnakes/ppa -y
   fi
 
+  # pypy ppa
+  echo "$chroot_cmd add-apt-repository ppa:pypy/ppa -y"
+  chroot "$ISOLATE_ROOT" add-apt-repository ppa:pypy/ppa -y
+
   # ruby ppa
   echo "$chroot_cmd add-apt-repository ppa:brightbox/ruby-ng -y"
   chroot "$ISOLATE_ROOT" add-apt-repository ppa:brightbox/ruby-ng -y
@@ -130,6 +134,12 @@ chroot "$ISOLATE_ROOT" apt-get install openjdk-11-jdk # Java
   echo "$chroot_install python3.8"
   chroot "$ISOLATE_ROOT" apt-get install python3.8 # Python 3.8
   # note: when updating these Python versions, also update the check for adding the PPA above
+
+  # PyPy
+  # https://www.pypy.org
+  echo "$chroot_install pypy3"
+  chroot "$ISOLATE_ROOT" apt-get install pypy3
+
 
   echo "$chroot_install ruby2.2"
   chroot "$ISOLATE_ROOT" apt-get install ruby2.2

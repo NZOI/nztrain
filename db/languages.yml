@@ -111,6 +111,9 @@ python:
     python3.8:
       :name: "Python 3.8"
       :interpreter: /usr/bin/python3.8
+    pypy3:
+      :name: "Python 3.6 (PyPy 7.3)"
+      :interpreter: /usr/bin/pypy3
 
 ruby:
   :name: Ruby
