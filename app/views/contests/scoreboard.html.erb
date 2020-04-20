@@ -25,18 +25,16 @@
         <th style="width:1%"> # </th>
         <th style="padding-left:0;padding-right:0;border-right:0"></th>
         <th style="">Username</th>
-        <% if @contest.live_scoreboard %>
-          <% @contest.problem_set.problems.each_with_index do |problem, prob_num|%>
-            <th >
-              <% if policy(@contest).show_details? %>
-                <%= link_to problem.name, problem_path(problem) %>
-              <% else %>
-                <% prob_num += 1 %>
-                Problem <% while !prob_num.zero? %><% prob_num, rem = (prob_num - 1).divmod(26) %><%= ('A'..'Z').to_a[rem] %><% end %>
-              <% end %>
-              (<%= @weighting[problem.id] %>)
-            </th>
-          <% end %>
+        <% @contest.problem_set.problems.each_with_index do |problem, prob_num|%>
+          <th >
+            <% if policy(@contest).show_details? %>
+              <%= link_to problem.name, problem_path(problem) %>
+            <% else %>
+              <% prob_num += 1 %>
+              Problem <% while !prob_num.zero? %><% prob_num, rem = (prob_num - 1).divmod(26) %><%= ('A'..'Z').to_a[rem] %><% end %>
+            <% end %>
+            (<%= @weighting[problem.id] %>)
+          </th>
         <% end %>
         <th style="width:1%; text-align: right"> Score </th>
         <th style="width:1%"> Time </th>
@@ -65,22 +63,25 @@
             <td style="border-left:0;padding-left:1em"></td>
           <% end %>
           <% link_to_submissions = user_signed_in? && record.user && (record.user.id == current_user.id || current_user.is_admin?) %>
-          <% if @contest.live_scoreboard %>
-            <% @problems.each do |prob|%>
-              <td>
-                <span style="float: left; width: 2em; text-align: right;">
+          <% show_scores = link_to_submissions || @contest.live_scoreboard || @contest.ended? %>
+          <% @problems.each do |prob|%>
+            <td>
+              <span style="float: left; width: 2em; text-align: right;">
+                <% if show_scores %>
                   <%= record["score_#{prob.id}"].nil? ? "-":link_to_if(link_to_submissions, record["score_#{prob.id}"], submission_path(record["sub_#{prob.id}"])) %>
-                </span>
-                <span style="float: left; width: 2.5em; text-align: right; font-size: 75%; line-height: 90%;">
-                  <%= raw record["score_#{prob.id}"].nil? ? "&nbsp;":"#{record["attempt_#{prob.id}"].to_i.ordinalize}&nbsp;<br />try" %>
-                </span>
-                <span style="float: left; width: 2.5em; text-align: right;">
-                  (<%= link_to_if link_to_submissions, (record["attempts_#{prob.id}"] || 0), :controller => "submissions", :by_user => record[:user_id], :by_problem => prob.id %>)
-                </span>
-              </td>
-            <% end %>
+                <% else %>
+                  <%= record["score_#{prob.id}"].nil? ? "-" : "?" %>
+                <% end %>
+              </span>
+              <span style="float: left; width: 2.5em; text-align: right; font-size: 75%; line-height: 90%;">
+                <%= raw record["score_#{prob.id}"].nil? ? "&nbsp;":"#{record["attempt_#{prob.id}"].to_i.ordinalize}&nbsp;<br />try" %>
+              </span>
+              <span style="float: left; width: 2.5em; text-align: right;">
+                (<%= link_to_if link_to_submissions, (record["attempts_#{prob.id}"] || 0), :controller => "submissions", :by_user => record[:user_id], :by_problem => prob.id %>)
+              </span>
+            </td>
           <% end %>
-          <td style="text-align: right"> <%= record.score %> </td>
+          <td style="text-align: right"> <%= show_scores ? record.score : "?" %> </td>
           <td> <%= format("%d:%02d:%02d",record.time_taken.to_i/3600,record.time_taken.to_i/60%60,record.time_taken.to_i%60) %> </td>
         </tr>
       <% end %>
