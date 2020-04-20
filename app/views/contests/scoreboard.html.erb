@@ -12,6 +12,12 @@
 <% if !@contest.started? %>
   <em>The contest has not started yet.</em>
 <% else %>
+  <% if @contest.show_unofficial_competitors %>
+    <div style="float:right">
+      <input type="checkbox" id="show_unofficial" onclick="toggle_unofficial()">
+      <label for="show_unofficial">Show Unofficial Contestants</label>
+    </div>
+  <% end %>
   <h2><%= @contest.finalized? ? "Final Results" : "Preliminary Results" %></h2>
   <table class="main_table">
     <thead>
@@ -89,3 +95,14 @@
     </tbody>
   <table>
 <% end %>
+<script>
+  function toggle_unofficial() {
+    show_unofficial_contestants = document.getElementById("show_unofficial").checked;
+    unofficial = document.getElementsByClassName("unofficial");
+    for (let row of unofficial) {
+      if (row.classList.contains("emphasized")) continue  // always show current user
+      row.style.visibility = show_unofficial_contestants ? "visible" : "collapse";
+    }
+  }
+  toggle_unofficial();  // run on page load to match checkbox state (might be cached)
+</script>
