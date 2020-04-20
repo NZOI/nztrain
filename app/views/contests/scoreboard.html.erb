@@ -52,13 +52,12 @@
           <% previous_record = record %>
           <td align="right"> <%= rank - (is_official ? num_unofficial : 0)%> </td>
           <% if record.user %>   
-          <td style="width:1%;text-align:left;padding-left:0;padding-right:0;">
+            <td style="width:1%;text-align:left;padding-left:0;padding-right:0;">
               <%= flag_list(24){ flag(record.user.country_code.downcase, record.user.country_name, title: true) } if record.user.country_code %>
             </td> 
             <td style="">
               <%= link_to handle(record.user), record.user %>
             </td>
-            
           <% else %>
             <td style="border-right:0;padding-right:0"><%= "Deleted User ID #{record[:user_id]}" %></td>
             <td style="border-left:0;padding-left:1em"></td>
