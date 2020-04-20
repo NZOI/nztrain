@@ -69,7 +69,3 @@ table.main_table > tbody > tr > td, table.main_table > thead > tr > th {
 table.main_table > thead > tr > th {
   font-weight: bold;
 }
-
-.unofficial > td {
-  opacity: 0.4;
-}
