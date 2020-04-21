@@ -34,11 +34,11 @@
   <div class="field">
     <%= f.label :observation %><br />
     <%= f.select :observation, Contest::OBSERVATION.entries.invert %><br />
-    Students can only join a contest if they belong to a group that the contest also belongs to.
+    Users can only join a contest if they have been added manually, or belong to a group with access to the contest.
     <ul>
-        <li> Public: Anyone can see the contest. </li>
-        <li> Protected: Only those in one of the contest's groups can see the contest. </li>
-        <li> Private: Only those explicitly added as competitors can see the contest. </li>
+        <li>Public: Anyone can see the contest.</li>
+        <li>Protected: Only those in one of the contest's groups can see the contest.</li>
+        <li>Private: Only those explicitly added as contestants can see the contest.</li>
     </ul>
 
   </div>
@@ -55,12 +55,12 @@
     <% end %>
   </div>
   <div class="field">
-    <%= f.label :live_scoreboard %> - If true, individual problem scores are shown on the live scoreboard. Otherwise, only total scores are shown.<br /> 
     <%= f.check_box :live_scoreboard %>
+    <%= f.label :live_scoreboard %> - If checked, other users' scores are shown during the contest. Otherwise, you may only see your own scores until the end of the contest.<br />
   <div>
   <div class="field">
-    <%= f.label :show_unofficial_competitors %> - If true, unofficial competitors are greyed out. An offical competitor is any student enrolled in school.<br />
     <%= f.check_box :show_unofficial_competitors %>
+    <%= f.label :show_unofficial_competitors %> - If checked, unofficial contestants are not ranked. An offical competitor is any student enrolled in a NZ school.<br />
   <div>
   <br>
   <div class="actions">
