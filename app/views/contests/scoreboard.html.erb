@@ -96,6 +96,9 @@
       // row.style.visibility = show_unofficial_contestants ? "visible" : "collapse";  // has issues on safari
       row.style.display = show_unofficial_contestants ? "table-row" : "none";  // can cause column widths to change
     }
+    localStorage.setItem("show_unofficial", JSON.stringify(show_unofficial_contestants));
   }
+
+  document.getElementById("show_unofficial").checked = JSON.parse(localStorage.getItem("show_unofficial"));
   toggle_unofficial();  // run on page load to match checkbox state
 </script>
