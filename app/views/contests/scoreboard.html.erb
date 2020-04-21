@@ -93,8 +93,9 @@
     unofficial = document.getElementsByClassName("unofficial");
     for (let row of unofficial) {
       if (row.classList.contains("emphasized")) continue  // always show current user
-      row.style.visibility = show_unofficial_contestants ? "visible" : "collapse";
+      // row.style.visibility = show_unofficial_contestants ? "visible" : "collapse";  // has issues on safari
+      row.style.display = show_unofficial_contestants ? "table-row" : "none";  // can cause column widths to change
     }
   }
-  toggle_unofficial();  // run on page load to match checkbox state (might be cached)
+  toggle_unofficial();  // run on page load to match checkbox state
 </script>
