@@ -14,6 +14,7 @@ class User < ActiveRecord::Base
   validates :name, :length => {:maximum => 100, :minimum => 2}
   validates :username, :length => { :in => 2..32 }, :format => { :with => /\A\w(\.?\w)*\z/, :message => "Only letters, numbers, underscores or non-adjacent dots allowed in username" }, :presence => true, :uniqueness => { :case_sensitive => false }
   validates :avatar, :file_size => { :maximum => 40.kilobytes.to_i }
+  validates :school, :absence => { message: "must be blank if outside New Zealand"}, if: -> {country_code != "NZ"}
 
   before_save do
     self.can_change_username = false if self.username_changed? # can only change username once

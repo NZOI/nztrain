@@ -45,7 +45,7 @@
       <% num_unofficial = 0 %>
       <% previous_record = @scoreboard.first %>
       <% @scoreboard.each_with_index do |record,index| %>
-        <% is_unofficial = @contest.show_unofficial_competitors && (record.school.nil? || record.school_year.nil? || record.user&.country_code != "NZ") %>
+        <% is_unofficial = @contest.show_unofficial_competitors && (record.school.nil? || record.school_year.nil?) %>
         <tr class="<% if user_signed_in? && record.user && record.user.id == current_user.id %>emphasized<% end %><% if is_unofficial %> unofficial<% end %>">
           <% num_unofficial += 1 if is_unofficial %>
           <% rank = index + 1 - num_unofficial unless previous_record.score == record.score && previous_record.time_taken == record.time_taken %>
