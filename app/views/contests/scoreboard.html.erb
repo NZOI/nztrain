@@ -22,9 +22,9 @@
   <table class="main_table">
     <thead>
       <tr>
-        <th style="width:1%"> # </th>
-        <th style="padding-left:0;padding-right:0;border-right:0"></th>
-        <th style="">Username</th>
+        <th style="width:1%; text-align: right"> # </th>
+        <th style="width:1%"></th>
+        <th>Username</th>
         <% @contest.problem_set.problems.each_with_index do |problem, prob_num|%>
           <th >
             <% if policy(@contest).show_details? %>
@@ -50,18 +50,17 @@
           <% num_unofficial += 1 if is_unofficial %>
           <% rank = index + 1 - num_unofficial unless previous_record.score == record.score && previous_record.time_taken == record.time_taken %>
           <% previous_record = record %>
-          <td align="right"> <%= rank unless is_unofficial %> </td>
-          <% if record.user %>   
-            <td style="width:1%;text-align:left;padding-left:0;padding-right:0;">
-              <%= flag_list(24){ flag(record.user.country_code.downcase, record.user.country_name, title: true) } if record.user.country_code %>
-            </td> 
-            <td style="">
+          <td style="text-align: right"> <%= rank unless is_unofficial %> </td>
+          <td style="padding-left: 0; padding-right: 0;">
+            <%= flag_list(24){ flag(record.user.country_code.downcase, record.user.country_name, title: true) } if record.user&.country_code %>
+          </td>
+          <td>
+            <% if record.user %>
               <%= link_to handle(record.user), record.user %>
-            </td>
-          <% else %>
-            <td style="border-right:0;padding-right:0"><%= "Deleted User ID #{record[:user_id]}" %></td>
-            <td style="border-left:0;padding-left:1em"></td>
-          <% end %>
+            <% else %>
+              <%= "Deleted User ID #{record[:user_id]}" %>
+            <% end %>
+          </td>
           <% link_to_submissions = user_signed_in? && record.user && (record.user.id == current_user.id || current_user.is_admin?) %>
           <% show_scores = link_to_submissions || @contest.live_scoreboard || @contest.ended? %>
           <% @problems.each do |prob|%>
