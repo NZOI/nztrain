@@ -29,7 +29,7 @@
   </div>
   <div class="field">
     <%= f.label :duration %><br />
-    <%= f.text_field :duration, :value=>3.0 %> hours
+    <%= f.text_field :duration, :value => @contest.duration || 3.0 %> hours
   </div>
   <div class="field">
     <%= f.label :observation %><br />
