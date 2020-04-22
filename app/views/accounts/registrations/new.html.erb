@@ -19,7 +19,7 @@
   <%= f.password_field :password_confirmation %></p>
 
   <p><%= f.label :country_code, "Country" %><br />
-  <%= f.country_select(:country_code, selected: @user.country_code || request.location.try(:country_code), priority_countries: ["NZ", "AU"]) %></p>
+  <%= f.country_select(:country_code, selected: @user.country_code, priority_countries: ["NZ", "AU"]) %></p>
 
   <p><%= f.label :school_graduation, "School Graduation" %><br />
   <%= f.fields_for :school_graduation do |graduation_form| %>
