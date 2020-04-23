@@ -71,7 +71,7 @@
   <p>
     <b>Start time:</b>  <%= @contest.start_time %><br>
     <b>End time:</b>    <%= @contest.end_time %><br>
-    <b>Duration:</b>    <%= @contest.duration %><br>
+    <b>Duration:</b>    <%= @contest.duration %> hours<br>
     <b>Owner:</b> <%= @contest.owner_id %><br>
   </p>
   <% if @contest.ended? and @contest.finalized_at.nil? and policy(@contest).update? %>
