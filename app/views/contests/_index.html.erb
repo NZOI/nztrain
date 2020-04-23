@@ -31,7 +31,7 @@
     <td><%= contest.end_time.strftime("%b %d, %H:%M") unless contest.end_time.nil? %></td>
     <td><%= contest.duration %></td>
     <% if policy(Contest).update? %>
-      <td><%= link_to handle(contest.owner), contest.owner %></td>
+      <td><%= link_to contest.owner.username, contest.owner if contest.owner.present? %></td>
     <% end %>
     <td><%= contest.get_score(current_user.id) if user_signed_in? %></td>
     <td>
