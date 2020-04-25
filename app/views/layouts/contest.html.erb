@@ -71,7 +71,7 @@
   <p>
     <b>Start time:</b>  <%= @contest.start_time %><br>
     <b>End time:</b>    <%= @contest.end_time %><br>
-    <b>Duration:</b>    <%= @contest.duration %><br>
+    <b>Duration:</b>    <%= @contest.duration %> hours<br>
     <% if policy(@contest).update? %>
       <b>Owner:</b> <%= link_to @contest.owner.username, @contest.owner if @contest.owner.present? %><br>
     <% end %>
