@@ -1,7 +1,7 @@
 class ContestsController < ApplicationController
   def permitted_params
     @_permitted_params ||= begin
-      permitted_attributes = [:name, :start_time, :end_time, :duration, :problem_set_id, :startcode, :observation]
+      permitted_attributes = [:name, :start_time, :end_time, :duration, :problem_set_id, :startcode, :observation, :live_scoreboard, :show_unofficial_competitors]
       permitted_attributes << :owner_id if policy(@contest || Contest).transfer?
       params.require(:contest).permit(*permitted_attributes)
     end
@@ -49,7 +49,7 @@ class ContestsController < ApplicationController
   def show
     @contest = Contest.find(params[:id])
     if !policy(@contest).overview?
-      redirect_to info_contest_path(@contest)
+      redirect_to scoreboard_contest_path(@contest)
       return
     end
     @problem_associations = @contest.problem_set.problem_associations.includes(:problem)
@@ -60,15 +60,6 @@ class ContestsController < ApplicationController
     elsif @contest.is_running? && !@contest.get_relation(current_user)
       @contest_message = "You have not started this contest."
     end
-
-    render :layout => 'contest'
-  end
-
-  def info
-    @contest = Contest.find(params[:id])
-    authorize @contest, :show?
-    @groups = Group.all
-    @contest_relation = @contest.get_relation(current_user.id) if user_signed_in?
 
     render :layout => 'contest'
   end
