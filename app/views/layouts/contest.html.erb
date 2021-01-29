@@ -71,8 +71,10 @@
   <p>
     <b>Start time:</b>  <%= @contest.start_time %><br>
     <b>End time:</b>    <%= @contest.end_time %><br>
-    <b>Duration:</b>    <%= @contest.duration %><br>
-    <b>Owner:</b> <%= @contest.owner_id %><br>
+    <b>Duration:</b>    <%= @contest.duration %> hours<br>
+    <% if policy(@contest).update? %>
+      <b>Owner:</b> <%= link_to @contest.owner.username, @contest.owner if @contest.owner.present? %><br>
+    <% end %>
   </p>
   <% if @contest.ended? and @contest.finalized_at.nil? and policy(@contest).update? %>
     <%= link_to "Finalize results", finalize_contest_path(@contest), :data => { :confirm => 'Are you sure?' }, :method => :put %>

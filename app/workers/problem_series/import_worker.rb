@@ -251,7 +251,7 @@ class ProblemSeries
         original_attachment = filelink.file_attachment
         filelink.file_attachment = nil
         filelink.file_attachment = FileAttachment.new(file_attachment: File.open(paths[:statement]), owner_id: 0, name: "coci-#{problem.name.parameterize}-statement.pdf")
-        filelink.visibility = Filelink::VISIBILITY[:protected]
+        filelink.visibility = Filelink::VISIBILITY[:public]
         if filelink.save
           log "Statement attached for problem #{data[:name]}."
         else
