@@ -68,7 +68,7 @@ module ApplicationHelper
     else
       colour = "rgb(#{255-((percent-50)*255/50).to_i},#{255-((percent-50)*60/50).to_i},0)"
     end
-    raw "<div style=\"display: inline-block; vertical-align: middle; position: relative; height: 18px; width: #{options[:width]}; border: 1px #{colour} solid;\"><div style=\"height: 100%; width: #{percent}%; background-color: #{colour}\"></div><div style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%; text-align: center; font-size: small; text-shadow: 1px 1px #FFFFFF;\">#{text}</div></div>"
+    raw "<div class='progress_bar' style=\"display: inline-block; vertical-align: middle; position: relative; height: 18px; width: #{options[:width]}; border: 1px #{colour} solid;\"><div style=\"height: 100%; width: #{percent}%; background-color: #{colour}\"></div><div style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%; text-align: center; font-size: small;\">#{text}</div></div>"
   end
 
   def in_su?

@@ -1,0 +1,15 @@
+ul.tab_menu li a {
+  background: #a1cca1;
+}
+
+
+ul.tab_menu li a.selected {
+  background: #7aab7a;
+}
+
+.tab_box {
+  border: 1px solid #666666;
+  vertical-align: top;
+  padding: 5px 10px 5px 10px;
+  background: #2F2F2F;
+}

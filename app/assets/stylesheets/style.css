@@ -343,3 +343,7 @@ input[type="file"] {
 .countdown.large {
   font-size: 36px;
 }
+
+.progress_bar {
+    text-shadow: 1px 1px #FFFFFF;
+}

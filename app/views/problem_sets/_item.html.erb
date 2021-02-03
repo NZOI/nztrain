@@ -3,6 +3,7 @@
 <% problems = problem_set.problems_with_scores_by_user(current_user.try(:id) || -1) %>
 <% weighted = problems.map{|p|p.weighting != 100}.any? %>
 <%# problems = problem_set.problems.score_by_user(current_user.id) %>
+<%= stylesheet_link_tag "main_table_dark" %>
 <tr class="subheading">
   <td onClick="toggle_height('<%= "problemset#{problem_set.id}problems" %>');"><%= defined?(name) ? name : problem_set.name %> <span style="font-weight: normal; font-style: italic;">(<%= problem_set.problems.length %> problem<%= problem_set.problems.length==1?"":"s" %>)</span></td>
   <td>

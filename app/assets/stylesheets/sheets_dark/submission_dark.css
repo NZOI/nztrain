@@ -1,0 +1,18 @@
+.results tbody.headings {
+  border: 1px solid #AAAAAA !important;
+}
+
+.results tbody.summary {
+  border: 1px solid #AAAAAA !important;
+}
+
+.results .status_pending {
+    background-color: #000095 !important;
+    border-color: #AAAAAA !important;
+}
+
+#submission_judged {
+  /* Bit of a hack - make the div darker regardless of color*/
+  outline: 100px solid rgba(0, 0, 0, 0.1);
+  outline-offset: -100px;
+}

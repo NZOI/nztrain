@@ -1,8 +1,10 @@
 <!DOCTYPE HTML>
+
 <html>
   <head>
       <link rel="shortcut icon" href="/favicon.ico">
       <%= stylesheet_link_tag "application" %>
+      <%= stylesheet_link_tag "dark_theme" %>
       <%= javascript_include_tag "application", :async => Rails.env.production? %>
       <%= javascript_include_tag "//cdnjs.cloudflare.com/ajax/libs/mathjax/2.1.0/MathJax.js?config=TeX-AMS_HTML", :async => true %>
       <%= stylesheet_link_tag "//fonts.googleapis.com/css?family=Ubuntu:400italic,Ubuntu:400"%>
@@ -12,7 +14,6 @@
       <!--<script defer="defer" async type="text/javascript">
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', 'UA-37616650-1'],['_setDomainName', 'none'],['_trackPageview']);
-
         (function() {
           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
@@ -180,3 +181,4 @@
     <%= yield(:main).empty? ? yield : yield(:main) %>
   </body>
 </html>
+

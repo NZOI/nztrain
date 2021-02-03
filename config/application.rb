@@ -51,6 +51,8 @@ module NZTrain
     config.assets.enabled = true
     config.assets.paths << Rails.root.join("fonts")
     config.assets.precompile += %w(submission.css)
+    # Add dark theme  
+    config.assets.precompile += %w(dark_theme.css)
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'

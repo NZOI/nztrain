@@ -1,0 +1,3 @@
+bundle exec rails server -d
+bundle exec rake qless:work
+

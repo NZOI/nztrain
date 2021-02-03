@@ -1,0 +1,28 @@
+table.main_table > thead > tr {
+  background-color: #4C7522;
+  border: 1px solid #555555;
+  border-style: double;
+}
+
+table.main_table > tbody > tr {
+  background-color: #302530;
+  color: #FFFFFF;
+}
+
+table.main_table.hoverable > tbody > tr:hover {
+  background-color: #3F3F35;
+}
+
+table.main_table > tbody > tr.subheading {
+	background-color: #404A40;
+}
+
+table.main_table.hoverable > tbody > tr.subheading:hover {
+  background-color: #505A50;
+} 
+
+table.main_table > tbody > tr > td, table.main_table > thead > tr > th {
+  border: 1px solid #555555;
+}
+
+
