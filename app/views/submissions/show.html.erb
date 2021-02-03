@@ -11,14 +11,14 @@
   </p>
 <% else %>
   <div id="submission_judged" class="score_<%= (@submission.score/10).to_i %>x">
-    <%= RNGBySubID = Random.new(@submission.id) %>
+    <%= rngBySubID = Random.new(@submission.id) %>
     <%= @submission.score %>% - <%=
     case
-      when @submission.score == 100; ["All done. Nice.", "Top marks!", "One hundo!", "Smashed it!", "Phenomenal.", "Like a boss.", "Top stuff.", "Touch down!", "Nice!", "Sweet.", "In the bag!", "You did it!", "Congrats!"].sample(1, random: RNGBySubID)
-      when @submission.score >= 90; ["Fantastic! Soooooooo close!", "So close!", "Almost there!"].sample(1, random: RNGBySubID)
-      when @submission.score >= 25; ["Good work! Keep thinking.", "Keep it up!", "Great! Keep working at it.", "Nice one! Keep pondering."].sample(1, random: RNGBySubID)
+      when @submission.score == 100; ["All done. Nice.", "Top marks!", "One hundo!", "Smashed it!", "Phenomenal.", "Like a boss.", "Top stuff.", "Touch down!", "Nice!", "Sweet.", "In the bag!", "You did it!", "Congrats!"].sample(1, random: rngBySubID)
+      when @submission.score >= 90; ["Fantastic! Soooooooo close!", "So close!", "Almost there!"].sample(1, random: rngBySubID)
+      when @submission.score >= 25; ["Good work! Keep thinking.", "Keep it up!", "Great! Keep working at it.", "Nice one! Keep pondering."].sample(1, random: rngBySubID)
       when @submission.score > 0; "Points on the board!"
-      else; ["Ah well. Give it another go.", "Oops. Give it another go.", "Keep trying.", "These things happen."].sample(1, random: RNGBySubID)
+      else; ["Ah well. Give it another go.", "Oops. Give it another go.", "Keep trying.", "These things happen."].sample(1, random: rngBySubID)
     end
     %>
   </div>
