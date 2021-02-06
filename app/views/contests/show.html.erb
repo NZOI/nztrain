@@ -23,7 +23,7 @@
         <% if @contest.has_competitor?(current_user) %>
           <td><%= progress_bar(@contest.problem_score(current_user, problem), problem_association.weighting) %></td>
         <% end %>
-        <td><%= @contest.num_solved(problem) %></td>
+        <td><%= (@contest.live_scoreboard || @contest.ended? || policy(@contest).inspect?) ? @contest.num_solved(problem) : "?" %></td>
       </tr>
     <% end %>
   </tbody>

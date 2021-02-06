@@ -9,10 +9,13 @@
   //-->
   </script>
 <% end %>
+<% show_scoreboard = @contest.live_scoreboard || @contest.ended? || policy(@contest).inspect? %>
 <% if !@contest.started? %>
   <em>The contest has not started yet.</em>
+<% elsif !show_scoreboard && (!user_signed_in? || !@contest.has_competitor?(current_user)) %>
+  <em>The scoreboard is hidden until the end of the contest.</em>
 <% else %>
-  <% if @contest.show_unofficial_competitors %>
+  <% if @contest.show_unofficial_competitors && show_scoreboard %>
     <div style="float:right">
       <input type="checkbox" id="show_unofficial" onclick="toggle_unofficial()">
       <label for="show_unofficial">Show Unofficial Contestants</label>
@@ -45,12 +48,13 @@
       <% num_unofficial = 0 %>
       <% previous_record = @scoreboard.first %>
       <% @scoreboard.each_with_index do |record,index| %>
+        <% next if !show_scoreboard && (!user_signed_in? or record.user && record.user.id != current_user.id) # no permission to view %>
         <% is_unofficial = @contest.show_unofficial_competitors && (record.school.nil? || record.school_year.nil?) %>
         <tr class="<% if user_signed_in? && record.user && record.user.id == current_user.id %>emphasized<% end %><% if is_unofficial %> unofficial<% end %>">
           <% num_unofficial += 1 if is_unofficial %>
           <% rank = index + 1 - num_unofficial unless previous_record.score == record.score && previous_record.time_taken == record.time_taken %>
           <% previous_record = record %>
-          <td style="text-align: right"> <%= rank unless is_unofficial %> </td>
+          <td style="text-align: right"> <%= rank unless is_unofficial || !show_scoreboard %> </td>
           <td style="padding-left: 0; padding-right: 0;">
             <%= flag_list(24){ flag(record.user.country_code.downcase, record.user.country_name, title: true) } if record.user&.country_code %>
           </td>
@@ -62,15 +66,10 @@
             <% end %>
           </td>
           <% link_to_submissions = user_signed_in? && record.user && (record.user.id == current_user.id || current_user.is_admin?) %>
-          <% show_scores = link_to_submissions || @contest.live_scoreboard || @contest.ended? %>
           <% @problems.each do |prob|%>
             <td>
               <span style="float: left; width: 2em; text-align: right;">
-                <% if show_scores %>
-                  <%= record["score_#{prob.id}"].nil? ? "-":link_to_if(link_to_submissions, record["score_#{prob.id}"], submission_path(record["sub_#{prob.id}"])) %>
-                <% else %>
-                  <%= record["score_#{prob.id}"].nil? ? "-" : "?" %>
-                <% end %>
+                <%= record["score_#{prob.id}"].nil? ? "-":link_to_if(link_to_submissions, record["score_#{prob.id}"], submission_path(record["sub_#{prob.id}"])) %>
               </span>
               <span style="float: left; width: 2.5em; text-align: right; font-size: 75%; line-height: 90%;">
                 <%= raw record["score_#{prob.id}"].nil? ? "&nbsp;":"#{record["attempt_#{prob.id}"].to_i.ordinalize}&nbsp;<br />try" %>
@@ -80,7 +79,7 @@
               </span>
             </td>
           <% end %>
-          <td style="text-align: right"> <%= show_scores ? record.score : "?" %> </td>
+          <td style="text-align: right"> <%= record.score %> </td>
           <td> <%= format("%d:%02d:%02d",record.time_taken.to_i/3600,record.time_taken.to_i/60%60,record.time_taken.to_i%60) %> </td>
         </tr>
       <% end %>
