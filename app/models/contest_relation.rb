@@ -31,6 +31,11 @@ class ContestRelation < ActiveRecord::Base
     return "You have been registered, but the contest has not started yet." if !started?
   end
 
+  def country_name
+    country = ISO3166::Country[country_code || 'NZ']
+    country.name
+  end
+
   def start! checkin = true
     return false if started?
     self.checked_in = true

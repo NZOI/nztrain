@@ -56,7 +56,7 @@
           <% previous_record = record %>
           <td style="text-align: right"> <%= rank unless is_unofficial || !show_scoreboard %> </td>
           <td style="padding-left: 0; padding-right: 0;">
-            <%= flag_list(24){ flag(record.user.country_code.downcase, record.user.country_name, title: true) } if record.user&.country_code %>
+            <%= flag_list(24){ flag(record.country_code.downcase, record.country_name, title: true) } if record.country_code %>
           </td>
           <td>
             <% if record.user %>
