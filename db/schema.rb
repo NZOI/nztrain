@@ -118,7 +118,7 @@ ActiveRecord::Schema.define(version: 20200418113601) do
     t.integer  "registration",                default: 0
     t.integer  "affiliation",                 default: 0
     t.boolean  "live_scoreboard",             default: true
-    t.boolean  "show_unofficial_competitors", default: false
+    t.boolean  "show_unofficial_contestants", default: false
   end
 
   create_table "entities", force: true do |t|
