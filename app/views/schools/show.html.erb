@@ -1,4 +1,7 @@
-<b>School: </b><%= @school.name %><br>
+<% content_for :title, @school.name %>
+<% toolbox_push :edit, edit_school_path(@school) if policy(@school).edit? %>
+<% toolbox_push :delete, @school if policy(@school).destroy? %>
+<% toolbox_push :back, schools_path %>
 
 Users:
 
