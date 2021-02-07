@@ -48,9 +48,10 @@
       <% rank = nil %>
       <% previous_record = nil %>
       <% @scoreboard.each do |record| %>
-        <% next unless show_scoreboard || (user_signed_in? && record.user && record.user.id == current_user.id) # hide row unless permitted to view %>
+        <% is_record_of_current_user = user_signed_in? && record.user && record.user.id == current_user.id %>
+        <% next unless show_scoreboard || is_record_of_current_user # hide row unless permitted to view %>
         <% is_ranked = !@contest.only_rank_official_contestants || (record.school && record.school_year) %>
-        <tr class="<% if user_signed_in? && record.user && record.user.id == current_user.id %>emphasized<% end %><% if !is_ranked %> unofficial<% end %>">
+        <tr class="<% if is_record_of_current_user %>emphasized<% end %><% if !is_ranked %> unofficial<% end %>">
           <% if is_ranked %>
             <% num_ranked += 1 %>
             <% rank = num_ranked unless previous_record && previous_record.score == record.score && previous_record.time_taken == record.time_taken %>
