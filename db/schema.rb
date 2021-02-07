@@ -114,11 +114,11 @@ ActiveRecord::Schema.define(version: 20210206104409) do
     t.integer  "problem_set_id"
     t.datetime "finalized_at"
     t.string   "startcode"
-    t.integer  "observation",                 default: 1
-    t.integer  "registration",                default: 0
-    t.integer  "affiliation",                 default: 0
-    t.boolean  "live_scoreboard",             default: true
-    t.boolean  "show_unofficial_contestants", default: false
+    t.integer  "observation",                    default: 1
+    t.integer  "registration",                   default: 0
+    t.integer  "affiliation",                    default: 0
+    t.boolean  "live_scoreboard",                default: true
+    t.boolean  "only_rank_official_contestants", default: false
   end
 
   create_table "entities", force: true do |t|
