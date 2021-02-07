@@ -12,7 +12,7 @@
 <% show_scoreboard = @contest.live_scoreboard || @contest.ended? || policy(@contest).inspect? %>
 <% if !@contest.started? %>
   <em>The contest has not started yet.</em>
-<% elsif !show_scoreboard && (!user_signed_in? || !@contest.has_competitor?(current_user)) %>
+<% elsif !(show_scoreboard || (user_signed_in? && @contest.has_competitor?(current_user))) %>
   <em>The scoreboard is hidden until the end of the contest.</em>
 <% else %>
   <% if @contest.show_unofficial_contestants && show_scoreboard %>
