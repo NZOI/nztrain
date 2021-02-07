@@ -34,6 +34,10 @@
   <%= f.file_field :avatar %>
   <%= f.hidden_field :avatar_cache %></p>
 
+  <p><%= f.label :school %><br />
+    <%= f.collection_select :school_id, School.where(country_code: "NZ").order(:name), :id, :name, {:selected => @user.school_id, :include_blank => true} %>
+  </p>
+
   <div class="actions">
     <%= f.submit %>
   </div>
