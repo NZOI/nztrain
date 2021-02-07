@@ -90,10 +90,10 @@
 <% end %>
 <script>
   function toggle_unofficial() {
-    show_unofficial_contestants = document.getElementById("show_unofficial").checked;
-    unofficial = document.getElementsByClassName("unofficial");
+    var show_unofficial_contestants = document.getElementById("show_unofficial").checked;
+    var unofficial = document.getElementsByClassName("unofficial");
     for (let row of unofficial) {
-      if (row.classList.contains("emphasized")) continue  // always show current user
+      if (row.classList.contains("emphasized")) continue;  // always show current user
       // row.style.visibility = show_unofficial_contestants ? "visible" : "collapse";  // has issues on safari
       row.style.display = show_unofficial_contestants ? "table-row" : "none";  // can cause column widths to change
     }
