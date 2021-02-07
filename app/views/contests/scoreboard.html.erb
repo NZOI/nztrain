@@ -48,7 +48,7 @@
       <% num_unofficial = 0 %>
       <% previous_record = @scoreboard.first %>
       <% @scoreboard.each_with_index do |record,index| %>
-        <% next if !show_scoreboard && (!user_signed_in? or record.user && record.user.id != current_user.id) # no permission to view %>
+        <% next unless show_scoreboard || (user_signed_in? && record.user && record.user.id == current_user.id) # hide row unless permitted to view %>
         <% is_unofficial = @contest.show_unofficial_contestants && (record.school.nil? || record.school_year.nil?) %>
         <tr class="<% if user_signed_in? && record.user && record.user.id == current_user.id %>emphasized<% end %><% if is_unofficial %> unofficial<% end %>">
           <% num_unofficial += 1 if is_unofficial %>
