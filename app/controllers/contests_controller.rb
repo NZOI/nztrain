@@ -307,7 +307,9 @@ class ContestsController < ApplicationController
               redirect_to contestants_contest_path(@contest), :alert => "The maximum extra time that can be given is #{@contest.max_extra_time}."
               return
             end
-            relation.save
+            if !relation.save
+              redirect_to contestants_contest_path(@contest), :alert => "Could not add extra time to contestant #{relation.user&.username}."
+            end
           end
         end
       end
