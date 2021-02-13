@@ -113,7 +113,7 @@
             <tr class="inspect_test status_<%= case_data.status %>">
               <td colspan="5">
                 <% if policy(@submission).inspect? %>
-                  <table>
+                  <table class="inspect_meta">
                     <tr>
                       <% if case_data.status == :timeout %>
                         <th>Time (<%= case_data.killed? ? "killed" : "exited" %>):</th><td><%= case_data.meta.print_time %></td>

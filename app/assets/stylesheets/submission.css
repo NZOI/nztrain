@@ -108,6 +108,10 @@ table.results {
   width: 100%;
 }
 
+.results .inspect_test table.inspect_meta th:first-of-type {
+  padding-left: 2.5px;
+}
+
 .results .inspect_test table.inspect_output {
   width: 100%;
   border-spacing: 5px;
