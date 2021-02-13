@@ -118,6 +118,10 @@ table.results {
   padding-left: 0px;
 }
 
+.results .inspect_test table.inspect_output th:last-of-type {
+  padding-right: 0px;
+}
+
 .results .inspect_test table.inspect_output td {
   padding: 2px;
   border: 1px solid black;
