@@ -26,13 +26,13 @@ if [ ! -f script/update.time ]; then
   echo 2000-01-01+00:00:00 > script/update.time
 fi
 
+sudo apt-get update || exit 1
+
 bash script/install/ruby.bash || exit 1 # check ruby version
 
 bash script/install/postgresql.bash || exit 1 # create user & db if it doesn't exist
 
 bash script/install/imagemagick.bash || exit 1 # install imagemagick
-
-bash script/install/maxmind.bash || exit 1 # maxmind GeoIP data
 
 sudo apt-get install wkhtmltopdf xvfb || exit 1
 
