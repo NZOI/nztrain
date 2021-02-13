@@ -50,7 +50,7 @@
     <%= f.select :school_id, School.where(country_code: "NZ").order(:name).collect {|s| [s.name, s.id]}, { include_blank: true }, class: [:school_select, :jsdisplay], disabled: true %>, 
     <%= school_form.country_select(:country_code, only: ["NZ"] ) %><br />
     <a class="school_select togglelink jsnodisplay" data-toggle="school_select" href="javascript:void(0)">Select school from list</a>
-    <a class="school_select togglelink jsdisplay" data-toggle="school_select" style="color:blue" href="javascript:void(0)">Add new school</a>
+    <a class="school_select togglelink jsdisplay" data-toggle="school_select" href="javascript:void(0)">Add new school</a>
   <% end %>
   </p>
 
