@@ -42,8 +42,8 @@
     <%= f.country_select(:country_code, priority_countries: ["NZ", "AU"] ) %>
   </div>
 
-  <div class="field">
-    <h3><%= f.label :school_graduation, "School Graduation (NZ Only)" %></h3>
+  <div class="field nzonly">
+    <h3><%= f.label :school_graduation, "School Graduation" %></h3>
     <p>If you attend a primary, intermediate, or secondary school (or equivalent) in New Zealand then we ask that you please enter your estimated graduation date (the month and year you expect to finish secondary school by). You can update this later if it changes. Our website uses your graduation date to calculate your eligibility to:</p>
     <ul>
       <li>Compete <i>officially</i> in the New Zealand Informatics Competition (NZIC).</li>
@@ -62,8 +62,8 @@
     <% end %>
   </div>
 
-  <div class="field">
-    <h3><%= f.label :school, "School (NZ Only)" %></h3>
+  <div class="field nzonly">
+    <h3><%= f.label :school %></h3>
     <%= f.fields_for :school, @user.school do |school_form| %>
       <%= school_form.text_field :name, class: [:school_select, :jsnodisplay] %>
       <%= f.select :school_id, School.where(country_code: "NZ").order(:name).collect {|s| [s.name, s.id]}, { include_blank: true }, class: [:school_select, :jsdisplay], disabled: true %><br />
