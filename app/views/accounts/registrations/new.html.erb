@@ -8,25 +8,26 @@
 <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
   <%= devise_error_messages! %>
 
-  <h3><%= f.label :username %><br />
-  <%= f.text_field :username %></p>
+  <h3><%= f.label :username %></h3>
+  <%= f.text_field :username %>
 
-  <h3><%= f.label :name %><br />
-  <%= f.text_field :name %></p>
+  <h3><%= f.label :name %></h3>
+  <%= f.text_field :name %>
 
-  <h3><%= f.label :email %><br />
-  <%= f.email_field :email %></p>
+  <h3><%= f.label :email %></h3>
+  <%= f.email_field :email %>
 
-  <h3><%= f.label :password %><br />
-  <%= f.password_field :password %></p>
+  <h3><%= f.label :password %></h3>
+  <%= f.password_field :password %>
 
-  <h3><%= f.label :password_confirmation %><br />
-  <%= f.password_field :password_confirmation %></p>
+  <h3><%= f.label :password_confirmation %></h3>
+  <%= f.password_field :password_confirmation %>
 
-  <h3><%= f.label :country_code, "Country" %><br />
-  <%= f.country_select(:country_code, selected: @user.country_code || request.location.try(:country_code), priority_countries: ["NZ", "AU"]) %></p>
+  <h3><%= f.label :country_code, "Country" %></h3>
+  <p id="togglenz"><%= f.country_select(:country_code, selected: @user.country_code || request.location.try(:country_code), priority_countries: ["NZ", "AU"]) %></p>
 
-  <h3><%= f.label :school_graduation, "School Graduation" %></h3>
+  <div class="nzonly">
+  <h3><%= f.label :school_graduation, "School Graduation (NZ Only)" %></h3>
   <p> If you attend a primary, intermediate, or secondary school (or equivalent) in New Zealand then we ask that you please enter your estimated graduation date (the month and year you expect to finish secondary school by). You can update this later if it changes. Our website uses your graduation date to calculate your eligibility to:</p>
   <ul>
     <li>Compete <i>officially</i> in the New Zealand Informatics Competition (NZIC).</li>
@@ -44,15 +45,15 @@
   <%= graduation_form.radio_button('enabled', true, checked: !!@user.school_graduation) %><%= select_month(@user.school_graduation || 12, {prefix: 'user[school_graduation]'}, class: :radio_input) %><%= select_year(@user.school_graduation || Date.today, {start_year: [Date.today.year-50,@user.school_graduation.try(:year) || Date.today.year].min, end_year: Date.today.year+18, prefix: 'user[school_graduation]'}, class: :radio_input) %>
   <% end %>
 
-  <h3><%= f.label :school %></h3>
+  <h3><%= f.label :school, "School (NZ Only)" %></h3>
   <%= f.fields_for :school, @user.school do |school_form| %>
     <%= school_form.text_field :name, class: [:school_select, :jsnodisplay] %>
-    <%= f.select :school_id, School.where(country_code: "NZ").order(:name).collect {|s| [s.name, s.id]}, { include_blank: true }, class: [:school_select, :jsdisplay], disabled: true %>, 
-    <%= school_form.country_select(:country_code, only: ["NZ"] ) %><br />
+    <%= f.select :school_id, School.where(country_code: "NZ").order(:name).collect {|s| [s.name, s.id]}, { include_blank: true }, class: [:school_select, :jsdisplay], disabled: true %><br />
     <a class="school_select togglelink jsnodisplay" data-toggle="school_select" href="javascript:void(0)">Select school from list</a>
     <a class="school_select togglelink jsdisplay" data-toggle="school_select" href="javascript:void(0)">Add new school</a>
   <% end %>
   </p>
+  </div>
 
   <h3>Submit</h3>
   <p>
