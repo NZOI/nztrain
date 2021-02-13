@@ -1,4 +1,4 @@
-<h1 style="line-height:1.2em">Sign up to the NZOI's training site</h1>
+<h1 style="line-height:1.2em">Sign up to the NZOI training site</h1>
 <ul>
   <li>Submit solutions to problems.</li>
   <li>Compete in contests.</li>
@@ -27,16 +27,16 @@
   <%= f.country_select(:country_code, selected: @user.country_code || request.location.try(:country_code), priority_countries: ["NZ", "AU"]) %></p>
 
   <h3><%= f.label :school_graduation, "School Graduation" %></h3>
-  <p> If you attend a primary, intermediate, or secondary school (or equivilent) in New Zealand then we ask that you please enter your estimated graduation date (the month and year you expect to finish secondary school by). You can update this later if it changes. Our website uses your graduation date to calculate your eligibility to:ssss</p>
+  <p> If you attend a primary, intermediate, or secondary school (or equivalent) in New Zealand then we ask that you please enter your estimated graduation date (the month and year you expect to finish secondary school by). You can update this later if it changes. Our website uses your graduation date to calculate your eligibility to:</p>
   <ul>
-    <li>Compete <u>officially</u> in the NZIC (New Zealand Informatics Contest).</li>
-    <li>Potentally be invited to a programming camp run by the NZOI (New Zealand Olympiad in Informatics)</li>
+    <li>Compete <i>officially</i> in the New Zealand Informatics Competition (NZIC).</li>
+    <li>Potentially be invited to a programming camp run by the New Zealand Olympiad in Informatics (NZOI)</li>
   </ul>
   <p>Also note that:</p>
   <ul>
     <li>Anyone is welcome to create an account and use our site without specifying a graduation date.</li>
-    <li>Anyone can compete in the NZIC unofficially without specifying a graduation date. However, you will not be ranked on offical scoreboards or be eligible to be invited to our programming camps.</li>
-    <li>Only New Zealand citizens or perminant residents, with a valid future graduation date, will be considered for our international IOI team.</li>
+    <li>Anyone can compete in the NZIC unofficially without specifying a graduation date. However, you will not be ranked on official scoreboards or be eligible to be invited to our programming camps.</li>
+    <li>Only New Zealand citizens or permanent residents that have attended camp will be considered to represent New Zealand at the International Olympiad in Informatics.</li>
   </ul>
   <p><b>Please select approximate secondary school graduation date or leave unspecified:</b></p>
   <%= f.fields_for :school_graduation do |graduation_form| %>
@@ -54,10 +54,10 @@
   <% end %>
   </p>
 
+  <h3>Submit</h3>
   <p>
     <%= recaptcha_tags :site_key => @db_settings["recaptcha/public_key"] if @db_settings["recaptcha/public_key"] && !@db_settings["recaptcha/public_key"].empty? %>
   </p>
-  <h3>Submit</h3>
   <p><%= f.submit "Sign up" %></p>
 <% end %>
 
