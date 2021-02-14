@@ -293,6 +293,7 @@ class ContestsController < ApplicationController
             relation.school = School.find_by_id(school_id)
             if !relation.save
               redirect_to contestants_contest_path(@contest), :alert => "Could not update school of contestant #{relation.user&.username}."
+              return
             end
           end
         end
@@ -309,6 +310,7 @@ class ContestsController < ApplicationController
             end
             if !relation.save
               redirect_to contestants_contest_path(@contest), :alert => "Could not add extra time to contestant #{relation.user&.username}."
+              return
             end
           end
         end
