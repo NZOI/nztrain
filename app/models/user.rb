@@ -164,7 +164,7 @@ class User < ActiveRecord::Base
   def school=(value)
     if value.is_a? Hash
       if value[:name] && value[:name] != ""
-        school = School.where(name: value[:name], country_code: country_code).first_or_initialize
+        school = School.where(name: value[:name], country_code: 'NZ').first_or_initialize
         super(school.synonym || school)
       end
     else
