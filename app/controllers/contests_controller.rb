@@ -146,6 +146,7 @@ class ContestsController < ApplicationController
         format.html { redirect_to(@contest, :notice => 'Contest was successfully created.') }
         format.xml  { render :xml => @contest, :status => :created, :location => @contest }
       else
+        @problem_sets = ProblemSet.all
         format.html { render :action => "new" }
         format.xml  { render :xml => @contest.errors, :status => :unprocessable_entity }
       end
