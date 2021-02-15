@@ -168,6 +168,7 @@ class ContestsController < ApplicationController
         format.html { redirect_to(@contest, :notice => 'Contest was successfully updated.') }
         format.xml  { head :ok }
       else
+        @problem_sets = ProblemSet.all
         format.html { render :action => "edit" }
         format.xml  { render :xml => @contest.errors, :status => :unprocessable_entity }
       end
