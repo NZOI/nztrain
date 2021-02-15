@@ -155,6 +155,7 @@
         </tr>
       </thead>
       <tbody>
+        <% schools = School.order(:name) %>
         <% @contest_relations.each do |contest_relation| %>
           <tr>
             <td>
@@ -165,7 +166,9 @@
               <% end %>
             </td>
             <td><%= link_to handle(contest_relation.supervisor), contest_relation.supervisor if contest_relation.supervisor %></td>
-            <td><%= contest_relation.school.try(:name) %></td>
+            <td>
+              <%= collection_select :school_id, contest_relation.id, schools, :id, :name, {:selected => contest_relation.school&.id, :include_blank => true} %>
+            </td>
             <td>
               <%= contest_relation.school_year %>
               <%= link_to '+', update_year_level_contest_relation_path(contest_relation, year_level: (contest_relation.school_year||14)+1), :method => :post %>/<%= link_to '-', update_year_level_contest_relation_path(contest_relation, year_level: (contest_relation.school_year||14)-1), :method => :post %>

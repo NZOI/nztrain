@@ -3,7 +3,7 @@ class UserController < ApplicationController
   # this is for admins, users edit their own accounts using the accounts/ scope
   def permitted_params
     @_permitted_attributes ||= begin
-      permitted_attributes = [:name, :avatar, :remove_avatar, :avatar_cache, :email]
+      permitted_attributes = [:name, :avatar, :remove_avatar, :avatar_cache, :email, :school_id]
       permitted_attributes << :brownie_points if policy(@user).add_brownie?
       permitted_attributes
     end

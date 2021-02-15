@@ -244,7 +244,7 @@ NZTrain::Application.routes.draw do
     end
   end
 
-  resources :schools, only: [:index, :show]
+  resources :schools, only: [:index, :show, :edit, :update, :destroy]
 
   resources :items, only: :index
   resources :item, except: [:index, :create, :new] do

@@ -28,5 +28,9 @@ class ContestRelationPolicy < AuthenticatedPolicy
     return false if record.contest.ended?
     supervise?
   end
+
+  def update_school?
+    user.is_admin?
+  end
 end
 

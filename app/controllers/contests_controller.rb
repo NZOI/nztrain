@@ -285,6 +285,19 @@ class ContestsController < ApplicationController
       end
       redirect_to contestants_contest_path(@contest), :notice => "Contest ended for selected students"
     elsif params[:update]
+      if params[:school_id]
+        ContestRelation.transaction do
+          params[:school_id].each do |relation_id, school_id|
+            relation = @contest.contest_relations.find_by_id(relation_id)
+            authorize relation, :update_school?
+            relation.school = School.find_by_id(school_id)
+            if !relation.save
+              redirect_to contestants_contest_path(@contest), :alert => "Could not update school of contestant #{relation.user&.username}."
+              return
+            end
+          end
+        end
+      end
       if params[:extra_time]
         ContestRelation.transaction do
           params[:extra_time].each do |relation_id, extra_time|
@@ -295,10 +308,15 @@ class ContestsController < ApplicationController
               redirect_to contestants_contest_path(@contest), :alert => "The maximum extra time that can be given is #{@contest.max_extra_time}."
               return
             end
-            relation.save
+            if !relation.save
+              redirect_to contestants_contest_path(@contest), :alert => "Could not add extra time to contestant #{relation.user&.username}."
+              return
+            end
           end
         end
-        redirect_to contestants_contest_path(@contest), :notice => "Extra time updated"
+      end
+      if params[:school_id] || params[:extra_time]
+        redirect_to contestants_contest_path(@contest), :notice => "Contestants updated"
       else
         redirect_to contestants_contest_path(@contest), :alert => "Nothing to update."
         return
