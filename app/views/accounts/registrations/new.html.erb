@@ -24,9 +24,8 @@
   <%= f.password_field :password_confirmation %>
 
   <h3><%= f.label :country_code, "Country" %></h3>
-  <p id="togglenz"><%= f.country_select(:country_code, selected: @user.country_code || request.location.try(:country_code), priority_countries: ["NZ", "AU"]) %></p>
+  <p><%= f.country_select(:country_code, selected: @user.country_code || request.location.try(:country_code), priority_countries: ["NZ", "AU"]) %></p>
 
-  <div class="nzonly">
   <h3><%= f.label :school_graduation, "School Graduation (NZ Only)" %></h3>
   <p> If you attend a primary, intermediate, or secondary school (or equivalent) in New Zealand then we ask that you please enter your estimated graduation date (the month and year you expect to finish secondary school by). You can update this later if it changes. Our website uses your graduation date to calculate your eligibility to:</p>
   <ul>
@@ -53,7 +52,6 @@
     <a class="school_select togglelink jsdisplay" data-toggle="school_select" href="javascript:void(0)">Add new school</a>
   <% end %>
   </p>
-  </div>
 
   <h3>Submit</h3>
   <p>
