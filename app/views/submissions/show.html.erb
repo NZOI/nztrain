@@ -113,16 +113,16 @@
                 <% end %>
                 <table class="inspect_output">
                   <tr>
-                    <th>Input<span class="output_stats">Size: <%= number_to_human_size(test_case.input.bytesize) %></span></th>
-                    <th>Actual Output
+                    <th>Input: <span class="output_stats"><%= number_to_human_size(test_case.input.bytesize) %></span></th>
+                    <th>Actual Output: 
                       <% if !case_data.output_size.nil? %>
-                        <span class="output_stats">Size: <%= number_to_human_size(case_data.output_size) %></span>
+                        <span class="output_stats"><%= number_to_human_size(case_data.output_size) %></span>
                       <% end %>
                     </th>
-                    <th>Expected Output <span class="output_stats">Size: <%= number_to_human_size(test_case.output.bytesize) %></span></th>
+                    <th>Expected Output: <span class="output_stats"><%= number_to_human_size(test_case.output.bytesize) %></span></th>
                     <% evaluation = case_data.evaluator.evaluation %>
                     <% if policy(@submission).inspect? %>
-                      <th>Evaluator Log <span class="output_stats"><%= "Evaluation: #{evaluation ? sprintf("%.2f",evaluation) : "nil"}/1.00" %></span></th>
+                      <th>Evaluator Log <span class="output_stats"><%= "#{evaluation ? sprintf("%.2f",evaluation) : "nil"}/1.00" %></span></th>
                     <% end %>
                   </tr>
                   <tr>
