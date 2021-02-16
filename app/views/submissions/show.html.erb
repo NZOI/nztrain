@@ -122,7 +122,7 @@
                     <th>Expected Output: <span class="output_stats"><%= number_to_human_size(test_case.output.bytesize) %></span></th>
                     <% evaluation = case_data.evaluator.evaluation %>
                     <% if policy(@submission).inspect? %>
-                      <th>Evaluator Log <span class="output_stats"><%= "#{evaluation ? sprintf("%.2f",evaluation) : "nil"}/1.00" %></span></th>
+                      <th>Evaluator Log: <span class="output_stats"><%= "#{evaluation ? sprintf("%.2f",evaluation) : "nil"}/1.00" %></span></th>
                     <% end %>
                   </tr>
                   <tr>
