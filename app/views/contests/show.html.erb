@@ -2,6 +2,13 @@
   <p><%= @contest_message %></p>
 <% end %>
 
+<% if policy(@contest).update? %>
+  <p>
+    <b> Problem set: </b>
+    <%= link_to @contest.problem_set.name, @contest.problem_set %>
+  </p>
+<% end %>
+
 <table class="main_table" >
   <thead>
     <tr>
