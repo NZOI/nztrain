@@ -64,6 +64,15 @@ class ContestsController < ApplicationController
     render :layout => 'contest'
   end
 
+  def info
+    @contest = Contest.find(params[:id])
+    authorize @contest, :show?
+    @groups = Group.all
+    @contest_relation = @contest.get_relation(current_user.id) if user_signed_in?
+
+    render :layout => 'contest'
+  end
+
   def scoreboard
     @contest = Contest.find(params[:id])
     authorize @contest, :scoreboard?
