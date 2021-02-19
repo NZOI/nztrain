@@ -21,6 +21,9 @@
       else; ["Ah well. Give it another go.", "Oops. Give it another go.", "Keep trying.", "These things happen."].sample(random: rng_by_sub_id)
     end
     %>
+    <% if @submission.score == 0 %>
+      <div id='zero_score_message'>If you're wondering why you scored zero, you might find <a href='https://www.nzoi.org.nz/nzic/resources/why-did-i-score-zero.pdf'>this document</a> helpful.</div>
+    <% end %>
   </div>
 <% end %>
 <p><%= link_to "Rejudge", rejudge_submission_path(@submission), :data => { :confirm => 'Are you sure?' }, :method => "post" if policy(@submission).rejudge? %></p>
