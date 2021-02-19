@@ -35,15 +35,15 @@
 
   <div class="field">
     <h3><%= f.label :country_code, "Country" %></h3>
-    <p><%= f.country_select(:country_code, selected: @user.country_code || request.location.try(:country_code), priority_countries: ["NZ", "AU"]) %></p>
+    <%= f.country_select(:country_code, selected: @user.country_code || request.location.try(:country_code), priority_countries: ["NZ", "AU"]) %>
   </div>
 
   <div class="field">
     <h3><%= f.label :school_graduation, "School Graduation (NZ Only)" %></h3>
-    <p> If you attend a primary, intermediate, or secondary school (or equivalent) in New Zealand then we ask that you please enter your estimated graduation date (the month and year you expect to finish secondary school by). You can update this later if it changes. Our website uses your graduation date to calculate your eligibility to:</p>
+    <p>If you attend a primary, intermediate, or secondary school (or equivalent) in New Zealand then we ask that you please enter your estimated graduation date (the month and year you expect to finish secondary school by). You can update this later if it changes. Our website uses your graduation date to calculate your eligibility to:</p>
     <ul>
       <li>Compete <i>officially</i> in the New Zealand Informatics Competition (NZIC).</li>
-      <li>Potentially be invited to a programming camp run by the New Zealand Olympiad in Informatics (NZOI)</li>
+      <li>Potentially be invited to a programming camp run by the New Zealand Olympiad in Informatics (NZOI).</li>
     </ul>
     <p>Also note that:</p>
     <ul>
@@ -66,15 +66,12 @@
       <a class="school_select togglelink jsnodisplay" data-toggle="school_select" href="javascript:void(0)">Select school from list</a>
       <a class="school_select togglelink jsdisplay" data-toggle="school_select" href="javascript:void(0)">Add new school</a>
     <% end %>
-    </p>
   </div>
 
   <div class="actions">
     <h3>Submit</h3>
-    <p>
-      <%= recaptcha_tags :site_key => @db_settings["recaptcha/public_key"] if @db_settings["recaptcha/public_key"] && !@db_settings["recaptcha/public_key"].empty? %>
-    </p>
-    <p><%= f.submit "Sign up" %></p>
+    <%= recaptcha_tags :site_key => @db_settings["recaptcha/public_key"] if @db_settings["recaptcha/public_key"] && !@db_settings["recaptcha/public_key"].empty? %>
+    <%= f.submit "Sign up" %>
   </div>
 <% end %>
 
