@@ -3,59 +3,78 @@
 
 <%= form_for(resource, :as => resource_name, :url => "/accounts/settings/update", :html => { :multipart => true, :method => :put }) do |f| %>
   <%= devise_error_messages! %>
-  <h3><%= f.label :username %></h3>
-  <div style="display: inline-block; min-width: 20em;"><%= @user[:username] %></div> <%= link_to "change", edit_user_registration_path + '/username' %>
 
-  <h3><%= f.label :name %></h3>
-  <%= f.text_field :name %>
+  <div class="field">
+    <h3><%= f.label :username %></h3>
+    <div style="display: inline-block; min-width: 20em;"><%= @user[:username] %></div> <%= link_to "change", edit_user_registration_path + '/username' %>
+  </div>
 
-  <h3><%= f.label :email %></h3>
-  <div style="display: inline-block; min-width: 20em;"><%= @user[:email] %></div> <%= link_to "change", edit_user_registration_path + '/email' %>
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
-  <% end %>
+  <div class="field">
+    <h3><%= f.label :name %></h3>
+    <%= f.text_field :name %>
+  </div>
 
-  <h3><%= f.label :password %></h3>
-  <div style="display: inline-block; min-width: 20em;">********</div> <%= link_to "change", edit_user_registration_path + '/password' %>
+  <div class="field">
+    <h3><%= f.label :email %></h3>
+    <div style="display: inline-block; min-width: 20em;"><%= @user[:email] %></div> <%= link_to "change", edit_user_registration_path + '/email' %>
+    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+      <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
+    <% end %>
+  </div>
 
-  <h3><%= f.label :avatar %></h3>
-  <p><% if @user.avatar? %>
-    <img src="<%= @user.avatar_url %>"><br />
-    <label><%= f.check_box :remove_avatar %>Remove current avatar</label><br />
-  <% end %>
-  <%= f.file_field :avatar %>
-  <%= f.hidden_field :avatar_cache %></p>
+  <div class="field">
+    <h3><%= f.label :password %></h3>
+    <div style="display: inline-block; min-width: 20em;">********</div> <%= link_to "change", edit_user_registration_path + '/password' %>
+  </div>
 
-  <h3><%= f.label :country_code, "Country" %></h3>
-  <p><%= f.country_select(:country_code, priority_countries: ["NZ", "AU"] ) %></p>
+  <div class="field">
+    <h3><%= f.label :avatar %></h3>
+    <p><% if @user.avatar? %>
+      <img src="<%= @user.avatar_url %>"><br />
+      <label><%= f.check_box :remove_avatar %>Remove current avatar</label><br />
+    <% end %>
+    <%= f.file_field :avatar %>
+    <%= f.hidden_field :avatar_cache %></p>
+  </div>
 
-  <h3><%= f.label :school_graduation, "School Graduation (NZ Only)" %></h3>
-  <p> If you attend a primary, intermediate, or secondary school (or equivalent) in New Zealand then we ask that you please enter your estimated graduation date (the month and year you expect to finish secondary school by). You can update this later if it changes. Our website uses your graduation date to calculate your eligibility to:</p>
-  <ul>
-    <li>Compete <i>officially</i> in the New Zealand Informatics Competition (NZIC).</li>
-    <li>Potentially be invited to a programming camp run by the New Zealand Olympiad in Informatics (NZOI)</li>
-  </ul>
-  <p>Also note that:</p>
-  <ul>
-    <li>Anyone is welcome to create an account and use our site without specifying a graduation date.</li>
-    <li>Anyone can compete in the NZIC unofficially without specifying a graduation date. However, you will not be ranked on official scoreboards or be eligible to be invited to our programming camps.</li>
-    <li>Only New Zealand citizens or permanent residents that have attended camp will be considered to represent New Zealand at the International Olympiad in Informatics.</li>
-  </ul>
-  <p><b>Please select approximate secondary school graduation date or leave unspecified:</b></p>
-  <%= f.fields_for :school_graduation do |graduation_form| %>
-    <%= graduation_form.radio_button('enabled', false, checked: !@user.school_graduation) %><%= f.label(:school_graduation_enabled_false, "Unspecified") %> <br />
-    <%= graduation_form.radio_button('enabled', true, checked: !!@user.school_graduation) %><%= select_month(@user.school_graduation || 12, {prefix: 'user[school_graduation]'}, class: :radio_input) %><%= select_year(@user.school_graduation || Date.today, {start_year: [Date.today.year-50,@user.school_graduation.try(:year) || Date.today.year].min, end_year: Date.today.year+18, prefix: 'user[school_graduation]'}, class: :radio_input) %>
-  <% end %>
+  <div class="field">
+    <h3><%= f.label :country_code, "Country" %></h3>
+    <p><%= f.country_select(:country_code, priority_countries: ["NZ", "AU"] ) %></p>
+  </div>
 
-  <h3><%= f.label :school, "School (NZ Only)" %></h3>
-  <%= f.fields_for :school, @user.school do |school_form| %>
-    <%= school_form.text_field :name, class: [:school_select, :jsnodisplay] %>
-    <%= f.select :school_id, School.where(country_code: "NZ").order(:name).collect {|s| [s.name, s.id]}, { include_blank: true }, class: [:school_select, :jsdisplay], disabled: true %><br />
-    <a class="school_select togglelink jsnodisplay" data-toggle="school_select" href="javascript:void(0)">Select school from list</a>
-    <a class="school_select togglelink jsdisplay" data-toggle="school_select" href="javascript:void(0)">Add new school</a>
-  <% end %>
-  </p>
+  <div class="field">
+    <h3><%= f.label :school_graduation, "School Graduation (NZ Only)" %></h3>
+    <p> If you attend a primary, intermediate, or secondary school (or equivalent) in New Zealand then we ask that you please enter your estimated graduation date (the month and year you expect to finish secondary school by). You can update this later if it changes. Our website uses your graduation date to calculate your eligibility to:</p>
+    <ul>
+      <li>Compete <i>officially</i> in the New Zealand Informatics Competition (NZIC).</li>
+      <li>Potentially be invited to a programming camp run by the New Zealand Olympiad in Informatics (NZOI)</li>
+    </ul>
+    <p>Also note that:</p>
+    <ul>
+      <li>Anyone is welcome to create an account and use our site without specifying a graduation date.</li>
+      <li>Anyone can compete in the NZIC unofficially without specifying a graduation date. However, you will not be ranked on official scoreboards or be eligible to be invited to our programming camps.</li>
+      <li>Only New Zealand citizens or permanent residents that have attended camp will be considered to represent New Zealand at the International Olympiad in Informatics.</li>
+    </ul>
+    <p><b>Please select approximate secondary school graduation date or leave unspecified:</b></p>
+    <%= f.fields_for :school_graduation do |graduation_form| %>
+      <%= graduation_form.radio_button('enabled', false, checked: !@user.school_graduation) %><%= f.label(:school_graduation_enabled_false, "Unspecified") %> <br />
+      <%= graduation_form.radio_button('enabled', true, checked: !!@user.school_graduation) %><%= select_month(@user.school_graduation || 12, {prefix: 'user[school_graduation]'}, class: :radio_input) %><%= select_year(@user.school_graduation || Date.today, {start_year: [Date.today.year-50,@user.school_graduation.try(:year) || Date.today.year].min, end_year: Date.today.year+18, prefix: 'user[school_graduation]'}, class: :radio_input) %>
+    <% end %>
+  </div>
 
-  <h3>Submit</h3>
-  <%= f.submit "Update" %>
+  <div class="field">
+    <h3><%= f.label :school, "School (NZ Only)" %></h3>
+    <%= f.fields_for :school, @user.school do |school_form| %>
+      <%= school_form.text_field :name, class: [:school_select, :jsnodisplay] %>
+      <%= f.select :school_id, School.where(country_code: "NZ").order(:name).collect {|s| [s.name, s.id]}, { include_blank: true }, class: [:school_select, :jsdisplay], disabled: true %><br />
+      <a class="school_select togglelink jsnodisplay" data-toggle="school_select" href="javascript:void(0)">Select school from list</a>
+      <a class="school_select togglelink jsdisplay" data-toggle="school_select" href="javascript:void(0)">Add new school</a>
+    <% end %>
+    </p>
+  </div>
+
+  <div class="actions">
+    <h3>Submit</h3>
+    <%= f.submit "Update" %>
+  </div>
 <% end %>
