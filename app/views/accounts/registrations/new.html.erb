@@ -1,46 +1,78 @@
-<h2>Sign up</h2>
-
+<h1 style="line-height:1.2em">Sign up to the NZOI training site</h1>
+<ul>
+  <li>Submit solutions to problems.</li>
+  <li>Compete in contests.</li>
+  <li>Join groups.</li>
+  <li>Access more problems.</li>
+</ul>
 <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
   <%= devise_error_messages! %>
 
-  <p><%= f.label :username %><br />
-  <%= f.text_field :username %></p>
+  <div class="field">
+    <h3><%= f.label :username %></h3>
+    <%= f.text_field :username %>
+  </div>
 
-  <p><%= f.label :name %><br />
-  <%= f.text_field :name %></p>
+  <div class="field">
+    <h3><%= f.label :name %></h3>
+    <%= f.text_field :name %>
+  </div>
 
-  <p><%= f.label :email %><br />
-  <%= f.email_field :email %></p>
+  <div class="field">
+    <h3><%= f.label :email %></h3>
+    <%= f.email_field :email %>
+  </div>
 
-  <p><%= f.label :password %><br />
-  <%= f.password_field :password %></p>
+  <div class="field">
+    <h3><%= f.label :password %></h3>
+    <%= f.password_field :password %>
+  </div>
 
-  <p><%= f.label :password_confirmation %><br />
-  <%= f.password_field :password_confirmation %></p>
+  <div class="field">
+    <h3><%= f.label :password_confirmation %></h3>
+    <%= f.password_field :password_confirmation %>
+  </div>
 
-  <p><%= f.label :country_code, "Country" %><br />
-  <%= f.country_select(:country_code, selected: @user.country_code || request.location.try(:country_code), priority_countries: ["NZ", "AU"]) %></p>
+  <div class="field">
+    <h3><%= f.label :country_code, "Country" %></h3>
+    <%= f.country_select(:country_code, selected: @user.country_code || request.location.try(:country_code), priority_countries: ["NZ", "AU"]) %>
+  </div>
 
-  <p><%= f.label :school_graduation, "School Graduation" %><br />
-  <%= f.fields_for :school_graduation do |graduation_form| %>
-  <%= graduation_form.radio_button('enabled', false, checked: !@user.school_graduation) %><%= f.label(:school_graduation_enabled_false, "Unspecified (Not considered eligible for IOI)") %> <br />
-  <%= graduation_form.radio_button('enabled', true, checked: !!@user.school_graduation) %><%= select_month(@user.school_graduation || 12, {prefix: 'user[school_graduation]'}, class: :radio_input) %><%= select_year(@user.school_graduation || Date.today, {start_year: [Date.today.year-50,@user.school_graduation.try(:year) || Date.today.year].min, end_year: Date.today.year+18, prefix: 'user[school_graduation]'}, class: :radio_input) %>
-  <% end %></p>
+  <div class="field">
+    <h3><%= f.label :school_graduation, "School Graduation (NZ Only)" %></h3>
+    <p>If you attend a primary, intermediate, or secondary school (or equivalent) in New Zealand then we ask that you please enter your estimated graduation date (the month and year you expect to finish secondary school by). You can update this later if it changes. Our website uses your graduation date to calculate your eligibility to:</p>
+    <ul>
+      <li>Compete <i>officially</i> in the New Zealand Informatics Competition (NZIC).</li>
+      <li>Potentially be invited to a programming camp run by the New Zealand Olympiad in Informatics (NZOI).</li>
+    </ul>
+    <p>Also note that:</p>
+    <ul>
+      <li>Anyone is welcome to create an account and use our site without specifying a graduation date.</li>
+      <li>Anyone can compete in the NZIC unofficially without specifying a graduation date. However, you will not be ranked on official scoreboards or be eligible to be invited to our programming camps.</li>
+      <li>Only New Zealand citizens or permanent residents that have attended camp will be considered to represent New Zealand at the International Olympiad in Informatics.</li>
+    </ul>
+    <p><b>Please select approximate secondary school graduation date or leave unspecified:</b></p>
+    <%= f.fields_for :school_graduation do |graduation_form| %>
+      <%= graduation_form.radio_button('enabled', false, checked: !@user.school_graduation) %><%= f.label(:school_graduation_enabled_false, "Unspecified") %> <br />
+      <%= graduation_form.radio_button('enabled', true, checked: !!@user.school_graduation) %><%= select_month(@user.school_graduation || 12, {prefix: 'user[school_graduation]'}, class: :radio_input) %><%= select_year(@user.school_graduation || Date.today, {start_year: [Date.today.year-50,@user.school_graduation.try(:year) || Date.today.year].min, end_year: Date.today.year+18, prefix: 'user[school_graduation]'}, class: :radio_input) %>
+    <% end %>
+  </div>
 
-  <p><%= f.label :school %><br />
-  <%= f.fields_for :school, @user.school do |school_form| %>
-    <%= school_form.text_field :name, class: [:school_select, :jsnodisplay] %>
-    <%= f.select :school_id, School.where(country_code: "NZ").order(:name).collect {|s| [s.name, s.id]}, { include_blank: true }, class: [:school_select, :jsdisplay], disabled: true %>, 
-    <%= school_form.country_select(:country_code, only: ["NZ"] ) %><br />
-    <a class="school_select togglelink jsnodisplay" data-toggle="school_select" href="javascript:void(0)">Select school from list</a>
-    <a class="school_select togglelink jsdisplay" data-toggle="school_select" href="javascript:void(0)">Add new school</a>
-  <% end %>
-  </p>
+  <div class="field">
+    <h3><%= f.label :school, "School (NZ Only)" %></h3>
+    <%= f.fields_for :school, @user.school do |school_form| %>
+      <%= school_form.text_field :name, class: [:school_select, :jsnodisplay] %>
+      <%= f.select :school_id, School.where(country_code: "NZ").order(:name).collect {|s| [s.name, s.id]}, { include_blank: true }, class: [:school_select, :jsdisplay], disabled: true %><br />
+      <a class="school_select togglelink jsnodisplay" data-toggle="school_select" href="javascript:void(0)">Select school from list</a>
+      <a class="school_select togglelink jsdisplay" data-toggle="school_select" href="javascript:void(0)">Add new school</a>
+    <% end %>
+  </div>
 
-  <p>
+  <div class="actions">
+    <h3>Submit</h3>
     <%= recaptcha_tags :site_key => @db_settings["recaptcha/public_key"] if @db_settings["recaptcha/public_key"] && !@db_settings["recaptcha/public_key"].empty? %>
-  </p>
-  <p><%= f.submit "Sign up" %></p>
+    <%= f.submit "Sign up" %>
+  </div>
 <% end %>
 
 <%= render :partial => "devise/shared/links" %>
