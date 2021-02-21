@@ -139,8 +139,30 @@ $(document).ready(function() {
     
   });
 
+  function on_country_change() {
+    if ($("#user_country_code option:selected").text() === "New Zealand") {
+      $(".nzonly").show();
+    } else {
+      // reset jsdisplay for "Add new school"
+      $(".jsdisplay").show().prop('disabled', false);
+      $(".jsnodisplay").hide().prop('disabled', true);
+
+      // set defaults for non-NZ users
+      $("#user_school_id").val(''); // select no school
+      $("#user_school_graduation_enabled_false").prop("checked", true); // select unspecified grad date
+
+      $(".nzonly").hide();
+    }
+  }
+
   $(".jsdisplay").show().prop('disabled', false);
   $(".jsnodisplay").hide().prop('disabled', true);
+
+  // Hide the school fields if not from NZ, on user edit and registration pages
+  if ($("#user_country_code").length) {
+    on_country_change();
+    $("#user_country_code").on('change', on_country_change);
+  }
 
   $(".countdown").each(function() {
     var finalDate, format = $(this).data('format');
