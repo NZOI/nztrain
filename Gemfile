@@ -22,7 +22,7 @@ gem 'superfish-rails', '~> 1.6.0'
 gem 'forem', github: 'radar/forem', branch: 'rails4'
 gem 'forem-redcarpet', github: 'NZOI/forem-redcarpet'
 
-gem "nokogiri", '~> 1.10.8'
+gem "nokogiri", '~> 1.11.0'
 gem 'redcarpet'
 #gem 'rmagick', '2.13.2'
 gem 'rmagick'
