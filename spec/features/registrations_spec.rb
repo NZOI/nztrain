@@ -20,7 +20,7 @@ feature 'registration' do
     expect(@user.confirmed?).to be false
     mail.click_link("Confirm")
     visit "/accounts/confirmation?confirmation_token=#{@user.confirmation_token}"
-    @user.reload.confirmed?.should be true # make sure new user account is confirmed
+    expect(@user.reload.confirmed?).to be true # make sure new user account is confirmed
 
     visit '/accounts/sign_in'
     # sign in
@@ -31,10 +31,10 @@ feature 'registration' do
     end
 
     # we should be signed in
-    find('#current_user_username').text.should == 'registration_username'
+    expect(find('#current_user_username').text).to eq('registration_username')
 
     find('#sign_out').click # after signing out,
-    page.should have_selector('#sign_in') # should see a sign_in link
+    expect(page).to have_selector('#sign_in') # should see a sign_in link
 
     find('#sign_in').click
 
@@ -44,6 +44,6 @@ feature 'registration' do
       click_on 'Sign in'
     end
 
-    find('#current_user_username').text.should == 'registration_username' # we should be signed in
+    expect(find('#current_user_username').text).to eq('registration_username') # we should be signed in
   end
 end
