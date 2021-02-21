@@ -61,7 +61,7 @@ gem 'backup'
 
 # Redis and Background Processing
 gem 'redis', '< 4.0'
-gem 'rake', '< 11.0' # pinned to avoid last_comment issue
+gem 'rake', '< 13.0' # pinned to avoid last_comment issue
 gem 'qless'#, :github => 'ronalchn/qless', :branch => 'nztrain'
 gem 'connection_pool'
 gem 'sinatra'
