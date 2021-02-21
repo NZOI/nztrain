@@ -168,7 +168,7 @@ GEM
     friendly_id (5.0.5)
       activerecord (>= 4.0.0)
     gemoji (2.1.0)
-    geocoder (1.4.5)
+    geocoder (1.6.1)
     has_scope (0.6.0)
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
