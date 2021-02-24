@@ -4,7 +4,15 @@
   <% if !@contest.started? && !@contest.start_time.nil? %>
     window.setTimeout("window.location.reload(true);", <%= ((@contest.start_time-Time.now())*1000).round %>);
   <% elsif @contest.is_running? # contest currently running!!! %>
-    window.setTimeout("window.location.reload(true);", 60000);
+    function refreshScoreboard() {
+      $.get("_scoreboard_only", function( data ) {
+        $("#scoreboard_table").parent().html(data);
+      })
+    }
+
+    $(window).on('load', function() {  // Ensures this is run once and not each time the scoreboard refreshes
+      setInterval(refreshScoreboard, 60000);
+    });
   <% end %>
   //-->
   </script>
@@ -14,7 +22,7 @@
 <% else %>
   <h2><%= @contest.finalized? ? "Final Results" : "Preliminary Results" %></h2>
 
-  <table class="main_table" >
+  <table class="main_table" id="scoreboard_table">
     <thead>
       <tr>
         <th style="min-width: 25%;"> User </th>

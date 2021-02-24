@@ -73,6 +73,16 @@ class ContestsController < ApplicationController
     render :layout => 'contest'
   end
 
+  def _scoreboard_only
+    @contest = Contest.find(params[:id])
+    authorize @contest, :scoreboard?
+    @problems = @contest.problem_set.problems
+    @weighting = Hash[@contest.problem_associations.pluck(:problem_id, :weighting)]
+    @scoreboard = @contest.scoreboard
+
+    render :scoreboard, :layout => false
+  end
+
   def scoreboard
     @contest = Contest.find(params[:id])
     authorize @contest, :scoreboard?
