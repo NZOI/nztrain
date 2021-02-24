@@ -5,7 +5,7 @@
     window.setTimeout("window.location.reload(true);", <%= ((@contest.start_time-Time.now())*1000).round %>);
   <% elsif @contest.is_running? # contest currently running!!! %>
     function refreshScoreboard() {
-      $.get("_scoreboard_only", function( data ) {
+      $.get("_scoreboard_partial", function( data ) {
         $("#scoreboard_table").parent().html(data);
       })
     }

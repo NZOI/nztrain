@@ -73,17 +73,7 @@ class ContestsController < ApplicationController
     render :layout => 'contest'
   end
 
-  def _scoreboard_only
-    @contest = Contest.find(params[:id])
-    authorize @contest, :scoreboard?
-    @problems = @contest.problem_set.problems
-    @weighting = Hash[@contest.problem_associations.pluck(:problem_id, :weighting)]
-    @scoreboard = @contest.scoreboard
-
-    render :scoreboard, :layout => false
-  end
-
-  def scoreboard
+  def _scoreboard
     @contest = Contest.find(params[:id])
     authorize @contest, :scoreboard?
     @groups = Group.all
@@ -91,7 +81,17 @@ class ContestsController < ApplicationController
     @weighting = Hash[@contest.problem_associations.pluck(:problem_id, :weighting)]
     @realtimejudging = true # if false, scores only revealed at the end
     @scoreboard = @contest.scoreboard
+  end
 
+  # Responds with just the scoreboard partial, sans layout
+  # Used for live scoreboard refreshing
+  def _scoreboard_partial
+    _scoreboard
+    render :scoreboard, :layout => false
+  end
+
+  def scoreboard
+    _scoreboard
     render :layout => 'contest'
   end
 

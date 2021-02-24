@@ -68,7 +68,7 @@ NZTrain::Application.routes.draw do
     member do
       get 'info'
       get 'scoreboard'
-      get '_scoreboard_only'
+      get '_scoreboard_partial'
       get 'contestants'
       get 'supervisors'
       post 'supervise'
