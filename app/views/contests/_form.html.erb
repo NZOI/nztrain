@@ -29,11 +29,18 @@
   </div>
   <div class="field">
     <%= f.label :duration %><br />
-    <%= f.text_field :duration %>
+    <%= f.text_field :duration %> hours
   </div>
   <div class="field">
     <%= f.label :observation %><br />
-    <%= f.select :observation, Contest::OBSERVATION.entries.invert %>
+    <%= f.select :observation, Contest::OBSERVATION.entries.invert %><br />
+    Users can only join a contest if they have been added manually, or belong to a group with access to the contest.
+    <ul>
+      <li>Public: Anyone can see the contest.</li>
+      <li>Protected: Only those who can join the contest can see the contest.</li>
+      <li>Private: Currently this is the same as "Protected", but this may be changed in future.</li>
+    </ul>
+
   </div>
   <div class="field">
     <%= f.label :startcode %><br />
@@ -46,7 +53,14 @@
     <% else %>
       <%= handle(@contest.owner) %>
     <% end %>
-
+  </div>
+  <div class="field">
+    <%= f.check_box :live_scoreboard %>
+    <%= f.label :live_scoreboard %> - Show the scoreboard during the contest. If unchecked, users can only see their own score until the end of the contest.
+  </div>
+  <div class="field">
+    <%= f.check_box :only_rank_official_contestants %>
+    <%= f.label :only_rank_official_contestants %> - Exclude contestants from ranking calculation if they are not enrolled in a NZ school. Users will have an option to show or hide unofficial contestants when they view the scoreboard.
   </div>
   <div class="actions">
     <%= f.submit %>
