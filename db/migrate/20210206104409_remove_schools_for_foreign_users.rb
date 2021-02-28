@@ -3,7 +3,7 @@ class RemoveSchoolsForForeignUsers < ActiveRecord::Migration
     User.find_each do |user|
       if user.country_code != "NZ" && user.school
         user.school = nil
-        user.save!
+        user.save
       end
     end
   end
