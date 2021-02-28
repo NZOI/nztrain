@@ -2,7 +2,13 @@
   <p><%= @contest_message %></p>
 <% end %>
 
-<p>
+<% if policy(@contest).update? %>
+  <p>
+    <b> Problem set: </b>
+    <%= link_to @contest.problem_set.name, @contest.problem_set %>
+  </p>
+<% end %>
+
 <table class="main_table" >
   <thead>
     <tr>
@@ -23,10 +29,9 @@
         <% if @contest.has_competitor?(current_user) %>
           <td><%= progress_bar(@contest.problem_score(current_user, problem), problem_association.weighting) %></td>
         <% end %>
-        <td><%= @contest.num_solved(problem) %></td>
+        <td><%= (@contest.live_scoreboard || @contest.ended? || policy(@contest).inspect?) ? @contest.num_solved(problem) : "?" %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
-</p>
 

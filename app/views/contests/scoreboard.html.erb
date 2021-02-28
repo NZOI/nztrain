@@ -9,17 +9,27 @@
   //-->
   </script>
 <% end %>
+<% show_scoreboard = @contest.live_scoreboard || @contest.ended? || policy(@contest).inspect? %>
 <% if !@contest.started? %>
   <em>The contest has not started yet.</em>
+<% elsif !(show_scoreboard || (user_signed_in? && @contest.has_competitor?(current_user))) %>
+  <em>The scoreboard is hidden until the end of the contest.</em>
 <% else %>
+  <% if @contest.only_rank_official_contestants && show_scoreboard %>
+    <div style="float:right">
+      <input type="checkbox" id="show_unofficial" onclick="toggle_unofficial()">
+      <label for="show_unofficial">Show Unofficial Contestants</label>
+    </div>
+  <% end %>
   <h2><%= @contest.finalized? ? "Final Results" : "Preliminary Results" %></h2>
-
-  <table class="main_table" >
+  <table class="main_table">
     <thead>
       <tr>
-        <th style="min-width: 25%;"> User </th>
+        <th style="width:1%; text-align: right"> # </th>
+        <th style="width:1%"></th>
+        <th>Username</th>
         <% @contest.problem_set.problems.each_with_index do |problem, prob_num|%>
-          <th style="min-width: 6em;">
+          <th >
             <% if policy(@contest).show_details? %>
               <%= link_to problem.name, problem_path(problem) %>
             <% else %>
@@ -29,20 +39,28 @@
             (<%= @weighting[problem.id] %>)
           </th>
         <% end %>
-        <th style="text-align: right"> Score </th>
-        <th> Time </th>
-        <th> Rank </th>
+        <th style="width:1%; text-align: right"> Score </th>
+        <th style="width:1%"> Time </th>
       </tr>
     </thead>
     <tbody>
-      <% median = @scoreboard[@scoreboard.length/2-1] %>
-      <% rank = 1 %>
-      <% previous_record = @scoreboard.first %>
-      <% @scoreboard.each_with_index do |record,index| %>
-        <% if !user_signed_in? or record.user && record.user.id != current_user.id && !policy(@contest).inspect? %>
-          <% next if record.score < median.score || (record.score == median.score && record.time_taken > median.time_taken) # no permission to view %>
-        <% end %>
-        <tr <% if user_signed_in? && record.user && record.user.id == current_user.id %> class="emphasized"<% end %>>
+      <% num_ranked = 0 %>
+      <% rank = nil %>
+      <% previous_record = nil %>
+      <% @scoreboard.each do |record| %>
+        <% is_record_of_current_user = user_signed_in? && record.user && record.user.id == current_user.id %>
+        <% next unless show_scoreboard || is_record_of_current_user # hide row unless permitted to view %>
+        <% is_ranked = !@contest.only_rank_official_contestants || (record.school && record.school_year) %>
+        <tr class="<% if is_record_of_current_user %>current-user emphasized<% end %><% if !is_ranked %> unofficial<% end %>">
+          <% if is_ranked %>
+            <% num_ranked += 1 %>
+            <% rank = num_ranked unless previous_record && previous_record.score == record.score && previous_record.time_taken == record.time_taken %>
+            <% previous_record = record %>
+          <% end %>
+          <td style="text-align: right"> <%= rank if is_ranked && show_scoreboard %> </td>
+          <td style="padding-left: 0; padding-right: 0;">
+            <%= flag_list(24){ flag(record.country_code.downcase, record.country_name, title: true) } if record.country_code %>
+          </td>
           <td>
             <% if record.user %>
               <%= link_to handle(record.user), record.user %>
@@ -52,7 +70,7 @@
           </td>
           <% link_to_submissions = user_signed_in? && record.user && (record.user.id == current_user.id || current_user.is_admin?) %>
           <% @problems.each do |prob|%>
-            <td style="min-width: 5em;">
+            <td>
               <span style="float: left; width: 2em; text-align: right;">
                 <%= record["score_#{prob.id}"].nil? ? "-":link_to_if(link_to_submissions, record["score_#{prob.id}"], submission_path(record["sub_#{prob.id}"])) %>
               </span>
@@ -66,11 +84,25 @@
           <% end %>
           <td style="text-align: right"> <%= record.score %> </td>
           <td> <%= format("%d:%02d:%02d",record.time_taken.to_i/3600,record.time_taken.to_i/60%60,record.time_taken.to_i%60) %> </td>
-          <% rank = index + 1 unless previous_record.score == record.score and previous_record.time_taken == record.time_taken %>
-          <% previous_record = record %>
-          <td align="right"> <%= rank %> </td>
         </tr>
       <% end %>
     </tbody>
   </table>
+<% end %>
+<% if @contest.only_rank_official_contestants %>
+  <script>
+    function toggle_unofficial() {
+      var show_unofficial_contestants = document.getElementById("show_unofficial").checked;
+      var unofficial = document.getElementsByClassName("unofficial");
+      for (let row of unofficial) {
+        if (row.classList.contains("current-user")) continue;  // always show current user
+        // row.style.visibility = show_unofficial_contestants ? "visible" : "collapse";  // has issues on safari
+        row.style.display = show_unofficial_contestants ? "table-row" : "none";  // can cause column widths to change
+      }
+      localStorage.setItem("show_unofficial", JSON.stringify(show_unofficial_contestants));
+    }
+
+    document.getElementById("show_unofficial").checked = JSON.parse(localStorage.getItem("show_unofficial"));
+    toggle_unofficial();  // run on page load to match checkbox state
+  </script>
 <% end %>

@@ -1,7 +1,7 @@
 class ContestsController < ApplicationController
   def permitted_params
     @_permitted_params ||= begin
-      permitted_attributes = [:name, :start_time, :end_time, :duration, :problem_set_id, :startcode, :observation]
+      permitted_attributes = [:name, :start_time, :end_time, :duration, :problem_set_id, :startcode, :observation, :live_scoreboard, :only_rank_official_contestants]
       permitted_attributes << :owner_id if policy(@contest || Contest).transfer?
       params.require(:contest).permit(*permitted_attributes)
     end
@@ -49,7 +49,7 @@ class ContestsController < ApplicationController
   def show
     @contest = Contest.find(params[:id])
     if !policy(@contest).overview?
-      redirect_to info_contest_path(@contest)
+      redirect_to scoreboard_contest_path(@contest)
       return
     end
     @problem_associations = @contest.problem_set.problem_associations.includes(:problem)

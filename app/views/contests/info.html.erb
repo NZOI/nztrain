@@ -16,5 +16,11 @@
 <h2>Contest Settings</h2>
 <b>Mode: </b>Closed book (you cannot access other problems on the site while competing)<br>
 <b>Judge feedback: </b>Real-time<br>
-<b>Scoreboard: </b>Live<br>
+<b>Scoreboard: </b>
+<% if @contest.live_scoreboard %>
+  Live
+<% else %>
+  Hidden (you can only see your own score until the end of the contest)
+<% end %>
+<br>
 
