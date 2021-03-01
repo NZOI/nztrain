@@ -26,8 +26,9 @@
   <body>
     <div id="side">
       <div id="side-container">
-        <div id="side-minify">&#9664;</div>
-        <div id="side-expanded">
+        <% @expanded = (cookies[:expanded] == 'true' || cookies[:expanded].blank?) %>
+        <div id="side-minify"><%= @expanded?"\u25C0":"\u25B6"%></div>
+        <div id="side-expanded" <%= @expanded? 'opacity=1':'opacity=0' %>>
           <div id="side-logo">
              <%= image_tag("logo.svg") %>
           </div>
