@@ -344,7 +344,7 @@ class ContestsController < ApplicationController
 
   def export
     @contest = Contest.find(params[:id])
-    authorize @contest, :update?
+    authorize @contest, :export?
     name = @contest.name.gsub(/[\W]/,"")
     name = "contest" if name.empty?
     filename = name + ".zip"
