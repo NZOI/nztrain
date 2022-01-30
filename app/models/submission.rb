@@ -201,7 +201,7 @@ class Submission < ActiveRecord::Base
 
   def to_xml(opts={})
     # hiding e.g. judge log
-    opts[:only] ||= [:id, :source, :score, :user_id, :problem_id, :created_at, :updated_at, :input, :output, :language_id, :judged_at, :evaluation, :points, :maximum_points]
+    opts[:only] ||= [:id, :source, :score, :user_id, :problem_id, :created_at, :updated_at, :input, :output, :language_id, :judged_at, :evaluation]
 
     super(opts)
   end
