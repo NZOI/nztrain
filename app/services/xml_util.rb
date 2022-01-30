@@ -1,6 +1,8 @@
 module XmlUtil
   def self.serialize_id_list builder, name, docs
-    builder.tag!(name, 'count' => docs.count) do
+    array_type = ActiveSupport::XmlMini::TYPE_NAMES['Array']
+
+    builder.tag!(name, 'count' => docs.count, 'type' => array_type) do
       docs.each do |doc|
         ActiveSupport::XmlMini.to_tag(
           'id',
