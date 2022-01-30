@@ -41,6 +41,8 @@ class ProblemSet < ActiveRecord::Base
     opts[:only] ||= [:id, :name, :owner_id, :created_at, :updated_at]
 
     super(opts) do |xml|
+      XmlUtil.serialize_id_list xml, 'contests', contests
+      XmlUtil.serialize_id_list xml, 'groups', groups
       XmlUtil.serialize_id_list xml, 'problems', problems
     end
   end
