@@ -119,8 +119,10 @@ class Problem < ActiveRecord::Base
       XmlUtil.serialize_id_list xml, 'problem-sets', problem_sets
 
       XmlUtil.serialize_list xml, 'sample-cases', sample_cases do |sample|
-        XmlUtil.tag xml, 'input', sample.input
-        XmlUtil.tag xml, 'output', sample.output
+        xml.tag! 'sample-case' do
+          XmlUtil.tag xml, 'input', sample.input
+          XmlUtil.tag xml, 'output', sample.output
+        end
       end
 
       # TODO: Possibly nice to include submission ids here if user is an admin?
