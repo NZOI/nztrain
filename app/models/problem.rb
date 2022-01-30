@@ -110,10 +110,18 @@ class Problem < ActiveRecord::Base
   end
 
   def to_xml(opts={})
+    # hide e.g. test submission stats
+    opts[:only] ||= [:id, :name, :statement, :input, :output, :memory_limit, :time_limit, :owner_id, :created_at, :updated_at]
+
     super(opts) do |xml|
       XmlUtil.serialize_id_list xml, 'contests', contests
       XmlUtil.serialize_id_list xml, 'groups', groups
       XmlUtil.serialize_id_list xml, 'problem-sets', problem_sets
+
+      XmlUtil.serialize_list xml, 'sample-cases', sample_cases do |sample|
+        XmlUtil.tag xml, 'input', sample.input
+        XmlUtil.tag xml, 'output', sample.output
+      end
 
       # TODO: Possibly nice to include submission ids here if user is an admin?
     end
