@@ -54,5 +54,30 @@ class Group < ActiveRecord::Base
   def invite!(user, current_user)
     Request.create(:requester => current_user, :subject => self, :verb => :invite, :target => user, :requestee => user)
   end
+
+  def to_xml(opts={})
+    # No sensitive data
+    super(opts) do |xml|
+      xml.contests 'count' => contests.count do
+        contests.each do |contest|
+          ActiveSupport::XmlMini.to_tag(
+            'id',
+            contest.id,
+            {:builder => xml},
+          )
+        end
+      end
+
+      xml.problem_sets 'count' => problem_sets.count do
+        problem_sets.each do |problem_set|
+          ActiveSupport::XmlMini.to_tag(
+            'id',
+            problem_set.id,
+            {:builder => xml},
+          )
+        end
+      end
+    end
+  end
 end
 

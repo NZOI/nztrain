@@ -43,7 +43,11 @@ class ProblemSet < ActiveRecord::Base
     super(opts) do |xml|
       xml.problems do
         problems.each do |problem|
-          xml.tag!('id', problem.id, :type => ActiveSupport::XmlMini::TYPE_NAMES[problem.id.class.name])
+          ActiveSuppoprt::XmlMini.to_tag(
+            'id',
+            problem.id,
+            {:builder => xml},
+          )
         end
       end
     end

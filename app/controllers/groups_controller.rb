@@ -59,7 +59,10 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
     if policy(@group).access?
       @problem_set_associations = @group.problem_set_associations
-      render :layout => "group"
+      respond_to do |format|
+        format.html { render :layout => "group" }
+        format.xml { render :xml => @group }
+      end
     else
       redirect_to info_group_path(@group)
     end
@@ -73,8 +76,8 @@ class GroupsController < ApplicationController
       format.html { render :layout => "group" }
     end
   end
-  
-  def info 
+
+  def info
     @group = Group.find(params[:id])
     authorize @group, :show?
     respond_to do |format|
