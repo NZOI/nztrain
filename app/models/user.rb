@@ -173,6 +173,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def solved_problems
+    self.user_problem_relations.where(ranked_score: 100).joins(:problem).select([:problem_id, :ranked_submission_id, {problem: :name}]).order("problems.name")
+  end
+
   def estimated_year_level(on_this_date = DateTime.now)
     if school_graduation.nil? || school_graduation <= on_this_date
       nil
@@ -187,4 +191,25 @@ class User < ActiveRecord::Base
     end
   end
 
+  def to_xml(opts={})
+    default_fields = [:id, :created_at, :updated_at, :brownie_points, :username, :avatar]
+    if opts[:user] then
+      if Pundit.policy(opts[:user], self).inspect? then
+        default_fields.append(:email)
+        default_fields.append(:name)
+      end
+    end
+    opts[:only] ||= default_fields
+
+    super(opts) do |xml|
+      if opts[:user] then
+        if Pundit.policy(opts[:user], self).inspect? then
+          XmlUtil.serialize_id_list xml, 'groups', groups
+          XmlUtil.serialize_list xml, 'solved-problems', solved_problems do |association|
+            XmlUtil.tag xml, 'id', association.problem_id
+          end
+        end
+      end
+    end
+  end
 end
