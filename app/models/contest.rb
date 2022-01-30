@@ -117,7 +117,7 @@ class Contest < ActiveRecord::Base
     return "Running" if is_running?
     return finalized? ? "Finalized" : "Preliminary"
   end
-  
+
   def status_text(user_id)
     return "The contest has ended." if ended?
 
@@ -166,4 +166,37 @@ class Contest < ActiveRecord::Base
     (duration*3600).to_i
   end
 
+  def to_xml(opts={})
+    super(opts) do |xml|
+
+      if opts[:user] then
+        policy = Pundit.policy(opts[:user], self)
+
+        has_contestants = policy.contestants?
+        has_scoreboard = policy.scoreboard?
+
+        if policy.contestants? then
+          XmlUtil.serialize_id_list xml, 'contestants', contestants
+        end
+
+        if policy.scoreboard? then
+          # TODO: Include scoreboard info
+
+          XmlUtil.serialize_list xml, 'problems', problem_set.problems do |problem|
+            association = problem_associations.find {|i| i.problem_id == problem.id}
+            xml.id(
+              problem.id,
+              'type' => ActiveSupport::XmlMini::TYPE_NAMES[association.weighting.class.name],
+              'weighting' => association.weighting,
+            )
+          end
+        end
+
+        if policy.manage? then
+          XmlUtil.serialize_id_list xml, 'groups', groups
+          XmlUtil.serialize_id_list xml, 'registrants', registrants
+        end
+      end
+    end
+  end
 end
