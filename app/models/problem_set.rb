@@ -36,4 +36,16 @@ class ProblemSet < ActiveRecord::Base
   def total_weighting
     problem_associations.sum(:weighting)
   end
+
+  def to_xml(opts={})
+    opts[:only] ||= [:id, :name, :owner_id, :created_at, :updated_at]
+
+    super(opts) do |xml|
+      xml.problems do
+        problems.each do |problem|
+          xml.tag!('id', problem.id, :type => ActiveSupport::XmlMini::TYPE_NAMES[problem.id.class.name])
+        end
+      end
+    end
+  end
 end
