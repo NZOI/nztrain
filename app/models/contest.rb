@@ -167,8 +167,9 @@ class Contest < ActiveRecord::Base
   end
 
   def to_xml(opts={})
-    super(opts) do |xml|
+    opts[:exclude] ||= [:startcode]
 
+    super(opts) do |xml|
       if opts[:user] then
         policy = Pundit.policy(opts[:user], self)
 
