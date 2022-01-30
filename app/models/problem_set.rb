@@ -41,15 +41,7 @@ class ProblemSet < ActiveRecord::Base
     opts[:only] ||= [:id, :name, :owner_id, :created_at, :updated_at]
 
     super(opts) do |xml|
-      xml.problems do
-        problems.each do |problem|
-          ActiveSuppoprt::XmlMini.to_tag(
-            'id',
-            problem.id,
-            {:builder => xml},
-          )
-        end
-      end
+      XmlUtil.serialize_id_list xml, 'problems', problems
     end
   end
 end

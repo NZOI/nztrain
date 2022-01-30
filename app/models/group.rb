@@ -58,25 +58,8 @@ class Group < ActiveRecord::Base
   def to_xml(opts={})
     # No sensitive data
     super(opts) do |xml|
-      xml.contests 'count' => contests.count do
-        contests.each do |contest|
-          ActiveSupport::XmlMini.to_tag(
-            'id',
-            contest.id,
-            {:builder => xml},
-          )
-        end
-      end
-
-      xml.problem_sets 'count' => problem_sets.count do
-        problem_sets.each do |problem_set|
-          ActiveSupport::XmlMini.to_tag(
-            'id',
-            problem_set.id,
-            {:builder => xml},
-          )
-        end
-      end
+      XmlUtil.serialize_id_list xml, 'contests', contests
+      XmlUtil.serialize_id_list xml, 'problem-sets', problem_sets
     end
   end
 end
