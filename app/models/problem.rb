@@ -72,7 +72,7 @@ class Problem < ActiveRecord::Base
   def get_score(user, from = DateTime.new(1), to = DateTime.now)
     subs = self.submissions.find(:all, :limit => 1, :order => "score DESC", :conditions => ["created_at between ? and ? and user_id = ?", from, to, user])
     scores = subs.map {|s| s.score}
-    return scores.max 
+    return scores.max
   end
 
   def submission_history(user, from = DateTime.new(1), to = DateTime.now)
@@ -107,5 +107,15 @@ class Problem < ActiveRecord::Base
   def weighted_score
     return nil if self.points.nil?
     self.points * self.weighting / self.maximum_points
+  end
+
+  def to_xml(opts={})
+    super(opts) do |xml|
+      XmlUtil.serialize_id_list xml, 'contests', contests
+      XmlUtil.serialize_id_list xml, 'groups', groups
+      XmlUtil.serialize_id_list xml, 'problem-sets', problem_sets
+
+      # TODO: Possibly nice to include submission ids here if user is an admin?
+    end
   end
 end
