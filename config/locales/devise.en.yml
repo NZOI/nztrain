@@ -15,7 +15,7 @@ en:
     failure:
       already_authenticated: 'You are already signed in.'
       unauthenticated: 'You need to sign in or sign up before continuing.'
-      unconfirmed: 'You have to confirm your account before continuing.'
+      unconfirmed: 'You have to confirm your account before continuing. Please contact staff@nzoi.org.nz and we''ll send you the confirmation link.'
       locked: 'Your account is locked.'
       not_found_in_database: 'Invalid email or password.'
       invalid: 'Invalid email or password.'
