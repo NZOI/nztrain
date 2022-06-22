@@ -41,8 +41,9 @@ NZTrain::Application.configure do
   # Disable delivery errors, bad email addresses will be ignored
   # config.action_mailer.raise_delivery_errors = false
 
-  # Mail delivery is currently broken, so as a temporary workaround we save the email to a file and send it manually.
-  config.action_mailer.delivery_method = :file
+  # Mail delivery using SMTP is currently broken, so as a temporary workaround
+  # we send the emails to Discord using a webhook and then email them manually.
+  config.action_mailer.delivery_method = WebhookMailDelivery
 
   # Enable threaded mode
   # config.threadsafe!
