@@ -32,7 +32,7 @@
               <% end %>
             </td>
             <td class="tight" style="text-align: right;padding-left:5px;padding-right:5px;">
-              <% if relation.try(:last_viewed_at) %>
+              <% if policy(@group).inspect? && relation.try(:last_viewed_at) %>
                 (<%= link_to((relation.try(:submissions_count) || 0), :controller => "submissions", :by_user => member, :by_problem => problem) %>)
               <% end %>
             </td>
