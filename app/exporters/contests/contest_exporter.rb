@@ -1,8 +1,7 @@
-require 'base_exporter'
 require 'csv'
 
 module Contests
-  class ContestExporter < Exporters::BaseExporter
+  class ContestExporter < BaseExporter
     include RenderAnywhere
 
     def to_csv(contest, include_unranked_contestants)

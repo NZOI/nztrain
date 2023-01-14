@@ -1,7 +1,5 @@
-require 'base_exporter'
-
 module Problems
-  class TestCaseExporter < Exporters::BaseExporter
+  class TestCaseExporter < BaseExporter
     include RenderAnywhere
     # Problems::TestCaseExporter.export(Problem.find(1), '/home/ronald/sample/sample.zip')
     def export(path, options = {})
