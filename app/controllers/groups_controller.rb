@@ -73,8 +73,8 @@ class GroupsController < ApplicationController
       format.html { render :layout => "group" }
     end
   end
-  
-  def info 
+
+  def info
     @group = Group.find(params[:id])
     authorize @group, :show?
     respond_to do |format|
@@ -84,7 +84,7 @@ class GroupsController < ApplicationController
 
   def scoreboard
     @group = Group.find(params[:id])
-    authorize @group, :inspect?
+    authorize @group, :access?
     @problem_set_associations = @group.problem_set_associations
 
     problem_ids = ProblemSetProblem.where(:problem_set_id => GroupProblemSet.where(:group_id => @group.id).select(:problem_set_id)).select(:problem_id)
