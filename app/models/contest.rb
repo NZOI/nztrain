@@ -98,7 +98,7 @@ class Contest < ActiveRecord::Base
 
   def get_submissions(user_id, problem_id)
     relation = self.contest_relations.where(:user_id => user_id).first
-    Submission.where(:user_id => user_id, :problem_id => problem_id, :created_at => relation.started_at..relation.finish_at)
+    Submission.where(:user_id => user_id, :problem_id => problem_id, :created_at => relation.started_at...relation.finish_at)
   end
 
   def num_solved(problem)
