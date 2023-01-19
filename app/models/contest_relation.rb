@@ -87,6 +87,10 @@ class ContestRelation < ActiveRecord::Base
     end
   end
 
+  def get_submissions(problem_id)
+    Submission.where(:user_id => user.id, :problem_id => problem_id, :created_at => started_at...finish_at)
+  end
+
   def recalculate_contest_scores_and_save
     contest.problem_set.problems.each do |problem|
       ContestScore.find_or_initialize_by_contest_relation_id_and_problem_id(self.id, problem.id).recalculate_and_save
