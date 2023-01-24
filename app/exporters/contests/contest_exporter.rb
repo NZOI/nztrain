@@ -25,7 +25,7 @@ module Contests
 
           display_rank = is_ranked ? rank : nil
 
-          row = [display_rank, record.user&.id, record.user&.name, record.user&.username, is_ranked ? record.user&.school&.name : nil, is_ranked ? record.school_year : nil]
+          row = [display_rank, record.user&.id, record.user&.name, record.user&.username, is_ranked ? record.school&.name : nil, is_ranked ? record.school_year : nil]
           problems.each do |prob|
             row << record["score_#{prob.id}"]
           end
