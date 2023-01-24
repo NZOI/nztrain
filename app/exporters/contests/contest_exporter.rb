@@ -57,14 +57,17 @@ module Contests
       contest.scoreboard.each do |record|
         next if record.user.nil?
         contest.problem_set.problems.each do |prob|
-          submissions += contest.get_submissions(record.user.id, prob.id)
-        end
-      end
-
-      submissions.each do |sub|
-        file.open(File.expand_path("#{sub.id}#{sub.language.extension}", subpath), 'w') do |f|
-          f.write sub.source
-          tempfiles << f
+          chunk = contest.get_submissions(record.user.id, prob.id)
+          chunk.each do |sub|
+            file.open(File.expand_path("#{sub.id}#{sub.language.extension}", subpath), 'w') do |f|
+              f.write sub.source
+              tempfiles << f
+            end
+          end
+          submissions += chunk.as_json(
+            include: {language: {only: :name}},
+            except: [:judge_log, :source],
+          )
         end
       end
 
@@ -79,10 +82,7 @@ module Contests
       end
 
       file.open(File.expand_path('submissions.json', path), 'w') do |f|
-        f.write submissions.to_json(
-          include: {language: {only: :name}},
-          except: [:judge_log, :source],
-        )
+        f.write submissions.to_json
         tempfiles << f
       end
 
