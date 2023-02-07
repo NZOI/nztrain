@@ -19,12 +19,13 @@ jobs:
         ports:
           - "5432:5432"
         env:
-          POSTGRES_DB: rails_test
+          POSTGRES_DB: nztrain_test
           POSTGRES_USER: rails
           POSTGRES_PASSWORD: password
     env:
       RAILS_ENV: test
-      DATABASE_URL: "postgres://rails:password@localhost:5432/rails_test"
+      DATABASE_URL: "postgres://rails:password@localhost:5432/nztrain_test"
+      NZIC_DATABASE_URL: "postgres://rails:password@localhost:5432/nzic_test"
     steps:
       - name: Install libmaxmind
         run: |
@@ -38,9 +39,8 @@ jobs:
         uses: ruby/setup-ruby@ee2113536afb7f793eed4ce60e8d3b26db912da4 # v1.127.0
         with:
           bundler-cache: true
-      # Add or replace database setup steps here
       - name: Set up database schema
-        run: bundle exec rake db:schema:load
+        run: bundle exec rake db:create db:schema:load
       # Add or replace test runners here
       - name: Run tests
         run: bundle exec rspec
