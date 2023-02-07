@@ -14,6 +14,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     services:
+      redis:
+        image: redis:3
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
       postgres:
         image: postgres:11
         ports:
@@ -26,6 +33,7 @@ jobs:
       RAILS_ENV: test
       DATABASE_URL: "postgres://rails:password@127.0.0.1:5432/nztrain_test"
       NZIC_DATABASE_URL: "postgres://rails:password@127.0.0.1:5432/nzic_test"
+      REDIS_HOST: redis
       PGGSSENCMODE: "disable" # Workaround for https://www.postgresql.org/message-id/93f7379b-2e2f-db0c-980e-07ebd5de92ff%40crunchydata.com, remove after upgrading pg > 1.0
     steps:
       - name: Install libmaxmind

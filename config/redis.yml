@@ -1,0 +1,11 @@
+default:
+  host: <%= ENV.fetch("REDIS_HOST, "localhost") %>
+  port: 6379
+  password: ""
+production:
+  db: 0
+development:
+  db: 1
+test:
+  db: 2
+
