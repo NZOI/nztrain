@@ -26,6 +26,11 @@ jobs:
       RAILS_ENV: test
       DATABASE_URL: "postgres://rails:password@localhost:5432/rails_test"
     steps:
+      - name: Install libmaxmind
+        run: |
+          sudo add-apt-repository ppa:maxmind/ppa
+          sudo apt-get update
+          sudo apt-get install -y libmaxminddb0 libmaxminddb-dev mmdb-bin
       - name: Checkout code
         uses: actions/checkout@v3
       # Add or replace dependency steps here
