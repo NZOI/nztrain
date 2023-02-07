@@ -26,6 +26,7 @@ jobs:
       RAILS_ENV: test
       DATABASE_URL: "postgres://rails:password@127.0.0.1:5432/nztrain_test"
       NZIC_DATABASE_URL: "postgres://rails:password@127.0.0.1:5432/nzic_test"
+      PGGSSENCMODE: "disable" # Workaround for https://www.postgresql.org/message-id/93f7379b-2e2f-db0c-980e-07ebd5de92ff%40crunchydata.com, remove after upgrading pg > 1.0
     steps:
       - name: Install libmaxmind
         run: |
