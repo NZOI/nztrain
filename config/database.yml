@@ -7,4 +7,4 @@ test:
   url: <%= ENV["DATABASE_URL"] %>
 
 nzic_test:
-  url: <%+ ENV["NZIC_DATABASE_URL"] %>
+  url: <%= ENV["NZIC_DATABASE_URL"] %>
