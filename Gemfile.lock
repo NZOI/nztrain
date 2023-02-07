@@ -200,6 +200,7 @@ GEM
       ttfunk
     pdfkit (0.8.2)
     pg (0.21.0)
+    pkg-config (1.5.1)
     polyamorous (1.1.0)
       activerecord (>= 3.0)
     prawn (2.2.2)
@@ -249,7 +250,8 @@ GEM
     render_anywhere (0.0.12)
       rails (>= 3.0.7)
     request_store (1.0.8)
-    rmagick (2.16.0)
+    rmagick (5.1.0)
+      pkg-config (~> 1.4)
     rqrcode (0.10.1)
       chunky_png (~> 1.0)
     rspec-collection_matchers (1.1.3)
