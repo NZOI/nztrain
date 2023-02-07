@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 
+bundler_version="<2.4" # must be < 2.4 because Bundler 2.4 requires Ruby >= 2.6 but we use Ruby 2.3.8
+
 bundle version 2>/dev/null || {
   # check if directory where gems are installed is writable
   if [ -w "$(gem environment gemdir)" ]; then
     # don't need sudo (probably user installation e.g. rvm/rbenv, or we could be running as root)
-    cmd="gem install bundler"
+    cmd="gem install bundler -v $bundler_version"
     echo "$ $cmd"
     $cmd || exit 1
   else
     # need to use sudo to install gems (system-wide installation)
-    cmd="sudo gem install bundler"
+    cmd="sudo gem install bundler -v $bundler_version"
     echo "$ $cmd"
     $cmd || exit 1
   fi
