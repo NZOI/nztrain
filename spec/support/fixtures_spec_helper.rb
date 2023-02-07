@@ -3,13 +3,13 @@ module FixturesSpecHelper
 
   def self.initialize
     @@users = {
-      :user => FactoryGirl.create(:user),
-      :organiser => FactoryGirl.create(:organiser),
-      :admin => FactoryGirl.create(:admin),
-      :superadmin => FactoryGirl.create(:superadmin)
+      :user => FactoryBot.create(:user),
+      :organiser => FactoryBot.create(:organiser),
+      :admin => FactoryBot.create(:admin),
+      :superadmin => FactoryBot.create(:superadmin)
     }
-    @@problems = { :problem => FactoryGirl.create(:problem) }
-    @@test_sets = { :test_set => FactoryGirl.create(:test_set, :problem => @@problems[:problem]) }
+    @@problems = { :problem => FactoryBot.create(:problem) }
+    @@test_sets = { :test_set => FactoryBot.create(:test_set, :problem => @@problems[:problem]) }
   end
 
   def self.destroy

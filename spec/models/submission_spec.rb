@@ -4,11 +4,11 @@ describe Submission do
   #pending "add some examples to (or delete) #{__FILE__}"
   context 'on "adding" problem' do
     before(:all) do
-      @user = FactoryGirl.create(:user)
-      @problem = FactoryGirl.create(:adding_problem)
-      @submission = FactoryGirl.create(:adding_submission, :problem => @problem, :user => @user)
-      @char_submission = FactoryGirl.create(:adding_char_submission, :problem => @problem, :user => @user)
-      @unsigned_submission = FactoryGirl.create(:adding_unsigned_submission, :problem => @problem, :user => @user)
+      @user = FactoryBot.create(:user)
+      @problem = FactoryBot.create(:adding_problem)
+      @submission = FactoryBot.create(:adding_submission, :problem => @problem, :user => @user)
+      @char_submission = FactoryBot.create(:adding_char_submission, :problem => @problem, :user => @user)
+      @unsigned_submission = FactoryBot.create(:adding_unsigned_submission, :problem => @problem, :user => @user)
     end
     after(:all) do
       [@user, @problem, @submission, @char_submission, @unsigned_submission].reverse_each { |object| object.destroy }
@@ -20,8 +20,8 @@ describe Submission do
       @submission.evaluation.should == 1
     end
     it 'judges submission on stdio problem' do
-      problem = FactoryGirl.create(:adding_problem_stdio)
-      submission = FactoryGirl.create(:adding_submission_stdio, :problem => problem, :user => @user)
+      problem = FactoryBot.create(:adding_problem_stdio)
+      submission = FactoryBot.create(:adding_submission_stdio, :problem => problem, :user => @user)
       submission.evaluation.should be_nil
       submission.judge
       submission.reload

@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe ContestsController do
   before(:all) do
-    @problem_set = FactoryGirl.create(:problem_set)
-    @contest = FactoryGirl.create(:contest, :problem_set => @problem_set)
+    @problem_set = FactoryBot.create(:problem_set)
+    @contest = FactoryBot.create(:contest, :problem_set => @problem_set)
   end
   after(:all) do
     @contest.destroy
