@@ -8,24 +8,24 @@ describe "Authorization" do
     @organiser = users(:organiser)
     @user = users(:user)
     # various objects to test ability on
-    @member = FactoryGirl.create(:user)
-    @group = FactoryGirl.create(:group, :members => [users(:user), users(:admin), users(:superadmin), @member])
-    @organiser_group = FactoryGirl.create(:group, :owner => users(:organiser), :members => [@member])
-    @private_problem = FactoryGirl.create(:problem)
-    @group_set = FactoryGirl.create(:problem_set, :groups => [@group])
-    @everyone_set = FactoryGirl.create(:problem_set, :group_ids => [0])
-    @group_problem = FactoryGirl.create(:problem, :problem_sets => [@group_set])
-    @user_problem = FactoryGirl.create(:problem, :owner => users(:user))
-    @admin_problem = FactoryGirl.create(:problem, :owner => users(:admin))
-    @everyone_problem = FactoryGirl.create(:problem, :problem_sets => [@everyone_set])
-    @contest_set = FactoryGirl.create(:problem_set)
-    @contest = FactoryGirl.create(:contest, :name => "Contest", :groups => [@group], :problem_set => @contest_set, :duration => 100, :start_time => DateTime.now.advance(:hours => -100), :end_time => DateTime.now.advance(:hours => 100))
-    @contest_problem = FactoryGirl.create(:problem, :problem_sets => [@contest_set])
-    @private_set = FactoryGirl.create(:problem_set)
-    @private_contest = FactoryGirl.create(:contest, :problem_set => @contest_set)
-    @past_contest = FactoryGirl.create(:contest, :groups => [@group], :problem_set => @contest_set, :start_time => DateTime.now.advance(:hours => -100), :end_time => DateTime.now.advance(:hours => -50))
-    @future_contest = FactoryGirl.create(:contest, :groups => [@group], :problem_set => @contest_set, :start_time => DateTime.now.advance(:hours => 100), :end_time => DateTime.now.advance(:hours => 200))
-    @everyone_contest = FactoryGirl.create(:contest, :group_ids => [0], :problem_set => @contest_set, :start_time => DateTime.now.advance(:hours => -100), :end_time => DateTime.now.advance(:hours => 100))
+    @member = FactoryBot.create(:user)
+    @group = FactoryBot.create(:group, :members => [users(:user), users(:admin), users(:superadmin), @member])
+    @organiser_group = FactoryBot.create(:group, :owner => users(:organiser), :members => [@member])
+    @private_problem = FactoryBot.create(:problem)
+    @group_set = FactoryBot.create(:problem_set, :groups => [@group])
+    @everyone_set = FactoryBot.create(:problem_set, :group_ids => [0])
+    @group_problem = FactoryBot.create(:problem, :problem_sets => [@group_set])
+    @user_problem = FactoryBot.create(:problem, :owner => users(:user))
+    @admin_problem = FactoryBot.create(:problem, :owner => users(:admin))
+    @everyone_problem = FactoryBot.create(:problem, :problem_sets => [@everyone_set])
+    @contest_set = FactoryBot.create(:problem_set)
+    @contest = FactoryBot.create(:contest, :name => "Contest", :groups => [@group], :problem_set => @contest_set, :duration => 100, :start_time => DateTime.now.advance(:hours => -100), :end_time => DateTime.now.advance(:hours => 100))
+    @contest_problem = FactoryBot.create(:problem, :problem_sets => [@contest_set])
+    @private_set = FactoryBot.create(:problem_set)
+    @private_contest = FactoryBot.create(:contest, :problem_set => @contest_set)
+    @past_contest = FactoryBot.create(:contest, :groups => [@group], :problem_set => @contest_set, :start_time => DateTime.now.advance(:hours => -100), :end_time => DateTime.now.advance(:hours => -50))
+    @future_contest = FactoryBot.create(:contest, :groups => [@group], :problem_set => @contest_set, :start_time => DateTime.now.advance(:hours => 100), :end_time => DateTime.now.advance(:hours => 200))
+    @everyone_contest = FactoryBot.create(:contest, :group_ids => [0], :problem_set => @contest_set, :start_time => DateTime.now.advance(:hours => -100), :end_time => DateTime.now.advance(:hours => 100))
   end
   after(:all) do
     [@member, @group, @organiser_group, @private_problem, @group_set, @everyone_set, @group_problem, @user_problem, @admin_problem, @everyone_problem, @contest_set, @contest, @contest_problem, @private_set, @private_contest, @past_contest, @future_contest, @everyone_contest].reverse_each { |obj| obj.destroy }
@@ -63,7 +63,7 @@ describe "Authorization" do
     end
     context 'user in contest' do
       before(:all) do
-        @relation = FactoryGirl.create(:contest_relation, :user_id => users(:user).id, :contest_id => @contest.id, :started_at => DateTime.now.advance(:hours => -1))
+        @relation = FactoryBot.create(:contest_relation, :user_id => users(:user).id, :contest_id => @contest.id, :started_at => DateTime.now.advance(:hours => -1))
         @contest_problem.reload
         @contest_user = users(:user).reload
       end
@@ -93,7 +93,7 @@ describe "Authorization" do
     end
     context 'user in contest' do
       before(:all) do
-        @relation = FactoryGirl.create(:contest_relation, :user_id => users(:user).id, :contest_id => @contest.id, :started_at => DateTime.now.advance(:hours => -1))
+        @relation = FactoryBot.create(:contest_relation, :user_id => users(:user).id, :contest_id => @contest.id, :started_at => DateTime.now.advance(:hours => -1))
         @contest_user = users(:user).reload # refresh .competing?
       end
       after(:all) do
