@@ -24,8 +24,8 @@ jobs:
           POSTGRES_PASSWORD: password
     env:
       RAILS_ENV: test
-      DATABASE_URL: "postgres://rails:password@localhost:5432/nztrain_test"
-      NZIC_DATABASE_URL: "postgres://rails:password@localhost:5432/nzic_test"
+      DATABASE_URL: "postgres://rails:password@127.0.0.1:5432/nztrain_test"
+      NZIC_DATABASE_URL: "postgres://rails:password@127.0.0.1:5432/nzic_test"
     steps:
       - name: Install libmaxmind
         run: |
