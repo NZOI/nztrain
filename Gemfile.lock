@@ -402,7 +402,7 @@ DEPENDENCIES
   nokogiri (~> 1.10.8)
   pdf-reader
   pdfkit
-  pg
+  pg (< 1.0)
   prawn
   psych (~> 2.0.2)
   pundit (= 0.2.1)

@@ -49,7 +49,7 @@ gem 'world-flags'
 gem 'jquery-final_countdown-rails'
 gem 'ruby-duration'
 
-gem 'pg'
+gem 'pg', '<1.0'
 gem 'backup'
 
 # Redis and Background Processing
