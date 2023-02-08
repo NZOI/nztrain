@@ -8,15 +8,6 @@ GIT
       redcarpet (~> 3.2.2)
 
 GIT
-  remote: https://github.com/NZOI/nzic_models.git
-  revision: 0afa31e8bb8b045d12951a36032b15a768a3c868
-  specs:
-    nzic_models (0.0.2)
-      loofah
-      rails (~> 4.0)
-      redcarpet
-
-GIT
   remote: https://github.com/mixonic/ranked-model.git
   revision: 5fd725bb07a331e0fb10ba3f1b0bee15dad8a47f
   specs:
@@ -452,7 +443,6 @@ DEPENDENCIES
   mechanize
   newrelic_rpm
   nokogiri (~> 1.10.8)
-  nzic_models!
   pdf-reader
   pdfkit
   pg
