@@ -26,26 +26,3 @@ production:
   username: ${DATABASE_USERNAME}
   password:
 
-nzic_development:
-  adapter: postgresql
-  encoding: unicode
-  database: nzic
-  pool: 5
-  username: ${DATABASE_USERNAME}
-  password:
-
-nzic_test:
-  adapter: postgresql
-  encoding: unicode
-  database: ${TEST_DATABASE}
-  pool: 5
-  username: ${DATABASE_USERNAME}
-
-nzic_production:
-  adapter: postgresql
-  encoding: unicode
-  database: nzic
-  pool: 5
-  username: ${DATABASE_USERNAME}
-  password:
-

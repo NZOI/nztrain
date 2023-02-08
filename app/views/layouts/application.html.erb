@@ -129,14 +129,6 @@
                 <% if current_user && current_user.is_admin? %>
                   <li><a href="#" onClick="return false;">admin</a>
                     <ul>
-                      <% if policy(NZIC::Info).index? %>
-                        <li><a>NZIC</a>
-                          <ul>
-                            <li><a href="<%= main_app.nzic_infos_path %>">info pages</a></li>
-                            <li><a href="<%= main_app.nzic_menu_items_path %>">menu</a></li>
-                          </ul>
-                        </li>
-                      <% end %>
                       <% if policy(Role).index? %><li><a href="<%= main_app.roles_path %>">roles</a></li><% end %>
                       <% if policy(Setting).index? %><li><a href="<%= main_app.settings_path %>">settings</a></li><% end %>
                       <li><a href="<%= main_app.qless_path %>">qless</a></li>

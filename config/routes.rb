@@ -256,16 +256,6 @@ NZTrain::Application.routes.draw do
     end
   end
 
-  get 'nzic/info/*name/edit', to: 'nzic/info#edit', as: :edit_nzic_info
-  namespace :nzic do
-    resources :infos, controller: :info, param: :name, only: [:index, :new, :create]
-    get 'info/*name', to: 'info#show', as: :info
-    patch 'info/*name', to: 'info#update'
-    delete 'info/*name', to: 'info#destroy'
-
-    resources :menu_items
-  end
-
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 

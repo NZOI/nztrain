@@ -3,9 +3,6 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem 'rails', '~> 4.0.0'
 
-gem 'nzic_models', github: 'NZOI/nzic_models'
-#gem 'nzic_models', path: '../../nzic/nzic_models'
-
 gem 'devise', '~> 3.2.2'
 gem 'psych', '~> 2.0.2' # part of stdlib, need newer version for safe_load
 
