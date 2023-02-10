@@ -1,12 +1,4 @@
 NZTrain::Application.routes.draw do
-
-  # This line mounts Forem's routes at /forums by default.
-  # This means, any requests to the /forums URL of your application will go to Forem::ForumsController#index.
-  # If you would like to change where this extension is mounted, simply change the :at option to something different.
-  #
-  # We ask that you don't use the :as option here, as Forem relies on it being the default of "forem"
-  mount Forem::Engine, :at => '/forum'
-
   concern :file_root do |options|
     options ||= {}
     resources :files, options.merge(:except => [:new, :edit]) do
@@ -300,4 +292,6 @@ NZTrain::Application.routes.draw do
 
   # See how all your routes lay out with "rake routes"
 
+  # Legacy routes maintained to avoid routes breaking
+  get "/forum/*anything" => "pages#forum"
 end
