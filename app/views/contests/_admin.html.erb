@@ -16,3 +16,11 @@
 <% end %>
 </ul>
 
+<% if policy(Contest).export? %>
+  <br>
+  <b> Export Contest</b>
+  <%= form_tag( export_contest_path(@contest), :method => :get) do %>
+    <%= submit_tag "Download" %>
+  <% end %>
+<% end %>
+

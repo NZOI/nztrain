@@ -342,4 +342,17 @@ class ContestsController < ApplicationController
     redirect_to contest_path(@contest), :notice => "Contest results unfinalized"
   end
 
+  def export
+    @contest = Contest.find(params[:id])
+    authorize @contest, :export?
+    name = @contest.name.gsub(/[\W]/,"")
+    name = "contest" if name.empty?
+    filename = name + ".zip"
+
+    dir = Dir.mktmpdir("zip-contest-#{@contest.id}-#{current_user.id}-#{Time.now}")
+    zipfile = Contests::ContestExporter.export(@contest, File.expand_path(filename, dir))
+
+    send_file zipfile, :type => 'application/zip', :disposition => 'attachment', :filename => filename
+  end
+
 end

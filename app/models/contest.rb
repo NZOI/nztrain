@@ -96,6 +96,10 @@ class Contest < ActiveRecord::Base
     self.contest_relations.where(:user_id => user_id).first.try(:score)
   end
 
+  def get_submissions(user_id, problem_id)
+    get_relation(user_id).get_submissions(problem_id)
+  end
+
   def num_solved(problem)
     if problem.nil? # gives count per problem
       self.contest_relations.joins(:contest_scores).group(:contest_scores => :problem_id).select(:contest_scores => :problem_id).select("COUNT(*)").select("SUM(attempts)")
