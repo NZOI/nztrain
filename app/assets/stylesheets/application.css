@@ -2,7 +2,6 @@
 *= require jquery.ui.datepicker
 *= require jquery.ui.slider
 *= require scaffold
-*= require pygments
 *= require code
 *= require sample
 *= require jquery.facebox
@@ -15,7 +14,6 @@
 *= require messagebox
 *= require message
 *= require fontello
-*= require forem/base
 *= require forum
 *= require flags/basic
 *= require flags/flags24

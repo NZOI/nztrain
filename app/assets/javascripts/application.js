@@ -11,7 +11,6 @@
 //= require history
 //= require jquery.facebox
 //= require jquery.facebox.adapter
-//= require forem
 //= require_self
 
 
