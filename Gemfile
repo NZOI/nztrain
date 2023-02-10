@@ -8,9 +8,6 @@ gem 'rails', '~> 4.0.0'
 gem 'devise', '~> 3.2.2'
 gem 'psych', '~> 2.0.2' # part of stdlib, need newer version for safe_load
 
-# change back to cookie-based store (encrypted)
-gem 'activerecord-session_store'
-
 gem 'rubyzip', '1.3.0'
 
 gem 'jquery-rails', '~> 3.1.3'
