@@ -2,7 +2,7 @@ require 'spec_helper'
 
 feature 'invitation and join request' do
   scenario 'group owner invites a user, and user accepts invitation to group' do
-    @group = FactoryGirl.create(:group, :owner => users(:organiser), :visibility => Group::VISIBILITY[:private], :membership => Group::MEMBERSHIP[:private])
+    @group = FactoryBot.create(:group, :owner => users(:organiser), :visibility => Group::VISIBILITY[:private], :membership => Group::MEMBERSHIP[:private])
 
     login_as users(:organiser), :scope => :user
     visit invites_members_group_path(@group)
@@ -30,7 +30,7 @@ feature 'invitation and join request' do
   end
 
   scenario 'group member invites a user and cancels the invitation' do
-    @group = FactoryGirl.create(:group, :members => [users(:user)], :visibility => Group::VISIBILITY[:private], :membership => Group::MEMBERSHIP[:invitation])
+    @group = FactoryBot.create(:group, :members => [users(:user)], :visibility => Group::VISIBILITY[:private], :membership => Group::MEMBERSHIP[:invitation])
     
     login_as users(:user), :scope => :user
     visit invites_members_group_path(@group)
@@ -50,7 +50,7 @@ feature 'invitation and join request' do
   end
 
   scenario 'user applies to join group, and group member accepts join request' do
-    @group = FactoryGirl.create(:group, :owner => users(:organiser), :visibility => Group::VISIBILITY[:unlisted], :membership => Group::MEMBERSHIP[:invitation])
+    @group = FactoryBot.create(:group, :owner => users(:organiser), :visibility => Group::VISIBILITY[:unlisted], :membership => Group::MEMBERSHIP[:invitation])
 
     login_as users(:user), :scope => :user
     visit group_path(@group)
@@ -70,7 +70,7 @@ feature 'invitation and join request' do
   end
 
   scenario 'user applies to join group, and group owner rejects join request' do
-    @group = FactoryGirl.create(:group, :owner => users(:organiser), :visibility => Group::VISIBILITY[:public], :membership => Group::MEMBERSHIP[:application])
+    @group = FactoryBot.create(:group, :owner => users(:organiser), :visibility => Group::VISIBILITY[:public], :membership => Group::MEMBERSHIP[:application])
 
     login_as users(:user), :scope => :user
     visit group_path(@group)

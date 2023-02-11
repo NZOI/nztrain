@@ -1,6 +1,6 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
+# Read about factories at https://github.com/thoughtbot/factory_bot
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :evaluator do
     sequence(:name) {|n| "Evaluator #{n}" }
     description "Evaluator description"

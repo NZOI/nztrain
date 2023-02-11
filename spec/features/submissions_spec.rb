@@ -2,8 +2,8 @@ require 'spec_helper'
 
 feature 'submission' do
   scenario 'submit code for a problem' do
-    @problem = FactoryGirl.create(:adding_problem)
-    @problem_set = FactoryGirl.create(:problem_set, :problems => [@problem], :group_ids => [0])
+    @problem = FactoryBot.create(:adding_problem)
+    @problem_set = FactoryBot.create(:problem_set, :problems => [@problem], :group_ids => [0])
     login_as users(:user), :scope => :user
 
     visit submit_problem_path(@problem)

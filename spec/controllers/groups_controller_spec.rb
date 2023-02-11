@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe GroupsController do
   before(:all) do
-    @group = FactoryGirl.create(:group)
+    @group = FactoryBot.create(:group)
   end
   after(:all) do
     @group.destroy

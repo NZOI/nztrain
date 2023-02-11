@@ -1,6 +1,6 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
+# Read about factories at https://github.com/thoughtbot/factory_bot
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :ai_contest_games do
     ai_contest_id 1
     ai_submission_2_id 1

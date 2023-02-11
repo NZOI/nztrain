@@ -3,7 +3,7 @@ require 'spec_helper'
 describe TestCasesController do
   before { pending }
   before(:all) do
-    @test_case = FactoryGirl.create(:test_case, :problem_id => test_sets(:test_set).problem_id)
+    @test_case = FactoryBot.create(:test_case, :problem_id => test_sets(:test_set).problem_id)
     TestCaseRelation.create(:test_set => test_sets(:test_set), :test_case => @test_case)
   end
   after(:all) do
