@@ -61,7 +61,6 @@ gem 'backup'
 
 # Redis and Background Processing
 gem 'redis', '< 4.0'
-gem 'rake', '< 11.0' # pinned to avoid last_comment issue
 gem 'qless'#, :github => 'ronalchn/qless', :branch => 'nztrain'
 gem 'connection_pool'
 gem 'sinatra'
@@ -85,7 +84,7 @@ end
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
 group :development, :test do
-  gem 'rspec-rails', '~> 2.0'
+  gem 'rspec-rails', '~> 3.0'
   gem 'capybara'
   gem 'capybara-email'
 

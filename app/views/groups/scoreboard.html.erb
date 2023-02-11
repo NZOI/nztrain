@@ -26,13 +26,19 @@
             <% problem = problem_association.problem %>
             <% weight = problem_association.weighting %>
             <% relation = @scores[member.id][problem.id] %>
+            <% if policy(@group).inspect? %>
+              <% viewed = relation.try(:last_viewed_at) %>
+            <% else %>
+              <% # pretend the user viewed the problem, to avoid indicating to other group members whether the user viewed it %>
+              <% viewed = true %>
+            <% end %>
             <td class="tight">
-              <% if relation.try(:last_viewed_at) %>
+              <% if viewed %>
                 <%= progress_bar(relation.try(:submission).try(:weighted_score, weight), weight, relation.try(:submission), size: :compact) %>
               <% end %>
             </td>
             <td class="tight" style="text-align: right;padding-left:5px;padding-right:5px;">
-              <% if relation.try(:last_viewed_at) %>
+              <% if policy(@group).inspect? && viewed %>
                 (<%= link_to((relation.try(:submissions_count) || 0), :controller => "submissions", :by_user => member, :by_problem => problem) %>)
               <% end %>
             </td>
