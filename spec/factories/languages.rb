@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :language do
-    name "MyString"
-    compiler "MyString"
-    is_interpreted false
+    name { "MyString" }
+    compiler { "MyString" }
+    is_interpreted { false }
   end
 end

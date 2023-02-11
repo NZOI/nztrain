@@ -3,6 +3,6 @@
 FactoryBot.define do
   factory :setting do
     sequence(:key) {|n| "Setting #{n}" }
-    value "value"
+    value { "value" }
   end
 end

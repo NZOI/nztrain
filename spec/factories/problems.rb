@@ -3,19 +3,19 @@
 FactoryBot.define do
   factory :problem do
     sequence(:name) {|n| "Problem #{n}" }
-    statement "Do nothing"
+    statement { "Do nothing" }
     sequence(:input) {|n| "#{n}.in" }
     sequence(:output) {|n| "#{n}.out"}
-    memory_limit 1
-    time_limit 1
-    owner_id 0
+    memory_limit { 1 }
+    time_limit { 1 }
+    owner_id { 0 }
     factory :adding_problem do
       sequence(:name) {|n| "Adding problem #{n}" }
-      statement "Read two integers from input and output the sum."
-      input "add.in"
-      output "add.out"
-      memory_limit 30
-      time_limit 1
+      statement { "Read two integers from input and output the sum." }
+      input { "add.in" }
+      output { "add.out" }
+      memory_limit { 30 }
+      time_limit { 1 }
       test_cases { [FactoryBot.create(:test_case, :input => "5 9", :output => "14"),
                     FactoryBot.create(:test_case, :input => "100 -50", :output => "50"),
                     FactoryBot.create(:test_case, :input => "1235 942", :output => "2177"),
@@ -29,8 +29,8 @@ FactoryBot.define do
       end
 
       factory :adding_problem_stdio do
-        input nil
-        output nil
+        input { nil }
+        output { nil }
       end
     end
   end
