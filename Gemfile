@@ -24,7 +24,6 @@ gem 'forem-redcarpet', github: 'NZOI/forem-redcarpet'
 
 gem "nokogiri", '~> 1.10.8'
 gem 'redcarpet'
-#gem 'rmagick', '2.13.2'
 gem 'rmagick'
 gem 'carrierwave', '0.9.0'
 gem 'will_paginate'
