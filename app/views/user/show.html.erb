@@ -1,17 +1,20 @@
-<% content_for :title, @user_presenter.username %>
+<% content_for :title, @user.username %>
 <% toolbox_push :edit, edit_user_path(@user) if policy(@user).update? %>
 <% toolbox_push :edit, accounts_settings_edit_path if !policy(@user).update? && @user == current_user %>
 <% toolbox_push :back, :back %>
 
-<div style="float: left; height: 150px;"><%= @user_presenter.avatar %></div>
+<div style="float: left; height: 150px;"><%= avatar(@user) %></div>
 
 <div style="height: 150px; padding: 25px; padding-left: 200px;">
-  <% fields = { :username => "Username", :name => "Real Name", :email => "E-mail"} %>
-  <% @user_presenter.presents *fields.keys do |key, value| %>
-    <b><%= fields[key] %>:</b> <%= value %><br>
+  <b>Username:</b> <%= @user.username %><br>
+
+  <% if policy(@user).inspect? %>
+    <b>Real name:</b> <%= @user.name %><br>
+    <b>Email:</b> <%= @user.email %><br>
   <% end %>
 
   <b>Brownie Points:</b><%= @user.brownie_points %><br>
+
   <% if policy(@user).inspect? %>
     <b>School: </b><%= link_to @user.school.name, @user.school if @user.school %><br>
     <b>School Graduation Date: </b><%= @user.school_graduation %><br>
