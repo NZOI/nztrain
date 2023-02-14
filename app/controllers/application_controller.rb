@@ -34,11 +34,12 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Pundit::NotAuthorizedError do |exception|
-    if !user_signed_in? # not signed in, prompt to sign in
+    is_web_browser = request.accepts.include?(:html) # we only redirect to sign in etc. if the client is a web browser
+    if is_web_browser && !user_signed_in? # not signed in, prompt to sign in
       redirect_to(new_user_session_path, :alert => "Welcome to nztrain. Please log in or sign up to continue.")
-    elsif !current_user.confirmed? # user is unconfirmed
+    elsif is_web_browser && !current_user.confirmed? # user is unconfirmed
       redirect_to edit_user_registration_path + '/email', :notice => "You must confirm your email before using this site. Change your email and/or resend confirmation instructions."
-    else # user signed in and doesn't have permission
+    else
       render '403', status: :forbidden, layout: "scaffold", formats: :html
     end
   end
