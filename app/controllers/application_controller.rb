@@ -48,6 +48,15 @@ class ApplicationController < ActionController::Base
     raise Pundit::NotAuthorizedError
   end
 
+  def content_type=(type)
+    if type == "application/xml" && !current_user&.is_admin?
+      # the XML endpoints expose information that non-admin users should not have access to
+      raise Pundit::NotAuthorizedError
+    else
+      super
+    end
+  end
+
   def check_su_loss
     if user_signed_in? && in_su? # so that a user losing admin status cannot keep using admin privileges if they su-ed into another admin user
       original_user = User.find(session[:su][0])
