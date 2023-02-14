@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
     elsif !current_user.confirmed? # user is unconfirmed
       redirect_to edit_user_registration_path + '/email', :notice => "You must confirm your email before using this site. Change your email and/or resend confirmation instructions."
     else # user signed in and doesn't have permission
-      render '403', :status => :forbidden
+      render '403', status: :forbidden, layout: "scaffold"
     end
   end
 
