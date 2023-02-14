@@ -13,7 +13,6 @@ class ApplicationController < ActionController::Base
   before_filter :update_contest_checkin
   before_filter :read_settings
   before_filter :check_su_loss
-  before_filter :wrong_site
   before_filter :configure_permitted_parameters, if: :devise_controller?
   protect_from_forgery
 
@@ -44,10 +43,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def permission_denied
-    raise Pundit::NotAuthorizedError
-  end
-
   def content_type=(type)
     if type == "application/xml" && !current_user&.is_admin?
       # the XML endpoints expose information that non-admin users should not have access to
@@ -66,15 +61,6 @@ class ApplicationController < ActionController::Base
         redirect_to root_url, :alert => "You lost your su authorization"
       end
     end
-  end
-
-  def check_admin
-    if !current_user.is_admin?
-      redirect("You must be an admin to perform this operation")
-    end
-  end
-
-  def wrong_site
   end
 
   def read_settings
