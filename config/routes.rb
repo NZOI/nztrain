@@ -293,5 +293,5 @@ NZTrain::Application.routes.draw do
   # See how all your routes lay out with "rake routes"
 
   # Legacy routes maintained to avoid routes breaking
-  get "/forum/*anything" => "pages#forum"
+  get "/forum/(*anything)" => "pages#forum"
 end
