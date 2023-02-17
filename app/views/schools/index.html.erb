@@ -1,8 +1,18 @@
 Schools:
 
-<table class="main_table">
+<table class="main_table hoverable">
   <thead>
-    <tr><th>ID</td><th>Name</th><th>Users</th></tr>
+    <tr>
+      <th>ID</td>
+      <th>Name</th>
+      <th>Users</th>
+      <% if policy(School).update? %>
+          <th></th>
+      <% end %>
+      <% if policy(School).destroy? %>
+        <th></th>
+      <% end %>
+    </tr>
   </thead>
   <tbody>
     <% @schools.each do |school| %>
@@ -10,6 +20,12 @@ Schools:
         <td><%= school.id %></td>
         <td><%= link_to school.name, school %></td>
         <td><%= school.users_count %></td>
+        <% if policy(School).update? %>
+          <td><%= link_to 'Edit', edit_school_path(school) if policy(school).update? %></td>
+        <% end %>
+        <% if policy(School).destroy? %>
+          <td><%= link_to 'Destroy', school, :data => { :confirm => 'Are you sure?' }, :method => :delete if policy(school).destroy? %></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>

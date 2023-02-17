@@ -92,7 +92,7 @@ fi
 
 if [[ "${version}" = "stable" ]]; then
   # sets REDIS_VERSION
-  eval $(curl -L "http://download.redis.io/redis-stable/src/version.h" | grep REDIS_VERSION | sed 's/#define *REDIS_VERSION */REDIS_VERSION=/g')
+  eval $(curl -L "http://download.redis.io/redis-stable/src/version.h" | grep -w REDIS_VERSION | sed 's/#define *REDIS_VERSION */REDIS_VERSION=/g')
   version="$REDIS_VERSION"
 fi
 

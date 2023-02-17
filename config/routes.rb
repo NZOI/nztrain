@@ -72,6 +72,8 @@ NZTrain::Application.routes.draw do
       get 'supervisors'
       post 'supervise'
 
+      get 'export'
+
       #get 'start'
       put 'start'
       put 'finalize'
@@ -96,7 +98,7 @@ NZTrain::Application.routes.draw do
 
   resources :submissions, :except => [:new,:create] do
     collection do
-      get '(by_user/:by_user)(/by_problem/:by_problem)', :action => :index, :constraints => {:by_user => /[\d,]+/, :by_problem => /[\d,]+/}
+      get '(by_user/:by_user)(/by_problem/:by_problem)', :action => :index, :constraints => {:by_user => /\d+/, :by_problem => /\d+/}
       get 'my', :to => 'submissions#index', :defaults => { :filter => 'my' }
     end
     member do
@@ -244,7 +246,7 @@ NZTrain::Application.routes.draw do
     end
   end
 
-  resources :schools, only: [:index, :show]
+  resources :schools, only: [:index, :show, :edit, :update, :destroy]
 
   resources :items, only: :index
   resources :item, except: [:index, :create, :new] do
@@ -254,16 +256,6 @@ NZTrain::Application.routes.draw do
       post 'loan'
       post 'return'
     end
-  end
-
-  get 'nzic/info/*name/edit', to: 'nzic/info#edit', as: :edit_nzic_info
-  namespace :nzic do
-    resources :infos, controller: :info, param: :name, only: [:index, :new, :create]
-    get 'info/*name', to: 'info#show', as: :info
-    patch 'info/*name', to: 'info#update'
-    delete 'info/*name', to: 'info#destroy'
-
-    resources :menu_items
   end
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):

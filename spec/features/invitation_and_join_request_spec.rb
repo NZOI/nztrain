@@ -2,7 +2,7 @@ require 'spec_helper'
 
 feature 'invitation and join request' do
   scenario 'group owner invites a user, and user accepts invitation to group' do
-    @group = FactoryGirl.create(:group, :owner => users(:organiser), :visibility => Group::VISIBILITY[:private], :membership => Group::MEMBERSHIP[:private])
+    @group = FactoryBot.create(:group, :owner => users(:organiser), :visibility => Group::VISIBILITY[:private], :membership => Group::MEMBERSHIP[:private])
 
     login_as users(:organiser), :scope => :user
     visit invites_members_group_path(@group)
@@ -15,7 +15,7 @@ feature 'invitation and join request' do
 
     @invitation = @group.invitations.pending.where(:target_id => users(:user)).first
 
-    @group.members.exists?(users(:user)).should be false
+    expect(@group.members.exists?(users(:user))).to be false
 
     login_as users(:user), :scope => :user
     visit accounts_requests_path
@@ -26,11 +26,11 @@ feature 'invitation and join request' do
       end
     end.to change{ @group.invitations.pending.count }.by(-1)
 
-    @group.members.exists?(users(:user)).should be true
+    expect(@group.members.exists?(users(:user))).to be true
   end
 
   scenario 'group member invites a user and cancels the invitation' do
-    @group = FactoryGirl.create(:group, :members => [users(:user)], :visibility => Group::VISIBILITY[:private], :membership => Group::MEMBERSHIP[:invitation])
+    @group = FactoryBot.create(:group, :members => [users(:user)], :visibility => Group::VISIBILITY[:private], :membership => Group::MEMBERSHIP[:invitation])
     
     login_as users(:user), :scope => :user
     visit invites_members_group_path(@group)
@@ -50,7 +50,7 @@ feature 'invitation and join request' do
   end
 
   scenario 'user applies to join group, and group member accepts join request' do
-    @group = FactoryGirl.create(:group, :owner => users(:organiser), :visibility => Group::VISIBILITY[:unlisted], :membership => Group::MEMBERSHIP[:invitation])
+    @group = FactoryBot.create(:group, :owner => users(:organiser), :visibility => Group::VISIBILITY[:unlisted], :membership => Group::MEMBERSHIP[:invitation])
 
     login_as users(:user), :scope => :user
     visit group_path(@group)
@@ -58,7 +58,7 @@ feature 'invitation and join request' do
     apply_link = find :xpath, "//a[@href = '#{apply_group_path(@group)}']"
     expect { apply_link.click }.to change{ @group.join_requests.pending.count }.by(1)
 
-    @group.members.exists?(users(:user)).should be false
+    expect(@group.members.exists?(users(:user))).to be false
     @join_request = @group.join_requests.pending.where(:subject_id => users(:user)).first
 
     login_as users(:organiser)
@@ -66,11 +66,11 @@ feature 'invitation and join request' do
     accept_link = find :xpath, "//a[@href = '#{accept_members_group_path(@group, @join_request)}']"
     expect{ accept_link.click }.to change{ @group.join_requests.pending.count }.by(-1)
 
-    @group.members.exists?(users(:user)).should be true
+    expect(@group.members.exists?(users(:user))).to be true
   end
 
   scenario 'user applies to join group, and group owner rejects join request' do
-    @group = FactoryGirl.create(:group, :owner => users(:organiser), :visibility => Group::VISIBILITY[:public], :membership => Group::MEMBERSHIP[:application])
+    @group = FactoryBot.create(:group, :owner => users(:organiser), :visibility => Group::VISIBILITY[:public], :membership => Group::MEMBERSHIP[:application])
 
     login_as users(:user), :scope => :user
     visit group_path(@group)
@@ -84,6 +84,6 @@ feature 'invitation and join request' do
     reject_link = find :xpath, "//a[@href = '#{reject_members_group_path(@group, @join_request)}']"
     expect{ reject_link.click }.to change{ @group.join_requests.pending.count }.by(-1)
 
-    @group.members.exists?(users(:user)).should be false
+    expect(@group.members.exists?(users(:user))).to be false
   end
 end

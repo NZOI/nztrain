@@ -7,7 +7,7 @@ describe Accounts::PasswordsController do
 
   it "can get password reset form" do
     get :new
-    response.should be_success
+    expect(response).to be_success
   end
 
   it "can send password reset email" do
@@ -21,7 +21,7 @@ describe Accounts::PasswordsController do
 
   context "using password reset token" do
     before(:all) do
-      @resetuser = FactoryGirl.create(:user)
+      @resetuser = FactoryBot.create(:user)
     end
     after(:all) do
       @resetuser.destroy
@@ -36,7 +36,7 @@ describe Accounts::PasswordsController do
 
     it "can edit password" do
       get :edit, :reset_password_token => @reset_token
-      response.should be_success
+      expect(response).to be_success
     end
 
     it "can update password" do

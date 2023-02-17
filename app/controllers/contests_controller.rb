@@ -1,7 +1,7 @@
 class ContestsController < ApplicationController
   def permitted_params
     @_permitted_params ||= begin
-      permitted_attributes = [:name, :start_time, :end_time, :duration, :problem_set_id, :startcode, :observation]
+      permitted_attributes = [:name, :start_time, :end_time, :duration, :problem_set_id, :startcode, :observation, :live_scoreboard, :only_rank_official_contestants]
       permitted_attributes << :owner_id if policy(@contest || Contest).transfer?
       params.require(:contest).permit(*permitted_attributes)
     end
@@ -49,7 +49,7 @@ class ContestsController < ApplicationController
   def show
     @contest = Contest.find(params[:id])
     if !policy(@contest).overview?
-      redirect_to info_contest_path(@contest)
+      redirect_to scoreboard_contest_path(@contest)
       return
     end
     @problem_associations = @contest.problem_set.problem_associations.includes(:problem)
@@ -285,6 +285,19 @@ class ContestsController < ApplicationController
       end
       redirect_to contestants_contest_path(@contest), :notice => "Contest ended for selected students"
     elsif params[:update]
+      if params[:school_id]
+        ContestRelation.transaction do
+          params[:school_id].each do |relation_id, school_id|
+            relation = @contest.contest_relations.find_by_id(relation_id)
+            authorize relation, :update_school?
+            relation.school = School.find_by_id(school_id)
+            if !relation.save
+              redirect_to contestants_contest_path(@contest), :alert => "Could not update school of contestant #{relation.user&.username}."
+              return
+            end
+          end
+        end
+      end
       if params[:extra_time]
         ContestRelation.transaction do
           params[:extra_time].each do |relation_id, extra_time|
@@ -295,10 +308,15 @@ class ContestsController < ApplicationController
               redirect_to contestants_contest_path(@contest), :alert => "The maximum extra time that can be given is #{@contest.max_extra_time}."
               return
             end
-            relation.save
+            if !relation.save
+              redirect_to contestants_contest_path(@contest), :alert => "Could not add extra time to contestant #{relation.user&.username}."
+              return
+            end
           end
         end
-        redirect_to contestants_contest_path(@contest), :notice => "Extra time updated"
+      end
+      if params[:school_id] || params[:extra_time]
+        redirect_to contestants_contest_path(@contest), :notice => "Contestants updated"
       else
         redirect_to contestants_contest_path(@contest), :alert => "Nothing to update."
         return
@@ -322,6 +340,19 @@ class ContestsController < ApplicationController
     @contest.finalized_at = nil
     @contest.save
     redirect_to contest_path(@contest), :notice => "Contest results unfinalized"
+  end
+
+  def export
+    @contest = Contest.find(params[:id])
+    authorize @contest, :export?
+    name = @contest.name.gsub(/[\W]/,"")
+    name = "contest" if name.empty?
+    filename = name + ".zip"
+
+    dir = Dir.mktmpdir("zip-contest-#{@contest.id}-#{current_user.id}-#{Time.now}")
+    zipfile = Contests::ContestExporter.export(@contest, File.expand_path(filename, dir))
+
+    send_file zipfile, :type => 'application/zip', :disposition => 'attachment', :filename => filename
   end
 
 end

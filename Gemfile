@@ -3,9 +3,6 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem 'rails', '~> 4.0.0'
 
-gem 'nzic_models', github: 'NZOI/nzic_models'
-#gem 'nzic_models', path: '../../nzic/nzic_models'
-
 gem 'devise', '~> 3.2.2'
 gem 'psych', '~> 2.0.2' # part of stdlib, need newer version for safe_load
 
@@ -24,7 +21,6 @@ gem 'forem-redcarpet', github: 'NZOI/forem-redcarpet'
 
 gem "nokogiri", '~> 1.10.8'
 gem 'redcarpet'
-#gem 'rmagick', '2.13.2'
 gem 'rmagick'
 gem 'carrierwave', '0.9.0'
 gem 'will_paginate'
@@ -40,7 +36,7 @@ gem 'simple_form', '3.0.1'
 gem 'facebox-rails'
 gem 'strong_presenter', '~> 0.2.2'
 gem 'render_anywhere'
-gem 'pygments.rb', '0.5.4'
+gem 'pygments.rb', '~> 1.1.0'
 gem 'ranked-model', :github => 'mixonic/ranked-model'
 gem 'pdf-reader'
 gem 'mechanize'
@@ -59,7 +55,6 @@ gem 'backup'
 
 # Redis and Background Processing
 gem 'redis', '< 4.0'
-gem 'rake', '< 11.0' # pinned to avoid last_comment issue
 gem 'qless'#, :github => 'ronalchn/qless', :branch => 'nztrain'
 gem 'connection_pool'
 gem 'sinatra'
@@ -83,14 +78,13 @@ end
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
 group :development, :test do
-  gem 'rspec-rails', '~> 2.0'
+  gem 'rspec-rails', '~> 3.0'
   gem 'capybara'
   gem 'capybara-email'
 
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
 
   gem 'byebug'
-  gem 'factory_girl'#, '~> 4.0'
 
   gem 'ruby_parser' # for declarative_authorization
 end

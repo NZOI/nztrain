@@ -1,8 +1,8 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
+# Read about factories at https://github.com/thoughtbot/factory_bot
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :problem_set do
     sequence(:name) {|n| "Problem Set #{n}" }
-    owner_id 0
+    owner_id { 0 }
   end
 end

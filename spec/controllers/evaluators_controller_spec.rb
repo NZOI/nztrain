@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe EvaluatorsController do
   before(:all) do
-    @evaluator = FactoryGirl.create(:evaluator)
+    @evaluator = FactoryBot.create(:evaluator)
   end
   after(:all) do
     @evaluator.destroy

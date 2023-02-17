@@ -31,6 +31,11 @@ class ContestRelation < ActiveRecord::Base
     return "You have been registered, but the contest has not started yet." if !started?
   end
 
+  def country_name
+    country = ISO3166::Country[country_code || 'NZ']
+    country.name
+  end
+
   def start! checkin = true
     return false if started?
     self.checked_in = true
@@ -80,6 +85,10 @@ class ContestRelation < ActiveRecord::Base
       self.time_taken = lastsubmit ? lastsubmit.in_time_zone - self.started_at : 0
       self.save
     end
+  end
+
+  def get_submissions(problem_id)
+    Submission.where(:user_id => user.id, :problem_id => problem_id, :created_at => started_at...finish_at)
   end
 
   def recalculate_contest_scores_and_save

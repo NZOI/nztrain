@@ -59,8 +59,8 @@ module ApplicationHelper
       text = link_to(text,link,{:class => "progress_link", :style => "display: block; width: 100%;"})
     end
     weighting = 100 if weighting.nil?
-    percent = score*100/weighting unless score.nil?
-    if score.nil?
+    percent = score*100/weighting unless score.nil? || weighting == 0
+    if score.nil? || weighting == 0
       colour = "rgb(192,192,192)"
       percent = 0;
     elsif percent <= 50 # make a nice spectrum of colours

@@ -1,18 +1,18 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
+# Read about factories at https://github.com/thoughtbot/factory_bot
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :submission do
-    source "sauce"
+    source { "sauce" }
     language { LanguageGroup.find_by_identifier("c++").current_language }
-    score nil
-    judge_log nil
-    user_id 0
-    problem_id 0
+    score { nil }
+    judge_log { nil }
+    user_id { 0 }
+    problem_id { 0 }
     created_at { Time.now }
     updated_at { created_at }
     factory :adding_submission do
       language { LanguageGroup.find_by_identifier("c++").current_language }
-      source <<sourcecode
+      source { <<sourcecode }
         #include <cstdio>
         using namespace std;
         int main() {
@@ -28,7 +28,7 @@ sourcecode
     end
     factory :adding_submission_stdio do
       language { LanguageGroup.find_by_identifier("c++").current_language }
-      source <<sourcecode
+      source { <<sourcecode }
         #include <cstdio>
         using namespace std;
         int main() {
@@ -42,7 +42,7 @@ sourcecode
     end
     factory :adding_char_submission do
       language { LanguageGroup.find_by_identifier("c++").current_language }
-      source <<sourcecode
+      source { <<sourcecode }
         #include <cstdio>
         using namespace std;
         int main() {
@@ -58,7 +58,7 @@ sourcecode
     end
     factory :adding_unsigned_submission do
       language { LanguageGroup.find_by_identifier("c++").current_language }
-      source <<sourcecode
+      source { <<sourcecode }
         #include <cstdio>
         using namespace std;
         int main() {

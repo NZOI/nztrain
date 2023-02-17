@@ -122,5 +122,9 @@ class ContestPolicy < ApplicationPolicy
 
     manage? or user.is_staff? or current_or_past_contestant?
   end
+
+  def export?
+    user && user.is_admin?
+  end
 end
 
