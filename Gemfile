@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
+ruby '>= 2.3.8', '< 2.4' # must be < 2.4 until we upgrade to Rails >= 4.2.8 (see https://rubyonrails.org/2017/2/21/Rails-4-2-8-has-been-released)
+
 gem 'rails', '~> 4.0.0'
 
 gem 'devise', '~> 3.2.2'
