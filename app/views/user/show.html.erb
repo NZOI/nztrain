@@ -9,11 +9,11 @@
   <b>Username:</b> <%= @user.username %><br>
 
   <% if policy(@user).inspect? %>
-    <b>Real name:</b> <%= @user.name %><br>
+    <b>Real Name:</b> <%= @user.name %><br>
     <b>Email:</b> <%= @user.email %><br>
   <% end %>
 
-  <b>Brownie Points:</b><%= @user.brownie_points %><br>
+  <b>Brownie Points:</b> <%= @user.brownie_points %><br>
 
   <% if policy(@user).inspect? %>
     <b>School: </b><%= link_to @user.school.name, @user.school if @user.school %><br>
