@@ -196,7 +196,7 @@ declare -p ISOLATE_CGROUPS &> /dev/null || while [ -z "$ISOLATE_CGROUPS" ] ; do
   else ISOLATE_CGROUPS=false; fi
 done
 
-declare -p ISOLATE_BRANCH &> /dev/null || ISOLATE_BRANCH=nztrain # no prompt
+declare -p ISOLATE_BRANCH &> /dev/null || ISOLATE_BRANCH=master # no prompt
 
 
 shopt -u nocasematch;
