@@ -16,12 +16,12 @@ rbenv --version &> /dev/null || {
   cmd="sudo apt-get install autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm-dev"
   echo "$ $cmd"
   $cmd || exit 1
-  # as suggested, try installing libgdbm5, if it is not available try with libgdbm3
+  # as suggested, try installing libgdbm6, if it is not available try with libgdbm5
   # (it should have been installed as a dependency of libgdbm-dev anyway)
-  cmd="sudo apt-get install libgdbm5"
+  cmd="sudo apt-get install libgdbm6"
   echo "$ $cmd"
   $cmd || {
-    cmd="sudo apt-get install libgdbm3"
+    cmd="sudo apt-get install libgdbm5"
     echo "$ $cmd"
     $cmd || exit 1
   }
