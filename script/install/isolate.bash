@@ -6,30 +6,22 @@ source `dirname $0`/../install.cfg
 srclocation=/usr/local/src
 
 cd $srclocation
-if [ -d "moe" ]; then
-  cd moe
+if [ -d "isolate" ]; then
+  cd isolate
   done=true
   git pull --force | grep -q -v 'Already up-to-date.' && done=false
   if $done; then
     exit
   fi
 else
-  git clone -b $ISOLATE_BRANCH https://github.com/NZOI/moe-cms moe && cd moe || exit 1
+  git clone -b $ISOLATE_BRANCH https://github.com/ioi/isolate isolate && cd isolate || exit 1
 fi
 
-./configure && make || {
+apt-get install libcap-dev
+
+make install || {
   echo "Failure when configuring or making isolate - aborting"
   cd ..
-  rm -r moe
+  rm -r isolate
   exit 1
 }
-
-chgrp $APP_USER run/bin/isolate && chmod 4750 run/bin/isolate || {
-  echo "Failure to setup isolate permissions - aborting"
-  cd ..
-  rm -r $srclocation/moe
-  exit 1
-}
-
-ln -sf $srclocation/moe/run/bin/isolate /usr/local/bin
-
