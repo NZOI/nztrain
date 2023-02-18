@@ -120,7 +120,7 @@ ruby:
   :lexer: ruby
   :compiled: no
   :interpreted: yes
-  :current: ruby2.2
+  :current: ruby2.7
   :extension: .rb
   :source_filename: program
   :processes: 2 # ruby seems to have an extra process
@@ -128,8 +128,11 @@ ruby:
   :compiler_command: '%{interpreter} -c %{source}'
   :variants:
     ruby2.2:
-      :name: "Ruby 2.2"
+      :name: "Ruby 2.2"  # deprecated
       :interpreter: /usr/bin/ruby2.2
+    ruby2.7:
+      :name: "Ruby 2.7"
+      :interpreter: /usr/bin/ruby2.7
 j:
   :name: J
   :lexer: text

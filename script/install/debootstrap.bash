@@ -17,7 +17,7 @@ do
     esac
 done
 
-SUITE=xenial
+SUITE=focal
 
 
 new_debootstrap=false
@@ -99,11 +99,11 @@ chroot "$ISOLATE_ROOT" apt-get install ruby # Ruby (ruby)
   echo "$chroot_cmd apt-get update"
   chroot "$ISOLATE_ROOT" apt-get update
 
-  echo "$chroot_install ghc-8.8.2"
-  chroot "$ISOLATE_ROOT" apt-get install ghc-8.8.2 # Haskell (ghc)
+  echo "$chroot_install ghc-8.8.4"
+  chroot "$ISOLATE_ROOT" apt-get install ghc-8.8.4 # Haskell (ghc)
 
-  echo "$chroot_cmd update-alternatives --install /usr/bin/ghc ghc /opt/ghc/8.8.2/bin/ghc 75"
-  chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/ghc ghc /opt/ghc/8.8.2/bin/ghc 75
+  echo "$chroot_cmd update-alternatives --install /usr/bin/ghc ghc /opt/ghc/8.8.4/bin/ghc 75"
+  chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/ghc ghc /opt/ghc/8.8.4/bin/ghc 75
 
   # Note: Running ghc requires /proc to be mounted. The isolate command mounts
   # it, but it might not be mounted if running ghc manually in the chroot.
@@ -141,8 +141,8 @@ chroot "$ISOLATE_ROOT" apt-get install openjdk-11-jdk # Java
   chroot "$ISOLATE_ROOT" apt-get install pypy3
 
 
-  echo "$chroot_install ruby2.2"
-  chroot "$ISOLATE_ROOT" apt-get install ruby2.2
+  echo "$chroot_install ruby2.7"
+  chroot "$ISOLATE_ROOT" apt-get install ruby2.7
 
 
   ## INSTALL J
