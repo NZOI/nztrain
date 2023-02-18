@@ -16,9 +16,6 @@ gem 'jquery-ui-rails', '4.0.5'
 gem 'jquery-historyjs', '0.2.3'
 gem 'superfish-rails', '~> 1.6.0'
 
-gem 'forem', github: 'radar/forem', branch: 'rails4'
-gem 'forem-redcarpet', github: 'NZOI/forem-redcarpet'
-
 gem "nokogiri", '~> 1.10.8'
 gem 'redcarpet'
 gem 'rmagick'

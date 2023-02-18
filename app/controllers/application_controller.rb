@@ -1,12 +1,7 @@
 class ApplicationController < ActionController::Base
-
-  def forem_user
-    current_user
-  end
-  helper_method :forem_user
-
   include ApplicationHelper
   include Pundit
+
   layout "scaffold"
 
   before_filter :update_last_seen_at
@@ -15,6 +10,7 @@ class ApplicationController < ActionController::Base
   before_filter :check_su_loss
   before_filter :configure_permitted_parameters, if: :devise_controller?
   after_filter :check_response_content_type
+
   protect_from_forgery
 
   #helper ApplicationHelper

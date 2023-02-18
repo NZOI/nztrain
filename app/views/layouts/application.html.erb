@@ -123,7 +123,6 @@
                         <% if policy(User.new).inspect? %><li><a href="<%= main_app.online_users_path %>">online</a></li><% end %>
                       </ul>
                     </li>
-                    <li><a href="<%= forem.root_path %>">forum</a></li>
                   </ul>
                 </li>
                 <% if current_user && current_user.is_admin? %>
