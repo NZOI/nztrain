@@ -16,7 +16,7 @@ gem 'jquery-ui-rails', '4.0.5'
 gem 'jquery-historyjs', '0.2.3'
 gem 'superfish-rails', '~> 1.6.0'
 
-gem "nokogiri", '~> 1.10.8'
+gem "nokogiri", '~> 1.13.10'
 gem 'redcarpet'
 gem 'rmagick'
 gem 'carrierwave', '0.9.0'
