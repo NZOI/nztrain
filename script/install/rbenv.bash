@@ -29,7 +29,7 @@ rbenv --version &> /dev/null || {
   # rbenv-installer prints some instructions, make it clear what is
   # output from rbenv-installer and what is output from this script.
   echo "script/install/rbenv.bash: running rbenv-installer..."
-  curl -fsSL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash
+  curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
   # ignore exit code because rbenv-installer runs rbenv-doctor, which is fussy and reports spurious errors
   echo "script/install/rbenv.bash: rbenv-installer finished"
   if ! [ -x ~/.rbenv/bin/rbenv ]; then

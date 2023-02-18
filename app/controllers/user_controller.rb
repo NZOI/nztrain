@@ -23,8 +23,6 @@ class UserController < ApplicationController
     authorize @user, :show?
     @solved_problems = @user.user_problem_relations.where(ranked_score: 100).joins(:problem).select([:problem_id, :ranked_submission_id, {problem: :name}]).order("problems.name")
 
-    @user_presenter = UserPresenter.new(@user).permit!(*visible_attributes)
-
     respond_to do |format|
       format.html
       format.xml {render :xml => @user }

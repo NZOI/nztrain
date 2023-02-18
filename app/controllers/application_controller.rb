@@ -8,8 +8,8 @@ class ApplicationController < ActionController::Base
   before_filter :update_contest_checkin
   before_filter :read_settings
   before_filter :check_su_loss
-  before_filter :wrong_site
   before_filter :configure_permitted_parameters, if: :devise_controller?
+  after_filter :check_response_content_type
 
   protect_from_forgery
 
@@ -30,17 +30,33 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Pundit::NotAuthorizedError do |exception|
-    if !user_signed_in? # not signed in, prompt to sign in
+    is_web_browser = request.accepts.include?(:html) # we only redirect to sign in etc. if the client is a web browser
+    if is_web_browser && !user_signed_in? # not signed in, prompt to sign in
       redirect_to(new_user_session_path, :alert => "Welcome to nztrain. Please log in or sign up to continue.")
-    elsif !current_user.confirmed? # user is unconfirmed
+    elsif is_web_browser && !current_user.confirmed? # user is unconfirmed
       redirect_to edit_user_registration_path + '/email', :notice => "You must confirm your email before using this site. Change your email and/or resend confirmation instructions."
-    else # user signed in and doesn't have permission
-      render '403', :status => :forbidden
+    else
+      render '403', status: :forbidden, layout: "scaffold", formats: :html
     end
   end
 
-  def permission_denied
-    raise Pundit::NotAuthorizedError
+  def content_type=(type)
+    if type == "application/xml" && !current_user&.is_admin?
+      # the XML endpoints expose information that non-admin users should not have access to
+      raise Pundit::NotAuthorizedError
+    else
+      super
+    end
+  end
+
+  def check_response_content_type
+    # the #content_type= check above to forbid XML runs fairly early (which is good) but it is slightly fragile
+    # (e.g. it is bypassed if <code>response.content_type=</code> is called directly)
+    # so we also verify the content type of the response after the action completes
+    # example content types that we'd like to match: "application/xml", "application/xml; charset=utf-8", "text/xml"
+    if !response.content_type.nil? && response.content_type.include?("/xml") && !current_user&.is_admin?
+      raise "Assertion failure: content type of response was #{response.content_type.inspect} but XML should be forbidden for non-admins"
+    end
   end
 
   def check_su_loss
@@ -52,15 +68,6 @@ class ApplicationController < ActionController::Base
         redirect_to root_url, :alert => "You lost your su authorization"
       end
     end
-  end
-
-  def check_admin
-    if !current_user.is_admin?
-      redirect("You must be an admin to perform this operation")
-    end
-  end
-
-  def wrong_site
   end
 
   def read_settings
