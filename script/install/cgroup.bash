@@ -5,6 +5,6 @@
 source "`dirname $0`/../install.cfg"
 
 if $ISOLATE_CGROUPS; then
-  apt-get install cgroup-bin libcgroup1
+  apt-get install cgroup-tools libcgroup1
 fi
 
