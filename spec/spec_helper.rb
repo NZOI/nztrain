@@ -62,8 +62,6 @@ RSpec.configure do |config|
   config.include FixturesSpecHelper, :type => :feature # supply fixture variables
   config.include RequestsSpecHelper, :type => :feature # use warden to shortcut login
 
-  config.include MockGeocoderSpecHelper
-
   config.include FixturesSpecHelper, :type => :presenter, file_path: %r{spec/presenters} # supply fixture variables
   config.include ActionView::TestCase::Behavior, :type => :presenter, file_path: %r{spec/presenters}
 end

@@ -35,7 +35,7 @@
 
   <div class="field">
     <h3><%= f.label :country_code, "Country" %></h3>
-    <%= f.country_select(:country_code, selected: @user.country_code || request.location.try(:country_code), priority_countries: ["NZ", "AU"]) %>
+    <%= f.country_select(:country_code, selected: @user.country_code, priority_countries: ["NZ", "AU"]) %>
   </div>
 
   <div class="field nzonly">
