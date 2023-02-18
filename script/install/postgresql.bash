@@ -9,7 +9,14 @@ min_version=8
 psql --version 2>/dev/null | bash script/extract_version.bash | bash script/check_version.bash $min_version || {
   echo PostgreSQL $min_version+ required!
   bash script/confirm.bash 'Install PostgreSQL' && {
-    cmd="sudo apt-get install postgresql"
+
+    # version 12 breaks compatibility with rails < 4.2.5
+    # https://stackoverflow.com/questions/58763542/pginvalidparametervalue-error-invalid-value-for-parameter-client-min-messag
+    sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+    sudo apt-get update
+
+    cmd="sudo apt-get install postgresql-11"
     echo "$ $cmd"
     $cmd
   } || exit 1
