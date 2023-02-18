@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-bundler_version="<2.4" # must be < 2.4 because Bundler 2.4 requires Ruby >= 2.6 but we use Ruby 2.3.8
+bundler_version="~>1.16" # must be < 2.0 because Rails 4.0.13 requires Bundler < 2.0
 
 bundle version 2>/dev/null || {
   # check if directory where gems are installed is writable
