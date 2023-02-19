@@ -153,15 +153,20 @@ javascript:
   :lexer: javascript
   :compiled: no
   :interpreted: yes
-  :current: v8_8
+  :current: v8_11
   :extension: .js
   :source_filename: program
   :interpreter_command: '%{interpreter} %{source}'
   :variants:
     v8_8:
-      :name: "JavaScript (V8 8.1)"
+      :name: "JavaScript (V8 8.1)"  # deprecated
       :interpreter: /usr/local/bin/d8
       :processes: 9
+    v8_11:
+      :name: "JavaScript (V8 11.2)"
+      :interpreter: /usr/local/bin/d8
+      :processes: 12
+
 
 csharp:
   :name: "C#"
