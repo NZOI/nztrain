@@ -222,7 +222,7 @@ EOF
 
     options[:processes] = 1 if options[:processes] == false
     options[:processes] = "" if options[:processes] == true
-    options[:inherit_fds] = "" unless options.delete(:inherit_fds) == false
+    options[:inherit_fds] = "" if options.delete(:inherit_fds) == true
     options.map{ |k,v| "#{RESOURCE_OPTIONS[k]}#{v}" }
   end
 
