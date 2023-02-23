@@ -134,7 +134,7 @@ class JudgeSubmissionWorker < ApplicationWorker
   end
 
   private
-  attr_accessor :problem, :box, :tmpdir
+  attr_accessor :problem, :box, :interactive_boxes, :tmpdir
 
   def time_limit
     problem.time_limit || 0.001
@@ -154,18 +154,22 @@ class JudgeSubmissionWorker < ApplicationWorker
   end
 
   def wall_time
-    time_limit*3+extra_time+5
+    time_limit*2+extra_time+1
   end
 
   def setup_judging
     self.problem = submission.problem
+    self.box = Isolate.new
+    self.interactive_boxes = Array.new(problem.evaluator&.interactive_processes || 0) { Isolate.new }
     Dir.mktmpdir do |tmpdir|
       self.tmpdir = tmpdir
-      Isolate.box do |box|
-        self.box = box
-        yield
-      end or raise Isolate::LockError, "Error locking box"
+      yield
     end
+  ensure
+    box.send(:destroy) if !box.nil?
+    interactive_boxes.each do |box|
+      box.send(:destroy) if !box.nil?
+    end if !interactive_boxes.nil?
   end
 
   def compile!(source, language, output)
@@ -177,15 +181,19 @@ class JudgeSubmissionWorker < ApplicationWorker
   end
 
   def judge_test_case(test_case, run_command, eval_command, resource_limits)
-    FileUtils.copy(File.expand_path(exe_filename, tmpdir), box.expand_path(exe_filename))
-    result = run_test_case(test_case, run_command, resource_limits)
-    result['evaluator'] = evaluate_output(test_case, result['output'], result['output_size'], eval_command)
+    if problem.evaluator&.interactive_processes&.positive?
+      result = run_interactive(test_case, run_command, eval_command, resource_limits)
+    else
+      result = run_test_case(test_case, run_command, resource_limits)
+      result['evaluator'] = evaluate_output(test_case, result['output'], result['output_size'], eval_command)
+    end
     result['log'] = truncate_output(result['log']) # log only a small portion
     result['output'] = truncate_output(result['output'].slice(0,100)) # store only a small portion
     result
   end
 
   def run_test_case(test_case, run_command, resource_limits = {})
+    FileUtils.copy(File.expand_path(exe_filename, tmpdir), box.expand_path(exe_filename))
     stream_limit = OutputBaseLimit + test_case.output.bytesize*2
     run_opts = resource_limits.reverse_merge(:output_limit => stream_limit, :clean_utf8 => true)
     if submission.input.nil?
@@ -251,6 +259,144 @@ class JudgeSubmissionWorker < ApplicationWorker
       r
     end
   ensure
+    box.clean!
+  end
+
+  def run_interactive(test_case, run_command, eval_command, resource_limits)
+    stream_limit = OutputBaseLimit + test_case.output.bytesize*2
+    num_processes = problem.evaluator.interactive_processes
+
+    metafiles = []
+    boxfiles = []
+    logfiles = []
+    manager_pipes = []
+    user_pids = []
+
+    interactive_boxes.each_with_index do |box, index|
+      FileUtils.copy(File.expand_path(exe_filename, tmpdir), box.expand_path(exe_filename))
+      metafiles << Tempfile.new('metafile')
+      boxfiles << Tempfile.new('boxfile')
+      logfiles << box.tmpfile
+      manager_to_user = IO.pipe
+      user_to_manager = IO.pipe
+      manager_pipes << [user_to_manager[0], manager_to_user[1]]
+
+      run_opts = resource_limits.merge(:meta => metafiles.last.path, :err => boxfiles.last, :in => manager_to_user[0], :out => user_to_manager[1], :stderr => logfiles.last)
+      box_run_command = run_command
+      if num_processes > 1
+        box_run_command += " " + index.to_s
+      end
+      user_pids << box.spawn_command(box_run_command, run_opts)
+
+      manager_to_user[0].close
+      user_to_manager[1].close
+    end
+
+    expected = conditioned_output(test_case.output)
+    FileUtils.copy(File.expand_path(EvalFileName, tmpdir), box.expand_path(EvalFileName))
+    manager_resource_limits = { :mem => 524288, :time => num_processes * time_limit + 15, :wall_time => num_processes * wall_time + 30 }
+
+    eval_output = nil
+    eval_result = {}
+    str_to_pipe(expected) do |output_stream|
+      run_opts = manager_resource_limits.merge(:processes => true, 4 => output_stream, :stdin_data => test_case.input, :output_limit => OutputBaseLimit + test_case.output.bytesize*4, :clean_utf8 => true, :inherit_fds => true)
+      manager_pipes.each_with_index do |pipes, index|
+        run_opts.merge!(index * 2 + 5 => pipes[0], index * 2 + 6 => pipes[1])
+      end
+      (stdout,), (eval_result['log'],eval_result['log_size']), (eval_result['box'],), eval_result['meta'], status = box.capture5("#{eval_command}", run_opts)
+      eval_result['log'] = truncate_output(eval_result['log'])
+      eval_output = stdout.strip.split(nil,2)
+      eval_result['stat'] = status.exitstatus
+    end
+
+    manager_pipes.each do |pipes|
+      pipes[0].close
+      pipes[1].close
+    end
+
+    if eval_output.empty?
+      eval_result.delete('evaluation') # error
+    else
+      eval_result['evaluation'] = eval_output[0].to_d
+      eval_result['message'] = truncate_output(eval_output[1] || "")
+    end
+
+    r = { 'evaluator' => eval_result }
+
+    r['stat'] = 0
+    user_pids.each do |pid|
+      exit_status = Process.detach(pid).value.exitstatus
+      r['stat'] = r['stat'].nonzero? || exit_status
+    end
+
+    metafiles.each do |metafile|
+      metafile.open
+      meta = Isolate.parse_meta(metafile.read)
+
+      if r['meta'].nil?
+        r['meta'] = meta
+      else
+        # Merge execution stats
+        r['meta']['time'] += meta['time']
+        r['meta']['time-wall'] = [r['meta']['time-wall'], meta['time-wall']].max
+        r['meta']['cg-mem'] += meta['cg-mem'] if meta.has_key?('cg-mem')
+        r['meta']['max-rss'] += meta['max-rss']
+
+        # Use first non-OK status and related values
+        if r['meta']['status'] == 'OK' && meta['status'] != 'OK'
+          r['meta']['status'] = meta['status']
+          r['meta']['killed'] = meta['killed'] if meta.has_key?('killed')
+          r['meta']['exitcode'] = meta['exitcode'] if meta.has_key?('exitcode')
+          r['meta']['exitsig'] = meta['exitsig'] if meta.has_key?('exitsig')
+          r['meta']['message'] = meta['message'] if meta.has_key?('message')
+        end
+      end
+      metafile.close
+    end
+
+    # Check for MLE/TLE based on merged execution stats
+    if r['meta']['status'] == 'OK'
+      if (r['meta']['cg-mem'] || r['meta']['max-rss']).to_f > memory_limit*1024
+        r['meta']['status'] = 'SG'
+        r['meta']['exitsig'] = 9
+        r['meta']['message'] = "Memory Limit Exceeded"
+        r['meta']['cg-mem'] = [r['meta']['cg-mem'],memory_limit*1024].min if r['meta'].has_key?('cg-mem')
+        r['meta']['max-rss'] = [r['meta']['max-rss'],memory_limit*1024].min
+        r['stat'] = 1
+      elsif r['meta']['time'] > time_limit.to_f
+        r['meta']['status'] = 'TO'
+        r['meta']['message'] = "Time Limit Exceeded"
+        r['stat'] = 1
+      end
+    end
+
+    r['box'] = ''
+    boxfiles.each do |boxfile|
+      boxfile.open
+      r['box'] << boxfile.read
+      boxfile.close
+    end
+
+    r['log'] = ''
+    r['log_size'] = 0
+    interactive_boxes.zip(logfiles).each do |box, logfile|
+      stderr = File.open(box.expand_path(logfile)) { |f| box.read_pipe_limited(f, stream_limit) }
+      (log, log_size) = box.clean_utf8(stderr)
+      r['log'] << log
+      r['log_size'] += log_size
+    end
+    r['log'] = truncate_output(r['log'])
+
+    r['output'] = '' # no user output
+    r['output_size'] = 0
+
+    r['time'] = [r['meta']['time'],time_limit.to_f].min
+
+    return r
+  ensure
+    metafiles.each(&:close!)
+    boxfiles.each(&:close!)
+    interactive_boxes.each(&:clean!)
     box.clean!
   end
 
