@@ -54,7 +54,7 @@
   <% if @problem.evaluator %>
     <%= link_to @problem.evaluator.name, @problem.evaluator %>
     <% if policy(@problem.evaluator).inspect? # privilege required to see evaluator source %>
-      <%= predisplay @problem.evaluator.source, language: :sh %>
+      <%= predisplay @problem.evaluator.source, language: @problem.evaluator.language&.lexer %>
     <% end %>
   <% else %>
     Default evaluator

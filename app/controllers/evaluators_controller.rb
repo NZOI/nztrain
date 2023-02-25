@@ -2,7 +2,7 @@ class EvaluatorsController < ApplicationController
 
   def permitted_params
     @_permitted_params ||= begin
-      permitted_attributes = [:name, :description, :source]
+      permitted_attributes = [:name, :description, :source, :language_id]
       permitted_attributes << :owner_id if policy(@evaluator || Evaluator).transfer?
       params.require(:evaluator).permit(*permitted_attributes)
     end

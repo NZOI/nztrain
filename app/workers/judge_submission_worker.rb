@@ -52,7 +52,7 @@ class JudgeSubmissionWorker < ApplicationWorker
     raise
   end
 
-  EvalFileName = "eval.sh"
+  EvalFileName = "eval"
   OutputBaseLimit = 1024 * 1024 * 2
 
   attr_accessor :submission, :exe_filename
@@ -68,13 +68,34 @@ class JudgeSubmissionWorker < ApplicationWorker
     result = {}
     setup_judging do
       if submission.language.compiled
-        result['compile'] = compile!(exe_filename) # possible caching
-        return result.merge!(grade_compile_error(result['compile'])) if result['compile']['stat'] != 0 #error
+        result['compile'] = compile!(submission.source, submission.language, exe_filename) # possible caching
+        return result.merge!(grade_compile_error(result['compile'])) if result['compile']['stat'] != 0 # error
       else
         File.open(File.expand_path(exe_filename, tmpdir),"w") { |f| f.write(submission.source) }
       end
 
       run_command = submission.language.run_command(exe_filename)
+
+      if problem.evaluator.nil?
+        eval_command = nil
+      else
+        if problem.evaluator.language.nil?
+          eval_command = "./#{EvalFileName}"
+        else
+          eval_command = problem.evaluator.language.run_command(EvalFileName)
+        end
+
+        if problem.evaluator.language&.compiled
+          evaluator_compilation = compile!(problem.evaluator.source, problem.evaluator.language, EvalFileName) # possible caching
+          raise evaluator_compilation['log'] if evaluator_compilation['stat'] != 0 # error
+        else
+          File.open(File.expand_path(EvalFileName, tmpdir),"w") do |file|
+            file.chmod(0700)
+            file.write(problem.evaluator.source.gsub(/\r\n?/, "\n"))
+          end
+        end
+      end
+
 
       result['test_cases'] = {}
       result['test_sets'] = {}
@@ -85,7 +106,7 @@ class JudgeSubmissionWorker < ApplicationWorker
       prereqs = problem.test_cases.where(:id => problem.prerequisite_sets.joins(:test_case_relations).select(:test_case_relations => :test_case_id))
 
       prereqs.each do |test_case|
-        result['test_cases'][test_case.id] = judge_test_case(test_case, run_command, resource_limits) unless result['test_cases'].has_key?(test_case.id)
+        result['test_cases'][test_case.id] = judge_test_case(test_case, run_command, eval_command, resource_limits) unless result['test_cases'].has_key?(test_case.id)
       end
 
       problem.prerequisite_sets.each do |test_set|
@@ -100,7 +121,7 @@ class JudgeSubmissionWorker < ApplicationWorker
 
       # test cases
       (problem.test_cases - prereqs).each do |test_case|
-        result['test_cases'][test_case.id] = judge_test_case(test_case, run_command, resource_limits) unless result['test_cases'].has_key?(test_case.id)
+        result['test_cases'][test_case.id] = judge_test_case(test_case, run_command, eval_command, resource_limits) unless result['test_cases'].has_key?(test_case.id)
       end
 
       # test sets
@@ -148,18 +169,18 @@ class JudgeSubmissionWorker < ApplicationWorker
     end
   end
 
-  def compile! output
-    result = submission.language.compile(box, submission.source, output, :mem => 393216, :wall_time => 60)
+  def compile!(source, language, output)
+    result = language.compile(box, source, output, :mem => 393216, :wall_time => 60)
     FileUtils.copy(box.expand_path(output), File.expand_path(output, tmpdir)) if result['stat'] == 0
     return result
   ensure
     box.clean!
   end
 
-  def judge_test_case(test_case, run_command, resource_limits)
+  def judge_test_case(test_case, run_command, eval_command, resource_limits)
     FileUtils.copy(File.expand_path(exe_filename, tmpdir), box.expand_path(exe_filename))
     result = run_test_case(test_case, run_command, resource_limits)
-    result['evaluator'] = evaluate_output(test_case, result['output'], result['output_size'], problem.evaluator)
+    result['evaluator'] = evaluate_output(test_case, result['output'], result['output_size'], eval_command)
     result['log'] = truncate_output(result['log']) # log only a small portion
     result['output'] = truncate_output(result['output'].slice(0,100)) # store only a small portion
     result
@@ -190,21 +211,18 @@ class JudgeSubmissionWorker < ApplicationWorker
     box.clean!
   end
 
-  def evaluate_output(test_case, output, output_size, evaluator)
+  def evaluate_output(test_case, output, output_size, eval_command)
     stream_limit = OutputBaseLimit + test_case.output.bytesize*2
     if output_size > stream_limit
       return {'evaluation' => 0, 'log' => "Output exceeded the streamsize limit of #{stream_limit}.", 'meta' => {'status' => 'OK'}}
     end
     expected = conditioned_output(test_case.output)
     actual = conditioned_output(output)
-    if evaluator.nil?
+    if eval_command.nil?
       {'evaluation' => (actual == expected ? 1 : 0), 'meta' => {'status' => 'OK'}}
     else
       r = {}
-      box.fopen(EvalFileName,"w") do |file|
-        file.chmod(0700)
-        file.write(problem.evaluator.source.gsub(/\r\n?/, "\n"))
-      end
+      FileUtils.copy(File.expand_path(EvalFileName, tmpdir), box.expand_path(EvalFileName))
       resource_limits = { :mem => 524288, :time => time_limit*3+15, :wall_time => time_limit*3+30 }
       box.fopen("actual","w") { |f| f.write(actual) } # DEPRECATED
       box.fopen("input","w") { |f| f.write(test_case.input) } # DEPRECATED
@@ -213,7 +231,7 @@ class JudgeSubmissionWorker < ApplicationWorker
       eval_output = nil
       str_to_pipe(test_case.input, expected) do |input_stream, output_stream|
         run_opts = resource_limits.reverse_merge(:processes => true, 3 => input_stream, 4 => output_stream, :stdin_data => actual, :output_limit => OutputBaseLimit + test_case.output.bytesize*4, :clean_utf8 => true, :inherit_fds => true)
-        (stdout,), (r['log'],r['log_size']), (r['box'],), r['meta'], status = box.capture5("./#{EvalFileName} #{deprecated_args}", run_opts )
+        (stdout,), (r['log'],r['log_size']), (r['box'],), r['meta'], status = box.capture5("#{eval_command} #{deprecated_args}", run_opts )
         r['log'] = truncate_output(r['log'])
         return r.merge('stat' => 2, 'box' => 'Output was not a valid UTF-8 encoding\n'+r['box']) if !output.force_encoding("UTF-8").valid_encoding?
         eval_output = stdout.strip.split(nil,2)
