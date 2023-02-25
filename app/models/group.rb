@@ -25,9 +25,6 @@ class Group < ActiveRecord::Base
 
   validates :name, :presence => true, :uniqueness => { :case_sensitive => false }
 
-  # Scopes
-  scope :distinct, -> { select("distinct(groups.id), groups.*") }
-
   VISIBILITY = Enumeration.new 0 => :public, 1 => :unlisted, 2 => :private
   MEMBERSHIP = Enumeration.new 0 => [:open,'Membership is open to the public'],
                                1 => [:invitation,'Membership is by invitation or applying to join'],
