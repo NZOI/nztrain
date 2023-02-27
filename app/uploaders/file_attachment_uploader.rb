@@ -28,9 +28,6 @@ class FileAttachmentUploader < CarrierWave::Uploader::Base
     true # nothing, the dir is not empty
   end
 
-  # Process files as they are uploaded:
-  process :set_content_type # sets mimetype to match extension
-
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:
   def extension_white_list
