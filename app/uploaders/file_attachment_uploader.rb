@@ -1,8 +1,6 @@
 # encoding: utf-8
 
 class FileAttachmentUploader < CarrierWave::Uploader::Base
-  include CarrierWave::MimeTypes
-
   # Choose what kind of storage to use for this uploader:
   storage :file
 
