@@ -3,7 +3,6 @@
 class AvatarUploader < CarrierWave::Uploader::Base
   # Include RMagick or MiniMagick support:
   include CarrierWave::RMagick
-  include CarrierWave::MimeTypes
 
   # Choose what kind of storage to use for this uploader:
   storage :file
@@ -38,7 +37,6 @@ class AvatarUploader < CarrierWave::Uploader::Base
   end
 
   # Process files as they are uploaded:
-  process :set_content_type # sets mimetype to match extension
   process :resize_to_fit => [150, 150] # suitable for forum size
   #
   # def scale(width, height)

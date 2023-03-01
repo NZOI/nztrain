@@ -1,8 +1,6 @@
 # encoding: utf-8
 
 class FileAttachmentUploader < CarrierWave::Uploader::Base
-  include CarrierWave::MimeTypes
-
   # Choose what kind of storage to use for this uploader:
   storage :file
 
@@ -29,9 +27,6 @@ class FileAttachmentUploader < CarrierWave::Uploader::Base
   rescue SystemCallError
     true # nothing, the dir is not empty
   end
-
-  # Process files as they are uploaded:
-  process :set_content_type # sets mimetype to match extension
 
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:
