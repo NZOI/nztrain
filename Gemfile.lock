@@ -187,7 +187,7 @@ GEM
     net-http-persistent (4.0.1)
       connection_pool (~> 2.2)
     newrelic_rpm (4.7.1.340)
-    nokogiri (1.10.8)
+    nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
     ntlm-http (0.1.1)
     open4 (1.3.4)
@@ -404,7 +404,7 @@ DEPENDENCIES
   loofah
   mechanize
   newrelic_rpm
-  nokogiri (~> 1.10.8)
+  nokogiri (~> 1.10.10)
   pdf-reader
   pdfkit
   pg
