@@ -18,7 +18,7 @@ class User < ActiveRecord::Base
 
   before_save do
     self.can_change_username = false if self.username_changed? # can only change username once
-    return true
+    true # this line should be removed once we upgrade to Rails >= 5.1, see https://guides.rubyonrails.org/5_1_release_notes.html#active-model-removals
   end
 
   has_many :problems
