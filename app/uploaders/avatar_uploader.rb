@@ -37,7 +37,7 @@ class AvatarUploader < CarrierWave::Uploader::Base
   end
 
   # Process files as they are uploaded:
-  process :resize_to_fit => [150, 150] # suitable for forum size
+  process :resize_to_fit => [150, 150] # suitable for profile page
   #
   # def scale(width, height)
   #   # do something
