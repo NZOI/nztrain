@@ -71,11 +71,9 @@ class ChangeHabtmProblemAssociations < ActiveRecord::Migration
     rename_column :problem_sets, :title, :name
     rename_column :problems, :title, :name
     rename_column :contests, :title, :name
-    rename_column :ai_contests, :title, :name
   end
 
   def down
-    rename_column :ai_contests, :name, :title
     rename_column :contests, :name, :title
     rename_column :problems, :name, :title
     rename_column :problem_sets, :name, :title
