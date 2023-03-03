@@ -25,13 +25,11 @@
       <td><%= "#{game.ai_submission_2.id}" %></td>
       <td><%= "#{game.ai_submission_2.name} (#{game.ai_submission_2.user.username})" %></td>
       <td><%= game.score_2 %></td>
-      <td><%= link_to "Rejudge", rejudge_ai_submission_path(@ai_submission, :game_id => game.id), :method => 'post' if permitted_to? :rejudge, game %></td>
+      <td><%= link_to "Rejudge", rejudge_ai_submission_path(@ai_submission, :game_id => game.id), :method => 'post' %></td>
       <td><form action="http://heythatsmyfish.com/" method="post"><textarea name="log" style="display: none"><%= game.record %></textarea><input type="submit" value="Playback" /></form></td>
     </tr>
   <% end %>
 
 </table>
 
-<% if permitted_to? :source, @ai_submission %>
-  <pre><%= @ai_submission.source %></pre>
-<% end %>
+<pre><%= @ai_submission.source %></pre>

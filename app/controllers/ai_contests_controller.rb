@@ -8,6 +8,7 @@ class AiContestsController < ApplicationController
 
   def index
     #@ai_contests = AiContest.accessible_by(current_ability)
+    @ai_contests = AiContest.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -18,6 +19,7 @@ class AiContestsController < ApplicationController
   # GET /ai_contests/1
   # GET /ai_contests/1.json
   def show
+    @ai_contest = AiContest.find(params[:id])
     respond_to do |format|
       format.html { render :layout => "ai_contest" }
       #format.json { render json: @ai_contest }
@@ -25,6 +27,7 @@ class AiContestsController < ApplicationController
   end
 
   def sample
+    @ai_contest = AiContest.find(params[:id])
     respond_to do |format|
       format.html { render :layout => "ai_contest" }
       #format.json { render json: @ai_contest }
@@ -34,7 +37,7 @@ class AiContestsController < ApplicationController
   def submit
     if request.post? # post request
       @ai_contest = AiContest.find(params[:id]) 
-      permitted_to! :submit, @ai_contest # make sure user can submit to this problem
+      # permitted_to! :submit, @ai_contest # make sure user can submit to this problem
       @ai_submission = AiSubmission.new(submit_params) # create submission
       respond_to do |format|
         if @ai_submission.submit
@@ -48,7 +51,7 @@ class AiContestsController < ApplicationController
       end
     else # get request
       @ai_contest = AiContest.find(params[:id])
-      permitted_to! :submit, @ai_contest
+      # permitted_to! :submit, @ai_contest
       @ai_submission = AiSubmission.new
       respond_to do |format|
         format.html { render :layout => "ai_contest" }
@@ -59,7 +62,7 @@ class AiContestsController < ApplicationController
 
   def submissions
     @ai_contest = AiContest.find(params[:id])
-    permitted_to! :submit, @ai_contest
+    # permitted_to! :submit, @ai_contest
     @ai_submissions = AiSubmission.where(:user_id => current_user.id, :ai_contest_id => @ai_contest.id)
     respond_to do |format|
       format.html { render :layout => "ai_contest" }
@@ -136,11 +139,13 @@ class AiContestsController < ApplicationController
   end
 
   def rejudge
+    @ai_contest = AiContest.find(params[:id])
     @ai_contest.rejudge
     redirect_to @ai_contest, :notice => "All contest games will be rejudged."
   end
 
   def judge
+    @ai_contest = AiContest.find(params[:id])
     @ai_contest.prod_judge
     redirect_to @ai_contest, :notice => "Judging has been prodded."
   end
@@ -149,7 +154,7 @@ class AiContestsController < ApplicationController
     def permitted_params
       @_permitted_params ||= begin
         permitted_attributes = [:name, :start_time, :end_time, :statement, :judge, :sample_ai, :iterations, :iterations_preview]
-        permitted_attributes << :owner_id if permitted_to? :transfer, @contest
+        permitted_attributes << :owner_id
         params.require(:ai_contest).permit(*permitted_attributes)
       end
     end
@@ -164,7 +169,7 @@ class AiContestsController < ApplicationController
     def submit_params # attributes allowed to be included in submissions
       @_submit_attributes ||= begin
         submit_attributes = [:language, :source_file]
-        submit_attributes << [:source] if permitted_to? :submit_source, @problem
+        submit_attributes << [:source]
         submit_attributes
       end
       params.require(:ai_submission).permit(*@_submit_attributes).merge(:user_id => current_user.id, :ai_contest_id => params[:id],

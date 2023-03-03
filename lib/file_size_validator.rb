@@ -36,7 +36,7 @@ class FileSizeValidator < ActiveModel::EachValidator
   end
 
   def validate_each(record, attribute, value)
-    raise(ArgumentError, "A CarrierWave::Uploader::Base object was expected") unless value.kind_of? CarrierWave::Uploader::Base
+    # raise(ArgumentError, "A CarrierWave::Uploader::Base object was expected") unless value.kind_of? CarrierWave::Uploader::Base
     
     value = (options[:tokenizer] || DEFAULT_TOKENIZER).call(value) if value.kind_of?(String)
 

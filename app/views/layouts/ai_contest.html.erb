@@ -1,14 +1,10 @@
 <% content_for :title, @ai_contest.name %>
 <% content_for :content do %>
 <p>
-  <% if permitted_to? :rejudge, @ai_contest %>
     <%= link_to "Rejudge", rejudge_ai_contest_path(@ai_contest), :method => "post" %>
-  <% end %>
 </p>
 <p>
-  <% if permitted_to? :judge, @ai_contest %>
     <%= link_to "Judge", judge_ai_contest_path(@ai_contest), :method => "post" %> (Prods the judging to be maybe a bit faster)
-  <% end %>
 </p>
 
 <p>
@@ -27,7 +23,7 @@
     menu.dom_class = :tab_menu
     menu.item :statement, "overview", ai_contest_path(@ai_contest)
     menu.item :sample_ai, "sample AI", sample_ai_contest_path(@ai_contest)
-    menu.item :submit, "submit", submit_ai_contest_path(@ai_contest) if permitted_to? :submit, @ai_contest
+    menu.item :submit, "submit", submit_ai_contest_path(@ai_contest)
     menu.item :submissions, "submissions", submissions_ai_contest_path(@ai_contest)
     menu.item :scoreboard, "scoreboard", scoreboard_ai_contest_path(@ai_contest)
 #  end.render

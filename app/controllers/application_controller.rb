@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   #helper ApplicationHelper
-  #helper ProblemsHelper
+  helper ProblemsHelper
   #helper Accounts::RequestsHelper
 
   def redirect(message)

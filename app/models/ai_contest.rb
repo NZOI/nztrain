@@ -6,21 +6,21 @@ class AiContest < ActiveRecord::Base
 
   def rejudge
     # Use background processing
-    #spawn(:nice => 10) do
-    #  submissions.active.each do |sub|
-    #    sub.rejudge
-    #  end
-    #end
+    Thread.new do
+      submissions.active.each do |sub|
+        sub.rejudge
+      end
+    end
   end
   
   def prod_judge
     ##submissions.each_slice(submissions.length/4).to_a.each do |subs|
     # Use background processing
-    #spawn(:nice => 12) do
-    #  submissions.active.each do |sub|
-    #      sub.judge
-    #  end
-    #end
+    Thread.new do
+      submissions.active.each do |sub|
+        sub.judge
+      end
+    end
     #end
   end
 

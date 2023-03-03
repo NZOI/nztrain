@@ -18,25 +18,27 @@ NZTrain::Application.routes.draw do
     #end
   end
 
-  #resources :ai_contests do
-  #  member do
-  #    get 'sample'
-  #    get 'submit'
-  #    post 'submit'
-  #    get 'submissions'
-  #    get 'scoreboard'
-  #    post 'rejudge'
-  #    post 'judge'
-  #  end
-  #end
+  if Rails.env.development?
+    resources :ai_contests do
+     member do
+       get 'sample'
+       get 'submit'
+       post 'submit'
+       get 'submissions'
+       get 'scoreboard'
+       post 'rejudge'
+       post 'judge'
+     end
+    end
 
-  #resources :ai_submissions, :only => [:show] do
-  #  member do
-  #    put 'deactivate'
-  #    put 'activate'
-  #    post 'rejudge'
-  #  end
-  #end
+    resources :ai_submissions, :only => [:show] do
+     member do
+       put 'deactivate'
+       put 'activate'
+       post 'rejudge'
+     end
+    end
+  end
 
   #resources :test_sets
   #resources :test_cases
