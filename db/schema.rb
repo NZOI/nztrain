@@ -16,47 +16,6 @@ ActiveRecord::Schema.define(version: 20200418113601) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "ai_contest_games", force: true do |t|
-    t.integer  "ai_contest_id"
-    t.integer  "ai_submission_2_id"
-    t.integer  "ai_submission_1_id"
-    t.text     "record"
-    t.integer  "score_1"
-    t.integer  "score_2"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-    t.integer  "iteration"
-    t.text     "judge_output"
-  end
-
-  add_index "ai_contest_games", ["iteration", "ai_submission_1_id", "ai_submission_2_id"], name: "each_game", unique: true, using: :btree
-
-  create_table "ai_contests", force: true do |t|
-    t.string   "name"
-    t.datetime "start_time"
-    t.datetime "end_time"
-    t.integer  "owner_id"
-    t.datetime "finalized_at"
-    t.text     "sample_ai"
-    t.text     "statement"
-    t.text     "judge"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-    t.integer  "iterations"
-    t.integer  "iterations_preview"
-  end
-
-  create_table "ai_submissions", force: true do |t|
-    t.text     "source"
-    t.string   "language"
-    t.integer  "user_id"
-    t.integer  "ai_contest_id"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-    t.string   "name"
-    t.boolean  "active",        default: false
-  end
-
   create_table "contest_relations", force: true do |t|
     t.integer  "user_id"
     t.integer  "contest_id"
