@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -o pipefail # to detect failure in 'bundle ... | sed ...' (see 'man bash')
 
 lastupdate=`cat script/update.time` # get time of last update
 
@@ -8,7 +7,6 @@ if [[ "$lastupdate" < "$lastmodified" ]] ; then
   # don't use sudo with bundler, it will ask for password if necessary
   # see https://bundler.io/man/bundle-install.1.html#SUDO-USAGE
   echo "$ bundle install"
-  bundle install | sed -e 's/^/   /g;/Using/{:a;N;$!ba;s/Using [0-9a-z_ -]\+\(([0-9.]\+) \)\?\n//g}' | cat || exit 1
-  # sed indents, remove output of un-upgraded gems
+  bundle install || exit 1
 fi
 
