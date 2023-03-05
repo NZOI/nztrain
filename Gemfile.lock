@@ -409,7 +409,7 @@ DEPENDENCIES
   pygments.rb (~> 1.1.0)
   qless
   rails (~> 4.0.0)
-  ranked-model
+  ranked-model (< 0.4.3)
   recaptcha
   redcarpet
   redis (< 4.0)

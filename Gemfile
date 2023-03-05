@@ -36,7 +36,7 @@ gem 'facebox-rails'
 gem 'strong_presenter', '~> 0.2.2'
 gem 'render_anywhere'
 gem 'pygments.rb', '~> 1.1.0'
-gem 'ranked-model'
+gem 'ranked-model', '< 0.4.3' # pinned because 0.4.3-0.4.4 are broken (see https://github.com/brendon/ranked-model/issues/139; we also need the fix in https://github.com/brendon/ranked-model/pull/152); we can't update to 0.4.5 yet because it requires activerecord >= 4.2
 gem 'pdf-reader'
 gem 'mechanize'
 gem 'prawn'
