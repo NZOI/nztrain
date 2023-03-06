@@ -1,0 +1,37 @@
+<p>AI Contest: <%= link_to @ai_submission.ai_contest.name, @ai_submission.ai_contest %></p>
+<p>Games for <%= "#{@ai_submission.name} (#{@ai_submission.user.username})" %></p>
+
+<table>
+  <tr>
+    <th>Game id</th>
+    <th>Board number</th>
+    <th></th>
+    <th>Player 1</th>
+    <th>Score</th>
+    <th></th>
+    <th>Player 2</th>
+    <th>Score</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <% @ai_contest_games.each do |game| %>
+    <% next if game.ai_submission_1.nil? || (!game.ai_submission_1.active) or game.ai_submission_2.nil? || (!game.ai_submission_2.active) %>
+    <tr>
+      <td><%= game.id %></td>
+      <td><%= game.iteration %></td>
+      <td><%= "#{game.ai_submission_1.id}" %></td>
+      <td><%= "#{game.ai_submission_1.name} (#{game.ai_submission_1.user.username})" %></td>
+      <td><%= game.score_1 %></td>
+      <td><%= "#{game.ai_submission_2.id}" %></td>
+      <td><%= "#{game.ai_submission_2.name} (#{game.ai_submission_2.user.username})" %></td>
+      <td><%= game.score_2 %></td>
+      <td><%= link_to "Rejudge", rejudge_ai_submission_path(@ai_submission, :game_id => game.id), :method => 'post' if permitted_to? :rejudge, game %></td>
+      <td><form action="http://heythatsmyfish.com/" method="post"><textarea name="log" style="display: none"><%= game.record %></textarea><input type="submit" value="Playback" /></form></td>
+    </tr>
+  <% end %>
+
+</table>
+
+<% if permitted_to? :source, @ai_submission %>
+  <pre><%= @ai_submission.source %></pre>
+<% end %>

@@ -1,0 +1,27 @@
+<% content_for :title, "AI Contests" %>
+
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Start time</th>
+    <th>End time</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @ai_contests.each do |ai_contest| %>
+  <tr>
+    <td><%= ai_contest.name %></td>
+    <td><%= ai_contest.start_time %></td>
+    <td><%= ai_contest.end_time %></td>
+    <td><%= link_to 'Show', ai_contest %></td>
+    <td><%= link_to 'Edit', edit_ai_contest_path(ai_contest) if permitted_to? :edit, ai_contest %></td>
+    <td><%= link_to 'Destroy', ai_contest, method: :delete, data: { confirm: 'Are you sure?' } if permitted_to? :destroy, ai_contest %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New AI Contest', new_ai_contest_path %>
