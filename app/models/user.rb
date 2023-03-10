@@ -44,6 +44,7 @@ class User < ActiveRecord::Base
 
   # Scopes
 
+  scope :distinct, -> { select("distinct(users.id), users.*") }
   scope :num_solved, -> { select("users.*, (SELECT COUNT(DISTINCT problem_id) FROM user_problem_relations WHERE user_id = users.id AND ranked_score = 100) as num_solved") }
 
   def self.find_for_authentication(conditions={})
