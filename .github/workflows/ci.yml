@@ -43,5 +43,11 @@ jobs:
           ISOLATE_BRANCH: master
 
       - run: AUTOCONFIRM=true script/install.bash --skip-update
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432
+          PGHOST: localhost
+          PGUSER: postgres
+          PGPASSWORD: postgres
+
       - run: bundle exec rake db:test:load
       - run: bundle exec rspec

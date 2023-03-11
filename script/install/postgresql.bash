@@ -24,7 +24,7 @@ $cmd || exit 1
 # setup user if required
 psql -U$DATABASE_USERNAME postgres -c '' &> /dev/null || {
   bash script/confirm.bash "Create new PostgreSQL user $DATABASE_USERNAME" && {
-    cmd="sudo -u postgres createuser --superuser $DATABASE_USERNAME"
+    cmd="sudo -Eu postgres createuser --superuser $DATABASE_USERNAME"
     echo "$ $cmd"
     $cmd
   } || exit 1
@@ -34,7 +34,7 @@ psql -U$DATABASE_USERNAME postgres -c '' &> /dev/null || {
 if [[ $DATABASE ]] ; then
   psql -U$DATABASE_USERNAME $DATABASE -c '' &> /dev/null || {
     bash script/confirm.bash "Create new PostgreSQL database $DATABASE" && {
-      cmd="sudo -u postgres createdb $DATABASE"
+      cmd="sudo -Eu postgres createdb $DATABASE"
       echo "$ $cmd"
       $cmd
     } || exit 1
@@ -45,7 +45,7 @@ fi
 if [[ $TEST_DATABASE ]] ; then
   psql -U$DATABASE_USERNAME $TEST_DATABASE -c '' &> /dev/null || {
     bash script/confirm.bash "Create new PostgreSQL database $TEST_DATABASE" && {
-      cmd="sudo -u postgres createdb $TEST_DATABASE"
+      cmd="sudo -Eu postgres createdb $TEST_DATABASE"
       echo "$ $cmd"
       $cmd
     } || exit
