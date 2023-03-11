@@ -62,7 +62,8 @@ gem 'sinatra'
 
 # Monitoring
 gem 'newrelic_rpm'
-gem 'coveralls', require: false
+gem 'simplecov', require: false
+gem 'simplecov-lcov', require: false
 gem 'sentry-raven'
 
 group :development do
