@@ -59,7 +59,7 @@ chroot "$ISOLATE_ROOT" apt-get update
 echo "$chroot_install software-properties-common"
 chroot "$ISOLATE_ROOT" apt-get install software-properties-common # provides add-apt-repository
 
-[ -z "$TRAVIS" ] && { # if not in Travis-CI
+[ -z "$CI" ] && { # if not in CI
   # python ppa
   if ! chroot "$ISOLATE_ROOT" apt-cache show python3.4 &>/dev/null ||
       ! chroot "$ISOLATE_ROOT" apt-cache show python3.8 &>/dev/null; then
@@ -91,7 +91,7 @@ chroot "$ISOLATE_ROOT" apt-get install build-essential # C/C++ (g++, gcc)
 echo "$chroot_install ruby"
 chroot "$ISOLATE_ROOT" apt-get install ruby # Ruby (ruby)
 
-[ -z "$TRAVIS" ] && { # if not in Travis-CI
+[ -z "$CI" ] && { # if not in CI
   # add haskell ppa
   echo "$chroot_cmd add-apt-repository ppa:hvr/ghc -y"
   chroot "$ISOLATE_ROOT" add-apt-repository ppa:hvr/ghc -y
@@ -125,7 +125,7 @@ fi
 echo "$chroot_install openjdk-11-jdk"
 chroot "$ISOLATE_ROOT" apt-get install openjdk-11-jdk # Java
 
-[ -z "$TRAVIS" ] && { # if not in Travis-CI
+[ -z "$CI" ] && { # if not in CI
 
   # echo "$chroot_install python"
   # chroot "$ISOLATE_ROOT" apt-get install python # Python 2 (deprecated)
@@ -204,11 +204,11 @@ echo "$chroot_cmd update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 
 chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 75
 # gcc 9 done
 
-[ -z "$TRAVIS" ] && bash script/confirm.bash 'Install the V8 JavaScript Engine (submissions in JavaScript will fail without this!)' && {
+[ -z "$CI" ] && bash script/confirm.bash 'Install the V8 JavaScript Engine (submissions in JavaScript will fail without this!)' && {
   HOME=/root ISOLATE_ROOT= chroot "$ISOLATE_ROOT" bash < script/install/v8.bash
 }
 
-[ -z "$TRAVIS" ] && bash script/confirm.bash 'Install .NET Core (C#)' && {
+[ -z "$CI" ] && bash script/confirm.bash 'Install .NET Core (C#)' && {
   # check kernel version
   uname -r | bash script/check_version.bash 4.14.0 || {
     echo "Warning: Linux kernel $(uname -r) detected, .NET Core requires kernel >= 4.14"

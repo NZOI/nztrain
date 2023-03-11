@@ -47,7 +47,7 @@ bash script/install/jdk.bash || exit 1 # required by yui-compressor
 sudo bash script/install/isolate.bash || exit 1 # install isolate
 sudo bash script/install/cgroup.bash || exit 1 # install cgroups
 sudo bash script/install/isolock.bash || exit 1 # install isolock
-sudo bash script/install/debootstrap.bash || exit 1 # install debootstrap ubuntu if required
+sudo CI=$CI bash script/install/debootstrap.bash || exit 1 # install debootstrap ubuntu if required
 
 if [[ "$REDIS_INSTALL" = "true" ]]; then
   sudo bash script/install/redis.bash || exit 1 # install redis
