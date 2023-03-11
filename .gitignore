@@ -19,6 +19,6 @@
 /db/backup/
 /db/backups/
 /.fontello
-/coverage/.*
+/coverage/
 /vendor/bundle
 

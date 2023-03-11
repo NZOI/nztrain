@@ -57,6 +57,8 @@ jobs:
       #- run: bundle exec rake db:test:load # not required because script/install.bash runs db:migrate
       - run: bundle exec rspec
 
+      - uses: coverallsapp/github-action@v2
+
   lint:
     runs-on: ubuntu-20.04
     steps:
