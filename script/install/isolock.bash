@@ -16,7 +16,7 @@ else
   git clone https://github.com/NZOI/isolock.git && cd isolock || exit 1
 fi
 
-make && chown root bin/isolock && chgrp $APP_USER bin/isolock && chmod 6750 bin/isolock || {
+make && chown root:root bin/isolock && chmod 4755 bin/isolock || {
   echo "Failure to setup isolock permissions - aborting"
   cd ..
   rm -r $srclocation/isolock
