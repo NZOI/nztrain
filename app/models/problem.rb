@@ -38,7 +38,6 @@ class Problem < ActiveRecord::Base
   end
 
   # Scopes
-  scope :distinct, -> { select("distinct(problems.id), problems.*") }
 
   scope :score_by_user, ->(user_id) {
     select("problems.*, (SELECT MAX(submissions.score) FROM submissions WHERE submissions.problem_id = problems.id AND submissions.user_id = #{user_id.to_i}) AS score")

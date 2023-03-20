@@ -86,9 +86,6 @@ class Submission < ActiveRecord::Base
     @_mycontests ||= Contest.joins(:contest_relations, :problems).where(:contest_relations => {:user_id => user_id}, :problems => {:id => self.problem_id}).where("contest_relations.started_at <= ? AND contest_relations.finish_at > ?", self.created_at, self.created_at)
   end
 
-  # scopes (lazy running SQL queries)
-  scope :distinct, -> { select("distinct(submissions.id), submissions.*") }
-
   def self.by_user(user_id)
     where("submissions.user_id IN (?)", user_id.to_s.split(','))
   end
