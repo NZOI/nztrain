@@ -145,7 +145,9 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (4.0.5)
       railties (>= 3.1.0)
-    json (2.6.3)
+    json (1.8.6)
+    json_cve_2020_10663 (1.0.0)
+      json (>= 1.7.7, < 2.3)
     libv8 (3.16.14.19)
     loofah (2.3.1)
       crass (~> 1.0.2)
@@ -395,6 +397,7 @@ DEPENDENCIES
   jquery-historyjs (= 0.2.3)
   jquery-rails (~> 3.1.3)
   jquery-ui-rails (= 4.0.5)
+  json_cve_2020_10663 (~> 1.0)
   libv8 (~> 3.3)
   loofah
   mechanize
