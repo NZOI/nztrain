@@ -38,7 +38,7 @@ class Contest < ActiveRecord::Base
     problems = problem_set.problems
     self.contest_relations.find_each do |relation|
       problems.each do |problem|
-        ContestScore.find_or_initialize_by_contest_relation_id_and_problem_id(relation.id, problem.id).recalculate_and_save
+        ContestScore.find_or_initialize_by(contest_relation_id: relation.id, problem_id: problem.id).recalculate_and_save
       end
     end
   end

@@ -93,7 +93,7 @@ class ContestRelation < ActiveRecord::Base
 
   def recalculate_contest_scores_and_save
     contest.problem_set.problems.each do |problem|
-      ContestScore.find_or_initialize_by_contest_relation_id_and_problem_id(self.id, problem.id).recalculate_and_save
+      ContestScore.find_or_initialize_by(contest_relation_id: self.id, problem_id: problem.id).recalculate_and_save
     end
     self.reload
   end
