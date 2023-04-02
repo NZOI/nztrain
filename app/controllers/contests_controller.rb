@@ -89,7 +89,7 @@ class ContestsController < ApplicationController
     @contest = Contest.find(params[:id])
     authorize @contest, :contestants?
     @groups = Group.all
-    @contest_relations = @contest.contest_relations.includes(:user).order("contest_relations.school_id, users.username")
+    @contest_relations = @contest.contest_relations.includes(:user).order("contest_relations.school_id, users.username").references(:user)
 
     render layout: 'contest'
   end
