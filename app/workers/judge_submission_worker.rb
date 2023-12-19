@@ -212,7 +212,7 @@ class JudgeSubmissionWorker < ApplicationWorker
       deprecated_args = "input actual expected" # DEPRECATED
       eval_output = nil
       str_to_pipe(test_case.input, expected) do |input_stream, output_stream|
-        run_opts = resource_limits.reverse_merge(:processes => true, 3 => input_stream, 4 => output_stream, :stdin_data => actual, :output_limit => OutputBaseLimit + test_case.output.bytesize*4, :clean_utf8 => true)
+        run_opts = resource_limits.reverse_merge(:processes => true, 3 => input_stream, 4 => output_stream, :stdin_data => actual, :output_limit => OutputBaseLimit + test_case.output.bytesize*4, :clean_utf8 => true, :inherit_fds => true)
         (stdout,), (r['log'],r['log_size']), (r['box'],), r['meta'], status = box.capture5("./#{EvalFileName} #{deprecated_args}", run_opts )
         r['log'] = truncate_output(r['log'])
         return r.merge('stat' => 2, 'box' => 'Output was not a valid UTF-8 encoding\n'+r['box']) if !output.force_encoding("UTF-8").valid_encoding?

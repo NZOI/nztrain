@@ -13,7 +13,7 @@ if [ -d "isolock" ]; then
     exit
   fi
 else
-  git clone https://github.com/ronalchn/isolock.git && cd isolock || exit 1
+  git clone https://github.com/NZOI/isolock.git && cd isolock || exit 1
 fi
 
 make && chown root bin/isolock && chgrp $APP_USER bin/isolock && chmod 6750 bin/isolock || {

@@ -2,7 +2,7 @@ require 'open3'
 
 class Isolate
   private
-  RESOURCE_OPTIONS = { :time => '-t', :wall_time => '-w', :extra_time => '-x', :mem => '-m', :stack => '-k', :processes => '-p', :meta => '-M', :stderr => '-r', :stdin => '-i', :stdout => '-o', :cg => '--cg', :cg_timing => '--cg-timing', :cg_mem => '--cg-mem=' } # TODO: :quota
+  RESOURCE_OPTIONS = { :time => '-t', :wall_time => '-w', :extra_time => '-x', :mem => '-m', :stack => '-k', :processes => '-p', :meta => '-M', :stderr => '-r', :stdin => '-i', :stdout => '-o', :cg => '--cg', :cg_timing => '--cg-timing', :cg_mem => '--cg-mem=', :inherit_fds => '--inherit-fds' } # TODO: :quota
   CONFIG = YAML.load_file(File.expand_path('config/isolate.yml', Rails.root)).symbolize_keys
   META = { 'time' => :to_f, 'time-wall' => :to_f, 'max-rss' => :to_i, 'csw-voluntary' => :to_i, 'csw-forced' => :to_i, 'killed' => :to_i, 'cg-mem' => :to_i, 'exitsig' => :to_i, 'exitcode' => :to_i }
 
@@ -155,12 +155,13 @@ EOF
 
   # cleans the box directory of any files by re-initializing
   def clean!
+    system "isolate -b#{@box_id} --cleanup #{"--cg" if has_cgroup?}", :out => '/dev/null'
     system "isolate -b#{@box_id} --init #{"--cg" if has_cgroup?}", :out => '/dev/null'
     init_boxdir()
   end
 
   def expand_path filename
-    File.expand_path(filename,"/tmp/box/#{@box_id}/box")
+    File.expand_path(filename,"/var/local/lib/isolate/#{@box_id}/box")
   end
 
   def clean_utf8 string
@@ -221,6 +222,7 @@ EOF
 
     options[:processes] = 1 if options[:processes] == false
     options[:processes] = "" if options[:processes] == true
+    options[:inherit_fds] = "" if options.delete(:inherit_fds) == true
     options.map{ |k,v| "#{RESOURCE_OPTIONS[k]}#{v}" }
   end
 
@@ -243,8 +245,7 @@ EOF
       binding = opt.unshift(fullpath).join(':')
       next "--dir=#{boxpath}=" unless File.exist?(fullpath)
       "--dir=#{boxpath}=#{binding}"
-    end.compact +
-      ["--dir=/tmp=#{expand_path('tmp')}:rw:noexec"] # link /tmp to /box/tmp (ghc expects a temporary directory)
+    end.compact
   end
 
   # returns root if debootstrap enabled
