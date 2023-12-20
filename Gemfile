@@ -6,7 +6,7 @@ ruby '>= 2.3.8', '< 2.4' # must be < 2.4 until we upgrade to Rails >= 4.2.8 (see
 gem 'rails', '4.1.16'
 gem 'json_cve_2020_10663', '~> 1.0' # required until we update json >= 2.3, which we can only do once we upgrade to Rails >= 4.2 because activesupport 4.1.* depends on json ~> 1.7 (i.e < 2.0): https://rubygems.org/gems/activesupport/versions/4.1.16
 
-gem 'devise', '~> 3.2.2'
+gem 'devise', '~> 3.4.1'
 gem 'psych', '~> 2.0.2' # part of stdlib, need newer version for safe_load
 
 # change back to cookie-based store (encrypted)
