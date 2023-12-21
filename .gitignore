@@ -13,6 +13,7 @@
 /config/unicorn.yml
 /config/isolate.yml
 /config/redis.yml
+/config/secret_key_base.*.txt
 /script/install.cfg
 /script/update.time
 /db/backup/
