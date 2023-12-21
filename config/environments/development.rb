@@ -35,6 +35,3 @@ NZTrain::Application.configure do
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5 # removed in rails 4
 end
-
-ActionMailer::Base.register_interceptor(DevelopmentMailInterceptor) if Rails.env.development?
-
