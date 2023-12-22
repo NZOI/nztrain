@@ -6,7 +6,7 @@ class UsersController < ApplicationController
   end
 
   def online
-    authorize User.new, :index?
+    authorize User.new, :inspect?
     @users = policy_scope(User).order(:last_seen_at).reverse_order
     render
   end
