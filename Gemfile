@@ -95,6 +95,6 @@ gem 'sass-rails'
 gem 'coffee-rails'
 gem 'uglifier', '>=1.0.3'
 gem 'libv8', '~> 3.3'
-gem 'therubyracer', '~> 0.11' # required for the execjs gem (dependency)
+gem 'mini_racer', '~> 0.4.0'
 gem 'yui-compressor'
 #end
