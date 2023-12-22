@@ -5,7 +5,5 @@ require 'ext/string'
 #longest length a string can be before it's truncated in index view
 SHORTEN_LIMIT = 100
 
-#ActiveRecord::Base.pluralize_table_names = false
-
 #Initialize the rails application
 NZTrain::Application.initialize!
