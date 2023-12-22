@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # Installs Ruby from source
-branch="2.3"
-version="ruby-2.3.8"
+branch="2.4"
+version="ruby-2.4.10"
 tmpdir="ruby_install"
 
 # remember current directory

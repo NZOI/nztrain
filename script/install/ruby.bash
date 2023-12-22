@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-min_version=1.9.2
+min_version=2.4.10
 
 # min_version needs to be increased to 2.3, but for now still allow 1.9.2 - 2.2
 # when min_version is set to 2.3 this section of the script can be removed
-min_recommended_version=2.3
+min_recommended_version=2.4
 if ruby_version="$(ruby -e 'puts RUBY_VERSION' 2>/dev/null)"; then
   echo "Ruby $ruby_version detected"
   if echo "$ruby_version" | bash script/check_version.bash $min_recommended_version; then
@@ -26,7 +26,7 @@ fi
 
 ruby -e 'puts RUBY_VERSION' 2>/dev/null | bash script/check_version.bash $min_version || {
   echo "Ruby $min_version+ required!"
-  echo "Select an install option for Ruby 2.3.8"
+  echo "Select an install option for Ruby 2.4.10"
 
   # detect RVM
   rvm --version &>/dev/null && rvm_option="Install Ruby using RVM" || rvm_option="Install RVM (single user)"
