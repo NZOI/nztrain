@@ -12,7 +12,7 @@ class UsersController < ApplicationController
   end
 
   def newest
-    authorize User.new, :index?
+    authorize User.new, :inspect?
     @users = policy_scope(User).order(:created_at).reverse_order.limit(100)
     render
   end
