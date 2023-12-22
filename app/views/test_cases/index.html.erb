@@ -18,8 +18,8 @@
 
 <% @test_cases.each do |test_case| %>
   <tr>
-    <td><%= simple_format(test_case.input.shorten) %></td>
-    <td><%= simple_format(test_case.output.shorten) %></td>
+    <td><%= simple_format(test_case.input.truncate(100)) %></td>
+    <td><%= simple_format(test_case.output.truncate(100)) %></td>
     <td><%= test_case.test_set_ids.to_s %></td>
     <td><%= test_case.name %></td>
     <td><%= test_case.problem_ids %></td>
