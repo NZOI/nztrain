@@ -97,7 +97,6 @@ gem 'sass'
 gem 'sass-rails'
 gem 'coffee-rails'
 gem 'uglifier', '>=1.0.3'
-gem 'libv8', '~> 3.3'
 gem 'mini_racer', '~> 0.4.0'
 gem 'yui-compressor'
 #end
