@@ -158,6 +158,7 @@ GEM
     json_cve_2020_10663 (1.0.0)
       json (>= 1.7.7, < 2.3)
     libv8 (3.16.14.19)
+    libv8-node (15.14.0.1)
     loofah (2.3.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -182,6 +183,8 @@ GEM
     mime-types-data (3.2023.0218.1)
     mini_mime (1.1.2)
     mini_portile2 (2.4.0)
+    mini_racer (0.4.0)
+      libv8-node (~> 15.14.0.0)
     minitest (5.15.0)
     money (6.10.1)
       i18n (>= 0.6.4, < 1.0)
@@ -272,7 +275,6 @@ GEM
       json
     redcarpet (3.2.3)
     redis (3.3.5)
-    ref (2.0.0)
     render_anywhere (0.0.12)
       rails (>= 3.0.7)
     request_store (1.0.8)
@@ -380,9 +382,6 @@ GEM
     superfish-rails (1.6.0.1)
     term-ansicolor (1.6.0)
       tins (~> 1.0)
-    therubyracer (0.12.3)
-      libv8 (~> 3.16.14.15)
-      ref
     thin (1.7.2)
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0, >= 1.0.4)
@@ -446,6 +445,7 @@ DEPENDENCIES
   libv8 (~> 3.3)
   loofah
   mechanize
+  mini_racer (~> 0.4.0)
   newrelic_rpm
   nokogiri (~> 1.10.10)
   pdf-reader
@@ -479,7 +479,6 @@ DEPENDENCIES
   standard
   strong_presenter (~> 0.2.2)
   superfish-rails (~> 1.6.0)
-  therubyracer (~> 0.11)
   tilt
   uglifier (>= 1.0.3)
   whenever
