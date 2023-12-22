@@ -1,12 +1,10 @@
 require File.expand_path('../boot', __FILE__)
-require 'rubygems'
+
 require 'rails/all'
 
-if defined?(Bundler)  
-  # Require the gems listed in Gemfile, including any gems
-  # you've limited to :test, :development, or :production.
-  Bundler.require(:default, Rails.env)
-end
+# If you have a Gemfile, require the gems listed there, including any gems
+# you've limited to :test, :development, or :production.
+Bundler.require(:default, Rails.env) if defined?(Bundler)
 
 module NZTrain
   class Application < Rails::Application
@@ -15,8 +13,8 @@ module NZTrain
     # -- all .rb files in that directory are automatically loaded.
 
     # Custom directories with classes and modules you want to be autoloadable.
-    #config.autoload_paths += %W(#{config.root}/extras)
-    config.autoload_paths += %W(#{Rails.root}/lib)
+    # config.autoload_paths += %W(#{config.root}/extras)
+    config.autoload_paths += %W(#{Rails.root}/lib) # NZOI
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -42,16 +40,17 @@ module NZTrain
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
 
-    config.action_controller.include_all_helpers = false
+    config.action_controller.include_all_helpers = false # NZOI
 
     # Enable the asset pipeline
-    config.assets.enabled = true
-    config.assets.paths << Rails.root.join("fonts")
-    config.assets.precompile += %w(submission.css)
+    config.assets.enabled = true # NZOI
+    config.assets.paths << Rails.root.join("fonts") # NZOI
+    config.assets.precompile += %w(submission.css) # NZOI
 
     # Version of your assets, change this if you want to expire all your assets
-    config.assets.version = '1.0'
+    config.assets.version = '1.0' # NZOI
 
+    # NZOI
     config.time_zone = "Auckland"
     config.action_mailer.default_url_options = { :host => 'train.nzoi.org.nz' }
     config.action_mailer.delivery_method = :smtp
@@ -59,6 +58,7 @@ module NZTrain
     config.action_mailer.raise_delivery_errors = true
     config.action_mailer.default :charset => "utf-8"
 
+    # NZOI
     ActionMailer::Base.smtp_settings = {
       :address => "smtp.gmail.com",
       :port => 587,
@@ -69,6 +69,6 @@ module NZTrain
       :enable_starttls_auto => true
     }
 
-    config.middleware.use PDFKit::Middleware, {}, :only => [%r[^/item/[0-9]*/label]]
+    config.middleware.use PDFKit::Middleware, {}, :only => [%r[^/item/[0-9]*/label]] # NZOI
   end
 end
