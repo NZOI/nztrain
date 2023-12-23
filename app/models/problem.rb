@@ -63,17 +63,6 @@ class Problem < ActiveRecord::Base
     self.save
   end
 
-  def get_highest_scoring_submission(user, from = DateTime.new(1), to = DateTime.now)
-    subs = self.submissions.find(:all, :conditions => ["created_at between ? and ? and user_id = ?", from, to, user])
-    return subs.max_by {|s| s.score}
-  end
-
-  def get_score(user, from = DateTime.new(1), to = DateTime.now)
-    subs = self.submissions.find(:all, :limit => 1, :order => "score DESC", :conditions => ["created_at between ? and ? and user_id = ?", from, to, user])
-    scores = subs.map {|s| s.score}
-    return scores.max 
-  end
-
   def submission_history(user, from = DateTime.new(1), to = DateTime.now)
     return Submission.where("created_at between ? and ? and user_id IN (?) and problem_id = ?", from, to, user, self).order(created_at: :asc)
   end
