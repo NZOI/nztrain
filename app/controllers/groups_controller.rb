@@ -14,7 +14,7 @@ class GroupsController < ApplicationController
     authorize @group, :update?
     @contest = Contest.find(params[:contest_id])
     authorize @contest, :use?
-    if @group.contests.exists?(@contest)
+    if @group.contests.exists?(@contest.id)
       redirect_to(@contest, :alert => "This group already has access to this contest")
       return
     end

@@ -13,7 +13,7 @@ class ProblemSetsController < ApplicationController
     authorize @problem_set, :update?
     problem = Problem.find(params[:id]) # note switched params - TODO: fix form
     authorize problem, :use?
-    if @problem_set.problems.exists?(problem)
+    if @problem_set.problems.exists?(problem.id)
       redirect_to(problem, :alert => "This problem set already contains this problem")
       return
     end
