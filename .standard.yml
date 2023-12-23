@@ -137,6 +137,7 @@ ignore:
 - config/environments/production.rb
 - config/environments/test.rb
 - config/initializers/accessible_attributes.rb
+- config/initializers/assets.rb
 - config/initializers/carrierwave.rb
 - config/initializers/datetime_limits.rb
 - config/initializers/devise.rb
