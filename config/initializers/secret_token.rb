@@ -27,8 +27,8 @@ if NZTrain::Application.config.secret_key_base.nil?
   # Code inspired by Rails.application.generate_local_secret
   # (https://github.com/rails/rails/blob/v7.1.2/railties/lib/rails/application.rb#L665)
   filename = Rails.root.join("config/secret_key_base.#{Rails.env}.txt")
-  if !File.exist?(filename)
-    File.open(filename, "wb", 0600) { |f| f.write(SecureRandom.hex(64)) }
+  unless File.exist?(filename)
+    File.open(filename, "wb", 0o600) { |f| f.write(SecureRandom.hex(64)) }
   end
   NZTrain::Application.config.secret_key_base = File.binread(filename).strip
 end
