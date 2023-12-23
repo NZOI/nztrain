@@ -51,5 +51,13 @@ class Group < ActiveRecord::Base
   def invite!(user, current_user)
     Request.create(:requester => current_user, :subject => self, :verb => :invite, :target => user, :requestee => user)
   end
+
+  def to_xml(opts={})
+    # No sensitive data
+    super(opts) do |xml|
+      XmlUtil.serialize_id_list xml, 'contests', contests
+      XmlUtil.serialize_id_list xml, 'problem-sets', problem_sets
+    end
+  end
 end
 

@@ -21,11 +21,11 @@ class UserController < ApplicationController
   def show
     @user = User.find(params[:id])
     authorize @user, :show?
-    @solved_problems = @user.user_problem_relations.where(ranked_score: 100).joins(:problem).select([:problem_id, :ranked_submission_id, {problem: :name}]).order("problems.name")
+    @solved_problems = @user.solved_problems
 
     respond_to do |format|
       format.html
-      format.xml {render :xml => @user }
+      format.xml {render :xml => @user, :user => current_user }
     end
   end
 

@@ -33,4 +33,14 @@ class ProblemSet < ActiveRecord::Base
   def total_weighting
     problem_associations.sum(:weighting)
   end
+
+  def to_xml(opts={})
+    opts[:only] ||= [:id, :name, :owner_id, :created_at, :updated_at]
+
+    super(opts) do |xml|
+      XmlUtil.serialize_id_list xml, 'contests', contests
+      XmlUtil.serialize_id_list xml, 'groups', groups
+      XmlUtil.serialize_id_list xml, 'problems', problems
+    end
+  end
 end

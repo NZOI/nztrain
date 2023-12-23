@@ -50,6 +50,7 @@ class ProblemsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
+      format.xml { render :xml => @problems }
     end
   end
 
@@ -73,6 +74,7 @@ class ProblemsController < ApplicationController
 
     respond_to do |format|
       format.html { render :layout => "problem" }
+      format.xml { render :xml => @problem }
     end
 
     if user_signed_in?
@@ -115,7 +117,7 @@ class ProblemsController < ApplicationController
       start_time = current_user.contest_relations.joins(:contest => {:problem_set => :problems}).where{(started_at <= DateTime.now) & (finish_at > DateTime.now) & (contest.problem_set.problems.id == my{params[:id]})}.minimum(:started_at)
       @submissions = @problem.submission_history(current_user,start_time)
     end
-    
+
     respond_to do |format|
       format.html { render :layout => "problem" }
     end
@@ -225,7 +227,7 @@ class ProblemsController < ApplicationController
   def update
     @problem = Problem.find(params[:id])
     authorize @problem, :update?
-    
+
     @problem.assign_attributes(permitted_params)
     respond_to do |format|
       if validate(@problem) && @problem.save

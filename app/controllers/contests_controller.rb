@@ -1,3 +1,5 @@
+require 'builder'
+
 class ContestsController < ApplicationController
   def permitted_params
     @_permitted_params ||= begin
@@ -18,7 +20,7 @@ class ContestsController < ApplicationController
       authorize Contest.new, :manage?
       @contests = Contest.order("end_time DESC")
     end
-    
+
     respond_to do |format|
       format.html # index.html.erb
     end
@@ -42,6 +44,11 @@ class ContestsController < ApplicationController
     else
       raise Pundit::NotAuthorizedError
     end
+
+    respond_to do |format|
+      format.html
+      format.xml { render :xml => @contests.to_xml(:user => current_user) }
+    end
   end
 
   # GET /contests/1
@@ -61,7 +68,10 @@ class ContestsController < ApplicationController
       @contest_message = "You have not started this contest."
     end
 
-    render :layout => 'contest'
+    respond_to do |format|
+      format.html { render :layout => 'contest' }
+      format.xml { render :xml => @contest.to_xml(:user => current_user) }
+    end
   end
 
   def info

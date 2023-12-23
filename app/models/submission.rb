@@ -1,6 +1,6 @@
 class Submission < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
-  
+
   belongs_to :user
   belongs_to :problem
   has_many :contest_scores
@@ -9,7 +9,7 @@ class Submission < ActiveRecord::Base
   def user_problem_relation
     UserProblemRelation.where(:user_id => user_id, :problem_id => problem_id).first_or_create!
   end
-  
+
   validates :source, :presence => true
   validate do |submission|
     errors.add :language_id, "Invalid language specified" if submission.language.nil?
@@ -196,5 +196,11 @@ class Submission < ActiveRecord::Base
     end
   end
 
+  def to_xml(opts={})
+    # hiding e.g. judge log
+    opts[:only] ||= [:id, :source, :score, :user_id, :problem_id, :created_at, :updated_at, :input, :output, :language_id, :judged_at, :evaluation]
+
+    super(opts)
+  end
 end
 
