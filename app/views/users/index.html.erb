@@ -1,5 +1,14 @@
 <% content_for :title, "Users" %>
-<% if policy(User).su? %>
+
+<%
+# cache policy for efficiency
+policy_users_inspect = policy(User).inspect?
+policy_users_edit = policy(User).edit?
+policy_users_destroy = policy(User).destroy?
+policy_users_su = policy(User).su?
+%>
+
+<% if policy_users_su %>
   <%= render :partial => 'su', :formats => [:js] %>
 <% end %>
 
@@ -8,7 +17,7 @@
     <tr>
       <th></th>
       <th>Username</th>
-      <% if policy(User).inspect? %>
+      <% if policy_users_inspect %>
         <th>Name</th>
         <th>Email</th>
       <% end %>
@@ -16,13 +25,13 @@
       <th>Solved Problems</th>
       <th>Brownie Points</th>
       <th></th>
-      <% if policy(User).edit? %>
+      <% if policy_users_edit %>
         <th></th>
       <% end %>
-      <% if policy(User).destroy? %>
+      <% if policy_users_destroy %>
         <th></th>
       <% end %>
-      <% if policy(User).su? %>
+      <% if policy_users_su %>
         <th></th>
       <% end %>
     </tr>
@@ -32,7 +41,7 @@
       <tr>
         <td style="padding-left: 0; padding-right: 0"><%= flag_list(24){ flag(user.country_code.downcase, user.country_name, title: true) } if user.country_code %></td>
         <td><%= user.username %></td>
-        <% if policy(user).inspect? %>
+        <% if policy_users_inspect %>
           <td><%= user.name %></td>
           <td>
               <%= user.email %> <span style="color:red;"><%= "(unconfirmed)" if !user.confirmed? %></span>
@@ -42,10 +51,10 @@
         <td><%= user.num_solved %></td>
         <td><%= user.brownie_points %></td>
         <td><%= link_to 'Show', user %></td>
-        <% if policy(User).edit? %>
+        <% if policy_users_edit %>
           <td><%= link_to 'Edit', edit_user_path(user) if policy(user).edit? %></td>
         <% end %>
-        <% if policy(User).destroy? %>
+        <% if policy_users_destroy %>
           <td><%= link_to 'Destroy', user, :data => { :confirm => 'Are you sure?' }, :method => :delete if policy(user).destroy? %></td>
         <% end %>
         <% if policy(user).su? %>
