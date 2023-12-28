@@ -40,6 +40,7 @@ gem 'mechanize'
 gem 'prawn'
 gem 'rqrcode'
 gem 'pdfkit'
+gem 'responders'
 
 gem 'countries'
 gem 'country_select'

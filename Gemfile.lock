@@ -462,6 +462,7 @@ DEPENDENCIES
   redcarpet
   redis (< 4.0)
   render_anywhere
+  responders
   rmagick
   rqrcode
   rspec-rails (~> 3.0)
