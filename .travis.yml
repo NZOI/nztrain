@@ -1,6 +1,6 @@
 language: ruby
 rvm:
-  - "2.3.8"
+  - "2.4.10"
 services:
   - redis-server
   - postgresql
