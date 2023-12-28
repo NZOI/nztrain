@@ -97,6 +97,12 @@ gem 'sass'
 gem 'sass-rails'
 gem 'coffee-rails'
 gem 'uglifier', '>=1.0.3'
+# Provide a JS runtime to execjs without needing to
+# have node, bun, or similar installed on the relevant
+# server. We should write this out asap, along with the
+# rest of the gems in this assets category, as bundling
+# a version of libv8 into a rubygem is just security-vuln
+# city, but hey, what can you do.
 gem 'mini_racer', '~> 0.4.0'
 gem 'yui-compressor'
 #end
