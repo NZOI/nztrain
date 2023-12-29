@@ -27,7 +27,7 @@ class Enumeration
       end
       @enum[key] = value
       @enum[value] = key
-      if value.class != Fixnum
+      if value.class != Integer
         @entries[key] = value
       else
         @entries[value] = key
