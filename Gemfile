@@ -58,7 +58,13 @@ gem 'connection_pool'
 gem 'sinatra'
 
 # Deploy with Capistrano
-# gem 'capistrano'
+group :development do
+  gem 'capistrano', '~> 3.17', require: false
+  gem 'capistrano-bundler', '~> 2.0', require: false
+  gem 'capistrano-passenger', require: false
+  gem 'capistrano-rbenv', '~> 2.2'
+  gem "capistrano-rails", "~> 1.6", require: false
+end
 
 # Monitoring
 gem 'newrelic_rpm'
