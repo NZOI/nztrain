@@ -52,8 +52,8 @@ gem 'pg'
 gem 'backup'
 
 # Redis and Background Processing
-gem 'redis', '< 4.0'
-gem 'qless'#, :github => 'ronalchn/qless', :branch => 'nztrain'
+gem 'redis'
+gem 'qless', :github => 'Shopify/qless'
 gem 'connection_pool'
 gem 'sinatra'
 
