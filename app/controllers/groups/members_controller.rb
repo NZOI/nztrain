@@ -5,9 +5,9 @@ class Groups::MembersController < ApplicationController
   def load_group_request
     @group = Group.find(params[:id])
     @request = Request.find(params[:request_id])
-    if @group.invitations.exists?(@request) && @request.pending?
+    if @group.invitations.exists?(@request.id) && @request.pending?
       @request_type = :invitation
-    elsif @group.join_requests.exists?(@request) && @request.pending?
+    elsif @group.join_requests.exists?(@request.id) && @request.pending?
       @request_type = :join_request
     else
       redirect_to(@group, :alert => 'Invalid request operation')
@@ -27,7 +27,7 @@ class Groups::MembersController < ApplicationController
     @user = User.find_by_username(params[:username])
     if @user.nil?
       redirect_to(members_group_path(@group), :alert => "No user found with username \"#{params[:username]}\"")
-    elsif @group.members.exists?(@user)
+    elsif @group.members.exists?(@user.id)
       redirect_to(members_group_path(@group), :alert => "#{@user.username} is already a member of this group")
     else
       @group.join(@user)
@@ -63,7 +63,7 @@ class Groups::MembersController < ApplicationController
   def apply
     @group = Group.find(params[:id])
     authorize @group, :apply?
-    if @group.members.exists?(current_user)
+    if @group.members.exists?(current_user.id)
       redirect_to(@group, :alert => "You are already a member of this group")
     elsif invitation = @group.invitations.pending.where(:target_id => @user).first
       invitation.accept!
@@ -83,7 +83,7 @@ class Groups::MembersController < ApplicationController
       @user = User.find_by_username(params[:username])
       if @user.nil?
         redirect_to(invites_members_group_path(@group), :alert => "No user found with username \"#{params[:username]}\"")
-      elsif @group.members.exists?(@user)
+      elsif @group.members.exists?(@user.id)
         redirect_to(invites_members_group_path(@group), :alert => "#{@user.username} is already a member of this group")
       elsif join_request = @group.join_requests.pending.where(:subject_id => @user).first
         join_request.accept!

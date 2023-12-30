@@ -53,7 +53,7 @@ class UserController < ApplicationController
     authorize @user, :update?
     role = Role.find(params[:user][:role_ids])
     authorize role, :grant?
-    if @user.roles.exists?(role)
+    if @user.roles.exists?(role.id)
       redirect_to(@user, :alert => "This user already has this role")
       return
     end

@@ -15,7 +15,7 @@ feature 'invitation and join request' do
 
     @invitation = @group.invitations.pending.where(:target_id => users(:user)).first
 
-    expect(@group.members.exists?(users(:user))).to be false
+    expect(@group.members.exists?(users(:user).id)).to be false
 
     login_as users(:user), :scope => :user
     visit accounts_requests_path
@@ -26,7 +26,7 @@ feature 'invitation and join request' do
       end
     end.to change{ @group.invitations.pending.count }.by(-1)
 
-    expect(@group.members.exists?(users(:user))).to be true
+    expect(@group.members.exists?(users(:user).id)).to be true
   end
 
   scenario 'group member invites a user and cancels the invitation' do
@@ -58,7 +58,7 @@ feature 'invitation and join request' do
     apply_link = find :xpath, "//a[@href = '#{apply_group_path(@group)}']"
     expect { apply_link.click }.to change{ @group.join_requests.pending.count }.by(1)
 
-    expect(@group.members.exists?(users(:user))).to be false
+    expect(@group.members.exists?(users(:user).id)).to be false
     @join_request = @group.join_requests.pending.where(:subject_id => users(:user)).first
 
     login_as users(:organiser)
@@ -66,7 +66,7 @@ feature 'invitation and join request' do
     accept_link = find :xpath, "//a[@href = '#{accept_members_group_path(@group, @join_request)}']"
     expect{ accept_link.click }.to change{ @group.join_requests.pending.count }.by(-1)
 
-    expect(@group.members.exists?(users(:user))).to be true
+    expect(@group.members.exists?(users(:user).id)).to be true
   end
 
   scenario 'user applies to join group, and group owner rejects join request' do
@@ -84,6 +84,6 @@ feature 'invitation and join request' do
     reject_link = find :xpath, "//a[@href = '#{reject_members_group_path(@group, @join_request)}']"
     expect{ reject_link.click }.to change{ @group.join_requests.pending.count }.by(-1)
 
-    expect(@group.members.exists?(users(:user))).to be false
+    expect(@group.members.exists?(users(:user).id)).to be false
   end
 end

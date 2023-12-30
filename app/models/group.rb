@@ -32,7 +32,7 @@ class Group < ActiveRecord::Base
                                3 => [:private,'Membership is by private invitation']
 
   def join(current_user)
-    if self.members.exists?(current_user)
+    if self.members.exists?(current_user.id)
       false
     else
       self.members.push(current_user)

@@ -1,7 +1,7 @@
 <% content_for :title, @group.name %>
 <% toolbox_push :edit, edit_group_path(@group) if policy(@group).update? %>
 <% toolbox_push :delete, @group if policy(@group).destroy? %>
-<% if @group.members.exists?(current_user) %>
+<% if @group.members.exists?(current_user.id) %>
   <% toolbox_push :leave, leave_group_path(@group) if policy(@group).leave? %>
 <% elsif policy(@group).join? %>
   <%= toolbox_push :join, join_group_path(@group)  %>
