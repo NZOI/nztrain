@@ -1,19 +1,19 @@
 class UsersController < ApplicationController
   def index
     authorize User.new, :index?
-    @users = policy_scope(User).num_solved.order(:email)
+    @users = policy_scope(User).num_solved.includes(:roles).order(:email)
     render
   end
 
   def online
     authorize User.new, :inspect?
-    @users = policy_scope(User).order(:last_seen_at).reverse_order
+    @users = policy_scope(User).includes(:roles).order(:last_seen_at).reverse_order
     render
   end
 
   def newest
     authorize User.new, :inspect?
-    @users = policy_scope(User).order(:created_at).reverse_order.limit(100)
+    @users = policy_scope(User).includes(:roles).order(:created_at).reverse_order.limit(100)
     render
   end
 
