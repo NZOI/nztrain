@@ -16,7 +16,7 @@ class FileAttachmentsController < ApplicationController
       @file_attachments = FileAttachment.where(:owner_id => current_user.id)
     else
       authorize FileAttachment.new, :manage?
-      @file_attachments = FileAttachment.scoped
+      @file_attachments = FileAttachment.all
     end
   end
 
