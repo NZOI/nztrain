@@ -22,7 +22,7 @@ gem 'rmagick'
 gem 'carrierwave', '1.3.2'
 gem 'will_paginate'
 gem 'has_scope'
-gem 'pundit', '0.2.1'
+gem 'pundit', '~> 1.1.0'
 gem 'recaptcha', :require => 'recaptcha/rails'
 gem 'loofah'
 gem 'whenever', :require => false # for cron jobs
