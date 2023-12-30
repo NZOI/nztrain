@@ -63,6 +63,7 @@ gem 'sinatra'
 # Monitoring
 gem 'newrelic_rpm'
 gem 'coveralls', require: false
+gem 'sentry-raven'
 
 group :development do
   gem 'better_errors'
