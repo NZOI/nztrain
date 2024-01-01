@@ -26,5 +26,5 @@ make install || {
   exit 1
 }
 
-chgrp "$APP_USER" /usr/local/bin/isolate || exit 1
+chgrp "$APP_GROUP" /usr/local/bin/isolate || exit 1
 chmod 4750 /usr/local/bin/isolate || exit 1 # change permissions from default (4755) to prevent other users from executing, because it is setuid
