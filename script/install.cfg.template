@@ -14,6 +14,7 @@ export APP_NAME=${APP_NAME}
 # Rails environment that will be used to run this installation
 export RAILS_ROOT=${RAILS_ROOT}
 export APP_USER=${APP_USER} # user this app will run under
+export APP_GROUP=${APP_GROUP} # group this app will run under
 export RAILS_ENV=${RAILS_ENV} # development or production
 
 # Unicorn

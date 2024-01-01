@@ -57,6 +57,13 @@ while [ -z "$APP_USER" ] ; do
   if [[ ! $APP_USER ]] ; then APP_USER=$USER ; fi
 done
 
+default_app_group="$(id -gn "$APP_USER")"
+while [ -z "$APP_GROUP" ] ; do
+  anyset=true
+  prompt "What group will the server run as (default=$default_app_group)? " APP_GROUP
+  if [[ ! $APP_GROUP ]] ; then APP_GROUP=$default_app_group ; fi
+done
+
 while [ -z "$RAILS_ENV" ] ; do
   anyset=true
   prompt 'What environment is used to run this rails installation - d[evelopment] (default), p[roduction] or t[est]? ' RAILS_ENV
@@ -202,7 +209,7 @@ declare -p ISOLATE_BRANCH &> /dev/null || ISOLATE_BRANCH=master # no prompt
 shopt -u nocasematch;
 
 if $anyset ; then
-  export SERVER_NAME APP_NAME RAILS_ROOT APP_USER RAILS_ENV UNICORN_PORT
+  export SERVER_NAME APP_NAME RAILS_ROOT APP_USER APP_GROUP RAILS_ENV UNICORN_PORT
   export DATABASE TEST_DATABASE DATABASE_USERNAME
   export REDIS_HOST REDIS_PORT REDIS_PASS REDIS_INSTALL
   export SCHEDULE_BACKUPS BACKUP_RSYNC BACKUP_RSYNC_MODE BACKUP_RSYNC_PORT BACKUP_RSYNC_HOST BACKUP_RSYNC_USER BACKUP_RSYNC_PASS BACKUP_RSYNC_SSH_KEY BACKUP_RSYNC_PATH
