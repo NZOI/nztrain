@@ -4,16 +4,13 @@ cd `dirname $0`/../..
 
 source script/install.cfg
 
-min_version=8
-
-psql --version 2>/dev/null | bash script/extract_version.bash | bash script/check_version.bash $min_version || {
-  echo PostgreSQL $min_version+ required!
+id -u postgres &> /dev/null || {
+  echo "PostgreSQL required!"
   bash script/confirm.bash 'Install PostgreSQL' && {
     cmd="sudo apt-get install postgresql"
     echo "$ $cmd"
     $cmd
   } || exit 1
-
 }
 
 # required by pg gem
