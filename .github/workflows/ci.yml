@@ -52,6 +52,4 @@ jobs:
       - run: bundle exec rake db:test:load
       - run: bundle exec rspec
 
-      - uses: coverallsapp/github-action@v1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: coverallsapp/github-action@v2
