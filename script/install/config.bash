@@ -53,7 +53,7 @@ fi
 
 while [ -z "$APP_USER" ] ; do
   anyset=true
-  prompt "What username should the server run as (default=$USER)? " APP_USER
+  prompt "What username will the server run as (default=$USER)? " APP_USER
   if [[ ! $APP_USER ]] ; then APP_USER=$USER ; fi
 done
 
