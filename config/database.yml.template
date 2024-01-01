@@ -7,7 +7,6 @@ development:
   pool: 5
   username: ${DATABASE_USERNAME}
   password:
-  url: ${DATABASE_URL}
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -18,7 +17,6 @@ test:
   database: ${TEST_DATABASE}
   pool: 5
   username: ${DATABASE_USERNAME}
-  url: ${DATABASE_URL}
 
 production:
   adapter: postgresql
@@ -27,4 +25,4 @@ production:
   pool: 5
   username: ${DATABASE_USERNAME}
   password:
-  url: ${DATABASE_URL}
+

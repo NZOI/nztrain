@@ -23,6 +23,10 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: "postgresql://postgres:postgres@localhost:5432"
+
     steps:
       - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
@@ -31,7 +35,6 @@ jobs:
 
       - run: bash script/install/config.bash --defaults
         env:
-          RAILS_ENV: test
           DATABASE_USERNAME: postgres
           DATABASE:
           TEST_DATABASE: nztraintest
@@ -44,7 +47,6 @@ jobs:
 
       - run: AUTOCONFIRM=true script/install.bash --skip-update
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432
           PGHOST: localhost
           PGUSER: postgres
           PGPASSWORD: postgres
