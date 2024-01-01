@@ -41,9 +41,9 @@ fi
 if [[ $DATABASE ]] ; then
   psql -U "$DATABASE_USERNAME" "$DATABASE" -c '' &> /dev/null || {
     bash script/confirm.bash "Create new PostgreSQL database $DATABASE" && {
-      cmd="sudo -u postgres createdb $DATABASE"
-      echo "$ $cmd"
-      $cmd
+      cmd=(createdb -U "$DATABASE_USERNAME" "$DATABASE")
+      echo "$ ${cmd[@]}"
+      "${cmd[@]}"
     } || exit 1
   }
 fi
@@ -52,10 +52,10 @@ fi
 if [[ $TEST_DATABASE ]] ; then
   psql -U "$DATABASE_USERNAME" "$TEST_DATABASE" -c '' &> /dev/null || {
     bash script/confirm.bash "Create new PostgreSQL database $TEST_DATABASE" && {
-      cmd="sudo -u postgres createdb $TEST_DATABASE"
-      echo "$ $cmd"
-      $cmd
-    } || exit
+      cmd=(createdb -U "$DATABASE_USERNAME" "$TEST_DATABASE")
+      echo "$ ${cmd[@]}"
+      "${cmd[@]}"
+    } || exit 1
   }
 fi
 
