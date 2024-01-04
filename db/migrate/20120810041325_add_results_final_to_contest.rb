@@ -1,6 +1,6 @@
 class AddResultsFinalToContest < ActiveRecord::Migration
   def up
-    add_column :contests, :finalized_at, :datetime, :default => nil
+    add_column :contests, :finalized_at, :datetime, default: nil
 
     Contest.find_each do |contest|
       if contest.end_time < DateTime.now

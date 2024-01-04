@@ -6,11 +6,11 @@ class CreateProblemSets < ActiveRecord::Migration
       t.timestamps null: true
     end
     # add association tables
-    create_table :problem_sets_problems, :id => false do |t|
+    create_table :problem_sets_problems, id: false do |t|
       t.integer :problem_set_id
       t.integer :problem_id
     end
-    create_table :groups_problem_sets, :id => false do |t|
+    create_table :groups_problem_sets, id: false do |t|
       t.integer :group_id
       t.integer :problem_set_id
     end
