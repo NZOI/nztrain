@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(version: 20250318053450) do
   create_table "contest_supervisors", force: :cascade do |t|
     t.integer  "contest_id"
     t.integer  "user_id"
-    t.string   "site_type"
+    t.string   "site_type",            limit: 255
     t.integer  "site_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -63,7 +63,7 @@ ActiveRecord::Schema.define(version: 20250318053450) do
   end
 
   create_table "contests", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",                           limit: 255
     t.datetime "start_time"
     t.datetime "end_time"
     t.decimal  "duration"
@@ -72,45 +72,45 @@ ActiveRecord::Schema.define(version: 20250318053450) do
     t.datetime "updated_at"
     t.integer  "problem_set_id"
     t.datetime "finalized_at"
-    t.string   "startcode"
-    t.integer  "observation",                    default: 1
-    t.integer  "registration",                   default: 0
-    t.integer  "affiliation",                    default: 0
-    t.boolean  "live_scoreboard",                default: true
-    t.boolean  "only_rank_official_contestants", default: false
+    t.string   "startcode",                      limit: 255
+    t.integer  "observation",                                default: 1
+    t.integer  "registration",                               default: 0
+    t.integer  "affiliation",                                default: 0
+    t.boolean  "live_scoreboard",                            default: true
+    t.boolean  "only_rank_official_contestants",             default: false
   end
 
   create_table "entities", force: :cascade do |t|
-    t.string  "name"
+    t.string  "name",        limit: 255
     t.integer "entity_id"
-    t.string  "entity_type"
+    t.string  "entity_type", limit: 255
   end
 
   create_table "evaluators", force: :cascade do |t|
-    t.string   "name",                     null: false
-    t.text     "description", default: "", null: false
-    t.text     "source",      default: "", null: false
-    t.integer  "owner_id",                 null: false
+    t.string   "name",        limit: 255,              null: false
+    t.text     "description",             default: "", null: false
+    t.text     "source",                  default: "", null: false
+    t.integer  "owner_id",                             null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "language_id"
   end
 
   create_table "file_attachments", force: :cascade do |t|
-    t.string   "name"
-    t.string   "file_attachment"
+    t.string   "name",            limit: 255
+    t.string   "file_attachment", limit: 255
     t.integer  "owner_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   create_table "filelinks", force: :cascade do |t|
     t.integer  "root_id"
     t.integer  "file_attachment_id"
     t.datetime "created_at"
-    t.string   "filepath"
-    t.string   "root_type"
-    t.integer  "visibility",         limit: 2, default: 0
+    t.string   "filepath",           limit: 255
+    t.string   "root_type",          limit: 255
+    t.integer  "visibility",         limit: 2,   default: 0
   end
 
   add_index "filelinks", ["file_attachment_id"], name: "index_filelinks_on_file_attachment_id", using: :btree
@@ -133,19 +133,19 @@ ActiveRecord::Schema.define(version: 20250318053450) do
   create_table "group_problem_sets", force: :cascade do |t|
     t.integer "group_id"
     t.integer "problem_set_id"
-    t.string  "name"
+    t.string  "name",           limit: 255
   end
 
   add_index "group_problem_sets", ["group_id", "problem_set_id"], name: "index_group_problem_sets_on_group_id_and_problem_set_id", using: :btree
   add_index "group_problem_sets", ["problem_set_id", "group_id"], name: "index_group_problem_sets_on_problem_set_id_and_group_id", using: :btree
 
   create_table "groups", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "owner_id"
-    t.integer  "visibility", default: 0, null: false
-    t.integer  "membership", default: 0, null: false
+    t.integer  "visibility",             default: 0, null: false
+    t.integer  "membership",             default: 0, null: false
   end
 
   create_table "item_histories", force: :cascade do |t|
@@ -153,7 +153,7 @@ ActiveRecord::Schema.define(version: 20250318053450) do
     t.boolean  "active"
     t.integer  "action"
     t.integer  "holder_id"
-    t.string   "data"
+    t.string   "data",       limit: 255
     t.datetime "acted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -172,32 +172,32 @@ ActiveRecord::Schema.define(version: 20250318053450) do
   end
 
   create_table "language_groups", force: :cascade do |t|
-    t.string   "identifier"
-    t.string   "name"
+    t.string   "identifier",          limit: 255
+    t.string   "name",                limit: 255
     t.integer  "current_language_id"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
   end
 
   add_index "language_groups", ["identifier"], name: "index_language_groups_on_identifier", unique: true, using: :btree
 
   create_table "languages", force: :cascade do |t|
-    t.string   "identifier"
-    t.string   "compiler"
+    t.string   "identifier",          limit: 255
+    t.string   "compiler",            limit: 255
     t.boolean  "interpreted"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-    t.string   "extension"
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
+    t.string   "extension",           limit: 255
     t.boolean  "compiled"
-    t.string   "name"
-    t.string   "lexer"
+    t.string   "name",                limit: 255
+    t.string   "lexer",               limit: 255
     t.integer  "group_id"
-    t.string   "source_filename"
-    t.string   "exe_extension"
-    t.string   "compiler_command"
-    t.string   "interpreter"
-    t.string   "interpreter_command"
-    t.integer  "processes",           default: 1
+    t.string   "source_filename",     limit: 255
+    t.string   "exe_extension",       limit: 255
+    t.string   "compiler_command",    limit: 255
+    t.string   "interpreter",         limit: 255
+    t.string   "interpreter_command", limit: 255
+    t.integer  "processes",                       default: 1
   end
 
   add_index "languages", ["identifier"], name: "index_languages_on_identifier", unique: true, using: :btree
@@ -206,9 +206,9 @@ ActiveRecord::Schema.define(version: 20250318053450) do
   end
 
   create_table "problem_series", force: :cascade do |t|
-    t.string "name"
-    t.string "identifier"
-    t.string "importer_type"
+    t.string "name",          limit: 255
+    t.string "identifier",    limit: 255
+    t.string "importer_type", limit: 255
     t.text   "index_yaml"
   end
 
@@ -223,18 +223,18 @@ ActiveRecord::Schema.define(version: 20250318053450) do
   add_index "problem_set_problems", ["problem_set_id", "problem_id"], name: "index_problem_set_problems_on_problem_set_id_and_problem_id", using: :btree
 
   create_table "problem_sets", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",                     limit: 255
     t.integer  "owner_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "finalized_contests_count", default: 0
+    t.integer  "finalized_contests_count",             default: 0
   end
 
   create_table "problems", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",               limit: 255
     t.text     "statement"
-    t.string   "input"
-    t.string   "output"
+    t.string   "input",              limit: 255
+    t.string   "output",             limit: 255
     t.integer  "memory_limit"
     t.decimal  "time_limit"
     t.integer  "owner_id"
@@ -242,34 +242,34 @@ ActiveRecord::Schema.define(version: 20250318053450) do
     t.datetime "updated_at"
     t.integer  "evaluator_id"
     t.datetime "rejudge_at"
-    t.integer  "test_error_count",   default: 0
-    t.integer  "test_warning_count", default: 0
-    t.integer  "test_status",        default: 0
+    t.integer  "test_error_count",               default: 0
+    t.integer  "test_warning_count",             default: 0
+    t.integer  "test_status",                    default: 0
   end
 
   create_table "products", force: :cascade do |t|
-    t.string  "name"
+    t.string  "name",        limit: 255
     t.integer "gtin",        limit: 8
     t.text    "description"
-    t.string  "image"
+    t.string  "image",       limit: 255
   end
 
   create_table "requests", force: :cascade do |t|
     t.integer  "requester_id"
     t.integer  "subject_id"
-    t.string   "subject_type"
-    t.string   "verb",                              null: false
-    t.integer  "target_id",                         null: false
-    t.string   "target_type",                       null: false
-    t.integer  "status",       default: 0,          null: false
+    t.string   "subject_type", limit: 255
+    t.string   "verb",         limit: 255,                      null: false
+    t.integer  "target_id",                                     null: false
+    t.string   "target_type",  limit: 255,                      null: false
+    t.integer  "status",                   default: 0,          null: false
     t.integer  "requestee_id"
-    t.datetime "expired_at",   default: 'Infinity', null: false
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "expired_at",               default: 'Infinity', null: false
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
   end
 
   create_table "roles", force: :cascade do |t|
-    t.string "name"
+    t.string "name", limit: 255
   end
 
   create_table "roles_users", id: false, force: :cascade do |t|
@@ -278,14 +278,14 @@ ActiveRecord::Schema.define(version: 20250318053450) do
   end
 
   create_table "schools", force: :cascade do |t|
-    t.string  "name"
+    t.string  "name",         limit: 255
     t.string  "country_code", limit: 2
     t.integer "users_count"
     t.integer "synonym_id"
   end
 
   create_table "sessions", force: :cascade do |t|
-    t.string   "session_id", null: false
+    t.string   "session_id", limit: 255, null: false
     t.text     "data"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -296,8 +296,8 @@ ActiveRecord::Schema.define(version: 20250318053450) do
   add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "settings", force: :cascade do |t|
-    t.string "key"
-    t.string "value"
+    t.string "key",   limit: 255
+    t.string "value", limit: 255
   end
 
   add_index "settings", ["key"], name: "index_settings_on_key", unique: true, using: :btree
@@ -309,15 +309,15 @@ ActiveRecord::Schema.define(version: 20250318053450) do
     t.integer  "problem_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "input"
-    t.string   "output"
+    t.string   "input",          limit: 255
+    t.string   "output",         limit: 255
     t.integer  "language_id"
     t.text     "judge_log"
     t.datetime "judged_at"
-    t.string   "job"
+    t.string   "job",            limit: 255
     t.integer  "classification"
-    t.string   "test_errors",    array: true
-    t.string   "test_warnings",  array: true
+    t.string   "test_errors",    limit: 255, array: true
+    t.string   "test_warnings",  limit: 255, array: true
     t.float    "evaluation"
     t.decimal  "points"
     t.integer  "maximum_points"
@@ -339,11 +339,11 @@ ActiveRecord::Schema.define(version: 20250318053450) do
   create_table "test_cases", force: :cascade do |t|
     t.text     "input"
     t.text     "output"
-    t.string   "name"
+    t.string   "name",          limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "problem_id"
-    t.boolean  "sample",        default: false
+    t.boolean  "sample",                    default: false
     t.integer  "problem_order"
   end
 
@@ -352,10 +352,10 @@ ActiveRecord::Schema.define(version: 20250318053450) do
   create_table "test_sets", force: :cascade do |t|
     t.integer  "problem_id"
     t.integer  "points"
-    t.string   "name"
+    t.string   "name",          limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "prerequisite",  default: false
+    t.boolean  "prerequisite",              default: false
     t.integer  "problem_order"
   end
 
@@ -378,27 +378,27 @@ ActiveRecord::Schema.define(version: 20250318053450) do
   add_index "user_problem_relations", ["user_id", "problem_id"], name: "index_user_problem_relations_on_user_id_and_problem_id", unique: true, using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                            default: "",    null: false
-    t.string   "encrypted_password",               default: "",    null: false
-    t.string   "reset_password_token"
+    t.string   "email",                  limit: 255, default: "",    null: false
+    t.string   "encrypted_password",     limit: 255, default: "",    null: false
+    t.string   "reset_password_token",   limit: 255
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                    default: 0
+    t.integer  "sign_in_count",                      default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.string   "last_sign_in_ip"
+    t.string   "current_sign_in_ip",     limit: 255
+    t.string   "last_sign_in_ip",        limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "brownie_points",                   default: 0
-    t.string   "name"
-    t.string   "username",                                         null: false
-    t.boolean  "can_change_username",              default: false, null: false
-    t.string   "avatar"
-    t.string   "confirmation_token"
+    t.integer  "brownie_points",                     default: 0
+    t.string   "name",                   limit: 255
+    t.string   "username",               limit: 255,                 null: false
+    t.boolean  "can_change_username",                default: false, null: false
+    t.string   "avatar",                 limit: 255
+    t.string   "confirmation_token",     limit: 255
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.string   "unconfirmed_email"
+    t.string   "unconfirmed_email",      limit: 255
     t.datetime "last_seen_at"
     t.integer  "school_id"
     t.string   "country_code",           limit: 3
