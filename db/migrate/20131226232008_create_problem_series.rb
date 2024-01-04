@@ -5,8 +5,5 @@ class CreateProblemSeries < ActiveRecord::Migration
       t.string :identifier
       t.string :importer_type
     end
-
-    # unused column
-    remove_column :file_attachments, :string, :string
   end
 end
