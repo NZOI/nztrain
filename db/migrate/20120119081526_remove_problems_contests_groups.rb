@@ -5,11 +5,11 @@ class RemoveProblemsContestsGroups < ActiveRecord::Migration
   end
 
   def self.down
-    create_table :groups_problems, :id => false do |t|
+    create_table :groups_problems, id: false do |t|
       t.integer :group_id
       t.integer :problem_id
     end
-    create_table :contests_problems, :id => false do |t|
+    create_table :contests_problems, id: false do |t|
       t.integer :contest_id
       t.integer :problem_id
     end

@@ -5,13 +5,13 @@ class ChangeLanguageIdentifiersToMatch < ActiveRecord::Migration
 
   def up
     Language.all.each do |language|
-      language.update_attributes(:name => language.identifier, :identifier => mapping.fetch(language.identifier, language.identifier))
+      language.update_attributes(name: language.identifier, identifier: mapping.fetch(language.identifier, language.identifier))
     end
   end
 
   def down
     Language.all.each do |language|
-      language.update_attributes(:identifier => mapping.invert.fetch(language.identifier, language.identifier))
+      language.update_attributes(identifier: mapping.invert.fetch(language.identifier, language.identifier))
     end
   end
 end

@@ -1,10 +1,10 @@
 class CreateEvaluators < ActiveRecord::Migration
   def self.up
     create_table :evaluators do |t|
-      t.string :name, :unique => true, :null => false
-      t.text :description, :null => false, :default => ""
-      t.text :source, :null => false, :default => ""
-      t.integer :user_id, :null => false
+      t.string :name, unique: true, null: false
+      t.text :description, null: false, default: ""
+      t.text :source, null: false, default: ""
+      t.integer :user_id, null: false
 
       t.timestamps null: true
     end

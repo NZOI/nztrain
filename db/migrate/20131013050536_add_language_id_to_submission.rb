@@ -4,12 +4,12 @@ class AddLanguageIdToSubmission < ActiveRecord::Migration
     rename_column :submissions, :language, :old_language
 
     Submission.select(:old_language).uniq.each do |submission|
-      Language.where(:name => submission.old_language).first_or_create!
+      Language.where(name: submission.old_language).first_or_create!
     end
 
     execute "UPDATE submissions SET language_id = (SELECT id FROM languages WHERE languages.name = submissions.old_language);"
     # Check that language relations migrated successfully
-    failures = Submission.where(:language_id => nil).count
+    failures = Submission.where(language_id: nil).count
     raise "Languages in #{failures} submissions failed to migrate" if failures > 0
 
     remove_column :submissions, :old_language

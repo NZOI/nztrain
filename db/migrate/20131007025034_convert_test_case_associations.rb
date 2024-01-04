@@ -5,8 +5,8 @@ class ConvertTestCaseAssociations < ActiveRecord::Migration
     ## too slow
     #TestCase.find_each do |test_case|
     #  relation = TestCaseRelation.new(
-    #    :test_case => test_case,
-    #    :test_set => TestSet.find(test_case.test_set_id));
+    #    test_case: test_case,
+    #    test_set: TestSet.find(test_case.test_set_id));
     #    relation.save
     #end
     remove_column :test_cases, :test_set_id
@@ -19,7 +19,7 @@ class ConvertTestCaseAssociations < ActiveRecord::Migration
       sets = test_case.test_sets
       test_case.test_set_id = sets.first.id
       sets.drop(1).each do |set|
-        TestCase.create(test_case.attributes.merge(:test_set_id => set.id))
+        TestCase.create(test_case.attributes.merge(test_set_id: set.id))
       end
     end
   end

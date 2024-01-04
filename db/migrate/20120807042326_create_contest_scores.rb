@@ -3,8 +3,8 @@ class CreateContestScores < ActiveRecord::Migration
     # table to cache submission score for each problem/user (of all submissions that have been created)
     # however, this score may differ from actual submission score if it gets rejudged after a contest has been sealed
     create_table :contest_scores do |t|
-      t.references :contest_relation, :null => false
-      t.references :problem, :null => false
+      t.references :contest_relation, null: false
+      t.references :problem, null: false
       t.integer :score
       t.integer :attempts
       t.integer :attempt
@@ -15,9 +15,9 @@ class CreateContestScores < ActiveRecord::Migration
     add_index :contest_scores, [:contest_relation_id,:problem_id]
 
     # columns in contest_relations to cache important data
-    add_column :contest_relations, :score, :integer, :null => false, :default => 0 # column to cache total score
-    add_column :contest_relations, :time_taken, :float, :limit => 53, :null => false, :default => 0 # column to cache time taken
-    add_index :contest_relations, [:contest_id,:score,:time_taken], :order => {:contest_id => :asc, :score => :desc, :time_taken => :asc} # index to make it easy to get scores in sorted order for a specific contest
+    add_column :contest_relations, :score, :integer, null: false, default: 0 # column to cache total score
+    add_column :contest_relations, :time_taken, :float, limit: 53, null: false, default: 0 # column to cache time taken
+    add_index :contest_relations, [:contest_id,:score,:time_taken], order: {contest_id: :asc, score: :desc, time_taken: :asc} # index to make it easy to get scores in sorted order for a specific contest
 
     # populate cache table for current contests
     Contest.find_each do |contest|

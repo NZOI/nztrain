@@ -7,7 +7,7 @@ class AddLanguageGroupModel < ActiveRecord::Migration
       t.timestamps null: false
     end
 
-    add_index :language_groups, :identifier, :unique => true
+    add_index :language_groups, :identifier, unique: true
 
     add_column :languages, :compiled, :boolean
 
@@ -16,6 +16,6 @@ class AddLanguageGroupModel < ActiveRecord::Migration
     add_column :languages, :lexer, :string
     add_column :languages, :group_id, :integer
 
-    add_index :languages, :identifier, :unique => true
+    add_index :languages, :identifier, unique: true
   end
 end

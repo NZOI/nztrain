@@ -7,8 +7,8 @@ class NameAllTestSetsAndCases < ActiveRecord::Migration
       name_uniquely(problem.test_cases)
     end
 
-    add_index :test_sets, [:problem_id, :name], :unique => true
-    add_index :test_cases, [:problem_id, :name], :unique => true
+    add_index :test_sets, [:problem_id, :name], unique: true
+    add_index :test_cases, [:problem_id, :name], unique: true
   end
 
   def down
@@ -24,7 +24,7 @@ class NameAllTestSetsAndCases < ActiveRecord::Migration
     relation.select([:id, :name]).each do |obj|
       if !names.include?(obj.name)
         i+=1 while names.include?(i.to_s)
-        klass.update(obj.id, :name => i.to_s)
+        klass.update(obj.id, name: i.to_s)
         i+=1
       end
     end

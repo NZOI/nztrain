@@ -78,7 +78,7 @@ class ChangeHabtmProblemAssociations < ActiveRecord::Migration
     rename_column :problems, :name, :title
     rename_column :problem_sets, :name, :title
 
-    add_index :problems, :title, :unique => true
+    add_index :problems, :title, unique: true
 
     remove_column :group_problem_sets, :name
     remove_column :problem_set_problems, :problem_set_order

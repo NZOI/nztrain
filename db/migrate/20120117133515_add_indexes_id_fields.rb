@@ -8,7 +8,7 @@ class AddIndexesIdFields < ActiveRecord::Migration
   #   - getting the users that belong to a group
   #   - getting the test cases for a problem
   def self.up
-    add_index(:contest_relations, [:contest_id, :user_id], :unique => true)
+    add_index(:contest_relations, [:contest_id, :user_id], unique: true)
     add_index(:contest_relations, [:user_id, :started_at])
 
     add_index(:submissions, [:user_id, :problem_id])
