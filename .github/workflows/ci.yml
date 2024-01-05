@@ -1,0 +1,70 @@
+name: Continuous Integration
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    services:
+      postgres:
+        image: postgres:11-alpine
+        ports: ["5432:5432"]
+        env:
+          #POSTGRES_DB: nztraintest # not required because script/install.bash creates the database
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: "postgresql://postgres:postgres@localhost:5432"
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - run: bash script/install/config.bash --defaults
+        env:
+          DATABASE_INSTALL: false
+          DATABASE_USERNAME: postgres
+          DATABASE:
+          TEST_DATABASE: nztraintest
+          REDIS_INSTALL: false
+          REDIS_PASS:
+          SCHEDULE_BACKUPS: 0
+          ISOLATE_ROOT: /
+          ISOLATE_CGROUPS: false
+          ISOLATE_BRANCH: master
+
+      - run: AUTOCONFIRM=true script/install.bash
+        env:
+          PGHOST: localhost
+          PGUSER: postgres
+          PGPASSWORD: postgres
+
+      #- run: bundle exec rake db:test:load # not required because script/install.bash runs db:migrate
+      - run: bundle exec rspec
+
+      - uses: coverallsapp/github-action@v2
+
+  lint:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - run: bundle exec standardrb --parallel
