@@ -45,7 +45,7 @@ jobs:
           ISOLATE_CGROUPS: false
           ISOLATE_BRANCH: master
 
-      - run: AUTOCONFIRM=true script/install.bash --skip-update
+      - run: AUTOCONFIRM=true script/install.bash
         env:
           PGHOST: localhost
           PGUSER: postgres
