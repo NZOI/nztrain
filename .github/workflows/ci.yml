@@ -53,7 +53,7 @@ jobs:
           PGUSER: postgres
           PGPASSWORD: postgres
 
-      - run: bundle exec rake db:test:load
+      #- run: bundle exec rake db:test:load # not required because script/install.bash runs db:migrate
       - run: bundle exec rspec
 
       - uses: coverallsapp/github-action@v2
