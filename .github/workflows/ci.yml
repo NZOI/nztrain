@@ -48,6 +48,9 @@ jobs:
           ISOLATE_CGROUPS: false
           ISOLATE_BRANCH: master
 
+      - name: Back up db/schema.rb # it will be overwritten when install.bash runs migrate.bash; back up the original so we can check if it's up to date
+        run: cp db/schema.rb db/schema.rb.git
+
       - run: AUTOCONFIRM=true script/install.bash
         env:
           PGHOST: localhost
@@ -56,6 +59,11 @@ jobs:
 
       #- run: bundle exec rake db:test:load # not required because script/install.bash runs db:migrate
       - run: bundle exec rspec
+
+      - name: Check that db/schema.rb is up to date
+        run: |
+          diff -u db/schema.rb.git db/schema.rb >&2 ||
+            { echo "Error: db/schema.rb is out of date" >&2; exit 1; }
 
       - uses: coverallsapp/github-action@v2
 
