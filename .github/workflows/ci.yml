@@ -8,7 +8,7 @@ jobs:
         image: postgres:11-alpine
         ports: ["5432:5432"]
         env:
-          POSTGRES_DB: nztraintest
+          #POSTGRES_DB: nztraintest # not required because script/install.bash creates the database
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         options: >-
