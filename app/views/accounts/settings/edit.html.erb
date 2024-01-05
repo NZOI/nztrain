@@ -2,7 +2,7 @@
 <% toolbox_push :back, :back %>
 
 <%= form_for(resource, :as => resource_name, :url => "/accounts/settings/update", :html => { :multipart => true, :method => :put }) do |f| %>
-  <%= devise_error_messages! %>
+  <%= render "devise/shared/error_messages", resource: resource %>
 
   <div class="field">
     <h3><%= f.label :username %></h3>
