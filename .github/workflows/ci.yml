@@ -1,15 +1,16 @@
 name: Continuous Integration
 on: [push, pull_request]
 jobs:
-  build:
+  test:
     runs-on: ubuntu-20.04
     services:
       postgres:
-        image: postgres:11
+        image: postgres:11-alpine
+        ports: ["5432:5432"]
         env:
           POSTGRES_DB: nztraintest
+          POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-        ports: ['5432:5432']
         options: >-
           --health-cmd "pg_isready -U postgres"
           --health-interval 10s
@@ -17,7 +18,7 @@ jobs:
           --health-retries 5
       redis:
         image: redis
-        ports: ['6379:6379']
+        ports: ["6379:6379"]
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 10s
