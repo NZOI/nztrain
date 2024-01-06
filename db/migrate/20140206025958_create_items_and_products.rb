@@ -2,7 +2,9 @@ class CreateItemsAndProducts < ActiveRecord::Migration
   def change
     create_table :entities do |t|
       t.string :name
-      t.references :entity, polymorphic: true
+      # replaces `t.references :entity, polymorphic: true` to add limit: 255
+      t.integer :entity_id
+      t.string :entity_type
     end
     create_table :organisations do |t|
     end
