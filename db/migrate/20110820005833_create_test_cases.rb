@@ -4,7 +4,7 @@ class CreateTestCases < ActiveRecord::Migration
       t.text :input
       t.text :output
       t.integer :points
-      t.string :description
+      t.string :description, limit: 255
       t.integer :problem_id
 
       t.timestamps null: true

@@ -1,6 +1,6 @@
 class AddOptionsToContest < ActiveRecord::Migration
   def change
-    add_column :contests, :startcode, :string # plain-text start-code
+    add_column :contests, :startcode, :string, limit: 255 # plain-text start-code
     add_column :contests, :observation, :integer, default: 1 # for observers: public (everyone), protected (groups it is added to even if not competing), private (only if competing)
     add_column :contests, :registration, :integer, default: 0 # open (to all group members), application (by all group members), invitation (to anybody), private (no invites - admin add only)
     # display school affiliation, may require school set to join contest

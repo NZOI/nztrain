@@ -2,7 +2,7 @@ class CreateSubmissions < ActiveRecord::Migration
   def self.up
     create_table :submissions do |t|
       t.text :source
-      t.string :language
+      t.string :language, limit: 255
       t.integer :score
       t.integer :user_id
       t.integer :problem_id

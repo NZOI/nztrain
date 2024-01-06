@@ -16,7 +16,7 @@ class AddLanguageIdToSubmission < ActiveRecord::Migration
   end
 
   def down
-    add_column :submissions, :old_language, :string
+    add_column :submissions, :old_language, :string, limit: 255
 
     execute "UPDATE submissions SET old_language = (SELECT name FROM languages WHERE languages.id = submissions.language_id);"
 

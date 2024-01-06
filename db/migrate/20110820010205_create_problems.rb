@@ -1,10 +1,10 @@
 class CreateProblems < ActiveRecord::Migration
   def self.up
     create_table :problems do |t|
-      t.string :title
+      t.string :title, limit: 255
       t.text :statement
-      t.string :input
-      t.string :output
+      t.string :input, limit: 255
+      t.string :output, limit: 255
       t.integer :memory_limit
       t.decimal :time_limit
       t.integer :user_id
