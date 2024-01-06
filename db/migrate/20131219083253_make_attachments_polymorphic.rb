@@ -2,7 +2,7 @@ class MakeAttachmentsPolymorphic < ActiveRecord::Migration
   def up
     rename_table :group_file_attachments, :filelinks
     rename_column :filelinks, :group_id, :root_id
-    add_column :filelinks, :root_type, :string
+    add_column :filelinks, :root_type, :string, limit: 255
 
     drop_table :problem_file_attachments
 

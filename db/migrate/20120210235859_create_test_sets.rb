@@ -3,7 +3,7 @@ class CreateTestSets < ActiveRecord::Migration
     create_table :test_sets do |t|
       t.integer :problem_id
       t.integer :points
-      t.string :name
+      t.string :name, limit: 255
 
       t.timestamps null: true
     end

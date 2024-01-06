@@ -3,7 +3,7 @@ class CreateContestSupervisors < ActiveRecord::Migration
     create_table :contest_supervisors do |t|
       t.integer :contest_id
       t.integer :user_id
-      t.string :site_type
+      t.string :site_type, limit: 255
       t.integer :site_id
 
       t.timestamps null: true
