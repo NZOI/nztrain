@@ -1,7 +1,7 @@
 class CreateProblemSets < ActiveRecord::Migration
   def self.up
     create_table :problem_sets do |t|
-      t.string :title
+      t.string :title, limit: 255
       t.integer :user_id
       t.timestamps null: true
     end
