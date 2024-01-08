@@ -14,14 +14,20 @@ class SubmissionsController < ApplicationController
   # GET /submissions
   # GET /submissions.xml
   def index
+    # "/submissions" returns all submissions by all users
+    # "/submissions/by_user/:by_user" returns submissions by a particular user
+    # "/submissions/my" similar to "/submissions/by_user/#{current_user.id}"
+    # but renders slightly different (title is "My Submission", etc.)
     raise Pundit::NotAuthorizedError if current_user.nil?
     if params[:filter] == "my"
       params[:by_user] = current_user.id.to_s
     end
     if params[:by_user].nil?
-      authorize Submission, :inspect?
+      authorize Submission, :inspect? # need to be staff
     elsif params[:by_user].to_i != current_user.id
-      authorize User.find(params[:by_user]), :inspect?
+      authorize User.find(params[:by_user]), :inspect? # need to be staff
+    else
+      # always allowed to view own submissions (limited to policy_scope)
     end
     if !params[:by_problem].nil?
       authorize Problem.find(params[:by_problem]), :view_submissions?
