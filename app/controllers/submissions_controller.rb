@@ -15,12 +15,18 @@ class SubmissionsController < ApplicationController
   # GET /submissions.xml
   def index
     raise Pundit::NotAuthorizedError if current_user.nil?
-    params[:by_user] = current_user.id.to_s if params[:filter] == 'my'
-    if !params[:by_user].nil? && params[:by_user].to_i != current_user.id
+    if params[:filter] == "my"
+      params[:by_user] = current_user.id.to_s
+    end
+    if params[:by_user].nil?
+      authorize Submission.new, :show?
+    elsif params[:by_user].to_i != current_user.id
       authorize User.find(params[:by_user]), :inspect?
     end
-    authorize Submission.new, :show? if params[:by_user].nil?
-    authorize Problem.find(params[:by_problem]), :view_submissions? unless params[:by_problem].nil?
+    if !params[:by_problem].nil?
+      authorize Problem.find(params[:by_problem]), :view_submissions?
+    end
+
     @submissions = policy_scope(Submission) # if competing, only allowed to see contest submissions
     @submissions = apply_scopes(@submissions) # :by_user, :by_problem
     @submissions = @submissions.order(created_at: :desc).page(params[:page]).per_page(20)
