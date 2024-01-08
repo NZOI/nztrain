@@ -20,8 +20,8 @@ class SubmissionsController < ApplicationController
       authorize User.find(params[:by_user]), :inspect?
     end
     authorize Submission.new, :show? if params[:by_user].nil?
+    authorize Problem.find(params[:by_problem]), :show? unless params[:by_problem].nil?
     if current_user.openbook? || policy(Problem.new).show?
-      authorize Problem.find(params[:by_problem]), :show? unless params[:by_problem].nil?
       @submissions = apply_scopes(Submission)
     else # only allowed to see contest submissions
       @submissions = policy_scope(Submission)
