@@ -1,4 +1,4 @@
-<% if current_user.id == params[:by_user].to_i %>
+<% if !params[:by_user].nil? && current_user.id == params[:by_user].to_i %>
   <% content_for :title, "My submissions" %>
 <% else %>
   <% content_for :title, "Submissions" %>
