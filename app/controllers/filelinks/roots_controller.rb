@@ -56,7 +56,7 @@ class Filelinks::RootsController < ApplicationController
     else
       raise ActiveRecord::RecordNotFound if params[:filepath].nil?
       filepath = [params[:filepath], params[:format]].compact.join('.')
-      @filelink = model.filelinks.find_by_filepath(filepath)
+      @filelink = model.filelinks.find_by_filepath!(filepath)
     end
     authorize @filelink, :show?
     send_file FileAttachmentUploader.root + @filelink.file_attachment_url, :filename => File.basename(@filelink.filepath), :disposition => 'inline'
