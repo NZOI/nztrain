@@ -18,7 +18,7 @@ class SubmissionsController < ApplicationController
     # "/submissions/by_user/:by_user" returns submissions by a particular user
     # "/submissions/my" similar to "/submissions/by_user/#{current_user.id}"
     # but renders slightly different (title is "My Submission", etc.)
-    raise Pundit::NotAuthorizedError if current_user.nil?
+    authorize Submission, :index? # need to be signed in
     if params[:filter] == "my"
       params[:by_user] = current_user.id.to_s
     end
