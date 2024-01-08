@@ -1,6 +1,6 @@
 <%= will_paginate @submissions %>
 <% if @submissions.length == 0 %>
-  <% if !params[:by_user].nil? && current_user.id == params[:by_user].to_i %>
+  <% if params[:filter] == "my" %>
     You have no submissions.
   <% else %>
     No submissions found.
