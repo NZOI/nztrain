@@ -36,7 +36,6 @@ class SubmissionsController < ApplicationController
     @submissions = policy_scope(Submission) # if competing, only allowed to see contest submissions
     @submissions = apply_scopes(@submissions) # :by_user, :by_problem
     @submissions = @submissions.order(created_at: :desc).page(params[:page]).per_page(20)
-    # TODO: fix submission permissions
 
     respond_to do |format|
       format.html # index.html.erb
