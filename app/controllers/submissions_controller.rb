@@ -19,7 +19,7 @@ class SubmissionsController < ApplicationController
       params[:by_user] = current_user.id.to_s
     end
     if params[:by_user].nil?
-      authorize Submission.new, :show?
+      authorize Submission, :inspect?
     elsif params[:by_user].to_i != current_user.id
       authorize User.find(params[:by_user]), :inspect?
     end
