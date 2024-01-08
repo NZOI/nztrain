@@ -14,25 +14,21 @@
         <th>Submission</th>
         <th>Language</th>
         <th>Score</th>
-        <% if params[:by_user].nil?
-             @table_columns+=1
-        %>
+        <% if params[:by_user].nil? %>
+          <% @table_columns+=1 %>
           <th>User</th>
         <% end %>
-        <% if params[:by_problem].nil?
-             @table_columns+=1
-        %>
+        <% if params[:by_problem].nil? %>
+          <% @table_columns+=1 %>
           <th>Problem</th>
         <% end %>
         <th></th>
-        <% if policy(Submission).update?
-             @table_columns += 1
-        %>
+        <% if policy(Submission).update? %>
+          <% @table_columns += 1 %>
           <th></th>
         <% end %>
-        <% if policy(Submission).destroy?
-             @table_columns += 1
-        %>
+        <% if policy(Submission).destroy? %>
+          <% @table_columns += 1 %>
           <th></th>
         <% end %>
       </tr>
