@@ -14,6 +14,7 @@ class SubmissionsController < ApplicationController
   # GET /submissions
   # GET /submissions.xml
   def index
+    raise Pundit::NotAuthorizedError if current_user.nil?
     params[:by_user] = current_user.id.to_s if params[:filter] == 'my'
     if !params[:by_user].nil? && params[:by_user].to_i != current_user.id
       authorize User.find(params[:by_user]), :inspect?
