@@ -21,11 +21,8 @@ class SubmissionsController < ApplicationController
     end
     authorize Submission.new, :show? if params[:by_user].nil?
     authorize Problem.find(params[:by_problem]), :view_submissions? unless params[:by_problem].nil?
-    if current_user.openbook? || policy(Problem.new).show?
-      @submissions = apply_scopes(Submission)
-    else # only allowed to see contest submissions
-      @submissions = policy_scope(Submission)
-    end
+    @submissions = policy_scope(Submission) # if competing, only allowed to see contest submissions
+    @submissions = apply_scopes(@submissions) # :by_user, :by_problem
     @submissions = @submissions.order(created_at: :desc).page(params[:page]).per_page(20)
     # TODO: fix submission permissions
 
