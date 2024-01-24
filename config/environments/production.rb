@@ -33,7 +33,7 @@ NZTrain::Application.configure do
 
   # Disable Rails's static asset server
   # In production, Apache or nginx will already do this
-  config.serve_static_assets = true # true so Webrick testing of production mode works
+  config.serve_static_files = true # true so Webrick testing of production mode works
 
   # Enable serving of images, stylesheets, and javascripts from an asset server
   # config.action_controller.asset_host = "http://assets.example.com"
