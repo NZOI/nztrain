@@ -96,7 +96,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.2.2)
+    concurrent-ruby (1.2.3)
     connection_pool (2.2.1)
     countries (2.1.3)
       i18n_data (~> 0.8.0)
@@ -106,7 +106,7 @@ GEM
     country_select (3.1.1)
       countries (~> 2.0)
       sort_alphabetical (~> 1.0)
-    crass (1.0.5)
+    crass (1.0.6)
     daemons (1.4.1)
     debug_inspector (0.0.3)
     devise (3.4.1)
@@ -182,8 +182,8 @@ GEM
     jquery-rails (3.1.3)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
-    jquery-ui-rails (4.0.5)
-      railties (>= 3.1.0)
+    jquery-ui-rails (6.0.1)
+      railties (>= 3.2.16)
     json (1.8.6)
     json_cve_2020_10663 (1.0.0)
       json (>= 1.7.7, < 2.3)
@@ -452,7 +452,7 @@ DEPENDENCIES
   jquery-final_countdown-rails
   jquery-historyjs (= 0.2.3)
   jquery-rails (~> 3.1.3)
-  jquery-ui-rails (= 4.0.5)
+  jquery-ui-rails (= 6.0.1)
   json_cve_2020_10663 (~> 1.0)
   loofah
   mechanize
