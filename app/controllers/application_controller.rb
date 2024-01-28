@@ -79,10 +79,10 @@ class ApplicationController < ActionController::Base
 
   protected
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) << :username << :name << :email << :country_code << :school_id << {school_graduation: [:enabled, :month, :year]} << {school: [:name, :country_code]}
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:username, :name, :email, :country_code, :school_id, { school_graduation: [:enabled, :month, :year] }, { school: [:name, :country_code] } ])
 
     if user_signed_in? && current_user.can_change_username?
-      devise_parameter_sanitizer.for(:account_update) << :username
+      devise_parameter_sanitizer.permit(:account_update, keys: [:username])
     end
   end
 
