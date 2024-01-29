@@ -96,7 +96,6 @@ class JudgeSubmissionWorker < ApplicationWorker
         end
       end
 
-
       result['test_cases'] = {}
       result['test_sets'] = {}
 
