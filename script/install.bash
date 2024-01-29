@@ -42,7 +42,7 @@ bash script/install/bundler.bash || exit 1
 
 bash script/install/nokogiri.bash || exit 1 # nokogiri dependencies
 
-bash script/install/jdk.bash || exit 1 # required by yui-compressor
+bash script/install/jre.bash || exit 1 # required by yui-compressor
 
 sudo bash script/install/isolate.bash || exit 1 # install isolate
 sudo bash script/install/cgroup.bash || exit 1 # install cgroups
