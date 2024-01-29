@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20230225054132) do
+ActiveRecord::Schema.define(version: 20230225064438) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,13 +87,14 @@ ActiveRecord::Schema.define(version: 20230225054132) do
   end
 
   create_table "evaluators", force: :cascade do |t|
-    t.string   "name",                     null: false
-    t.text     "description", default: "", null: false
-    t.text     "source",      default: "", null: false
-    t.integer  "owner_id",                 null: false
+    t.string   "name",                               null: false
+    t.text     "description",           default: "", null: false
+    t.text     "source",                default: "", null: false
+    t.integer  "owner_id",                           null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "language_id"
+    t.integer  "interactive_processes", default: 0,  null: false
   end
 
   create_table "file_attachments", force: :cascade do |t|
