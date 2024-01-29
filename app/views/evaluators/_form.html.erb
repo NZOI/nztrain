@@ -24,6 +24,10 @@
     <%= f.text_area :source %>
   </div>
   <div class="field">
+    <%= f.label :language_id %><br>
+    <%= f.select :language_id, grouped_options_for_select(Language.grouped_submission_options, @evaluator.language_id), :include_blank => true %>
+  </div>
+  <div class="field">
     <%= f.label :owner_id %><br />
     <% if policy(@evaluator).transfer? %>
       <%= f.text_field :owner_id %>

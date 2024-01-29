@@ -8,8 +8,10 @@
 </p>
 <% if policy(@evaluator).inspect? %>
   <p>
+    <b>Language:</b>
+    <%= @evaluator.language&.name %><br>
     <b>Source:</b>
-    <pre><%= @evaluator.source %></pre>
+    <%= predisplay @evaluator.source, language: @evaluator.language&.lexer %>
   </p>
 <% end %>
 
