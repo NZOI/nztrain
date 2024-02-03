@@ -28,6 +28,7 @@ jobs:
     env:
       RAILS_ENV: test
       DATABASE_URL: "postgresql://postgres:postgres@localhost:5432"
+      BUNDLE_WITHOUT: assets
 
     steps:
       - uses: actions/checkout@v4
