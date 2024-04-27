@@ -285,8 +285,16 @@ class Submission
       data.has_key?('compile')
     end
 
+    def evaluator_compiled?
+      data.has_key?('evaluator_compile')
+    end
+
     def compilation
       @compilation ||= Compilation.new(data['compile'])
+    end
+
+    def evaluator_compilation
+      @evaluator_compilation ||= Compilation.new(data['evaluator_compile'])
     end
 
     def prerequisite_sets

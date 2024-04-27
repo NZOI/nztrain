@@ -87,7 +87,7 @@ class JudgeSubmissionWorker < ApplicationWorker
 
         if problem.evaluator.language&.compiled
           evaluator_compilation = compile!(problem.evaluator.source, problem.evaluator.language, EvalFileName) # possible caching
-          raise evaluator_compilation['log'] if evaluator_compilation['stat'] != 0 # error
+          return result.merge!('evaluator_compile' => evaluator_compilation, 'status' => 2) if evaluator_compilation['stat'] != 0 # error
         else
           File.open(File.expand_path(EvalFileName, tmpdir),"w") do |file|
             file.chmod(0700)
