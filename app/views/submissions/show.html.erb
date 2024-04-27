@@ -62,18 +62,18 @@
   </table>
 <% end %>
 <% if @judge_data.evaluator_compiled? && @submission.problem.evaluator && policy(@submission.problem.evaluator).inspect? %>
-<table class="results">
-  <tbody class="compilation status_<%= @judge_data.evaluator_compilation.status %>">
-    <tr>
-      <th class="compile_command" colspan="3">Evaluator Compilation: <span class="code"><%= @judge_data.evaluator_compilation.command %></span></th>
-      <th class="compile_status"><%= @judge_data.evaluator_compilation.judgement %></th>
-      <th>&nbsp;</th>
-    </tr>
-    <tr>
-      <td colspan="5"><span class="code"><%= @judge_data.evaluator_compilation.log %></span></td>
-    </tr>
-  </tbody>
-</table>
+  <table class="results">
+    <tbody class="compilation status_<%= @judge_data.evaluator_compilation.status %>">
+      <tr>
+        <th class="compile_command" colspan="3">Evaluator Compilation: <span class="code"><%= @judge_data.evaluator_compilation.command %></span></th>
+        <th class="compile_status"><%= @judge_data.evaluator_compilation.judgement %></th>
+        <th>&nbsp;</th>
+      </tr>
+      <tr>
+        <td colspan="5"><span class="code"><%= @judge_data.evaluator_compilation.log %></span></td>
+      </tr>
+    </tbody>
+  </table>
 <% end %>
 <table class="results">
   <% if !@judge_data.compiled? || @judge_data.compilation.status == :success %>
