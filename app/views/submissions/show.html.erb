@@ -5,7 +5,12 @@
 
 <%= stylesheet_link_tag "submission" %>
 
-<% if @submission.score == nil %>
+<% @judge_data = @submission.judge_data %>
+<% if @judge_data.errored? %>
+  <p>
+    <b>An unexpected error has occurred during judging. Please retry the submission, or contact us at <%= mail_to "nzic@nzoi.org.nz" %> if the error persists.</b>
+  </p>
+<% elsif @submission.score == nil %>
   <p>
     <b>This submission has not finished judging. Refresh this page in a minute or two to see the submission's score.</b>
   </p>
@@ -46,7 +51,6 @@
   <% end %>
 </p>
 
-<% @judge_data = @submission.judge_data %>
 <% if @judge_data.compiled? %>
   <table class="results">
     <tbody class="compilation status_<%= @judge_data.compilation.status %>">
@@ -76,7 +80,7 @@
   </table>
 <% end %>
 <table class="results">
-  <% if !@judge_data.compiled? || @judge_data.compilation.status == :success %>
+  <% if !@judge_data.errored? && (!@judge_data.compiled? || @judge_data.compilation.status == :success) %>
     <tbody class="headings">
       <th class="test_name"></th>
       <th>Time</th>
