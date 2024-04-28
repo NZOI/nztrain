@@ -46,7 +46,7 @@ class JudgeSubmissionWorker < ApplicationWorker
   rescue StandardError => e
     unless self.submission.nil?
       submission.reload
-      submission.judge_log = {'error' => {'message' => e.message, 'backtrace' => e.backtrace}}.to_json
+      submission.judge_log = {'error' => {'message' => e.message, 'backtrace' => e.backtrace}, 'status' => 2}.to_json
       submission.save
     end
     raise
