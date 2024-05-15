@@ -40,8 +40,6 @@ bash script/install/nztrain.bash || exit 1 # fix files & directory structure
 
 bash script/install/bundler.bash || exit 1
 
-bash script/install/nokogiri.bash || exit 1 # nokogiri dependencies
-
 bash script/install/jdk.bash || exit 1 # required by yui-compressor
 
 sudo bash script/install/isolate.bash || exit 1 # install isolate
