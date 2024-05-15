@@ -9,7 +9,7 @@ cd $srclocation
 if [ -d "isolate" ]; then
   cd isolate
   done=true
-  git pull --force | grep -q -v 'Already up-to-date.' && done=false
+  # git pull --force | grep -q -v 'Already up-to-date.' && done=false
   if $done; then
     exit
   fi
