@@ -274,7 +274,7 @@ class Submission
     end
 
     def errored?
-      data.has_key?('error')
+      data.has_key?('error') || status == :error
     end
 
     def completed?

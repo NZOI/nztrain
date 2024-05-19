@@ -149,7 +149,7 @@ class Submission < ActiveRecord::Base
 
       judge_data = self.judge_data
       return if judge_data.status == :pending # incomplete judge_log
-      return if judge_data.errored? # judge errored - very bad
+      return if judge_data.data.has_key?('error') # judge errored - very bad
 
       errors = []
       warnings = []
