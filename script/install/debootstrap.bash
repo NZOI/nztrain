@@ -113,17 +113,20 @@ chroot "$ISOLATE_ROOT" apt-get install ruby # Ruby (ruby)
   # LD_ORIGIN_PATH.)
 }
 
-if ! chroot "$ISOLATE_ROOT" apt-cache show openjdk-11-jdk &>/dev/null; then
-  # add java ppa
-  echo "$chroot_cmd add-apt-repository ppa:openjdk-r/ppa -y"
-  chroot "$ISOLATE_ROOT" add-apt-repository ppa:openjdk-r/ppa -y
+[ -z "$CI" ] && { # if not in CI
+  # Java
+  if ! chroot "$ISOLATE_ROOT" apt-cache show openjdk-11-jdk-headless &>/dev/null; then
+    # add java ppa
+    echo "$chroot_cmd add-apt-repository ppa:openjdk-r/ppa -y"
+    chroot "$ISOLATE_ROOT" add-apt-repository ppa:openjdk-r/ppa -y
 
-  echo "$chroot_cmd apt-get update"
-  chroot "$ISOLATE_ROOT" apt-get update
-fi
+    echo "$chroot_cmd apt-get update"
+    chroot "$ISOLATE_ROOT" apt-get update
+  fi
 
-echo "$chroot_install openjdk-11-jdk"
-chroot "$ISOLATE_ROOT" apt-get install openjdk-11-jdk # Java
+  echo "$chroot_install openjdk-11-jdk-headless"
+  chroot "$ISOLATE_ROOT" apt-get install openjdk-11-jdk-headless # Java
+}
 
 [ -z "$CI" ] && { # if not in CI
 
@@ -145,20 +148,21 @@ chroot "$ISOLATE_ROOT" apt-get install openjdk-11-jdk # Java
   chroot "$ISOLATE_ROOT" apt-get install ruby2.2
 
 
-  ## INSTALL J
-  chroot "$ISOLATE_ROOT" mkdir /home/j -p
-  J_TAG="J803"
-  J_DEB="j803_amd64.deb"
-  J_SAVE="/home/j/$J_DEB"
-  [ -f "$ISOLATE_ROOT/$J_SAVE" ] || {
-    echo "wget -O \"$ISOLATE_ROOT/$J_SAVE\" https://github.com/NZOI/J-install/releases/download/$J_TAG/$J_DEB"
-    wget -O "$ISOLATE_ROOT/$J_SAVE" "https://github.com/NZOI/J-install/releases/download/$J_TAG/$J_DEB"
-  }
+  # install J
+  bash script/confirm.bash 'Install J' && {
+    chroot "$ISOLATE_ROOT" mkdir /home/j -p
+    J_TAG="J803"
+    J_DEB="j803_amd64.deb"
+    J_SAVE="/home/j/$J_DEB"
+    [ -f "$ISOLATE_ROOT/$J_SAVE" ] || {
+      echo "wget -O \"$ISOLATE_ROOT/$J_SAVE\" https://github.com/NZOI/J-install/releases/download/$J_TAG/$J_DEB"
+      wget -O "$ISOLATE_ROOT/$J_SAVE" "https://github.com/NZOI/J-install/releases/download/$J_TAG/$J_DEB"
+    }
 
-  echo "$chroot_cmd dpkg -i $J_SAVE"
-  chroot "$ISOLATE_ROOT" dpkg -i "$J_SAVE"
+    echo "$chroot_cmd dpkg -i $J_SAVE"
+    chroot "$ISOLATE_ROOT" dpkg -i "$J_SAVE"
 
-  cat << EOF > "$ISOLATE_ROOT"/home/j/install.ijs
+    cat << EOF > "$ISOLATE_ROOT"/home/j/install.ijs
 load 'pacman'
 'update' jpkg ''
 'install' jpkg 'format/printf'
@@ -168,9 +172,10 @@ load 'pacman'
 exit 0
 EOF
 
-  echo "$chroot_cmd ijconsole /home/j/install.ijs"
-  chroot "$ISOLATE_ROOT" ijconsole /home/j/install.ijs
-  ## END INSTALL J
+    echo "$chroot_cmd ijconsole /home/j/install.ijs"
+    chroot "$ISOLATE_ROOT" ijconsole /home/j/install.ijs
+  }
+  # end install J
 
 }
 
