@@ -89,7 +89,7 @@ class ProblemsController < ApplicationController
       respond_to do |format|
         source_is_valid = @submission.source.valid_encoding? && !@submission.source.include?("\0")
         if !source_is_valid
-          @submission.errors.add :source_file, "- Submission has an invalid text encoding. This was likely caused by submitting a compiled file (.exe, .out, .class, ...) instead of a source code file (.cpp, .c, .java, ...)."
+          @submission.errors.add :source_file, "has an invalid text encoding. This was likely caused by submitting a compiled file (.exe, .out, .class, ...) instead of a source code file (.cpp, .c, .java, ...)."
           @submission.source = nil; # Prevent submission form from trying to render the source (and erroring)
         end
 
