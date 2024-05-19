@@ -10,6 +10,8 @@
   <p>
     <b>Language:</b>
     <%= @evaluator.language&.name %><br>
+    <b>Interactive processes:</b>
+    <%= @evaluator.interactive_processes %><br>
     <b>Source:</b>
     <%= predisplay @evaluator.source, language: @evaluator.language&.lexer %>
   </p>
