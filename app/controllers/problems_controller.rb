@@ -87,7 +87,13 @@ class ProblemsController < ApplicationController
       @problem = Problem.find(params[:id])
       @submission = Submission.new(submit_params) # create submission
       respond_to do |format|
-        if @submission.save
+        source_is_valid = @submission.source.valid_encoding? && !@submission.source.include?("\0")
+        if !source_is_valid
+          @submission.errors.add :source_file, "- Submission has an invalid text encoding. This was likely caused by submitting a compiled file (.exe, .out, .class, ...) instead of a source code file (.cpp, .c, .java, ...)."
+          @submission.source = nil; # Prevent submission form from trying to render the source (and erroring)
+        end
+
+        if source_is_valid && @submission.save
           @submission.judge
           format.html { redirect_to(@submission, :notice => 'Submission was successfully created.') }
           format.xml  { render :xml => @submission, :status => :created, :location => @submission }
