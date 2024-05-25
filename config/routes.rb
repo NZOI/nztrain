@@ -18,9 +18,6 @@ NZTrain::Application.routes.draw do
     #end
   end
 
-  #resources :test_sets
-  #resources :test_cases
-
   resources :evaluators
 
   resources :settings
