@@ -1,5 +1,8 @@
-<p>Welcome <%= @email %>!</p>
+<p>Hello <%= @resource.name %>,</p>
 
-<p>You can confirm your account email through the link below:</p>
+<p>Welcome to NZOI Training! You have signed up for an account with the username: <%= @resource.username %></p>
+<p>Before you can participate, you'll need to confirm your email address through the link below:</p>
 
-<p><%= link_to 'Confirm my account', confirmation_url(@resource, :confirmation_token => @token) %></p>
+<p><%= link_to nil, confirmation_url(@resource, :confirmation_token => @token) %></p>
+
+<p>If you didn't request to sign up, you can ignore this email.</p>
