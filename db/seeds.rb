@@ -34,7 +34,7 @@ if rootuser && rootuser.username == "root"
   superadmin.users.push(rootuser) unless superadmin.users.include?(rootuser);
 end
 
-["recaptcha/public_key","recaptcha/private_key"].each do |setting|
+["recaptcha/public_key", "recaptcha/private_key", "system/mailer/username", "system/mailer/password"].each do |setting|
   Setting.find_or_create_by(key: setting)
 end
 
