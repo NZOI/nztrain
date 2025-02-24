@@ -47,12 +47,13 @@ module NZTrain
     config.action_mailer.perform_deliveries = true
     config.action_mailer.raise_delivery_errors = true
     config.action_mailer.default :charset => "utf-8"
+    config.action_mailer.default :from => "nztrain@gmail.com"
 
     ActionMailer::Base.smtp_settings = {
       :address => "smtp.gmail.com",
       :port => 587,
       :authentication => :plain,
-      :domain => 'nztrain.com',
+      :domain => 'nzoi.org.nz',
       :user_name => 'nztrain@gmail.com', # username and password set with higher priority in settings table
       :password => 'training site',
       :enable_starttls_auto => true
