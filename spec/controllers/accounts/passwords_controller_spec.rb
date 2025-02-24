@@ -16,7 +16,7 @@ describe Accounts::PasswordsController do
     expect(mail = ActionMailer::Base.deliveries.last).to_not be_nil
 
     host = ActionMailer::Base.default_url_options[:host]
-    expect(mail).to have_link('Change my password')
+    expect(mail).to have_link('reset_password_token')
   end
 
   context "using password reset token" do

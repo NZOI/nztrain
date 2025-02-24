@@ -14,11 +14,11 @@ feature 'registration' do
     end
     mail = open_email('registration@integration.spec')
     expect(mail.to).to eq(['registration@integration.spec'])
-    expect(mail).to have_link("Confirm")
+    expect(mail).to have_link("confirmation")
 
     @user = User.find_by_username('registration_username')
     expect(@user.confirmed?).to be false
-    mail.click_link("Confirm")
+    mail.click_link("confirmation")
     visit "/accounts/confirmation?confirmation_token=#{@user.confirmation_token}"
     expect(@user.reload.confirmed?).to be true # make sure new user account is confirmed
 
