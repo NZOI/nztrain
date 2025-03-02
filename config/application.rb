@@ -2,7 +2,7 @@ require File.expand_path('../boot', __FILE__)
 require 'rubygems'
 require 'rails/all'
 
-if defined?(Bundler)  
+if defined?(Bundler)
   # Require the gems listed in Gemfile, including any gems
   # you've limited to :test, :development, or :production.
   Bundler.require(:default, Rails.env)
@@ -53,8 +53,8 @@ module NZTrain
       :port => 587,
       :authentication => :plain,
       :domain => 'nzoi.org.nz',
-      :user_name => 'nztrain@gmail.com', # username and password set with higher priority in settings table
-      :password => 'training site',
+      #:user_name => ..., # set in config/initializers/mailer.rb
+      #:password => ...,  # set in config/initializers/mailer.rb
       :enable_starttls_auto => true
     }
 
