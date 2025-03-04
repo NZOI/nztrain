@@ -12,8 +12,6 @@ class Isolate
   # 
   # Alternatively, the isolate box is passed as an argument to a block with an arity, which is not instance_exec-ed
   def self.box options = {}, &block
-    options.reverse_merge!(:cg => has_cgroups?).assert_valid_keys(:cg)
-    raise CGroupsUnavailableError if options[:cg] && !has_cgroups?
     isolate = self.new(options)
     yield isolate if block_given?
     true
@@ -47,6 +45,13 @@ class Isolate
   def exec command, options = {}
     sandbox_command(command, options) do |command, options|
       system(*command, options.reverse_merge(:close_others => true))
+    end
+  end
+
+  # Spawn a single command in isolate context
+  def spawn_command command, options = {}
+    sandbox_command(command, options) do |command, options|
+      spawn(*command, options)
     end
   end
 
@@ -177,6 +182,8 @@ EOF
   protected
 
   def initialize(options = {})
+    options.reverse_merge!(:cg => self.class.has_cgroups?).assert_valid_keys(:cg)
+    raise CGroupsUnavailableError if options[:cg] && !self.class.has_cgroups?
     @has_cgroup = !!options[:cg]
     @box_id = Kernel.send(:`, "isolock --lock -- #{"--cg" if has_cgroup?}").to_i
     raise LockError unless $?.success?
