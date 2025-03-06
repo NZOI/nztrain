@@ -1,6 +1,4 @@
 class AdminMailer < ActionMailer::Base
-  default :from => "nztrain@gmail.com"
-
   def custom_email(admin,user,subject,msgbody)
     @user = user
     @msgbody = msgbody
