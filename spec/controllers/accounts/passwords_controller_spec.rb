@@ -30,7 +30,7 @@ describe Accounts::PasswordsController do
       User.send_reset_password_instructions :email => @resetuser.email
       @resetuser.reload
       expect(mail = ActionMailer::Base.deliveries.last).to_not be_nil
-      expect(mail.body.encoded =~ %r{<a href=\"http://[[:alnum:]\.\:\/]+/password/edit\?reset_password_token=([^"]+)">}).to_not be_nil
+      expect(mail.body.encoded =~ %r{<a href=\"https://[[:alnum:]\.\:\/]+/password/edit\?reset_password_token=([^"]+)">}).to_not be_nil
       @reset_token = $1
     end
 
