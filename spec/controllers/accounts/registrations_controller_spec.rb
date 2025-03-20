@@ -64,7 +64,7 @@ describe Accounts::RegistrationsController do
 
       expect(mail = ActionMailer::Base.deliveries.last).to_not be_nil
       expect(mail.to).to eq ["unconfirmed@nztrain.com"] # email sent to right place
-      expect(mail.body.encoded =~ %r{<a href=\"http://[[:alnum:]\.\:\/]+\?confirmation_token=([^"]+)">}).to_not be_nil
+      expect(mail.body.encoded =~ %r{<a href=\"https://[[:alnum:]\.\:\/]+\?confirmation_token=([^"]+)">}).to_not be_nil
     end
   end
 end
