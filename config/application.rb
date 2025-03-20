@@ -2,7 +2,7 @@ require File.expand_path('../boot', __FILE__)
 require 'rubygems'
 require 'rails/all'
 
-if defined?(Bundler)  
+if defined?(Bundler)
   # Require the gems listed in Gemfile, including any gems
   # you've limited to :test, :development, or :production.
   Bundler.require(:default, Rails.env)
@@ -46,15 +46,14 @@ module NZTrain
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.perform_deliveries = true
     config.action_mailer.raise_delivery_errors = true
-    config.action_mailer.default :charset => "utf-8"
 
     ActionMailer::Base.smtp_settings = {
       :address => "smtp.gmail.com",
       :port => 587,
       :authentication => :plain,
-      :domain => 'nztrain.com',
-      :user_name => 'nztrain@gmail.com', # username and password set with higher priority in settings table
-      :password => 'training site',
+      :domain => 'nzoi.org.nz',
+      #:user_name => ..., # set in config/initializers/mailer.rb
+      #:password => ...,  # set in config/initializers/mailer.rb
       :enable_starttls_auto => true
     }
 
