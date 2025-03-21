@@ -64,7 +64,7 @@ class ChangeHabtmProblemAssociations < ActiveRecord::Migration
     execute 'UPDATE problem_set_problems SET problem_set_order = id*10'
 
     # give problem sets in groups custom names
-    add_column :group_problem_sets, :name, :string
+    add_column :group_problem_sets, :name, :string, limit: 255
 
     execute 'DROP INDEX IF EXISTS index_problems_on_title'
 
@@ -78,7 +78,7 @@ class ChangeHabtmProblemAssociations < ActiveRecord::Migration
     rename_column :problems, :name, :title
     rename_column :problem_sets, :name, :title
 
-    add_index :problems, :title, :unique => true
+    add_index :problems, :title, unique: true
 
     remove_column :group_problem_sets, :name
     remove_column :problem_set_problems, :problem_set_order

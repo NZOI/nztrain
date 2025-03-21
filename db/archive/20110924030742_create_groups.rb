@@ -1,7 +1,7 @@
 class CreateGroups < ActiveRecord::Migration
   def self.up
     create_table :groups do |t|
-      t.string :name
+      t.string :name, limit: 255
 
       t.timestamps null: true
     end

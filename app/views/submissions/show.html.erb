@@ -5,7 +5,12 @@
 
 <%= stylesheet_link_tag "submission" %>
 
-<% if @submission.score == nil %>
+<% @judge_data = @submission.judge_data %>
+<% if @judge_data.errored? %>
+  <p>
+    <b>An unexpected error has occurred during judging. Please retry the submission, or contact us at <%= mail_to "nzic@nzoi.org.nz" %> if the error persists.</b>
+  </p>
+<% elsif @submission.score == nil %>
   <p>
     <b>This submission has not finished judging. Refresh this page in a minute or two to see the submission's score.</b>
   </p>
@@ -46,9 +51,8 @@
   <% end %>
 </p>
 
-<% @judge_data = @submission.judge_data %>
-<table class="results">
-  <% if @judge_data.compiled? %>
+<% if @judge_data.compiled? %>
+  <table class="results">
     <tbody class="compilation status_<%= @judge_data.compilation.status %>">
       <tr>
         <th class="compile_command" colspan="3">Compilation: <span class="code"><%= @judge_data.compilation.command %></span></th>
@@ -59,11 +63,24 @@
         <td colspan="5"><span class="code"><%= @judge_data.compilation.log %></span></td>
       </tr>
     </tbody>
-  <% end %>
-</table>
-&nbsp;
+  </table>
+<% end %>
+<% if @judge_data.evaluator_compiled? && @submission.problem.evaluator && policy(@submission.problem.evaluator).inspect? %>
+  <table class="results">
+    <tbody class="compilation status_<%= @judge_data.evaluator_compilation.status %>">
+      <tr>
+        <th class="compile_command" colspan="3">Evaluator Compilation: <span class="code"><%= @judge_data.evaluator_compilation.command %></span></th>
+        <th class="compile_status"><%= @judge_data.evaluator_compilation.judgement %></th>
+        <th>&nbsp;</th>
+      </tr>
+      <tr>
+        <td colspan="5"><span class="code"><%= @judge_data.evaluator_compilation.log %></span></td>
+      </tr>
+    </tbody>
+  </table>
+<% end %>
 <table class="results">
-  <% if !@judge_data.compiled? || @judge_data.compilation.status == :success %>
+  <% if !@judge_data.errored? && (!@judge_data.compiled? || @judge_data.compilation.status == :success) %>
     <tbody class="headings">
       <th class="test_name"></th>
       <th>Time</th>
@@ -152,8 +169,6 @@
     </tr>
   </tbody>
 </table>
-<br>
-<br>
 <p>
 <b>Source:</b>
 <%= predisplay(@submission.source || "", language: @submission.language.lexer) %>

@@ -203,7 +203,7 @@ declare -p ISOLATE_CGROUPS &> /dev/null || while [ -z "$ISOLATE_CGROUPS" ] ; do
   else ISOLATE_CGROUPS=false; fi
 done
 
-declare -p ISOLATE_BRANCH &> /dev/null || ISOLATE_BRANCH=master # no prompt
+declare -p ISOLATE_BRANCH &> /dev/null || ISOLATE_BRANCH=v1.10.1 # no prompt
 
 
 shopt -u nocasematch;

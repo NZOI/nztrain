@@ -1,8 +1,8 @@
 class CreateFileAttachments < ActiveRecord::Migration
   def change
     create_table :file_attachments do |t|
-      t.string :name
-      t.string :file_attachment, :string
+      t.string :name, limit: 255
+      t.string :file_attachment, limit: 255
       t.references :owner
 
       t.timestamps null: false

@@ -56,7 +56,7 @@ class Filelinks::RootsController < ApplicationController
     else
       raise ActiveRecord::RecordNotFound if params[:filepath].nil?
       filepath = [params[:filepath], params[:format]].compact.join('.')
-      @filelink = model.filelinks.find_by_filepath(filepath)
+      @filelink = model.filelinks.find_by_filepath!(filepath)
     end
     authorize @filelink, :show?
     send_file FileAttachmentUploader.root + @filelink.file_attachment_url, :filename => File.basename(@filelink.filepath), :disposition => 'inline'
@@ -80,11 +80,11 @@ class Filelinks::RootsController < ApplicationController
     self.model = load_model
     authorize model, :update?
     authorize FileAttachment.find(filelink_params[:file_attachment_id]), :use?
-    @new_file = model.filelinks.build(filelink_params)
-    if @new_file.save
+    @new_filelink = model.filelinks.build(filelink_params)
+    if @new_filelink.save
       redirect_to(index_path, :notice => "File attachment added")
     else
-      @files = model.filelinks.order(:filepath)
+      @filelinks = model.filelinks.order(:filepath)
       render :action => :index
     end
   end

@@ -1,7 +1,7 @@
 class AddInputOutputToSubmissions < ActiveRecord::Migration
   def up
-    add_column :submissions, :input, :string
-    add_column :submissions, :output, :string
+    add_column :submissions, :input, :string, limit: 255
+    add_column :submissions, :output, :string, limit: 255
 
     Submission.all.each do |sub|
       sub.input = sub.problem.input

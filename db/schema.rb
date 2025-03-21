@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200418113601) do
+ActiveRecord::Schema.define(version: 20250318053450) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -93,6 +93,7 @@ ActiveRecord::Schema.define(version: 20200418113601) do
     t.integer  "owner_id",                             null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "language_id"
   end
 
   create_table "file_attachments", force: :cascade do |t|

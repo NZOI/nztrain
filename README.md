@@ -1,15 +1,16 @@
-== NZTrain
-Status: {<img src="https://secure.travis-ci.org/NZOI/nztrain.png?branch=master" alt="Build Status" />}[http://travis-ci.org/NZOI/nztrain] {<img src="https://coveralls.io/repos/NZOI/nztrain/badge.png" alt="Coverage Status" />}[https://coveralls.io/r/NZOI/nztrain] {<img src="https://codeclimate.com/github/NZOI/nztrain.png" />}[https://codeclimate.com/github/NZOI/nztrain]
-Workflow: {<img src="https://badge.waffle.io/NZOI/nztrain.png" alt="WIP Issues" />}[http://waffle.io/NZOI/nztrain]
+# NZTrain
+[![Build Status](https://github.com/NZOI/nztrain/actions/workflows/ci.yml/badge.svg)](https://github.com/NZOI/nztrain/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/NZOI/nztrain/badge.svg)](https://coveralls.io/github/NZOI/nztrain)
+[![Code Climate](https://codeclimate.com/github/NZOI/nztrain.svg)](https://codeclimate.com/github/NZOI/nztrain)
 
-=== Installation
+## Installation
 Run `script/install.bash` to install dependencies.
 
 `script/update.bash` will pull changes from origin and recompile various things. This includes assets - assuming that it is for production purposes.
 
 Both scripts depends on `script/install.cfg`, which is built using `script/install/config.bash` automatically. If `script/install.cfg` is incomplete (eg. new configuration is added), `script/install.bash` and `script/update.bash` will prompt for the new configurations required.
 
-=== Development Tools
+## Development Tools
 - `spring` instead of `bundle exec` to keep a background copy of rails running, and avoid startup time.
 - `unicorn` starts of a development server (instead of Webrick).
 

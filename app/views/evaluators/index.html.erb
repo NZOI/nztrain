@@ -7,6 +7,7 @@
       <th>Name</th>
       <th>Description</th>
       <th>User</th>
+      <th>Langauge</th>
       <th></th>
       <% if policy(Evaluator).update? %>
         <th></th>
@@ -22,6 +23,7 @@
     <td><%= evaluator.name %></td>
     <td><%= evaluator.description %></td>
     <td><%= evaluator.owner_id %></td>
+    <td><%= evaluator.language&.name %></td>
     <td><%= link_to 'Show', evaluator %></td>
     <% if policy(Evaluator).update? %>
       <td><%= link_to 'Edit', edit_evaluator_path(evaluator) if policy(evaluator).update? %></td>

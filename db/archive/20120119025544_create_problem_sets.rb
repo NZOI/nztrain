@@ -1,16 +1,16 @@
 class CreateProblemSets < ActiveRecord::Migration
   def self.up
     create_table :problem_sets do |t|
-      t.string :title
+      t.string :title, limit: 255
       t.integer :user_id
       t.timestamps null: true
     end
     # add association tables
-    create_table :problem_sets_problems, :id => false do |t|
+    create_table :problem_sets_problems, id: false do |t|
       t.integer :problem_set_id
       t.integer :problem_id
     end
-    create_table :groups_problem_sets, :id => false do |t|
+    create_table :groups_problem_sets, id: false do |t|
       t.integer :group_id
       t.integer :problem_set_id
     end

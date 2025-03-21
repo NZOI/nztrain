@@ -1,12 +1,9 @@
 class CreateProblemSeries < ActiveRecord::Migration
   def change
     create_table :problem_series do |t|
-      t.string :name
-      t.string :identifier
-      t.string :importer_type
+      t.string :name, limit: 255
+      t.string :identifier, limit: 255
+      t.string :importer_type, limit: 255
     end
-
-    # unused column
-    remove_column :file_attachments, :string, :string
   end
 end
