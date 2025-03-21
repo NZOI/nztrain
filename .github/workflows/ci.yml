@@ -2,7 +2,7 @@ name: Continuous Integration
 on: [push, pull_request]
 jobs:
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:11-alpine
@@ -31,6 +31,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - run: sudo apt-get install imagemagick libmagickwand-dev # required by the RMagick gem
+
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
@@ -68,9 +71,12 @@ jobs:
       - uses: coverallsapp/github-action@v2
 
   lint:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - run: sudo apt-get install imagemagick libmagickwand-dev # required by the RMagick gem
+
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
