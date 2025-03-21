@@ -1,6 +1,6 @@
 class LoadSchema < ActiveRecord::Migration
   def up
-    if ActiveRecord::Migrator.current_version > 0
+    if ActiveRecord::Migrator.current_version != 0
       raise StandardError, "The database schema is out of date; running this migration will cause irreversible data loss!"
     end
 
