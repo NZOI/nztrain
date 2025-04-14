@@ -393,6 +393,8 @@ GEM
       request_store (~> 1.0.3)
       strong_attributes (~> 0.0.2)
     superfish-rails (1.6.0.1)
+    test_after_commit (1.2.2)
+      activerecord (>= 3.2, < 5.0)
     thin (1.8.2)
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0, >= 1.0.4)
@@ -488,6 +490,7 @@ DEPENDENCIES
   standard
   strong_presenter (~> 0.2.2)
   superfish-rails (~> 1.6.0)
+  test_after_commit (~> 1.2)
   tilt
   uglifier (>= 1.0.3)
   whenever

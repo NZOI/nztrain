@@ -86,6 +86,8 @@ group :development, :test do
   gem 'byebug'
 
   gem 'standard'
+
+  gem "test_after_commit", "~> 1.2"
 end
 
 
