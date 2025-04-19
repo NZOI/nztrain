@@ -275,7 +275,6 @@ GEM
     regexp_parser (2.10.0)
     render_anywhere (0.0.12)
       rails (>= 3.0.7)
-    request_store (1.0.8)
     responders (2.4.1)
       actionpack (>= 4.2.0, < 6.0)
       railties (>= 4.2.0, < 6.0)
@@ -366,14 +365,6 @@ GEM
       rubocop (= 1.12.1)
       rubocop-performance (= 1.10.1)
     statsd-ruby (1.5.0)
-    strong_attributes (0.0.2)
-      activesupport (>= 3.0)
-    strong_presenter (0.2.2)
-      actionpack (>= 3.0)
-      activemodel (>= 3.0)
-      activesupport (>= 3.0)
-      request_store (~> 1.0.3)
-      strong_attributes (~> 0.0.2)
     superfish-rails (1.6.0.1)
     test_after_commit (1.2.2)
       activerecord (>= 3.2, < 5.0)
@@ -463,7 +454,6 @@ DEPENDENCIES
   sinatra
   spring
   standard
-  strong_presenter (~> 0.2.2)
   superfish-rails (~> 1.6.0)
   test_after_commit (~> 1.2)
   tilt
