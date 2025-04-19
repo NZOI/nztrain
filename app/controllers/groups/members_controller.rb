@@ -67,7 +67,7 @@ class Groups::MembersController < ApplicationController
     authorize @group, :apply?
     if @group.members.exists?(current_user.id)
       redirect_to(@group, alert: "You are already a member of this group")
-    elsif invitation = @group.invitations.pending.where(target_id: @user).first
+    elsif (invitation = @group.invitations.pending.where(target_id: @user).first)
       invitation.accept!
       redirect_to(@group, notice: "You have accepted an invitation to join the group")
     elsif @group.join_requests.pending.where(subject_id: @user).first
@@ -87,7 +87,7 @@ class Groups::MembersController < ApplicationController
         redirect_to(invites_members_group_path(@group), alert: "No user found with username \"#{params[:username]}\"")
       elsif @group.members.exists?(@user.id)
         redirect_to(invites_members_group_path(@group), alert: "#{@user.username} is already a member of this group")
-      elsif join_request = @group.join_requests.pending.where(subject_id: @user).first
+      elsif (join_request = @group.join_requests.pending.where(subject_id: @user).first)
         join_request.accept!
         redirect_to(invites_members_group_path(@group), notice: "#{@user.username}'s join request has been accepted")
       elsif @group.invitations.pending.where(target_id: @user).first

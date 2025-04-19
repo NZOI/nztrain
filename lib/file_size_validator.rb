@@ -10,7 +10,7 @@ class FileSizeValidator < ActiveModel::EachValidator
   RESERVED_OPTIONS = [:minimum, :maximum, :within, :is, :tokenizer, :too_short, :too_long]
 
   def initialize(options)
-    if range = (options.delete(:in) || options.delete(:within))
+    if (range = (options.delete(:in) || options.delete(:within)))
       raise ArgumentError, ":in and :within must be a Range" unless range.is_a?(Range)
       options[:minimum], options[:maximum] = range.begin, range.end
       options[:maximum] -= 1 if range.exclude_end?
@@ -41,7 +41,7 @@ class FileSizeValidator < ActiveModel::EachValidator
     value = (options[:tokenizer] || DEFAULT_TOKENIZER).call(value) if value.is_a?(String)
 
     CHECKS.each do |key, validity_check|
-      next unless check_value = options[key]
+      next unless (check_value = options[key])
 
       value ||= [] if key == :maximum
 
