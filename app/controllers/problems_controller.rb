@@ -1,13 +1,12 @@
 class ProblemsController < ApplicationController
   def permitted_params
-    @_permitted_attributes ||= begin
+    @_permitted_params ||= begin
       permitted_attributes = [:name, :statement, :memory_limit, :time_limit, :input_type, :output_type, :evaluator_id]
       permitted_attributes << :owner_id if policy(@problem || Problem).transfer?
       permitted_attributes << :input if params.require(:problem)[:input_type] == "file"
       permitted_attributes << :output if params.require(:problem)[:output_type] == "file"
-      permitted_attributes
+      params.require(:problem).permit(*permitted_attributes)
     end
-    params.require(:problem).permit(*@_permitted_attributes)
   end
 
   # attributes allowed to be included in submissions
