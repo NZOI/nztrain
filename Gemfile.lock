@@ -168,9 +168,7 @@ GEM
       concurrent-ruby (~> 1.0)
     i18n_data (0.8.0)
     iso8601 (0.10.1)
-    json (1.8.6)
-    json_cve_2020_10663 (1.0.0)
-      json (>= 1.7.7, < 2.3)
+    json (2.7.6)
     libv8-node (15.14.0.1)
     loofah (2.3.1)
       crass (~> 1.0.2)
@@ -437,7 +435,6 @@ DEPENDENCIES
   factory_bot_rails
   foreman
   has_scope
-  json_cve_2020_10663 (~> 1.0)
   loofah
   mechanize
   mini_racer (~> 0.4.0)
