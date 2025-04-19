@@ -11,14 +11,14 @@ class ContestsController < ApplicationController
   # GET /contests.xml
   def index
     case params[:filter].to_s
-    when 'my'
-      authorize Contest.new(:owner_id => current_user.id), :manage?
-      @contests = Contest.where(:owner_id => current_user.id).order("end_time DESC")
+    when "my"
+      authorize Contest.new(owner_id: current_user.id), :manage?
+      @contests = Contest.where(owner_id: current_user.id).order("end_time DESC")
     else
       authorize Contest.new, :manage?
       @contests = Contest.order("end_time DESC")
     end
-    
+
     respond_to do |format|
       format.html # index.html.erb
     end
@@ -30,15 +30,15 @@ class ContestsController < ApplicationController
     visible_contests = policy_scope(Contest)
 
     case params[:filter].to_s
-    when 'active'
+    when "active"
       raise Pundit::NotAuthorizedError unless user_signed_in?
-      @contests = Contest.joins(:contest_relations).where{ (contest_relations.user_id == my{current_user.id}) & (contest_relations.finish_at > Time.now) }.order("end_time ASC")
-    when 'current'
-      @contests = visible_contests.where{(start_time < Time.now+30.minutes) & (end_time > Time.now)}.order("end_time ASC")
-    when 'upcoming'
-      @contests = visible_contests.where{(start_time > Time.now+30.minutes)}.order("start_time ASC")
-    when 'past'
-      @contests = visible_contests.where{(end_time < Time.now)}.order("end_time DESC")
+      @contests = Contest.joins(:contest_relations).where { (contest_relations.user_id == my { current_user.id }) & (contest_relations.finish_at > Time.now) }.order("end_time ASC")
+    when "current"
+      @contests = visible_contests.where { (start_time < Time.now + 30.minutes) & (end_time > Time.now) }.order("end_time ASC")
+    when "upcoming"
+      @contests = visible_contests.where { (start_time > Time.now + 30.minutes) }.order("start_time ASC")
+    when "past"
+      @contests = visible_contests.where { (end_time < Time.now) }.order("end_time DESC")
     else
       raise Pundit::NotAuthorizedError
     end
@@ -61,7 +61,7 @@ class ContestsController < ApplicationController
       @contest_message = "You have not started this contest."
     end
 
-    render :layout => 'contest'
+    render layout: "contest"
   end
 
   def info
@@ -70,7 +70,7 @@ class ContestsController < ApplicationController
     @groups = Group.all
     @contest_relation = @contest.get_relation(current_user.id) if user_signed_in?
 
-    render :layout => 'contest'
+    render layout: "contest"
   end
 
   def scoreboard
@@ -82,7 +82,7 @@ class ContestsController < ApplicationController
     @realtimejudging = true # if false, scores only revealed at the end
     @scoreboard = @contest.scoreboard
 
-    render :layout => 'contest'
+    render layout: "contest"
   end
 
   def contestants
@@ -91,7 +91,7 @@ class ContestsController < ApplicationController
     @groups = Group.all
     @contest_relations = @contest.contest_relations.includes(:user).order("contest_relations.school_id, users.username").references(:user)
 
-    render layout: 'contest'
+    render layout: "contest"
   end
 
   def supervisors
@@ -101,13 +101,13 @@ class ContestsController < ApplicationController
     @contest_supervisors = @contest.contest_supervisors.includes(:user).order("users.username")
     @new_supervisor = ContestSupervisor.new(contest: @contest)
 
-    render layout: 'contest'
+    render layout: "contest"
   end
 
   # GET /contests/new
   # GET /contests/new.xml
   def new
-    @contest = Contest.new(:owner => current_user)
+    @contest = Contest.new(owner: current_user)
     authorize @contest, :new?
     @problem_sets = ProblemSet.all
     @start_time = ""
@@ -115,7 +115,7 @@ class ContestsController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @contest }
+      format.xml { render xml: @contest }
     end
   end
 
@@ -143,11 +143,11 @@ class ContestsController < ApplicationController
 
     respond_to do |format|
       if @contest.save
-        format.html { redirect_to(@contest, :notice => 'Contest was successfully created.') }
-        format.xml  { render :xml => @contest, :status => :created, :location => @contest }
+        format.html { redirect_to(@contest, notice: "Contest was successfully created.") }
+        format.xml { render xml: @contest, status: :created, location: @contest }
       else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @contest.errors, :status => :unprocessable_entity }
+        format.html { render action: "new" }
+        format.xml { render xml: @contest.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -164,11 +164,11 @@ class ContestsController < ApplicationController
 
     respond_to do |format|
       if @contest.update_attributes(permitted_params)
-        format.html { redirect_to(@contest, :notice => 'Contest was successfully updated.') }
-        format.xml  { head :ok }
+        format.html { redirect_to(@contest, notice: "Contest was successfully updated.") }
+        format.xml { head :ok }
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @contest.errors, :status => :unprocessable_entity }
+        format.html { render action: "edit" }
+        format.xml { render xml: @contest.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -182,7 +182,7 @@ class ContestsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to(contests_url) }
-      format.xml  { head :ok }
+      format.xml { head :ok }
     end
   end
 
@@ -193,15 +193,15 @@ class ContestsController < ApplicationController
       authorize @contest, :start?
 
       if !@contest.startcode.nil? && @contest.startcode != params[:startcode]
-        redirect_to(@contest, :alert => 'Incorrect start code.')
+        redirect_to(@contest, alert: "Incorrect start code.")
         return
       end
 
       respond_to do |format|
         if @contest.start(current_user, true)
-          format.html { redirect_to(@contest, :notice => 'Contest started.') }
+          format.html { redirect_to(@contest, notice: "Contest started.") }
         else
-          format.html { redirect_to(@contest, :alert => @contest.errors.full_messages_for(:contest).join(' ')) }
+          format.html { redirect_to(@contest, alert: @contest.errors.full_messages_for(:contest).join(" ")) }
         end
       end
     else
@@ -237,11 +237,11 @@ class ContestsController < ApplicationController
 
     respond_to do |format|
       if user.nil?
-        format.html { redirect_to(redirect_path, :alert => "No such user exists.") }
+        format.html { redirect_to(redirect_path, alert: "No such user exists.") }
       elsif @contest.register(user)
-        format.html { redirect_to(redirect_path, :notice => "Registered #{params[:username]} for contest.") }
+        format.html { redirect_to(redirect_path, notice: "Registered #{params[:username]} for contest.") }
       else
-        format.html { redirect_to(redirect_path, :alert => @contest.errors.full_messages_for(:contest).join(' ')) }
+        format.html { redirect_to(redirect_path, alert: @contest.errors.full_messages_for(:contest).join(" ")) }
       end
     end
   end
@@ -263,7 +263,7 @@ class ContestsController < ApplicationController
     end
     if params[:start_contest] && params[:selected]
       if !@contest.is_running?
-        redirect_to contestants_contest_path(@contest), :alert => "The contest is not currently running"
+        redirect_to contestants_contest_path(@contest), alert: "The contest is not currently running"
         return
       end
       ContestRelation.transaction do
@@ -274,7 +274,7 @@ class ContestsController < ApplicationController
           relation.set_start_timer! 1.minute
         end
       end
-      redirect_to contestants_contest_path(@contest), :notice => "Contest started for selected students"
+      redirect_to contestants_contest_path(@contest), notice: "Contest started for selected students"
     elsif params[:end_contest] && params[:selected]
       ContestRelation.transaction do
         params[:selected].each do |relation_id|
@@ -283,7 +283,7 @@ class ContestsController < ApplicationController
           relation.stop! if relation.started? && !relation.ended?
         end
       end
-      redirect_to contestants_contest_path(@contest), :notice => "Contest ended for selected students"
+      redirect_to contestants_contest_path(@contest), notice: "Contest ended for selected students"
     elsif params[:update]
       if params[:school_id]
         ContestRelation.transaction do
@@ -292,7 +292,7 @@ class ContestsController < ApplicationController
             authorize relation, :update_school?
             relation.school = School.find_by_id(school_id)
             if !relation.save
-              redirect_to contestants_contest_path(@contest), :alert => "Could not update school of contestant #{relation.user&.username}."
+              redirect_to contestants_contest_path(@contest), alert: "Could not update school of contestant #{relation.user&.username}."
               return
             end
           end
@@ -305,24 +305,24 @@ class ContestsController < ApplicationController
             authorize relation, :update_extra_time?
             relation.extra_time = extra_time.to_i || 0
             if extra_time.to_i > @contest.max_extra_time
-              redirect_to contestants_contest_path(@contest), :alert => "The maximum extra time that can be given is #{@contest.max_extra_time}."
+              redirect_to contestants_contest_path(@contest), alert: "The maximum extra time that can be given is #{@contest.max_extra_time}."
               return
             end
             if !relation.save
-              redirect_to contestants_contest_path(@contest), :alert => "Could not add extra time to contestant #{relation.user&.username}."
+              redirect_to contestants_contest_path(@contest), alert: "Could not add extra time to contestant #{relation.user&.username}."
               return
             end
           end
         end
       end
       if params[:school_id] || params[:extra_time]
-        redirect_to contestants_contest_path(@contest), :notice => "Contestants updated"
+        redirect_to contestants_contest_path(@contest), notice: "Contestants updated"
       else
-        redirect_to contestants_contest_path(@contest), :alert => "Nothing to update."
-        return
+        redirect_to contestants_contest_path(@contest), alert: "Nothing to update."
+        nil
       end
     else
-      redirect_to contestants_contest_path(@contest), :alert => "Could not start/end contest for any users as none were selected."
+      redirect_to contestants_contest_path(@contest), alert: "Could not start/end contest for any users as none were selected."
     end
   end
 
@@ -331,7 +331,7 @@ class ContestsController < ApplicationController
     authorize @contest, :finalize?
     @contest.finalized_at = Time.now
     @contest.save
-    redirect_to contest_path(@contest), :notice => "Contest results finalized"
+    redirect_to contest_path(@contest), notice: "Contest results finalized"
   end
 
   def unfinalize
@@ -339,20 +339,19 @@ class ContestsController < ApplicationController
     authorize @contest, :unfinalize?
     @contest.finalized_at = nil
     @contest.save
-    redirect_to contest_path(@contest), :notice => "Contest results unfinalized"
+    redirect_to contest_path(@contest), notice: "Contest results unfinalized"
   end
 
   def export
     @contest = Contest.find(params[:id])
     authorize @contest, :export?
-    name = @contest.name.gsub(/[\W]/,"")
+    name = @contest.name.gsub(/\W/, "")
     name = "contest" if name.empty?
     filename = name + ".zip"
 
     dir = Dir.mktmpdir("zip-contest-#{@contest.id}-#{current_user.id}-#{Time.now}")
     zipfile = Contests::ContestExporter.export(@contest, File.expand_path(filename, dir))
 
-    send_file zipfile, :type => 'application/zip', :disposition => 'attachment', :filename => filename
+    send_file zipfile, type: "application/zip", disposition: "attachment", filename: filename
   end
-
 end

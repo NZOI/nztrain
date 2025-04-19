@@ -3,11 +3,11 @@
 # Based on: https://gist.github.com/795665
 
 class FileSizeValidator < ActiveModel::EachValidator
-  MESSAGES  = { :is => :wrong_filesize, :minimum => :filesize_too_small, :maximum => :filesize_too_big }.freeze
-  CHECKS    = { :is => :==, :minimum => :>=, :maximum => :<= }.freeze
+  MESSAGES = {is: :wrong_filesize, minimum: :filesize_too_small, maximum: :filesize_too_big}.freeze
+  CHECKS = {is: :==, minimum: :>=, maximum: :<=}.freeze
 
   DEFAULT_TOKENIZER = lambda { |value| value.split(//) }
-  RESERVED_OPTIONS  = [:minimum, :maximum, :within, :is, :tokenizer, :too_short, :too_long]
+  RESERVED_OPTIONS = [:minimum, :maximum, :within, :is, :tokenizer, :too_short, :too_long]
 
   def initialize(options)
     if range = (options.delete(:in) || options.delete(:within))
@@ -23,7 +23,7 @@ class FileSizeValidator < ActiveModel::EachValidator
     keys = CHECKS.keys & options.keys
 
     if keys.empty?
-      raise ArgumentError, 'Range unspecified. Specify the :within, :maximum, :minimum, or :is option.'
+      raise ArgumentError, "Range unspecified. Specify the :within, :maximum, :minimum, or :is option."
     end
 
     keys.each do |key|
@@ -36,9 +36,9 @@ class FileSizeValidator < ActiveModel::EachValidator
   end
 
   def validate_each(record, attribute, value)
-    raise(ArgumentError, "A CarrierWave::Uploader::Base object was expected") unless value.kind_of? CarrierWave::Uploader::Base
-    
-    value = (options[:tokenizer] || DEFAULT_TOKENIZER).call(value) if value.kind_of?(String)
+    raise(ArgumentError, "A CarrierWave::Uploader::Base object was expected") unless value.is_a? CarrierWave::Uploader::Base
+
+    value = (options[:tokenizer] || DEFAULT_TOKENIZER).call(value) if value.is_a?(String)
 
     CHECKS.each do |key, validity_check|
       next unless check_value = options[key]
@@ -57,7 +57,7 @@ class FileSizeValidator < ActiveModel::EachValidator
       record.errors.add(attribute, MESSAGES[key], errors_options)
     end
   end
-  
+
   def help
     Helper.instance
   end

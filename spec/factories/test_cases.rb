@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :test_case do
-    sequence(:name) {|n| "Test Case #{n}" }
+    sequence(:name) { |n| "Test Case #{n}" }
     input { "Input" }
     output { "Output" }
   end

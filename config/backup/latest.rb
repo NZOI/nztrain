@@ -1,16 +1,14 @@
-# encoding: utf-8
+RAILS_ROOT = File.expand_path("", File.dirname(__FILE__))
 
-RAILS_ROOT = File.expand_path('',  File.dirname(__FILE__))
-
-require 'yaml'
-backup_config = YAML.load_file(File.join(RAILS_ROOT, 'config', 'backup.yml'))
+require "yaml"
+backup_config = YAML.load_file(File.join(RAILS_ROOT, "config", "backup.yml"))
 ##
 # Backup Generated: daily
 # Once configured, you can run the backup with the following command:
 #
 # $ backup perform -t daily [-c <path_to_configuration_file>]
 #
-Backup::Model.new(:latest, 'Dump of database and associated data to local server storage') do
+Backup::Model.new(:latest, "Dump of database and associated data to local server storage") do
   ##
   # Split [Splitter]
   #
@@ -28,9 +26,9 @@ Backup::Model.new(:latest, 'Dump of database and associated data to local server
   # Archive - Database data
   #
   archive :db_data do |archive|
-    archive.root 'db/data'
-    archive.add 'uploads'
-    archive.exclude 'uploads/tmp'
+    archive.root "db/data"
+    archive.add "uploads"
+    archive.exclude "uploads/tmp"
   end
 
   compress_with Gzip do |compression|
@@ -75,31 +73,30 @@ Backup::Model.new(:latest, 'Dump of database and associated data to local server
   # Local (Copy) [Storage]
   #
   store_with Local do |local|
-    local.path       = File.join(RAILS_ROOT, 'db', 'backups')
-    local.keep       = 1 # keep only latest daily dump (to minimize storage of uncompressed dump)
+    local.path = File.join(RAILS_ROOT, "db", "backups")
+    local.keep = 1 # keep only latest daily dump (to minimize storage of uncompressed dump)
   end
 
-#  ##
-#  # Mail [Notifier]
-#  #
-#  # The default delivery method for Mail Notifiers is 'SMTP'.
-#  # See the Wiki for other delivery options.
-#  # https://github.com/meskyanichi/backup/wiki/Notifiers
-#  #
-#  notify_by Mail do |mail|
-#    mail.on_success           = true
-#    mail.on_warning           = true
-#    mail.on_failure           = true
-#
-#    mail.from                 = "sender@email.com"
-#    mail.to                   = "receiver@email.com"
-#    mail.address              = "smtp.gmail.com"
-#    mail.port                 = 587
-#    mail.domain               = "your.host.name"
-#    mail.user_name            = "sender@email.com"
-#    mail.password             = "my_password"
-#    mail.authentication       = "plain"
-#    mail.enable_starttls_auto = true
-#  end
-
+  #  ##
+  #  # Mail [Notifier]
+  #  #
+  #  # The default delivery method for Mail Notifiers is 'SMTP'.
+  #  # See the Wiki for other delivery options.
+  #  # https://github.com/meskyanichi/backup/wiki/Notifiers
+  #  #
+  #  notify_by Mail do |mail|
+  #    mail.on_success           = true
+  #    mail.on_warning           = true
+  #    mail.on_failure           = true
+  #
+  #    mail.from                 = "sender@email.com"
+  #    mail.to                   = "receiver@email.com"
+  #    mail.address              = "smtp.gmail.com"
+  #    mail.port                 = 587
+  #    mail.domain               = "your.host.name"
+  #    mail.user_name            = "sender@email.com"
+  #    mail.password             = "my_password"
+  #    mail.authentication       = "plain"
+  #    mail.enable_starttls_auto = true
+  #  end
 end

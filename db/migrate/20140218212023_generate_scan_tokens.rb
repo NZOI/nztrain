@@ -7,6 +7,7 @@ class GenerateScanTokens < ActiveRecord::Migration
       end
     end
   end
+
   def down
   end
 end

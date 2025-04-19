@@ -3,12 +3,12 @@
 # It's helpful, but not entirely necessary to understand cron before proceeding.
 # http://en.wikipedia.org/wiki/Cron
 
-RAILS_ROOT = File.expand_path('../',  File.dirname(__FILE__))
+RAILS_ROOT = File.expand_path("../", File.dirname(__FILE__))
 
-require 'yaml'
-backup = YAML.load_file(File.join(RAILS_ROOT, 'config', 'backup.yml'))
+require "yaml"
+backup = YAML.load_file(File.join(RAILS_ROOT, "config", "backup.yml"))
 
-env :PATH, '/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin'
+env :PATH, "/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
 
 # Example:
 #
@@ -23,7 +23,7 @@ env :PATH, '/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin'
 # every 4.days do
 #   runner "AnotherModel.prune_old_records"
 # end
-job_type :cmd,  "cd :path && :task :output" # job to be run in the rails root path
+job_type :cmd, "cd :path && :task :output" # job to be run in the rails root path
 
 every 1.day do
   rake "session:clean" # delete old sessions
@@ -31,7 +31,7 @@ every 1.day do
   cmd "find public/uploads/tmp/* -type d -empty -delete" # delete empty directories in tmp directory (caused by deleting tmp uploads)
 end
 
-if backup["schedule"]==1
+if backup["schedule"] == 1
   every 1.day do
     cmd "bundle exec backup perform -t latest -c config/backup.rb"
   end

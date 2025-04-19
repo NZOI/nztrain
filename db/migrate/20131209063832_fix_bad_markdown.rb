@@ -6,9 +6,8 @@ class FixBadMarkdown < ActiveRecord::Migration
       toplevel = [toplevel, $~[2].length].min
       pos += inc + $~[0].length
     end
-    toplevel = 2 if toplevel<2
-    string = string.gsub(/^#{Array.new(toplevel-2,"#").join}/,'').gsub(/^(#+)([^# ])/, '\1 \2')
-    return string
+    toplevel = 2 if toplevel < 2
+    string.gsub(/^#{Array.new(toplevel - 2, "#").join}/, "").gsub(/^(#+)([^# ])/, '\1 \2')
   end
 
   def up

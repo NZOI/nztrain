@@ -4,33 +4,34 @@ module Problems
       dir.foreach(path) do |entry|
         setname = nil
         outputname = case entry
-        when /.in\z/; "#{name = entry.chomp('.in')}.out"
-        when /.IN\z/; "#{name = entry.chomp('.IN')}.OUT"
-        when /.i\z/; "#{name = entry.chomp('.i')}.o"
+        when /.in\z/ then "#{name = entry.chomp(".in")}.out"
+        when /.IN\z/ then "#{name = entry.chomp(".IN")}.OUT"
+        when /.i\z/ then "#{name = entry.chomp(".i")}.o"
         when /(.*)\.in((put)?\.(.*))\z/
-          n1, n2 = $~[1,2]
+          n1, n2 = $~[1, 2]
           name = n1 + n2
           # for COCI compatibility
-          if n1 =~ /\.(dummy|sample)(\.|\z)/
+          if /\.(dummy|sample)(\.|\z)/.match?(n1)
             setname = n1
           elsif n2 =~ /\A(\.[[:digit:]]+)[[:alpha:]]+\z/
             setname = n1 + $~[1]
           end
           "#{n1}.out#{n2}"
-        else
-          nil
         end
         setname ||= name
         if outputname && file.exist?(ofile = File.expand_path(outputname, path))
-          caseopts = {:input => file.read(File.expand_path(entry, path)), :output => file.read(ofile)}
+          caseopts = {input: file.read(File.expand_path(entry, path)), output: file.read(ofile)}
           if casemap.has_key?(name)
             casemap[name].assign_attributes(caseopts)
           else
-            caseopts.merge!(:sample => true) if name =~ /\.(dummy|sample)(\.|\z)/
-            casemap[name] = problem.test_cases.build(caseopts.merge(:name => name))
+            caseopts[:sample] = true if /\.(dummy|sample)(\.|\z)/.match?(name)
+            casemap[name] = problem.test_cases.build(caseopts.merge(name: name))
             unless setmap.has_key?(setname)
-              setopts = {:name => setname, :points => 1}
-              setopts.merge!(:points => 0, :prerequisite => true) if setname =~ /\.(dummy|sample)(\.|\z)/
+              setopts = {name: setname, points: 1}
+              if /\.(dummy|sample)(\.|\z)/.match?(setname)
+                setopts[:points] = 0
+                setopts[:prerequisite] = true
+              end
               setmap[setname] = problem.test_sets.build(setopts)
             end
             setmap[setname].test_case_relations.build(test_case: casemap[name])
@@ -39,6 +40,5 @@ module Problems
       end
       problem
     end
-
   end
 end

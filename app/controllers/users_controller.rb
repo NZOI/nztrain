@@ -18,11 +18,11 @@ class UsersController < ApplicationController
   end
 
   def suexit
-    if (!session[:su]) || session[:su].empty?
+    if !session[:su] || session[:su].empty?
       raise Pundit::NotAuthorizedError
     end
     old_user = current_user.username
     sign_in User.find(session[:su].pop)
-    redirect_to request.referrer || '/', :notice => "exit su #{old_user}"
+    redirect_to request.referrer || "/", notice: "exit su #{old_user}"
   end
 end

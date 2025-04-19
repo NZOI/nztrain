@@ -1,5 +1,4 @@
 class EvaluatorsController < ApplicationController
-
   def permitted_params
     @_permitted_params ||= begin
       permitted_attributes = [:name, :description, :source, :language_id]
@@ -16,7 +15,7 @@ class EvaluatorsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @evaluators }
+      format.xml { render xml: @evaluators }
     end
   end
 
@@ -27,18 +26,18 @@ class EvaluatorsController < ApplicationController
     authorize @evaluator, :show?
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @evaluator }
+      format.xml { render xml: @evaluator }
     end
   end
 
   # GET /evaluators/new
   # GET /evaluators/new.xml
   def new
-    @evaluator = Evaluator.new(:owner_id => current_user.id)
+    @evaluator = Evaluator.new(owner_id: current_user.id)
     authorize @evaluator, :new?
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @evaluator }
+      format.xml { render xml: @evaluator }
     end
   end
 
@@ -56,11 +55,11 @@ class EvaluatorsController < ApplicationController
     authorize @evaluator, :create?
     respond_to do |format|
       if @evaluator.save
-        format.html { redirect_to(@evaluator, :notice => 'Evaluator was successfully created.') }
-        format.xml  { render :xml => @evaluator, :status => :created, :location => @evaluator }
+        format.html { redirect_to(@evaluator, notice: "Evaluator was successfully created.") }
+        format.xml { render xml: @evaluator, status: :created, location: @evaluator }
       else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @evaluator.errors, :status => :unprocessable_entity }
+        format.html { render action: "new" }
+        format.xml { render xml: @evaluator.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -72,11 +71,11 @@ class EvaluatorsController < ApplicationController
     authorize @evaluator, :update?
     respond_to do |format|
       if @evaluator.update_attributes(permitted_params)
-        format.html { redirect_to(@evaluator, :notice => 'Evaluator was successfully updated.') }
-        format.xml  { head :ok }
+        format.html { redirect_to(@evaluator, notice: "Evaluator was successfully updated.") }
+        format.xml { head :ok }
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @evaluator.errors, :status => :unprocessable_entity }
+        format.html { render action: "edit" }
+        format.xml { render xml: @evaluator.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -90,7 +89,7 @@ class EvaluatorsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to(evaluators_url) }
-      format.xml  { head :ok }
+      format.xml { head :ok }
     end
   end
 end

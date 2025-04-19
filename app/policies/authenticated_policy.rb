@@ -6,4 +6,3 @@ class AuthenticatedPolicy < ApplicationPolicy
     super(user, record)
   end
 end
-

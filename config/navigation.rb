@@ -1,3 +1,2 @@
-SimpleNavigation::Configuration.run do |navigation|  
-
+SimpleNavigation::Configuration.run do |navigation|
 end

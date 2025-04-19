@@ -5,6 +5,7 @@ class UpdateCheckedInField < ActiveRecord::Migration
       relation.save
     end
   end
+
   def down
   end
 end

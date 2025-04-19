@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Accounts::RegistrationsController do
   it "can get signup form" do
@@ -6,10 +6,10 @@ describe Accounts::RegistrationsController do
     expect(response).to be_success
   end
 
-  it 'can signup (create action)' do
+  it "can signup (create action)" do
     expect do
-      post :create, :user => { :username => "signup_username", :name => "Mr. SignUp", :email => "signup@nztrain.com", :password => "password", :password_confirmation => "password" }
-    end.to change{User.count}.by(1)
+      post :create, user: {username: "signup_username", name: "Mr. SignUp", email: "signup@nztrain.com", password: "password", password_confirmation: "password"}
+    end.to change { User.count }.by(1)
     # check signup attributes saved
     newuser = User.find_by_username("signup_username")
     expect(newuser).not_to be_nil
@@ -19,12 +19,12 @@ describe Accounts::RegistrationsController do
     # check email confirmation email sent
     expect(mail = ActionMailer::Base.deliveries.last).not_to be_nil
     expect(mail.to).to eq(["signup@nztrain.com"]) # email sent to right place
-    expect(mail).to have_link('confirmation') # email includes confirmation link
+    expect(mail).to have_link("confirmation") # email includes confirmation link
   end
 
-  context 'when signed in' do
+  context "when signed in" do
     before(:all) do
-      @user = FactoryBot.create(:user, :password => "registration password")
+      @user = FactoryBot.create(:user, password: "registration password")
     end
     after(:all) do
       @user.destroy
@@ -34,19 +34,19 @@ describe Accounts::RegistrationsController do
     end
 
     it "can get edit password form" do
-      get :edit, :type => "password"
+      get :edit, type: "password"
       expect(response).to be_success
     end
 
     it "can get edit email form" do
-      get :edit, :type => "email"
+      get :edit, type: "email"
       expect(response).to be_success
     end
   end
 
-  context 'when signed in' do
+  context "when signed in" do
     before(:each) do
-      @user = FactoryBot.create(:user, :password => "registration password")
+      @user = FactoryBot.create(:user, password: "registration password")
       sign_in @user
     end
     after(:each) do
@@ -54,17 +54,17 @@ describe Accounts::RegistrationsController do
     end
 
     it "can update password" do
-      put :update, :type => "password", :user => { :password => "anewpass", :password_confirmation => "anewpass", :current_password => "registration password" }
+      put :update, type: "password", user: {password: "anewpass", password_confirmation: "anewpass", current_password: "registration password"}
       expect(@user.reload.valid_password?("anewpass")).to be true
     end
 
     it "can update email" do
-      put :update, :type => "email", :user => { :email => "unconfirmed@nztrain.com", :current_password => "registration password" }
+      put :update, type: "email", user: {email: "unconfirmed@nztrain.com", current_password: "registration password"}
       expect(@user.reload.unconfirmed_email).to eq("unconfirmed@nztrain.com")
 
       expect(mail = ActionMailer::Base.deliveries.last).to_not be_nil
       expect(mail.to).to eq ["unconfirmed@nztrain.com"] # email sent to right place
-      expect(mail.body.encoded =~ %r{<a href=\"https://[[:alnum:]\.\:\/]+\?confirmation_token=([^"]+)">}).to_not be_nil
+      expect(mail.body.encoded =~ %r{<a href="https://[[:alnum:].:/]+\?confirmation_token=([^"]+)">}).to_not be_nil
     end
   end
 end

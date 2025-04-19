@@ -1,5 +1,5 @@
 class Problems::TestCasesController < ApplicationController
-  layout 'problem'
+  layout "problem"
 
   before_filter do
     @problem = Problem.find(params[:problem_id])
@@ -17,15 +17,15 @@ class Problems::TestCasesController < ApplicationController
     [:test_cases, :test_sets].each do |type|
       if params[type]
         failed = []
-        @problem.send(type).where(:id => params[type].keys).each do |object|
-          unless object.update_attributes(send("#{type.to_s.singularize}_params",object.id))
+        @problem.send(type).where(id: params[type].keys).each do |object|
+          unless object.update_attributes(send("#{type.to_s.singularize}_params", object.id))
             failed << object
           end
         end
         if failed.empty?
           flash += "#{type.to_s.humanize} updated. "
         else
-          flash += "The following #{type.to_s.humanize.downcase} were not updated: #{failed.map(&:name).join(', ')}. "
+          flash += "The following #{type.to_s.humanize.downcase} were not updated: #{failed.map(&:name).join(", ")}. "
           flash_type = :alert
         end
       end

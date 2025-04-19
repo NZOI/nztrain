@@ -30,14 +30,13 @@ class CreateProblemSets < ActiveRecord::Migration
     # reference problem set for each group
     execute "INSERT INTO groups_problem_sets (\"group_id\",\"problem_set_id\") SELECT groups.id, problem_sets.id FROM groups JOIN problem_sets ON problem_sets.title = groups.name AND groups.created_at = problem_sets.created_at AND groups.updated_at = problem_sets.updated_at;"
 
-
     # rewrite views to go through problem_sets table for problems
     execute "DROP VIEW contests_max_score_scoreboard"
     execute "DROP VIEW contests_latest_scoreboard"
 
     execute "DROP VIEW contests_max_score_submissions"
     case ActiveRecord::Base.connection.adapter_name
-    when 'SQLite'
+    when "SQLite"
       execute "CREATE VIEW contests_max_score_submissions AS SELECT submissions.id, submissions.score as score, submissions.user_id, submissions.problem_id, submissions.created_at, submissions.updated_at, contest_relations.contest_id FROM contests JOIN contest_relations ON contests.id = contest_relations.contest_id JOIN problem_sets ON contests.problem_set_id = problem_sets.id JOIN problem_sets_problems ON problem_sets_problems.problem_set_id = problem_sets.id JOIN submissions ON contest_relations.user_id = submissions.user_id AND submissions.problem_id = problem_sets_problems.problem_id WHERE submissions.created_at BETWEEN contests.start_time AND contests.end_time GROUP BY contests.id, submissions.user_id, submissions.problem_id ORDER BY contests.id, submissions.user_id, submissions.problem_id, score DESC, submissions.created_at ASC;"
     else
       execute "CREATE VIEW contests_max_score_submissions AS SELECT DISTINCT ON (contests.id, submissions.user_id, submissions.problem_id) submissions.id, submissions.score as score, submissions.user_id, submissions.problem_id, submissions.created_at, submissions.updated_at, contest_relations.contest_id FROM contests JOIN contest_relations ON contests.id = contest_relations.contest_id JOIN problem_sets ON contests.problem_set_id = problem_sets.id JOIN problem_sets_problems ON problem_sets_problems.problem_set_id = problem_sets.id JOIN submissions ON contest_relations.user_id = submissions.user_id AND submissions.problem_id = problem_sets_problems.problem_id WHERE submissions.created_at BETWEEN contests.start_time AND contests.end_time ORDER BY contests.id, submissions.user_id, submissions.problem_id, score DESC, submissions.created_at ASC;"
@@ -45,7 +44,7 @@ class CreateProblemSets < ActiveRecord::Migration
 
     execute "DROP VIEW contests_latest_submissions"
     case ActiveRecord::Base.connection.adapter_name
-    when 'SQLite'
+    when "SQLite"
       execute "CREATE VIEW contests_latest_submissions AS SELECT submissions.id, submissions.score as score, submissions.user_id, submissions.problem_id, submissions.created_at, submissions.updated_at, contest_relations.contest_id FROM contests JOIN contest_relations ON contests.id = contest_relations.contest_id JOIN problem_sets ON contests.problem_set_id = problem_sets.id JOIN problem_sets_problems ON problem_sets_problems.problem_set_id = problem_sets.id JOIN submissions ON contest_relations.user_id = submissions.user_id AND submissions.problem_id = problem_sets_problems.problem_id WHERE submissions.created_at BETWEEN contests.start_time AND contests.end_time GROUP BY contests.id, submissions.user_id, submissions.problem_id ORDER BY contests.id, submissions.user_id, submissions.problem_id, submissions.created_at DESC;"
     else
       execute "CREATE VIEW contests_latest_submissions AS SELECT DISTINCT ON (contests.id, submissions.user_id, submissions.problem_id) submissions.id, submissions.score as score, submissions.user_id, submissions.problem_id, submissions.created_at, submissions.updated_at, contest_relations.contest_id FROM contests JOIN contest_relations ON contests.id = contest_relations.contest_id JOIN problem_sets ON contests.problem_set_id = problem_sets.id JOIN problem_sets_problems ON problem_sets_problems.problem_set_id = problem_sets.id JOIN submissions ON contest_relations.user_id = submissions.user_id AND submissions.problem_id = problem_sets_problems.problem_id WHERE submissions.created_at BETWEEN contests.start_time AND contests.end_time ORDER BY contests.id, submissions.user_id, submissions.problem_id, submissions.created_at DESC;"
@@ -56,13 +55,13 @@ class CreateProblemSets < ActiveRecord::Migration
 
     # 2 views not changed, however, they rely on views that change
     case ActiveRecord::Base.connection.adapter_name
-    when 'SQLite'
+    when "SQLite"
       execute "CREATE VIEW contests_max_score_scoreboard AS SELECT contest_relations.contest_id, contest_relations.user_id, COALESCE(SUM(score),0) AS total_score, STRFTIME('%s',SUBSTR(COALESCE(MAX(submissions_score.created_at),MIN(contest_relations.created_at)),0,27)) - STRFTIME('%s',SUBSTR(MIN(contest_relations.created_at),0,27)) AS time_taken FROM contest_relations LEFT JOIN contests_max_score_submissions AS submissions_score ON submissions_score.user_id = contest_relations.user_id AND contest_relations.contest_id = submissions_score.contest_id AND submissions_score.score > 0 GROUP BY contest_relations.user_id, contest_relations.contest_id ORDER BY total_score DESC, time_taken;"
     else
       execute "CREATE VIEW contests_max_score_scoreboard AS SELECT contest_relations.contest_id, contest_relations.user_id, COALESCE(SUM(score),0) AS total_score, COALESCE(MAX(submissions_score.created_at),MIN(contest_relations.created_at)) - MIN(contest_relations.created_at) AS time_taken, RANK() OVER (PARTITION BY contest_relations.contest_id ORDER BY COALESCE(SUM(score),0) DESC, COALESCE(MAX(submissions_score.created_at),MIN(contest_relations.created_at)) - MIN(contest_relations.created_at) ASC) AS rank FROM contest_relations LEFT JOIN contests_max_score_submissions AS submissions_score ON submissions_score.user_id = contest_relations.user_id AND contest_relations.contest_id = submissions_score.contest_id AND submissions_score.score > 0 GROUP BY contest_relations.user_id, contest_relations.contest_id;"
     end
     case ActiveRecord::Base.connection.adapter_name
-    when 'SQLite'
+    when "SQLite"
       execute "CREATE VIEW contests_latest_scoreboard AS SELECT contest_relations.contest_id, contest_relations.user_id, COALESCE(SUM(score),0) AS total_score, STRFTIME('%s',SUBSTR(COALESCE(MAX(submissions_score.created_at),MIN(contest_relations.created_at)),0,27)) - STRFTIME('%s',SUBSTR(MIN(contest_relations.created_at),0,27)) AS time_taken FROM contest_relations LEFT JOIN contests_latest_submissions AS submissions_score ON submissions_score.user_id = contest_relations.user_id AND contest_relations.contest_id = submissions_score.contest_id AND submissions_score.score > 0 GROUP BY contest_relations.user_id, contest_relations.contest_id ORDER BY total_score DESC, time_taken;"
     else
       execute "CREATE VIEW contests_latest_scoreboard AS SELECT contest_relations.contest_id, contest_relations.user_id, COALESCE(SUM(score),0) AS total_score, COALESCE(MAX(submissions_score.created_at),MIN(contest_relations.created_at)) - MIN(contest_relations.created_at) AS time_taken, RANK() OVER (PARTITION BY contest_relations.contest_id ORDER BY COALESCE(SUM(score),0) DESC, COALESCE(MAX(submissions_score.created_at),MIN(contest_relations.created_at)) - MIN(contest_relations.created_at) ASC) AS rank FROM contest_relations LEFT JOIN contests_latest_submissions AS submissions_score ON submissions_score.user_id = contest_relations.user_id AND contest_relations.contest_id = submissions_score.contest_id AND submissions_score.score > 0 GROUP BY contest_relations.user_id, contest_relations.contest_id;"
@@ -78,7 +77,7 @@ class CreateProblemSets < ActiveRecord::Migration
 
     execute "DROP VIEW contests_latest_submissions"
     case ActiveRecord::Base.connection.adapter_name
-    when 'SQLite'
+    when "SQLite"
       execute "CREATE VIEW contests_latest_submissions AS SELECT submissions.id, submissions.score as score, submissions.user_id, submissions.problem_id, submissions.created_at, submissions.updated_at, contest_relations.contest_id FROM contests JOIN contest_relations ON contests.id = contest_relations.contest_id JOIN contests_problems ON contests_problems.contest_id = contests.id JOIN submissions ON contest_relations.user_id = submissions.user_id AND submissions.problem_id = contests_problems.problem_id WHERE submissions.created_at BETWEEN contests.start_time AND contests.end_time GROUP BY contests.id, submissions.user_id, submissions.problem_id ORDER BY contests.id, submissions.user_id, submissions.problem_id, submissions.created_at DESC;"
     else
       execute "CREATE VIEW contests_latest_submissions AS SELECT DISTINCT ON (contests.id, submissions.user_id, submissions.problem_id) submissions.id, submissions.score as score, submissions.user_id, submissions.problem_id, submissions.created_at, submissions.updated_at, contest_relations.contest_id FROM contests JOIN contest_relations ON contests.id = contest_relations.contest_id JOIN contests_problems ON contests_problems.contest_id = contests.id JOIN submissions ON contest_relations.user_id = submissions.user_id AND submissions.problem_id = contests_problems.problem_id WHERE submissions.created_at BETWEEN contests.start_time AND contests.end_time ORDER BY contests.id, submissions.user_id, submissions.problem_id, submissions.created_at DESC;"
@@ -86,7 +85,7 @@ class CreateProblemSets < ActiveRecord::Migration
 
     execute "DROP VIEW contests_max_score_submissions"
     case ActiveRecord::Base.connection.adapter_name
-    when 'SQLite'
+    when "SQLite"
       execute "CREATE VIEW contests_max_score_submissions AS SELECT submissions.id, submissions.score as score, submissions.user_id, submissions.problem_id, submissions.created_at, submissions.updated_at, contest_relations.contest_id FROM contests JOIN contest_relations ON contests.id = contest_relations.contest_id JOIN contests_problems ON contests_problems.contest_id = contests.id JOIN submissions ON contest_relations.user_id = submissions.user_id AND submissions.problem_id = contests_problems.problem_id WHERE submissions.created_at BETWEEN contests.start_time AND contests.end_time GROUP BY contests.id, submissions.user_id, submissions.problem_id ORDER BY contests.id, submissions.user_id, submissions.problem_id, score DESC, submissions.created_at ASC;"
     else
       execute "CREATE VIEW contests_max_score_submissions AS SELECT DISTINCT ON (contests.id, submissions.user_id, submissions.problem_id) submissions.id, submissions.score as score, submissions.user_id, submissions.problem_id, submissions.created_at, submissions.updated_at, contest_relations.contest_id FROM contests JOIN contest_relations ON contests.id = contest_relations.contest_id JOIN contests_problems ON contests_problems.contest_id = contests.id JOIN submissions ON contest_relations.user_id = submissions.user_id AND submissions.problem_id = contests_problems.problem_id WHERE submissions.created_at BETWEEN contests.start_time AND contests.end_time ORDER BY contests.id, submissions.user_id, submissions.problem_id, score DESC, submissions.created_at ASC;"
@@ -94,13 +93,13 @@ class CreateProblemSets < ActiveRecord::Migration
 
     # 2 views not changed, however, they rely on views that change
     case ActiveRecord::Base.connection.adapter_name
-    when 'SQLite'
+    when "SQLite"
       execute "CREATE VIEW contests_max_score_scoreboard AS SELECT contest_relations.contest_id, contest_relations.user_id, COALESCE(SUM(score),0) AS total_score, STRFTIME('%s',SUBSTR(COALESCE(MAX(submissions_score.created_at),MIN(contest_relations.created_at)),0,27)) - STRFTIME('%s',SUBSTR(MIN(contest_relations.created_at),0,27)) AS time_taken FROM contest_relations LEFT JOIN contests_max_score_submissions AS submissions_score ON submissions_score.user_id = contest_relations.user_id AND contest_relations.contest_id = submissions_score.contest_id AND submissions_score.score > 0 GROUP BY contest_relations.user_id, contest_relations.contest_id ORDER BY total_score DESC, time_taken;"
     else
       execute "CREATE VIEW contests_max_score_scoreboard AS SELECT contest_relations.contest_id, contest_relations.user_id, COALESCE(SUM(score),0) AS total_score, COALESCE(MAX(submissions_score.created_at),MIN(contest_relations.created_at)) - MIN(contest_relations.created_at) AS time_taken, RANK() OVER (PARTITION BY contest_relations.contest_id ORDER BY COALESCE(SUM(score),0) DESC, COALESCE(MAX(submissions_score.created_at),MIN(contest_relations.created_at)) - MIN(contest_relations.created_at) ASC) AS rank FROM contest_relations LEFT JOIN contests_max_score_submissions AS submissions_score ON submissions_score.user_id = contest_relations.user_id AND contest_relations.contest_id = submissions_score.contest_id AND submissions_score.score > 0 GROUP BY contest_relations.user_id, contest_relations.contest_id;"
     end
     case ActiveRecord::Base.connection.adapter_name
-    when 'SQLite'
+    when "SQLite"
       execute "CREATE VIEW contests_latest_scoreboard AS SELECT contest_relations.contest_id, contest_relations.user_id, COALESCE(SUM(score),0) AS total_score, STRFTIME('%s',SUBSTR(COALESCE(MAX(submissions_score.created_at),MIN(contest_relations.created_at)),0,27)) - STRFTIME('%s',SUBSTR(MIN(contest_relations.created_at),0,27)) AS time_taken FROM contest_relations LEFT JOIN contests_latest_submissions AS submissions_score ON submissions_score.user_id = contest_relations.user_id AND contest_relations.contest_id = submissions_score.contest_id AND submissions_score.score > 0 GROUP BY contest_relations.user_id, contest_relations.contest_id ORDER BY total_score DESC, time_taken;"
     else
       execute "CREATE VIEW contests_latest_scoreboard AS SELECT contest_relations.contest_id, contest_relations.user_id, COALESCE(SUM(score),0) AS total_score, COALESCE(MAX(submissions_score.created_at),MIN(contest_relations.created_at)) - MIN(contest_relations.created_at) AS time_taken, RANK() OVER (PARTITION BY contest_relations.contest_id ORDER BY COALESCE(SUM(score),0) DESC, COALESCE(MAX(submissions_score.created_at),MIN(contest_relations.created_at)) - MIN(contest_relations.created_at) ASC) AS rank FROM contest_relations LEFT JOIN contests_latest_submissions AS submissions_score ON submissions_score.user_id = contest_relations.user_id AND contest_relations.contest_id = submissions_score.contest_id AND submissions_score.score > 0 GROUP BY contest_relations.user_id, contest_relations.contest_id;"

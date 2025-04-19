@@ -7,8 +7,8 @@ class AddTypeToTestSet < ActiveRecord::Migration
     TestCase.select(:id).find_each do |cas|
       p = cas.problems.pluck(:id)
       case p.size
-      when 0; cas.destroy
-      when 1; TestCase.update(cas.id, problem_id: p.first)
+      when 0 then cas.destroy
+      when 1 then TestCase.update(cas.id, problem_id: p.first)
       else; raise "Not implemented error: test case has multiple problems - test case will need to be duplicated"
       end
     end

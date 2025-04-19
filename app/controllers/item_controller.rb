@@ -1,5 +1,4 @@
 class ItemController < ApplicationController
-
   def show
     @item = Item.find(params[:id])
     authorize @item, :show?
@@ -8,16 +7,16 @@ class ItemController < ApplicationController
   def label
     @item = Item.find(params[:id])
     authorize @item, :show?
-    render :label, :layout => false
+    render :label, layout: false
   end
 
   def loan
     @item = Item.find(params[:id])
     authorize @item, :manage?
     if @item.loan!(params[:item][:holder_id])
-      redirect_to @item, :notice => "Item Loaned"
+      redirect_to @item, notice: "Item Loaned"
     else
-      redirect_to @item, :alert => "No such user"
+      redirect_to @item, alert: "No such user"
     end
   end
 
@@ -25,9 +24,9 @@ class ItemController < ApplicationController
     @item = Item.find(params[:id])
     authorize @item, :manage?
     if @item.return!(params[:item][:holder_id])
-      redirect_to @item, :notice => "Item returned"
+      redirect_to @item, notice: "Item returned"
     else
-      redirect_to @item, :alert => "No such user"
+      redirect_to @item, alert: "No such user"
     end
   end
 

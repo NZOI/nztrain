@@ -1,5 +1,4 @@
 class ProblemPolicy < ApplicationPolicy
-
   class Scope < ApplicationPolicy::Scope
     def resolve
       if !user
@@ -9,7 +8,7 @@ class ProblemPolicy < ApplicationPolicy
       elsif user.competing?
         scope.none
       else
-        scope.where(:owner_id => user.id)
+        scope.where(owner_id: user.id)
       end
     end
   end
@@ -33,12 +32,12 @@ class ProblemPolicy < ApplicationPolicy
     return true if user && user.is_staff?
 
     if user && user.competing?
-      return record.contest_relations.where{|relation|(relation.user_id == user.id) & (relation.started_at <= DateTime.now) & (relation.finish_at > DateTime.now)}.exists?
+      return record.contest_relations.where { |relation| (relation.user_id == user.id) & (relation.started_at <= DateTime.now) & (relation.finish_at > DateTime.now) }.exists?
     end
 
-    return true if record.groups.where(:id => 0).exists?
+    return true if record.groups.where(id: 0).exists?
     return false unless user # signed in
-    user.owns(record) or record.group_memberships.where{|membership|(membership.member_id == user.id)}.exists?
+    user.owns(record) or record.group_memberships.where { |membership| (membership.member_id == user.id) }.exists?
   end
 
   def access?
@@ -83,4 +82,3 @@ class ProblemPolicy < ApplicationPolicy
     [record.time_limit_was || 0.0, limit].max
   end
 end
-

@@ -1,5 +1,4 @@
 class RolePolicy < AuthenticatedPolicy
-
   class Scope < ApplicationPolicy::Scope
     def resolve
       if user.is_admin?
@@ -27,10 +26,9 @@ class RolePolicy < AuthenticatedPolicy
   end
 
   def grant?
-    case
-    when user.has_role?(:superadmin); true
-    when user.has_role?(:admin); record == Role || !['superadmin'].include?(record.name)
-    when user.has_role?(:staff); record == Role || !['superadmin','admin','staff'].include?(record.name)
+    if user.has_role?(:superadmin) then true
+    elsif user.has_role?(:admin) then record == Role || !["superadmin"].include?(record.name)
+    elsif user.has_role?(:staff) then record == Role || !["superadmin", "admin", "staff"].include?(record.name)
     else; false
     end
   end
@@ -39,4 +37,3 @@ class RolePolicy < AuthenticatedPolicy
     grant?
   end
 end
-

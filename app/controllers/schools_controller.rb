@@ -1,5 +1,4 @@
 class SchoolsController < ApplicationController
-
   def permitted_params
     @_permitted_params ||= begin
       permitted_attributes = [:name]
@@ -26,9 +25,9 @@ class SchoolsController < ApplicationController
     @school = School.find(params[:id])
     authorize @school, :update?
     if @school.update_attributes(permitted_params)
-      redirect_to @school, :notice => "School was successfully updated."
+      redirect_to @school, notice: "School was successfully updated."
     else
-      render :action => "edit"
+      render action: "edit"
     end
   end
 
@@ -36,9 +35,9 @@ class SchoolsController < ApplicationController
     @school = School.find(params[:id])
     authorize @school, :destroy?
     if @school.users.any?
-      redirect_to :back, :alert => "Could not destroy school, as one or more users belong to it."
+      redirect_to :back, alert: "Could not destroy school, as one or more users belong to it."
     elsif (relation = ContestRelation.find_by(school_id: @school.id))
-      redirect_to contestants_contest_path(relation.contest), :alert => "Could not destroy school, as one or more contest relations belong to it."
+      redirect_to contestants_contest_path(relation.contest), alert: "Could not destroy school, as one or more contest relations belong to it."
     else
       @school.destroy
       redirect_to schools_url

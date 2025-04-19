@@ -4,7 +4,7 @@ class ContestSupervisor < ActiveRecord::Base
   belongs_to :site, polymorphic: true
 
   validates :username, presence: true
-  validates :site_type, inclusion: { in: ["School"] }
+  validates :site_type, inclusion: {in: ["School"]}
 
   def username
     user.try(:username)
@@ -15,7 +15,7 @@ class ContestSupervisor < ActiveRecord::Base
   end
 
   def site_name
-    self.site.name
+    site.name
   end
 
   def can_supervise?(contest_relation)
@@ -36,7 +36,7 @@ class ContestSupervisor < ActiveRecord::Base
 
   def potential_contestants
     if site_type == "School"
-      User.where{|user|(user.school_id == site_id) & ((user.school_graduation >= contest.end_time) | ((user.school_graduation == nil) & (user.created_at >= DateTime.now.advance(years: -1)))) & (user.id << contest.registrants)}
+      User.where { |user| (user.school_id == site_id) & ((user.school_graduation >= contest.end_time) | ((user.school_graduation.nil?) & (user.created_at >= DateTime.now.advance(years: -1)))) & (user.id << contest.registrants) }
     else
       [] # not implemented
     end
@@ -44,7 +44,7 @@ class ContestSupervisor < ActiveRecord::Base
 
   def is_user_eligible?(user)
     if site_type == "School"
-      !user.school_graduation.nil? && user.school_graduation >= contest.end_time && !user.name.blank? && user.name.split(" ").size >= 2 && user.school_id == self.site_id
+      !user.school_graduation.nil? && user.school_graduation >= contest.end_time && !user.name.blank? && user.name.split(" ").size >= 2 && user.school_id == site_id
     else
       false # not implemented
     end

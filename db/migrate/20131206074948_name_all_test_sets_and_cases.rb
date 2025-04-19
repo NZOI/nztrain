@@ -1,4 +1,4 @@
-require 'set'
+require "set"
 
 class NameAllTestSetsAndCases < ActiveRecord::Migration
   def up
@@ -18,14 +18,14 @@ class NameAllTestSetsAndCases < ActiveRecord::Migration
 
   def name_uniquely relation
     klass = relation.klass
-    names = relation.pluck(:name).compact.reject{|s|s.blank?}
+    names = relation.pluck(:name).compact.reject { |s| s.blank? }
     names = Set[*names] - names.group_by { |e| e }.select { |k, v| v.size > 1 }.map(&:first)
     i = 1
     relation.select([:id, :name]).each do |obj|
       if !names.include?(obj.name)
-        i+=1 while names.include?(i.to_s)
+        i += 1 while names.include?(i.to_s)
         klass.update(obj.id, name: i.to_s)
-        i+=1
+        i += 1
       end
     end
   end

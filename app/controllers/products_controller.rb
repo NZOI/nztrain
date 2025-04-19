@@ -1,5 +1,4 @@
 class ProductsController < ApplicationController
-
   def index
     authorize Product.new, :index?
     @products = Product.all
@@ -19,9 +18,9 @@ class ProductsController < ApplicationController
     @product = Product.find(params[:id])
     authorize @product, :update?
     if @product.update_attributes(product_params)
-      redirect_to @product, :notice => "Product updated"
+      redirect_to @product, notice: "Product updated"
     else
-      render :action => "edit"
+      render action: "edit"
     end
   end
 
@@ -34,9 +33,9 @@ class ProductsController < ApplicationController
     @product = Product.new(product_params)
     authorize @product, :create?
     if @product.save
-      redirect_to @product, :notice => "Product created"
+      redirect_to @product, notice: "Product created"
     else
-      render :action => "new"
+      render action: "new"
     end
   end
 
@@ -47,6 +46,7 @@ class ProductsController < ApplicationController
   end
 
   private
+
   def product_params
     params.require(:product).permit(:name, :gtin)
   end

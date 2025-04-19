@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :setting do
-    sequence(:key) {|n| "Setting #{n}" }
+    sequence(:key) { |n| "Setting #{n}" }
     value { "value" }
   end
 end

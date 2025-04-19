@@ -1,5 +1,4 @@
 class SchoolPolicy < AuthenticatedPolicy
-
   class Scope < ApplicationPolicy::Scope
     def resolve
       if user.has_role?(:admin)
@@ -26,4 +25,3 @@ class SchoolPolicy < AuthenticatedPolicy
     manage?
   end
 end
-

@@ -9,6 +9,7 @@ class AddResultsFinalToContest < ActiveRecord::Migration
       end
     end
   end
+
   def down
     remove_column :contests, :finalized_at
   end

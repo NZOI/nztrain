@@ -1,13 +1,12 @@
-require 'csv'
+require "csv"
 
 module Contests
   class ContestExporter < BaseExporter
-
     def to_csv(contest, include_unranked_contestants)
       problems = contest.problem_set.problems
 
       scoreboard = CSV.generate do |csv|
-        csv << ["Rank", "User ID", "Real Name", "Username", "School", "Year"] + problems.map{ |p| p.name } + ["Total Score", "Time"]
+        csv << ["Rank", "User ID", "Real Name", "Username", "School", "Year"] + problems.map { |p| p.name } + ["Total Score", "Time"]
 
         num_ranked = 0
         rank = nil
@@ -29,7 +28,7 @@ module Contests
           problems.each do |prob|
             row << record["score_#{prob.id}"]
           end
-          row += [record.score, format("%d:%02d:%02d",record.time_taken.to_i/3600,record.time_taken.to_i/60%60,record.time_taken.to_i%60)]
+          row += [record.score, format("%d:%02d:%02d", record.time_taken.to_i / 3600, record.time_taken.to_i / 60 % 60, record.time_taken.to_i % 60)]
           csv << row
         end
       end
@@ -37,18 +36,17 @@ module Contests
 
     def export(path, options = {})
       contest = subject
-      subpath = File.expand_path('submissions', path)
+      subpath = File.expand_path("submissions", path)
       dir.mkdir(subpath)
       submissions = []
 
-
-      file.open(File.expand_path('scoreboard.csv', path), 'wb') do |f|
+      file.open(File.expand_path("scoreboard.csv", path), "wb") do |f|
         f.write to_csv(contest, false)
         tempfiles << f
       end
 
       if contest.only_rank_official_contestants
-        file.open(File.expand_path('unofficial_scoreboard.csv', path), 'wb') do |f|
+        file.open(File.expand_path("unofficial_scoreboard.csv", path), "wb") do |f|
           f.write to_csv(contest, true)
           tempfiles << f
         end
@@ -59,29 +57,29 @@ module Contests
         contest.problem_set.problems.each do |prob|
           chunk = contest.get_submissions(record.user.id, prob.id)
           chunk.each do |sub|
-            file.open(File.expand_path("#{sub.id}#{sub.language.extension}", subpath), 'w') do |f|
+            file.open(File.expand_path("#{sub.id}#{sub.language.extension}", subpath), "w") do |f|
               f.write sub.source
               tempfiles << f
             end
           end
           submissions += chunk.as_json(
             include: {language: {only: :name}},
-            except: [:judge_log, :source],
+            except: [:judge_log, :source]
           )
         end
       end
 
-      file.open(File.expand_path('contest.json', path), 'w') do |f|
+      file.open(File.expand_path("contest.json", path), "w") do |f|
         f.write contest.to_json(include: {
           problem_set: {include: :problems},
           contestants: {include: :school},
           contest_relations: {},
-          scoreboard: {},
+          scoreboard: {}
         })
         tempfiles << f
       end
 
-      file.open(File.expand_path('submissions.json', path), 'w') do |f|
+      file.open(File.expand_path("submissions.json", path), "w") do |f|
         f.write submissions.to_json
         tempfiles << f
       end
@@ -92,7 +90,5 @@ module Contests
     def around_export(path, options)
       super
     end
-
   end
 end
-

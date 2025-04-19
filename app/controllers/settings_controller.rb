@@ -1,8 +1,7 @@
 class SettingsController < ApplicationController
-
   def permitted_params
     @_permitted_params ||= begin
-      permitted_attributes = [:key,:value]
+      permitted_attributes = [:key, :value]
       params.require(:setting).permit(*permitted_attributes)
     end
   end
@@ -15,7 +14,7 @@ class SettingsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @settings }
+      format.xml { render xml: @settings }
     end
   end
 
@@ -26,7 +25,7 @@ class SettingsController < ApplicationController
     authorize @setting, :show?
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @setting }
+      format.xml { render xml: @setting }
     end
   end
 
@@ -37,7 +36,7 @@ class SettingsController < ApplicationController
     authorize @setting, :new?
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @setting }
+      format.xml { render xml: @setting }
     end
   end
 
@@ -54,11 +53,11 @@ class SettingsController < ApplicationController
     authorize @setting, :new?
     respond_to do |format|
       if @setting.save
-        format.html { redirect_to(@setting, :notice => 'Setting was successfully created.') }
-        format.xml  { render :xml => @setting, :status => :created, :location => @setting }
+        format.html { redirect_to(@setting, notice: "Setting was successfully created.") }
+        format.xml { render xml: @setting, status: :created, location: @setting }
       else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @setting.errors, :status => :unprocessable_entity }
+        format.html { render action: "new" }
+        format.xml { render xml: @setting.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -70,11 +69,11 @@ class SettingsController < ApplicationController
     authorize @setting, :update?
     respond_to do |format|
       if @setting.update_attributes(permitted_params)
-        format.html { redirect_to(@setting, :notice => 'Setting was successfully updated.') }
-        format.xml  { head :ok }
+        format.html { redirect_to(@setting, notice: "Setting was successfully updated.") }
+        format.xml { head :ok }
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @setting.errors, :status => :unprocessable_entity }
+        format.html { render action: "edit" }
+        format.xml { render xml: @setting.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -88,7 +87,7 @@ class SettingsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to(settings_url) }
-      format.xml  { head :ok }
+      format.xml { head :ok }
     end
   end
 end

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe EvaluatorsController do
   before(:all) do
@@ -13,8 +13,8 @@ describe EvaluatorsController do
       sign_in users(:admin)
     end
     can_index :evaluators
-    can_create :evaluator, :attributes => { :name => "A unique name", :description => "Unique description", :source => "special sauce" }
-    can_manage :evaluator, :attributes => { :name => "A unique name", :description => "Unique description", :source => "special sauce" }
+    can_create :evaluator, attributes: {name: "A unique name", description: "Unique description", source: "special sauce"}
+    can_manage :evaluator, attributes: {name: "A unique name", description: "Unique description", source: "special sauce"}
   end
 
   context "as a normal user" do

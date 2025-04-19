@@ -9,4 +9,3 @@ module RequestsSpecHelper
     end
   end
 end
-

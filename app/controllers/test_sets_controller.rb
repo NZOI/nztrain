@@ -1,5 +1,4 @@
 class TestSetsController < ApplicationController
-
   def permitted_params
     @_permitted_params ||= begin
       permitted_attributes = [:name, :problem_id, :points]
@@ -11,11 +10,11 @@ class TestSetsController < ApplicationController
   # GET /test_sets.json
   def index
     permitted_to! :inspect, Problem.find(params[:problem_id])
-    @test_sets = TestSet.where(:problem_id => params[:problem_id])
+    @test_sets = TestSet.where(problem_id: params[:problem_id])
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render :json => @test_sets }
+      format.json { render json: @test_sets }
     end
   end
 
@@ -26,7 +25,7 @@ class TestSetsController < ApplicationController
     permitted_to! :inspect, @test_set.problem
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render :json => @test_set }
+      format.json { render json: @test_set }
     end
   end
 
@@ -36,7 +35,7 @@ class TestSetsController < ApplicationController
     raise Pundit::NotAuthorizedError
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render :json => @test_set }
+      format.json { render json: @test_set }
     end
   end
 
@@ -53,11 +52,11 @@ class TestSetsController < ApplicationController
 
     respond_to do |format|
       if @test_set.save
-        format.html { redirect_to @test_set, :notice => 'Test set was successfully created.' }
-        format.json { render :json => @test_set, :status => :created, :location => @test_set }
+        format.html { redirect_to @test_set, notice: "Test set was successfully created." }
+        format.json { render json: @test_set, status: :created, location: @test_set }
       else
-        format.html { render :action => "new" }
-        format.json { render :json => @test_set.errors, :status => :unprocessable_entity }
+        format.html { render action: "new" }
+        format.json { render json: @test_set.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -69,11 +68,11 @@ class TestSetsController < ApplicationController
     permitted_to! :update, @test_set.problem
     respond_to do |format|
       if @test_set.update_attributes(permitted_params)
-        format.html { redirect_to @test_set, :notice => 'Test set was successfully updated.' }
+        format.html { redirect_to @test_set, notice: "Test set was successfully updated." }
         format.json { head :ok }
       else
-        format.html { render :action => "edit" }
-        format.json { render :json => @test_set.errors, :status => :unprocessable_entity }
+        format.html { render action: "edit" }
+        format.json { render json: @test_set.errors, status: :unprocessable_entity }
       end
     end
   end

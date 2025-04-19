@@ -1,8 +1,8 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe SubmissionsController do
   before(:all) do
-    @submission = FactoryBot.create(:submission, :problem => problems(:problem), :user => users(:superadmin))
+    @submission = FactoryBot.create(:submission, problem: problems(:problem), user: users(:superadmin))
   end
   after(:all) do
     @submission.destroy
@@ -21,6 +21,6 @@ describe SubmissionsController do
     before(:each) do
       sign_in users(:user)
     end
-    can_index :submissions, :params => { :filter => 'my' }
+    can_index :submissions, params: {filter: "my"}
   end
 end

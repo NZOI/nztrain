@@ -5,8 +5,9 @@ module Loofah
       def initialize
         @direction = :top_down
       end
+
       def scrub(node)
-        return STOP if (node.type == Nokogiri::XML::Node::ELEMENT_NODE) && (['script','noscript','style','textarea','pre','code'].include? node.name)
+        return STOP if (node.type == Nokogiri::XML::Node::ELEMENT_NODE) && (["script", "noscript", "style", "textarea", "pre", "code"].include? node.name)
         if node.name == "text"
           pos = 0
           content = node.content
@@ -25,13 +26,13 @@ module Loofah
             fragment = Nokogiri::HTML::DocumentFragment.new node.document
             Nokogiri::HTML::Builder.with(fragment) do |html|
               html.text escape content[pos...match.begin(0)] # text before Jax
-              html.span(:class => 'MathJax_Preview', :style => dollars==2?'display: block; text-align: center;':'' ) { # preview before Jax typeset
-                html.span(:class => 'js_only') { html.text tex } # preview if javascript exists
+              html.span(class: "MathJax_Preview", style: dollars == 2 ? "display: block; text-align: center;" : "") { # preview before Jax typeset
+                html.span(class: "js_only") { html.text tex } # preview if javascript exists
                 html.noscript {
                   html.text tex # placeholder if javascript doesn't exist, TODO: use mathtex cgi
                 }
               }
-              html.script(:type => 'math/tex'+(dollars==2?'; mode=display':'')) { html.text tex } # MathJax script
+              html.script(type: "math/tex" + (dollars == 2 ? "; mode=display" : "")) { html.text tex } # MathJax script
             end
 
             node.add_previous_sibling fragment
@@ -40,14 +41,14 @@ module Loofah
           end
           node.content = escape content[pos..-1] # set remaining text
         end
-        return CONTINUE
+        CONTINUE
       end
 
       private
+
       def escape content
-        content.gsub(/\\\$/,'$')
+        content.gsub(/\\\$/, "$")
       end
     end
   end
 end
-

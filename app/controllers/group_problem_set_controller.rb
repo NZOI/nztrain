@@ -1,6 +1,4 @@
 class GroupProblemSetController < ApplicationController
-
-
   def add
     @problem_set = ProblemSet.find(params[:problem_set_id])
     @group = Group.find(params[:problem_set][:group_ids])
@@ -10,7 +8,7 @@ class GroupProblemSetController < ApplicationController
     @group.problem_sets.push(@problem_set)
 
     respond_to do |format|
-      format.html { redirect_to(@problem_set, :notice => 'Problem set added to group') }
+      format.html { redirect_to(@problem_set, notice: "Problem set added to group") }
     end
   end
 end

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe SettingsController do
   before(:all) do
@@ -13,8 +13,8 @@ describe SettingsController do
       sign_in users(:superadmin)
     end
     can_index :settings
-    can_create :setting, :attributes => { :key => "A unique name", :value => "Secret value setting" }
-    can_manage :setting, :attributes => { :key => "A unique name", :value => "Secret value setting" }
+    can_create :setting, attributes: {key: "A unique name", value: "Secret value setting"}
+    can_manage :setting, attributes: {key: "A unique name", value: "Secret value setting"}
   end
 
   context "as a normal user" do
