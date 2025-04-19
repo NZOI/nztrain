@@ -9,7 +9,7 @@ class Importers::ProblemSeriesController < ApplicationController
   end
 
   def update_index
-    if jid = problem_series.update_index
+    if (jid = problem_series.update_index)
       redirect_to index_path, notice: "Index update job (#{jid}) queued."
     else
       redirect_to index_path, alert: "The series index failed to update."
@@ -17,7 +17,7 @@ class Importers::ProblemSeriesController < ApplicationController
   end
 
   def download
-    if jid = problem_series.download(params[:vid], params[:cid])
+    if (jid = problem_series.download(params[:vid], params[:cid]))
       redirect_to index_path, notice: "Download job (#{jid}) queued."
     else
       redirect_to index_path, alert: "Download failed."
@@ -25,7 +25,7 @@ class Importers::ProblemSeriesController < ApplicationController
   end
 
   def reindex
-    if jid = problem_series.reindex(params[:vid], params[:cid])
+    if (jid = problem_series.reindex(params[:vid], params[:cid]))
       redirect_to index_path, notice: "Reindex job (#{jid}) queued."
     else
       redirect_to index_path, alert: "Reindex failed."
@@ -58,7 +58,7 @@ class Importers::ProblemSeriesController < ApplicationController
       end
       pids = nil if params[:commit] == "Import All"
 
-      if jid = problem_series.import(params[:vid], params[:cid], pids, disposition: issue_params["disposition"] || "merge", operations: operations)
+      if (jid = problem_series.import(params[:vid], params[:cid], pids, disposition: issue_params["disposition"] || "merge", operations: operations))
         redirect_to index_path, notice: "Import job (#{jid}) queued."
       else
         redirect_to index_path, alert: "Import failed."
