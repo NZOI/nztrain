@@ -7,7 +7,6 @@ ignore:
 - app/controllers/contests_controller.rb
 - app/controllers/groups/members_controller.rb
 - app/controllers/importers/problem_series_controller.rb
-- app/controllers/problems_controller.rb
 - app/controllers/test_cases_controller.rb
 - app/controllers/test_sets_controller.rb
 - app/exporters/contests/contest_exporter.rb
