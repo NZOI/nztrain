@@ -49,7 +49,7 @@
           <td><%= link_to 'Destroy', user, :data => { :confirm => 'Are you sure?' }, :method => :delete if policy(user).destroy? %></td>
         <% end %>
         <% if policy(user).su? %>
-          <td><%= link_to "su", su_user_path(user), :rel => "facebox" %></td>
+          <td><%= link_to "su", su_user_path(user) %></td>
         <% end %>
       </tr>
     <% end %>
