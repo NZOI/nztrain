@@ -13,10 +13,16 @@ class JudgeSubmissionWorker < ApplicationWorker
     user = submission.user
     if user.competing? && Pundit.policy(user, submission).show?
       if rejudging # re-judging, later submissions are more important
-        later = Submission.where(problem_id: submission.problem_id, user_id: submission.user_id).where { created_at > submission.created_at }.count
+        later = Submission
+          .where(problem_id: submission.problem_id, user_id: submission.user_id)
+          .where("created_at > ?", submission.created_at)
+          .count
         priority = 18 - [later * 2, 10].min
       else # first time judging, earlier submissions get better priority (so other people get a chance to have their stuff judged)
-        prev = Submission.where(problem_id: submission.problem_id, user_id: submission.user_id).where { created_at < submission.created_at }.count
+        prev = Submission
+          .where(problem_id: submission.problem_id, user_id: submission.user_id)
+          .where("created_at < ?", submission.created_at)
+          .count
 
         priority = 20 - [prev, 10].min
       end
@@ -102,7 +108,7 @@ class JudgeSubmissionWorker < ApplicationWorker
       resource_limits = {mem: memory_limit * 1024, time: time_limit, extra_time: extra_time, wall_time: wall_time, stack: stack_limit, processes: submission.language.processes}
 
       # prerequisites
-      prereqs = problem.test_cases.where(id: problem.prerequisite_sets.joins(:test_case_relations).select(test_case_relations: :test_case_id))
+      prereqs = problem.test_cases.where(id: problem.prerequisite_sets.joins(:test_case_relations).select("test_case_relations.test_case_id"))
 
       prereqs.each do |test_case|
         result["test_cases"][test_case.id] = judge_test_case(test_case, run_command, eval_command, resource_limits) unless result["test_cases"].has_key?(test_case.id)
