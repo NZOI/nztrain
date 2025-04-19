@@ -4,7 +4,7 @@
     <%= password_field_tag :password, '', :autocomplete => 'off' %>
   </div>
   <div class="actions" style="padding: 0px; margin: 0px;">
-    <input type="button" value="Cancel" style="margin-right: 20px;" onClick="jQuery(document).trigger(\"close.facebox\");">
+    <input type="button" value="Cancel" style="margin-right: 20px;" onclick="history.back() || location.assign('<%= users_path %>')">
     <%= submit_tag('Confirm', :style => "margin-left: 20px;") %>
   </div>
 <% end %>

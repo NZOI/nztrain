@@ -8,8 +8,6 @@
 //= require jquery.url
 //= require hoverIntent
 //= require superfish
-//= require jquery.facebox
-//= require jquery.facebox.adapter
 //= require_self
 
 
