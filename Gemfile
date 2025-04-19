@@ -11,8 +11,6 @@ gem 'psych', '~> 2.0.2' # part of stdlib, need newer version for safe_load
 
 gem 'rubyzip', '1.3.0'
 
-gem 'jquery-rails', '~> 3.1.3'
-gem 'jquery-ui-rails', '4.0.5'
 gem 'superfish-rails', '~> 1.6.0'
 
 gem 'nokogiri', '~> 1.10.10'
@@ -43,7 +41,6 @@ gem 'responders'
 gem 'countries'
 gem 'country_select'
 gem 'world-flags'
-gem 'jquery-final_countdown-rails'
 gem 'ruby-duration'
 
 gem 'pg'
