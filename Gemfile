@@ -43,6 +43,8 @@ gem "ruby-duration"
 gem "pg"
 gem "backup"
 
+gem "activemodel-serializers-xml"
+
 # Redis and Background Processing
 gem "redis"
 gem "qless", github: "Shopify/qless"
