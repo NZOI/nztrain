@@ -27,7 +27,6 @@ gem 'whenever', :require => false # for cron jobs
 gem 'tilt'
 gem 'simple-navigation', '3.11.0'
 gem 'simple_form', '3.2.1'
-gem 'strong_presenter', '~> 0.2.2'
 gem 'render_anywhere'
 gem 'pygments.rb', '~> 2.0'
 gem 'ranked-model'

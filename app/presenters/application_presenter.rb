@@ -1,4 +1,4 @@
-class ApplicationPresenter < StrongPresenter::Presenter
+class ApplicationPresenter
 
   private
   def self.present_owner_link
