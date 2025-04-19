@@ -3,7 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '>= 2.4.10', '< 2.5'
 
-gem 'rails', '~> 4.2'
+gem 'rails', '~> 5.0.7.2'
 gem 'json_cve_2020_10663', '~> 1.0' # required until we update json >= 2.3, which we can only do once we upgrade to Rails >= 4.2 because activesupport 4.1.* depends on json ~> 1.7 (i.e < 2.0): https://rubygems.org/gems/activesupport/versions/4.1.16
 
 gem 'devise', '~> 4.0'
@@ -28,11 +28,10 @@ gem 'squeel'#, '~> 1.1.1' # until version 1.1.2 released
 gem 'tilt'
 gem 'simple-navigation', '3.11.0'
 gem 'simple_form', '3.2.1'
-gem 'facebox-rails'
 gem 'strong_presenter', '~> 0.2.2'
 gem 'render_anywhere'
 gem 'pygments.rb', '~> 2.0'
-gem 'ranked-model', '< 0.4.3' # pinned because 0.4.3-0.4.4 are broken (see https://github.com/brendon/ranked-model/issues/139; we also need the fix in https://github.com/brendon/ranked-model/pull/152); we can't update to 0.4.5 yet because it requires activerecord >= 4.2
+gem 'ranked-model'
 gem 'pdf-reader'
 gem 'mechanize'
 gem 'prawn'
@@ -83,8 +82,6 @@ group :development, :test do
   gem 'byebug'
 
   gem 'standard'
-
-  gem "test_after_commit", "~> 1.2"
 end
 
 
