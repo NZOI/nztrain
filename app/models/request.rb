@@ -16,9 +16,23 @@ class Request < ActiveRecord::Base
       status == key
     end
   end
-  scope :pending, -> { where { (status == STATUS[:pending]) & (expired_at > DateTime.now) } }
-  scope :expired, -> { where { (status == STATUS[:pending]) & (expired_at <= DateTime.now) } }
-  scope :closed, -> { where { (status != STATUS[:pending]) | (expired_at <= DateTime.now) } }
+
+  # I would prefer to just use expired and not_expired, but these
+  # names are in used below for a slightly different use.
+  scope :past_expiry, -> { where("expired_at <= ?", DateTime.now) }
+  scope :not_past_expiry, -> { where("expired_at > ?", DateTime.now) }
+
+  # IMO a better name for this would be "pending", but see below
+  scope :status_pending, -> { where(status: STATUS[:pending]) }
+
+  # These scopes have weird names.
+  # * Pending is redefined a scope defined above.
+  # * Expired you wouldn't usually expect to check status
+  scope :pending, -> { status_pending.merge(not_past_expiry) }
+  scope :expired, -> { status_pending.merge(past_expiry) }
+
+  # TODO(Rails5): Convert to where.not(pending).or(past_expiry)
+  scope :closed, -> { where("status != ? OR expired_at <= ?", STATUS[:pending], DateTime.now) }
 
   def pending?
     status == STATUS[:pending] && (expired_at == Float::INFINITY || expired_at > DateTime.now)

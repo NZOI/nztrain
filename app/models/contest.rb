@@ -24,6 +24,9 @@ class Contest < ActiveRecord::Base
   # public = everyone, protected = in group, private = competitors
   OBSERVATION = Enumeration.new 0 => :public, 1 => :protected, 2 => :private
 
+  scope :not_ended, -> { where("end_time > ?", Time.current) }
+  scope :publicly_observable, -> { where(observation: OBSERVATION[:public]) }
+
   before_save do # update the end time that was cached
     if duration_changed? || end_time_changed?
       contest_relations.find_each do |relation|

@@ -4,20 +4,31 @@ class SubmissionPolicy < AuthenticatedPolicy
       if user.is_staff?
         scope.all
       elsif user.competing?
-        problem_set_ids = ContestRelation.where { |contest_relations| (contest_relations.user_id == user.id) & (contest_relations.started_at <= DateTime.now) & (contest_relations.finish_at > DateTime.now) }.joins(:contest).select(contest: :problem_set_id)
-        scope.joins(problem: :problem_sets).where(problem: {problem_sets: {id: problem_set_ids}}, user_id: user.id)
+        problem_set_ids = ContestRelation
+          .where(user_id: user.id)
+          .where("contest_relations.started_at <= ?", DateTime.now)
+          .where("contest_relations.finish_at > ?", DateTime.now)
+          .joins(:contest)
+          .select("contests.problem_set_id")
+
+        scope
+          .joins(problem: :problem_sets)
+          .where(user_id: user.id)
+          .where(problem_sets: {id: problem_set_ids})
       else
-        scope.joins(:problem).where { |submission| (submission.user_id == user.id) | (submission.problem.owner_id == user.id) }
+        scope
+          .joins(:problem)
+          .where("submissions.user_id = :user_id OR problems.owner_id = :user_id", user_id: user.id)
       end
     end
   end
 
   def inspect?
-    super or (record.is_a?(Submission) && policy(record.problem).try(:inspect?) && !user.competing?)
+    super || (record.is_a?(Submission) && policy(record.problem).try(:inspect?) && !user.competing?)
   end
 
   def update?
-    super or (record.is_a?(Submission) && policy(record.problem).try(:update?) && !user.competing?)
+    super || (record.is_a?(Submission) && policy(record.problem).try(:update?) && !user.competing?)
   end
 
   def index?
@@ -25,7 +36,7 @@ class SubmissionPolicy < AuthenticatedPolicy
   end
 
   def show?
-    inspect? or scope.where(id: record.id).exists?
+    inspect? || scope.where(id: record.id).exists?
   end
 
   def rejudge?

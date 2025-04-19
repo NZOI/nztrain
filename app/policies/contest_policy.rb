@@ -5,25 +5,30 @@ class ContestPolicy < ApplicationPolicy
         return scope.all
       end
 
-      # following uses advanced squeel
-      scope.where do |contests|
-        public_observation = contests.observation == Contest::OBSERVATION[:public]
-        grouped = contests.id.in(GroupContest.where do |gc|
-          group_contests = (gc.group_id == 0)
-          group_contests |= (gc.group_id >> user.groups.select(:id)) if user
-          group_contests
-        end.select(:contest_id))
-        visible_contests = public_observation | grouped
+      sql = <<~SQL
+        contests.observation = :public
+        OR contests.id IN (
+          SELECT
+            contest_id
+          FROM
+            group_contests
+          WHERE
+            group_id = 0
+            OR group_id IN (:user_groups)
+        )
+        OR contests.id IN (:allowed_contest_ids)
+        OR contests.owner_id = :user_id
+      SQL
 
-        if user
-          registered = contests.id.in(user.contest_relations.select(:contest_id))
-          owned = contests.owner_id == user.id
-          supervising = contests.id.in(user.contest_supervising.select(:contest_id))
-          visible_contests |= registered | owned | supervising
-        end
+      allowed_contest_ids = []
+      allowed_contest_ids = user.contest_relations.pluck(:contest_id) + user.contest_supervising.pluck(:contest_id) if user
 
-        visible_contests
-      end
+      scope.where(sql, {
+        public: Contest::OBSERVATION[:public],
+        user_groups: user&.groups&.pluck(:id),
+        allowed_contest_ids: allowed_contest_ids,
+        user_id: user&.id,
+      })
     end
   end
 
@@ -34,12 +39,22 @@ class ContestPolicy < ApplicationPolicy
 
   def current_contestant?
     return false unless user # signed in
-    record.contest_relations.where { |relation| (relation.user_id == user.id) & (relation.started_at <= DateTime.now) & (relation.finish_at > DateTime.now) }.exists?
+
+    record
+      .contest_relations
+      .where(user_id: user.id)
+      .where("started_at <= :now AND finish_at > :now", DateTime.now)
+      .exists?
   end
 
   def current_or_past_contestant?
     return false unless user # signed in
-    record.contest_relations.where { |relation| (relation.user_id == user.id) & (relation.started_at <= DateTime.now) }.exists?
+
+    record
+      .contest_relations
+      .where(user_id: user.id)
+      .where("started_at <= ?", DateTime.now)
+      .exists?
   end
 
   def index?
@@ -87,7 +102,7 @@ class ContestPolicy < ApplicationPolicy
 
   def startable?
     return false unless user # signed in
-    user.is_staff? or registered? or record.groups.where(id: 0).exists? or record.groups.joins(:memberships).where(memberships: {member_id: user.id}).exists?
+    user.is_staff? || registered? || record.groups.where(id: 0).exists? || record.groups.joins(:memberships).where(group_memberships: { member_id: user.id }).exists?
   end
 
   def start?
