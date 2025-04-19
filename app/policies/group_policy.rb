@@ -51,7 +51,7 @@ class GroupPolicy < AuthenticatedPolicy
   end
 
   def invite?
-    user.is_admin? or user.owns(record) or member? && [Group::MEMBERSHIP[:open], Group::MEMBERSHIP[:invitation]].include?(record.membership)
+    user.is_admin? || user.owns(record) || (member? && [Group::MEMBERSHIP[:open], Group::MEMBERSHIP[:invitation]].include?(record.membership))
   end
 
   def reject?
