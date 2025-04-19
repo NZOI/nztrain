@@ -9,8 +9,6 @@
 //= require hoverIntent
 //= require superfish
 //= require history
-//= require jquery.facebox
-//= require jquery.facebox.adapter
 //= require_self
 
 

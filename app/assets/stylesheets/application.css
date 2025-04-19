@@ -5,7 +5,6 @@
 *= require pygments
 *= require code
 *= require sample
-*= require jquery.facebox
 *= require style
 *= require superfish
 *= require nav-superfish
