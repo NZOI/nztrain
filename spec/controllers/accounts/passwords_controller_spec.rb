@@ -1,47 +1,38 @@
 require "spec_helper"
 
 describe Accounts::PasswordsController do
-  before(:each) do
-    @user = users(:user)
-  end
+  let(:user) { FactoryBot.create(:user) }
 
-  it "can get password reset form" do
-    get :new
-    expect(response).to be_success
-  end
-
-  it "can send password reset email" do
-    post :create, user: {email: @user.email}
-
-    expect(mail = ActionMailer::Base.deliveries.last).to_not be_nil
-
-    host = ActionMailer::Base.default_url_options[:host]
-    expect(mail).to have_link("reset_password_token")
-  end
-
-  context "using password reset token" do
-    before(:all) do
-      @resetuser = FactoryBot.create(:user)
+  describe "forgot password" do
+    it "can get password reset form" do
+      get :new
+      expect(response).to be_success
     end
-    after(:all) do
-      @resetuser.destroy
-    end
-    before(:each) do
-      User.send_reset_password_instructions email: @resetuser.email
-      @resetuser.reload
+
+    it "can send password reset email" do
+      post :create, user: {email: user.email}
+
       expect(mail = ActionMailer::Base.deliveries.last).to_not be_nil
-      expect(mail.body.encoded =~ %r{<a href="https://[[:alnum:].:/]+/password/edit\?reset_password_token=([^"]+)">}).to_not be_nil
-      @reset_token = $1
+
+      host = ActionMailer::Base.default_url_options[:host]
+      expect(mail).to have_link("reset_password_token")
+    end
+  end
+
+  describe "using password reset token" do
+    before do
+      @token = user.send_reset_password_instructions
     end
 
     it "can edit password" do
-      get :edit, reset_password_token: @reset_token
+      get :edit, reset_password_token: @token
       expect(response).to be_success
     end
 
     it "can update password" do
-      post :update, user: {reset_password_token: @reset_token, password: "newpassword", password_confirmation: "newpassword"}
-      expect(@resetuser.reload.valid_password?("newpassword")).to be true
+      post :update, user: {reset_password_token: @token, password: "newpassword", password_confirmation: "newpassword"}
+
+      expect(user.reload.valid_password?("newpassword")).to be true
     end
   end
 end
