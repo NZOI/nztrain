@@ -4,7 +4,7 @@ class RequestPolicy < AuthenticatedPolicy
       if user.is_admin?
         scope.all
       else
-        scope.where { (requester_id == user.id) | (requestee_id == user.id) }
+        scope.where("requester_id = :user_id OR requestee_id = :user_id", user_id: user.id)
       end
     end
   end
