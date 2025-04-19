@@ -123,11 +123,13 @@ class Groups::MembersController < ApplicationController
       else
         redirect_to(@group, alert: "Failed to join group")
       end
-    elsif @group.join(@request.subject) # :join_request
-      @request.accept!
-      redirect_to(join_requests_members_group_path(@group), notice: "Join request accepted")
-    else
-      redirect_to(@group, alert: "Failed to accept join request")
+    else # :join_request
+      if @group.join(@request.subject) # rubocop:disable Style/IfInsideElse
+        @request.accept!
+        redirect_to(join_requests_members_group_path(@group), notice: "Join request accepted")
+      else
+        redirect_to(@group, alert: "Failed to accept join request")
+      end
     end
   end
 
