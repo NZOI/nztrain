@@ -1,22 +1,19 @@
 require "spec_helper"
 
 describe UsersController do
-  before(:each) do
-    @user = users(:user)
-    @superadmin = users(:superadmin)
+  before do
+    sign_in user
   end
 
   context "as admin" do
-    before(:each) do
-      sign_in users(:admin)
-    end
+    let(:user) { FactoryBot.create(:admin) }
+
     can_index :users
   end
 
   context "as a normal user" do
-    before(:each) do
-      sign_in users(:user)
-    end
+    let(:user) { FactoryBot.create(:user) }
+
     can_index :users
   end
 end
