@@ -3,7 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby ">= 2.4.10", "< 2.5"
 
-gem "rails", "~> 4.2"
+gem 'rails', '~> 5.0.7.2'
 
 gem "devise", "~> 4.0"
 gem "psych", "~> 2.0.2" # part of stdlib, need newer version for safe_load
@@ -12,14 +12,14 @@ gem "rubyzip", "1.3.0"
 
 gem "superfish-rails", "~> 1.6.0"
 
-gem "nokogiri", "~> 1.10.10"
-gem "redcarpet"
-gem "rmagick"
-gem "carrierwave", "1.3.2"
-gem "will_paginate"
-gem "has_scope"
-gem "pundit", "~> 1.1.0"
-gem "recaptcha", require: "recaptcha/rails"
+gem 'nokogiri', '~> 1.10.10'
+gem 'redcarpet'
+gem 'rmagick'
+gem 'carrierwave', '1.3.2'
+gem 'will_paginate'
+gem 'has_scope'
+gem 'pundit', '~> 1.1.0'
+gem 'recaptcha', :require => 'recaptcha/rails'
 gem "loofah", "<= 2.20.0"
 gem "whenever", require: false # for cron jobs
 gem "tilt"
@@ -27,7 +27,7 @@ gem "simple-navigation", "3.11.0"
 gem "simple_form", "3.2.1"
 gem "render_anywhere"
 gem "pygments.rb", "~> 2.0"
-gem "ranked-model", "< 0.4.3" # pinned because 0.4.3-0.4.4 are broken (see https://github.com/brendon/ranked-model/issues/139; we also need the fix in https://github.com/brendon/ranked-model/pull/152); we can't update to 0.4.5 yet because it requires activerecord >= 4.2
+gem "ranked-model"
 gem "pdf-reader"
 gem "mechanize"
 gem "prawn"
@@ -78,8 +78,6 @@ group :development, :test do
   gem "byebug"
 
   gem "standard"
-
-  gem "test_after_commit", "~> 1.2"
 end
 
 # Gems used only for assets and not required
