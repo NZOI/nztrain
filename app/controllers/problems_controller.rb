@@ -83,7 +83,6 @@ class ProblemsController < ApplicationController
     @problem = Problem.find(params[:id])
     authorize @problem, :submit?
     if request.post? # post request
-      @problem = Problem.find(params[:id])
       @submission = Submission.new(submit_params) # create submission
       respond_to do |format|
         source_is_valid = @submission.source.nil? || @submission.source.valid_encoding? && !@submission.source.include?("\0")
@@ -102,7 +101,6 @@ class ProblemsController < ApplicationController
         end
       end
     else # get request
-      @problem = Problem.find(params[:id])
       @submission = Submission.new
       respond_to do |format|
         format.html { render layout: "problem" }
@@ -113,7 +111,6 @@ class ProblemsController < ApplicationController
   def submissions
     @problem = Problem.find(params[:id])
     authorize @problem, :view_submissions?
-    @problem = Problem.find(params[:id])
     if current_user.openbook?
       @submissions = @problem.submission_history(current_user)
     else
