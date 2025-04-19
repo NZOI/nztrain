@@ -178,7 +178,7 @@ GEM
       json (>= 1.7.7, < 2.3)
     libv8-node (15.14.0.1)
     logger (1.5.3)
-    loofah (2.21.1)
+    loofah (2.20.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.1)
@@ -458,7 +458,7 @@ DEPENDENCIES
   has_scope
   jquery-historyjs (= 0.2.3)
   json_cve_2020_10663 (~> 1.0)
-  loofah
+  loofah (<= 2.20.0)
   mechanize
   mini_racer (~> 0.4.0)
   newrelic_rpm
