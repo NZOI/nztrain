@@ -569,7 +569,6 @@ module Problems
       def extract_images(imagelist)
         extractor = PDF::ExtractImages::Extractor.new(pdf_path, reader)
         extractor.extract_images(imagelist)
-        # puts extracted_images.inspect
       end
     end
   end
