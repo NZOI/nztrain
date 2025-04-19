@@ -1,3 +1,4 @@
+# coding: utf-8
 module Problems
   module COCI
     class PDFImporter
@@ -503,7 +504,6 @@ module Problems
                 if within?(:P)
                   append_image_to_paragraph(label, state)
                 else
-                  !current_name.nil?
                   text, imageinfo = process_image(label, state)
                   append_statement(text)
                   statements[current_name][:images] << imageinfo
