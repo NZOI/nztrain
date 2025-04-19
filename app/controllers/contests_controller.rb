@@ -319,7 +319,6 @@ class ContestsController < ApplicationController
         redirect_to contestants_contest_path(@contest), notice: "Contestants updated"
       else
         redirect_to contestants_contest_path(@contest), alert: "Nothing to update."
-        nil
       end
     else
       redirect_to contestants_contest_path(@contest), alert: "Could not start/end contest for any users as none were selected."
