@@ -3,7 +3,6 @@
 ---
 ignore:
 - Rakefile
-- app/controllers/accounts/registrations_controller.rb
 - app/controllers/accounts/settings_controller.rb
 - app/controllers/contests_controller.rb
 - app/controllers/groups/members_controller.rb
