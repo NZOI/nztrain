@@ -239,8 +239,6 @@ GEM
     pdfkit (0.8.4.3.2)
     pg (1.2.3)
     pkg-config (1.6.1)
-    polyamorous (1.1.0)
-      activerecord (>= 3.0)
     prawn (2.2.2)
       pdf-core (~> 0.7.0)
       ttfunk (~> 1.5)
@@ -389,10 +387,6 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    squeel (1.2.3)
-      activerecord (>= 3.0)
-      activesupport (>= 3.0)
-      polyamorous (~> 1.1.0)
     ssrf_filter (1.0.8)
     standard (1.0.5)
       rubocop (= 1.12.1)
@@ -496,7 +490,6 @@ DEPENDENCIES
   simplecov
   sinatra
   spring
-  squeel
   standard
   strong_presenter (~> 0.2.2)
   superfish-rails (~> 1.6.0)
