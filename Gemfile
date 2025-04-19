@@ -6,7 +6,7 @@ ruby '>= 2.4.10', '< 2.5'
 gem 'rails', '~> 4.2'
 gem 'json_cve_2020_10663', '~> 1.0' # required until we update json >= 2.3, which we can only do once we upgrade to Rails >= 4.2 because activesupport 4.1.* depends on json ~> 1.7 (i.e < 2.0): https://rubygems.org/gems/activesupport/versions/4.1.16
 
-gem 'devise', '~> 3.4.1'
+gem 'devise', '~> 4.0'
 gem 'psych', '~> 2.0.2' # part of stdlib, need newer version for safe_load
 
 gem 'rubyzip', '1.3.0'
@@ -86,6 +86,8 @@ group :development, :test do
   gem 'byebug'
 
   gem 'standard'
+
+  gem "test_after_commit", "~> 1.2"
 end
 
 
