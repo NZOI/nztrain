@@ -11,7 +11,7 @@ class ChangeHabtmProblemAssociations < ActiveRecord::Migration
     add_column :problem_set_problems, :problem_set_id, :integer
     rename_column :problem_set_problems, :problem_id, :old_problem_id
     add_column :problem_set_problems, :problem_id, :integer
-    execute 'UPDATE problem_set_problems SET problem_id = old_problem_id, problem_set_id = old_problem_set_id;'
+    execute "UPDATE problem_set_problems SET problem_id = old_problem_id, problem_set_id = old_problem_set_id;"
     remove_column :problem_set_problems, :old_problem_set_id
     remove_column :problem_set_problems, :old_problem_id
 
@@ -30,7 +30,7 @@ class ChangeHabtmProblemAssociations < ActiveRecord::Migration
     add_column :group_problem_sets, :group_id, :integer
     rename_column :group_problem_sets, :problem_set_id, :old_problem_set_id
     add_column :group_problem_sets, :problem_set_id, :integer
-    execute 'UPDATE group_problem_sets SET group_id = old_group_id, problem_set_id = old_problem_set_id;'
+    execute "UPDATE group_problem_sets SET group_id = old_group_id, problem_set_id = old_problem_set_id;"
     remove_column :group_problem_sets, :old_group_id
     remove_column :group_problem_sets, :old_problem_set_id
 
@@ -49,7 +49,7 @@ class ChangeHabtmProblemAssociations < ActiveRecord::Migration
     add_column :group_contests, :group_id, :integer
     rename_column :group_contests, :contest_id, :old_contest_id
     add_column :group_contests, :contest_id, :integer
-    execute 'UPDATE group_contests SET group_id = old_group_id, contest_id = old_contest_id;'
+    execute "UPDATE group_contests SET group_id = old_group_id, contest_id = old_contest_id;"
     remove_column :group_contests, :old_group_id
     remove_column :group_contests, :old_contest_id
 
@@ -61,12 +61,12 @@ class ChangeHabtmProblemAssociations < ActiveRecord::Migration
 
     # rank problems within problem sets
     add_column :problem_set_problems, :problem_set_order, :integer
-    execute 'UPDATE problem_set_problems SET problem_set_order = id*10'
+    execute "UPDATE problem_set_problems SET problem_set_order = id*10"
 
     # give problem sets in groups custom names
     add_column :group_problem_sets, :name, :string, limit: 255
 
-    execute 'DROP INDEX IF EXISTS index_problems_on_title'
+    execute "DROP INDEX IF EXISTS index_problems_on_title"
 
     rename_column :problem_sets, :title, :name
     rename_column :problems, :title, :name

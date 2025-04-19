@@ -1,16 +1,15 @@
 class ItemsController < ApplicationController
-
   def index
     authorize Item.new, :index?
     @items = Item.all
   end
 
-  #def new
+  # def new
   #  @product = Item.new
   #  authorize @product, :new?
-  #end
+  # end
 
-  #def create
+  # def create
   #  @product = Item.new(product_params)
   #  authorize @product, :create?
   #  if @product.save
@@ -18,10 +17,11 @@ class ItemsController < ApplicationController
   #  else
   #    render :action => "new"
   #  end
-  #end
+  # end
 
   private
-  #def product_params
+
+  # def product_params
   #  params.require(:product).permit(:name, :gtin)
-  #end
+  # end
 end

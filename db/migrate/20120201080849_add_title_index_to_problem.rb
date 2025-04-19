@@ -1,7 +1,7 @@
 class AddTitleIndexToProblem < ActiveRecord::Migration
   def self.up
     case ActiveRecord::Base.connection.adapter_name
-    when 'SQLite'
+    when "SQLite"
       execute "CREATE INDEX index_problems_on_title ON problems (title collate nocase)"
     else
       execute "CREATE UNIQUE INDEX index_problems_on_title ON problems (lower(title))"

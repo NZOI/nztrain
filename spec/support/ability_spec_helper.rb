@@ -1,5 +1,5 @@
 module AbilitySpecHelper
-  RSpec::Matchers.define :be_permitted_to do |actions,subjects|
+  RSpec::Matchers.define :be_permitted_to do |actions, subjects|
     match do |user|
       begin
         Array(actions).each do |action|

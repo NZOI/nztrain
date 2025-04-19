@@ -4,4 +4,3 @@ class DevelopmentMailInterceptor
     message.to = message.from
   end
 end
-

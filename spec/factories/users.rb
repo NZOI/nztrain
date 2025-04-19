@@ -1,9 +1,9 @@
 # Read about factories at https://github.com/thoughtbot/factory_bot
 
 FactoryBot.define do
-  factory :user, :aliases => [:owner] do
+  factory :user, aliases: [:owner] do
     name { "Name of User" }
-    sequence(:username) {|n| "user#{n}" }
+    sequence(:username) { |n| "user#{n}" }
     email { "#{username}@test.emails.com" }
     password { "default password" }
     confirmed_at { "2012-08-05 07:00:38.285779" }

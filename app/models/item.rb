@@ -1,10 +1,10 @@
 class Item < ActiveRecord::Base
   belongs_to :product
-  belongs_to :owner, :class_name => Entity
+  belongs_to :owner, class_name: Entity
   belongs_to :organisation
-  belongs_to :sponsor, :class_name => Entity
-  belongs_to :donator, :class_name => Entity
-  belongs_to :holder, :class_name => User
+  belongs_to :sponsor, class_name: Entity
+  belongs_to :donator, class_name: Entity
+  belongs_to :holder, class_name: User
 
   has_many :item_histories
 
@@ -25,10 +25,10 @@ class Item < ActiveRecord::Base
     rescue
       return false
     end
-    self.item_histories.create(active: false, action: ItemHistory::ACTION[:loan], holder_id: holder_id, acted_at: DateTime.now)
+    item_histories.create(active: false, action: ItemHistory::ACTION[:loan], holder_id: holder_id, acted_at: DateTime.now)
     self.holder_id = holder_id
     self.status = STATUS[:on_loan]
-    self.save
+    save
   end
 
   def return! holder_id
@@ -37,9 +37,9 @@ class Item < ActiveRecord::Base
     rescue
       return false
     end
-    self.item_histories.create(active: false, action: ItemHistory::ACTION[:return], holder_id: holder_id, acted_at: DateTime.now)
+    item_histories.create(active: false, action: ItemHistory::ACTION[:return], holder_id: holder_id, acted_at: DateTime.now)
     self.holder_id = holder_id
     self.status = STATUS[:available]
-    self.save
+    save
   end
 end

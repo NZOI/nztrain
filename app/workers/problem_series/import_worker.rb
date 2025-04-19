@@ -1,6 +1,5 @@
 class ProblemSeries
   class ImportWorker < Base
-
     attr_accessor :submissions_to_judge
     def initialize(*args)
       super
@@ -8,11 +7,11 @@ class ProblemSeries
     end
 
     def perform
-      imports = job.data['operations']
+      imports = job.data["operations"]
 
-      volumes = job.data['volume_id'] ? [job.data['volume_id'].to_i] : 0...(importer.index.size)
+      volumes = job.data["volume_id"] ? [job.data["volume_id"].to_i] : 0...(importer.index.size)
       volumes.each do |vid|
-        issues = job.data['volume_id'] && job.data['issue_id'] ? [job.data['issue_id'].to_i] : 0...(importer.volume(vid)[:issues].size)
+        issues = job.data["volume_id"] && job.data["issue_id"] ? [job.data["issue_id"].to_i] : 0...(importer.volume(vid)[:issues].size)
         issues.each do |num|
           issue_index = importer.issue(vid, num)
 
@@ -22,7 +21,7 @@ class ProblemSeries
             next
           end
 
-          pids = job.data['volume_id'] && job.data['issue_id'] && job.data['problem_ids'] ? job.data['problem_ids'] : 0...(issue_index[:problems].size)
+          pids = job.data["volume_id"] && job.data["issue_id"] && job.data["problem_ids"] ? job.data["problem_ids"] : 0...(issue_index[:problems].size)
 
           # Make a problem set for the volume/issue if it doesn't already exist
           if issue_index[:problem_set_id]
@@ -52,33 +51,33 @@ class ProblemSeries
               # can't use problem.problem_set_associations.find_by(problem_set_id: ...) because it
               # operates on the database rather than the cache, and the problem might not have been
               # saved yet
-              problem.problem_set_associations.select{ |assoc| assoc.problem_set_id == problem_set.id }.first.update_attributes(weighting: manager.get_maxscore)
+              problem.problem_set_associations.select { |assoc| assoc.problem_set_id == problem_set.id }.first.update_attributes(weighting: manager.get_maxscore)
             end
 
-            next if job.data['disposition'] == 'missing' and problem.persisted? # in this mode, stuff is done only if the problem is missing completely
+            next if (job.data["disposition"] == "missing") && problem.persisted? # in this mode, stuff is done only if the problem is missing completely
 
             ## import attributes
-            manager.import_attributes(replace: replace?) if imports.include?('attributes')
+            manager.import_attributes(replace: replace?) if imports.include?("attributes")
 
             ## import statement
-            manager.import_statement if imports.include?('statement') and (replace? or not manager.detect_statement?)
+            manager.import_statement if imports.include?("statement") && (replace? || !manager.detect_statement?)
 
             ## import images
             data[:images].values.each do |filename|
-              manager.import_image(filename) if imports.include?('images') and (replace? or not manager.detect_image?(filename))
+              manager.import_image(filename) if imports.include?("images") && (replace? || !manager.detect_image?(filename))
             end
 
             ## import test cases
-            manager.import_test_cases if imports.include?('test_cases') and (replace? or not manager.detect_test_cases?)
+            manager.import_test_cases if imports.include?("test_cases") && (replace? || !manager.detect_test_cases?)
 
             ## test submissions
             manager.clean_submissions_index
-            manager.import_model if imports.include?('submissions') and (replace? or not manager.detect_model?)
-            manager.import_test_submissions if imports.include?('submissions')
+            manager.import_model if imports.include?("submissions") && (replace? || !manager.detect_model?)
+            manager.import_test_submissions if imports.include?("submissions")
 
             ## import other attachments (pdf statement)
-            manager.import_statement_file if imports.include?('attachments') and (replace? or not manager.detect_statement_file?)
-            manager.import_solution_file if imports.include?('attachments') and (replace? or not manager.detect_solution_file?)
+            manager.import_statement_file if imports.include?("attachments") && (replace? || !manager.detect_statement_file?)
+            manager.import_solution_file if imports.include?("attachments") && (replace? || !manager.detect_solution_file?)
 
             self.submissions_to_judge += manager.submissions_to_judge
           end
@@ -90,7 +89,7 @@ class ProblemSeries
     end
 
     def replace?
-      job.data['disposition'] == 'replace'
+      job.data["disposition"] == "replace"
     end
 
     class ProblemImportManager
@@ -132,7 +131,7 @@ class ProblemSeries
       end
 
       def detect_image?(filename)
-        Filelink.where(root_type: 'Problem', root_id: problem.id, filepath: filename).any?
+        Filelink.where(root_type: "Problem", root_id: problem.id, filepath: filename).any?
       end
 
       def import_image(filename)
@@ -142,7 +141,7 @@ class ProblemSeries
         file_attachment = FileAttachment.new(name: attachment_name, owner_id: 0, file_attachment: File.open(File.expand_path(filename, paths[:tmp])))
         if file_attachment.save
           # remove any existing filelink
-          filelink = Filelink.find_or_initialize_by(root_type: 'Problem', root_id: problem.id, filepath: filename)
+          filelink = Filelink.find_or_initialize_by(root_type: "Problem", root_id: problem.id, filepath: filename)
           previous_id = filelink.file_attachment_id
           filelink.file_attachment_id = file_attachment.id
           filelink.save or log "Filelink for #{attachment_name} failed to be created"
@@ -161,7 +160,7 @@ class ProblemSeries
       end
 
       def import_test_cases
-        if Problems::FlatCaseImporter.import(problem, paths[:testdata], :extension => '', :merge => false)
+        if Problems::FlatCaseImporter.import(problem, paths[:testdata], extension: "", merge: false)
           log "Test cases for #{data[:name]} imported."
         else
           log "Test cases for #{data[:name]} was not imported."
@@ -171,7 +170,7 @@ class ProblemSeries
       def clean_submissions_index
         removed_tests = []
         index[:tests].reject! do |test|
-          test[:submission_id].nil? || !Submission.where(:id => test[:submission_id]).any? # submission is dead
+          test[:submission_id].nil? || !Submission.where(id: test[:submission_id]).any? # submission is dead
         end
       end
 
@@ -181,7 +180,7 @@ class ProblemSeries
 
       def import_model
         # get solution
-        model = index[:tests].select{|test|test[:model]}.first
+        model = index[:tests].select { |test| test[:model] }.first
         if model.nil? && paths[:model]
           submission = Submission.new(user_id: 0, problem: problem, source: File.read(paths[:model]), language: Language.infer(File.extname(paths[:model])), classification: Submission::CLASSIFICATION[:model])
           if submission.save
@@ -198,26 +197,26 @@ class ProblemSeries
         @maxscore ||= begin
           agent = Mechanize.new
           page = agent.get(data[:results][:url])
-          links = page.links_with(:href => /#{data[:shortname]}.cpp$/)
-          maxscore = links.map{|link| link.text.to_i }.max || 0
+          links = page.links_with(href: /#{data[:shortname]}.cpp$/)
+          maxscore = links.map { |link| link.text.to_i }.max || 0
         end
       end
 
       def import_test_submissions
-        num_add = [(4 - problem.test_submissions.count),0].max
+        num_add = [(4 - problem.test_submissions.count), 0].max
         if num_add > 0 && data[:shortname] && data[:results] && data[:results][:url]
           agent = Mechanize.new
           page = agent.get(data[:results][:url])
-          links = page.links_with(:href => /#{data[:shortname]}.cpp$/)
+          links = page.links_with(href: /#{data[:shortname]}.cpp$/)
           maxscore = get_maxscore
           if maxscore > 0 && maxscore % 10 == 0
-            links.select{|link|link.text.to_i == maxscore}.take(4).each do |link|
+            links.select { |link| link.text.to_i == maxscore }.take(4).each do |link|
               sourcepath = URI.join(page.uri, link.uri).to_s
               source = agent.get(sourcepath)
               # check that such a solution doesn't already exist...
               submission = problem.test_submissions.find_or_initialize_by(user_id: 0, source: source.body, classification: Submission::CLASSIFICATION[:solution])
               next if submission.persisted? # skip if already exists
-              submission.language = Language.infer('.cpp')
+              submission.language = Language.infer(".cpp")
               if submission.save
                 submissions_to_judge << submission
                 submission_index = {submission_id: submission.id, url: sourcepath}
@@ -246,7 +245,7 @@ class ProblemSeries
       end
 
       def import_statement_file
-        return false if !paths[:statement] # doesn't exist
+        return false unless paths[:statement] # doesn't exist
         filelink = problem.filelinks.find_or_initialize_by(filepath: "statement.pdf")
         original_attachment = filelink.file_attachment
         filelink.file_attachment = nil
@@ -270,7 +269,7 @@ class ProblemSeries
       end
 
       def import_solution_file
-        return false if !paths[:solution] # doesn't exist
+        return false unless paths[:solution] # doesn't exist
         filelink = problem.filelinks.find_or_initialize_by(filepath: "solution.pdf")
         original_attachment = filelink.file_attachment
         filelink.file_attachment = nil

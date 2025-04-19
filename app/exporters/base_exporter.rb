@@ -1,12 +1,12 @@
-require 'zip/filesystem'
+require "zip/filesystem"
 
 class BaseExporter
   def self.export(subject, path, options = {})
-    exporter = self.new(subject)
+    exporter = new(subject)
     # redirect to export zip etc if zip path etc
     extension = File.extname(path)
     context = case extension
-    when '.zip'; :enter_zip
+    when ".zip" then :enter_zip
     else; :enter_fs
     end
     exporter.send(context, path, options) do |path, options|
@@ -35,7 +35,7 @@ class BaseExporter
 
   def enter_zip(path, options = {})
     zippath = path
-    basedir = File.expand_path(File.basename(path,'.zip'),'/')
+    basedir = File.expand_path(File.basename(path, ".zip"), "/")
     Zip::File.open(zippath, Zip::File::CREATE) do |zfs|
       chfs(zfs.dir, zfs.file) do
         zfs.dir.mkdir(basedir)
@@ -61,5 +61,6 @@ class BaseExporter
   end
 
   private
+
   attr_accessor :tempfiles
 end

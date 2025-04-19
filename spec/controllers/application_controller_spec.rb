@@ -1,7 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe ApplicationController do
-
   describe "XML authorization" do
     controller(UserController) do
     end
@@ -11,21 +10,21 @@ describe ApplicationController do
 
     it "allows admin to view XML" do
       sign_in users(:admin)
-      get :show, :id => @user.to_param, :format => :xml
+      get :show, id: @user.to_param, format: :xml
       expect(response).to be_success
       expect(response.body).to include("<email>#{@user.email}</email>")
     end
 
     it "forbids a normal user from viewing XML" do
       sign_in users(:user)
-      get :show, :id => @user.to_param, :format => :xml
+      get :show, id: @user.to_param, format: :xml
       expect(response).to have_http_status(:forbidden)
       expect(response.body).not_to include(@user.email)
     end
 
     it "forbids an unauthenticated user from viewing XML" do
       # no sign in
-      get :show, :id => @user.to_param, :format => :xml
+      get :show, id: @user.to_param, format: :xml
       expect(response).to have_http_status(:forbidden)
       expect(response.body).not_to include(@user.email)
     end
@@ -34,14 +33,14 @@ describe ApplicationController do
       it "forbids viewing XML" do
         sign_in users(:user)
         request.headers["Accept"] = "application/xml"
-        get :show, :id => @user.to_param
+        get :show, id: @user.to_param
         expect(response).to have_http_status(:forbidden)
         expect(response.body).not_to include(@user.email)
       end
       it "forbids viewing XML when the 'Accept' header has multiple media types" do
         sign_in users(:user)
         request.headers["Accept"] = "text/plain;q=0.8, text/xml;q=0.2"
-        get :show, :id => @user.to_param
+        get :show, id: @user.to_param
         expect(response).to have_http_status(:forbidden)
         expect(response.body).not_to include(@user.email)
       end
@@ -55,12 +54,12 @@ describe ApplicationController do
       controller(UserController) do
         def show
           @user = User.find(params[:id])
-          render :xml => @user
+          render xml: @user
         end
       end
       it "forbids viewing XML" do
         sign_in users(:user)
-        get :show, :id => @user.to_param, :format => :xml
+        get :show, id: @user.to_param, format: :xml
         expect(response).to have_http_status(:forbidden)
         expect(response.body).not_to include(@user.email)
       end
@@ -79,9 +78,8 @@ describe ApplicationController do
       end
       it "raises an error" do
         sign_in users(:user)
-        expect { get :show, :id => @user.to_param, format: :xml }.to raise_error(/XML.*forbidden/)
+        expect { get :show, id: @user.to_param, format: :xml }.to raise_error(/XML.*forbidden/)
       end
     end
   end
-
 end

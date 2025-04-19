@@ -13,9 +13,9 @@ class ProblemSeries
     end
 
     def self.perform(job)
-      raise "AbstractWorkerError" if self.class == ProblemSeries::Base
+      raise "AbstractWorkerError" if instance_of?(ProblemSeries::Base)
 
-      worker = self.new(job)
+      worker = new(job)
       worker.problem_series.with_lock do
         result = worker.perform
       end
@@ -26,8 +26,8 @@ class ProblemSeries
 
     def initialize(job)
       self.job = job
-      self.problem_series = ProblemSeries.find(job.data['id'])
-      self.importer = self.problem_series.importer
+      self.problem_series = ProblemSeries.find(job.data["id"])
+      self.importer = problem_series.importer
     end
   end
 end

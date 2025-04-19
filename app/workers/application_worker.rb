@@ -11,7 +11,8 @@ class ApplicationWorker
   end
 
   protected
+
   def self.default_queue(queue = nil)
-    @default_queue = (queue || @default_queue || 'default').to_s
+    @default_queue = (queue || @default_queue || "default").to_s
   end
 end

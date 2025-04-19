@@ -19,7 +19,7 @@ class ApplicationPolicy
   end
 
   def show?
-    scope.where(:id => record.id).exists?
+    scope.where(id: record.id).exists?
   end
 
   def access?
@@ -73,10 +73,9 @@ class ApplicationPolicy
     def resolve
       if user && user.is_staff?
         scope.all
-      elsif user and !user.competing? # TODO check for owner association
-        scope.where(:owner_id => user.id)
+      elsif user && !user.competing? # TODO check for owner association
+        scope.where(owner_id: user.id)
       end
     end
   end
 end
-

@@ -1,11 +1,10 @@
 class FileAttachmentPolicy < AuthenticatedPolicy
-
   class Scope < ApplicationPolicy::Scope
     def resolve
       if user.is_staff?
         scope.all
       elsif user.is_organiser?
-        scope.where(:owner_id => user.id)
+        scope.where(owner_id: user.id)
       else
         scope.none
       end
@@ -21,7 +20,7 @@ class FileAttachmentPolicy < AuthenticatedPolicy
   end
 
   def show?
-    scope.where(:id => record.id).exists?
+    scope.where(id: record.id).exists?
   end
 
   def create?
@@ -32,4 +31,3 @@ class FileAttachmentPolicy < AuthenticatedPolicy
     show?
   end
 end
-

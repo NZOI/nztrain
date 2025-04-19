@@ -1,9 +1,8 @@
 class ContestSupervisorPolicy < AuthenticatedPolicy
-
   class Scope < ApplicationPolicy::Scope
     def resolve
       if user.is_a?(User) && user.is_staff?
-        return scope.all
+        scope.all
       else
         scope.none
       end
@@ -28,4 +27,3 @@ class ContestSupervisorPolicy < AuthenticatedPolicy
     use?
   end
 end
-

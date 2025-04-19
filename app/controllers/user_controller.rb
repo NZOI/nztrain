@@ -1,5 +1,4 @@
 class UserController < ApplicationController
-
   # this is for admins, users edit their own accounts using the accounts/ scope
   def permitted_params
     @_permitted_attributes ||= begin
@@ -25,7 +24,7 @@ class UserController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.xml {render :xml => @user }
+      format.xml { render xml: @user }
     end
   end
 
@@ -39,11 +38,11 @@ class UserController < ApplicationController
     authorize @user, :update?
     respond_to do |format|
       if @user.update_attributes(permitted_params)
-        format.html { redirect_to(@user, :notice => 'User was successfully updated.') }
+        format.html { redirect_to(@user, notice: "User was successfully updated.") }
         format.xml { head :ok }
       else
-        format.html { render :action => "edit" }
-        format.xml { render :xml => @user.errors, :status => :unprocessable_entity }
+        format.html { render action: "edit" }
+        format.xml { render xml: @user.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -54,11 +53,11 @@ class UserController < ApplicationController
     role = Role.find(params[:user][:role_ids])
     authorize role, :grant?
     if @user.roles.exists?(role.id)
-      redirect_to(@user, :alert => "This user already has this role")
+      redirect_to(@user, alert: "This user already has this role")
       return
     end
     @user.roles.push(role)
-    redirect_to(@user, :notice => "Role #{role.name} added.")
+    redirect_to(@user, notice: "Role #{role.name} added.")
   end
 
   def remove_role
@@ -67,7 +66,7 @@ class UserController < ApplicationController
     role = Role.find(params[:role_id])
     authorize role, :revoke?
     @user.roles.delete(role)
-    redirect_to(@user, :notice => "Role #{role.name} removed.")
+    redirect_to(@user, notice: "Role #{role.name} removed.")
   end
 
   def destroy
@@ -86,14 +85,14 @@ class UserController < ApplicationController
     authorize @user, :su?
     if request.post?
       if current_user.valid_password?(params[:password])
-        session[:su] = (session[:su]||[]).push(current_user.id)
+        session[:su] = (session[:su] || []).push(current_user.id)
         sign_in @user
-        redirect_to root_url, :notice => "su #{@user.username}"
+        redirect_to root_url, notice: "su #{@user.username}"
       else
-        redirect_to request.referrer || '/', :alert => "Password incorrect"
+        redirect_to request.referrer || "/", alert: "Password incorrect"
       end
     else
-      render "users/su", :layout => !request.xhr?
+      render "users/su", layout: !request.xhr?
     end
   end
 
@@ -103,7 +102,7 @@ class UserController < ApplicationController
     logger.debug "adding brownie"
     @user.brownie_points += 1
     @user.save
-    redirect_to user_path(@user), :notice => "Brownie point added."
+    redirect_to user_path(@user), notice: "Brownie point added."
   end
 
   def admin_email
@@ -114,7 +113,7 @@ class UserController < ApplicationController
   def send_admin_email
     @user = User.find(params[:id])
     authorize @user, :email?
-    AdminMailer.custom_email(current_user,@user,params[:subject],params[:body]).deliver
-    redirect_to user_path(@user), :notice => "Email sent."
+    AdminMailer.custom_email(current_user, @user, params[:subject], params[:body]).deliver
+    redirect_to user_path(@user), notice: "Email sent."
   end
 end

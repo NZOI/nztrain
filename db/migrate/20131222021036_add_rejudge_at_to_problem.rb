@@ -4,7 +4,7 @@ class AddRejudgeAtToProblem < ActiveRecord::Migration
 
     reversible do |dir|
       dir.up do
-        execute 'UPDATE problems SET rejudge_at = updated_at'
+        execute "UPDATE problems SET rejudge_at = updated_at"
       end
     end
   end

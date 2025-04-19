@@ -1,5 +1,4 @@
 class EvaluatorPolicy < AuthenticatedPolicy
-
   class Scope < ApplicationPolicy::Scope
     def resolve
       if user.is_staff?
@@ -23,7 +22,7 @@ class EvaluatorPolicy < AuthenticatedPolicy
   end
 
   def show?
-    scope.where(:id => record.id).exists?
+    scope.where(id: record.id).exists?
   end
 
   def create?
@@ -34,4 +33,3 @@ class EvaluatorPolicy < AuthenticatedPolicy
     show?
   end
 end
-

@@ -1,7 +1,6 @@
 class ProblemSeries < ActiveRecord::Base
-
   def index
-    Psych.safe_load(self.index_yaml || "", [Symbol], %i[name local url issues problem_set_id timestamp tasks testdata solutions results problems problem_id points images tests submission_id model language_id file_attachment_id]) || []
+    Psych.safe_load(index_yaml || "", [Symbol], %i[name local url issues problem_set_id timestamp tasks testdata solutions results problems problem_id points images tests submission_id model language_id file_attachment_id]) || []
   end
 
   def index=(index)
@@ -9,26 +8,26 @@ class ProblemSeries < ActiveRecord::Base
   end
 
   def importer
-    @importer ||= self.importer_type.constantize.new(self)
+    @importer ||= importer_type.constantize.new(self)
   end
 
   def update_index
-    ProblemSeries::UpdateWorker.put(id: self.id)
+    ProblemSeries::UpdateWorker.put(id: id)
   end
 
   def tag
-    "ProblemSeries:#{self.identifier}"
+    "ProblemSeries:#{identifier}"
   end
 
   def download(vn = nil, num = nil)
-    ProblemSeries::DownloadWorker.put(id: self.id, volume_id: vn, issue_id: num)
+    ProblemSeries::DownloadWorker.put(id: id, volume_id: vn, issue_id: num)
   end
 
   def reindex(vn = nil, num = nil)
-    ProblemSeries::ReindexWorker.put(id: self.id, volume_id: vn, issue_id: num)
+    ProblemSeries::ReindexWorker.put(id: id, volume_id: vn, issue_id: num)
   end
 
   def import(vn = nil, num = nil, pids = nil, disposition: :merge, operations: [])
-    ProblemSeries::ImportWorker.put(id: self.id, volume_id: vn, issue_id: num, problem_ids: pids, disposition: disposition, operations: operations)
+    ProblemSeries::ImportWorker.put(id: id, volume_id: vn, issue_id: num, problem_ids: pids, disposition: disposition, operations: operations)
   end
 end

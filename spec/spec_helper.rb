@@ -1,12 +1,12 @@
-require 'simplecov'
-SimpleCov.start 'rails'
+require "simplecov"
+SimpleCov.start "rails"
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
-ENV["RAILS_ENV"] ||= 'test'
+ENV["RAILS_ENV"] ||= "test"
 require File.expand_path("../../config/environment", __FILE__)
-require 'rspec/rails'
-require 'capybara/rspec'
-require 'capybara/email/rspec'
+require "rspec/rails"
+require "capybara/rspec"
+require "capybara/email/rspec"
 require "pundit/rspec"
 
 # include seeds
@@ -14,7 +14,7 @@ require "#{Rails.root}/db/seeds.rb"
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
+Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
 RSpec.configure do |config|
   # ## Mock Framework
@@ -54,15 +54,14 @@ RSpec.configure do |config|
     FixturesSpecHelper.destroy
   end
 
-  config.include Devise::Test::ControllerHelpers, :type => :controller
-  config.include FixturesSpecHelper, :type => :controller # supply fixtures variables
-  config.include ControllersSpecHelper, :type => :controller # some macros for testing controllers
+  config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include FixturesSpecHelper, type: :controller # supply fixtures variables
+  config.include ControllersSpecHelper, type: :controller # some macros for testing controllers
   config.render_views # don't stub views when testing controllers
 
-  config.include FixturesSpecHelper, :type => :feature # supply fixture variables
-  config.include RequestsSpecHelper, :type => :feature # use warden to shortcut login
+  config.include FixturesSpecHelper, type: :feature # supply fixture variables
+  config.include RequestsSpecHelper, type: :feature # use warden to shortcut login
 
-  config.include FixturesSpecHelper, :type => :presenter, file_path: %r{spec/presenters} # supply fixture variables
-  config.include ActionView::TestCase::Behavior, :type => :presenter, file_path: %r{spec/presenters}
+  config.include FixturesSpecHelper, type: :presenter, file_path: %r{spec/presenters} # supply fixture variables
+  config.include ActionView::TestCase::Behavior, type: :presenter, file_path: %r{spec/presenters}
 end
-

@@ -1,5 +1,4 @@
 class OrganisationsController < ApplicationController
-
   def index
     authorize Organisation.new, :index?
     @organisations = Organisation.all
@@ -26,11 +25,11 @@ class OrganisationsController < ApplicationController
 
   def create_product_item
     @item = Item.new item_params.merge(organisation_id: params[:id], product_id: params[:product_id])
-    authorize @item, :create? 
+    authorize @item, :create?
     if @item.save
-      redirect_to @item, :notice => "Item created"
+      redirect_to @item, notice: "Item created"
     else
-      render :action => "new_product_item"
+      render action: "new_product_item"
     end
   end
 
@@ -43,9 +42,9 @@ class OrganisationsController < ApplicationController
     @organisation = Organisation.find(params[:id])
     authorize @organisation, :update?
     if @organisation.update_attributes(organisation_params)
-      redirect_to @organisation, :notice => "Organisation updated"
+      redirect_to @organisation, notice: "Organisation updated"
     else
-      render :action => "edit"
+      render action: "edit"
     end
   end
 
@@ -58,9 +57,9 @@ class OrganisationsController < ApplicationController
     @organisation = Organisation.new(organisation_params)
     authorize @organisation, :create?
     if @organisation.save
-      redirect_to @organisation, :notice => "Organisation created"
+      redirect_to @organisation, notice: "Organisation created"
     else
-      render :action => "new"
+      render action: "new"
     end
   end
 
@@ -71,6 +70,7 @@ class OrganisationsController < ApplicationController
   end
 
   private
+
   def organisation_params
     params.require(:organisation).permit(:name)
   end

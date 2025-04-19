@@ -1,6 +1,6 @@
 NZTrain::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
-  
+
   # Eager load all gems and libraries
   config.eager_load = false
 
@@ -10,7 +10,7 @@ NZTrain::Application.configure do
   config.cache_classes = false
 
   # Show full error reports and disable caching
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = true
   config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send
@@ -24,7 +24,7 @@ NZTrain::Application.configure do
 
   # Do not compress assets
   config.assets.compress = false
-  
+
   # Expands the lines which load the assets
   config.assets.debug = true
 

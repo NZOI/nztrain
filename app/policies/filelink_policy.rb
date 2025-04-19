@@ -36,4 +36,3 @@ class FilelinkPolicy < ApplicationPolicy
     policy(record.root).update? && (record.file_attachment == record.file_attachment.was || policy(record.file_attachment).use?)
   end
 end
-

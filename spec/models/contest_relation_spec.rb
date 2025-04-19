@@ -1,10 +1,10 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe ContestRelation do
   include FixturesSpecHelper
   RSpec::Matchers.define :finish_at_correct_time do
     def expected_time(relation)
-      [relation.started_at.advance(:hours => relation.contest.duration),relation.contest.end_time].min
+      [relation.started_at.advance(hours: relation.contest.duration), relation.contest.end_time].min
     end
     match do |relation|
       relation.finish_at == expected_time(relation)
@@ -21,7 +21,7 @@ describe ContestRelation do
   end
   before(:all) do
     @contest = FactoryBot.create(:contest)
-    @relation = FactoryBot.create(:contest_relation, :contest => @contest, :user => users(:user))
+    @relation = FactoryBot.create(:contest_relation, contest: @contest, user: users(:user))
   end
   after(:all) do
     @relation.destroy
@@ -29,25 +29,24 @@ describe ContestRelation do
   end
   it "updates finish_at when relation started_at changes" do
     expect(@relation).to finish_at_correct_time
-    @relation.started_at = @contest.end_time.advance(:hours => -1)
+    @relation.started_at = @contest.end_time.advance(hours: -1)
     expect(@relation).to finish_at_correct_time
   end
   it "updates finish_at when contest changes" do
-    @anothercontest = FactoryBot.build(:contest, :start_time => @relation.started_at.advance(:hours => -1), :end_time => @relation.started_at.advance(:hours => 1))
+    @anothercontest = FactoryBot.build(:contest, start_time: @relation.started_at.advance(hours: -1), end_time: @relation.started_at.advance(hours: 1))
     @relation.contest = @anothercontest
     expect(@relation).to finish_at_correct_time
     @relation.contest_id = @contest.id
     expect(@relation).to finish_at_correct_time
   end
   it "updates finish_at when contest end_time changes" do
-    @contest.update_attributes(:end_time => @relation.started_at.advance(:hours => 1))
+    @contest.update_attributes(end_time: @relation.started_at.advance(hours: 1))
     expect(@relation).to finish_at_correct_time
   end
   it "updates finish_at when contest duration changes" do
-    @contest.update_attributes(:duration => 1.0)
+    @contest.update_attributes(duration: 1.0)
     expect(@relation).to finish_at_correct_time
-    @contest.update_attributes(:duration => 5.0)
+    @contest.update_attributes(duration: 5.0)
     expect(@relation).to finish_at_correct_time
   end
-
 end

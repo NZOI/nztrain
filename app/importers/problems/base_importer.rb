@@ -1,17 +1,16 @@
-require 'zip/filesystem'
+require "zip/filesystem"
 
 module Problems
   class BaseImporter
-
     class ImportError < StandardError; end
 
     def self.import(problem, path, options = {})
-      importer = self.new(problem)
+      importer = new(problem)
       # redirect to import zip etc if zip path etc
-      
+
       extension = options.fetch(:extension) { File.extname(path) }
       context = case extension
-      when '.zip'; :enter_zip
+      when ".zip" then :enter_zip
       else; :enter_fs
       end
       importer.send(context, path, options) do |path, options|
@@ -30,7 +29,7 @@ module Problems
     end
 
     def around_import(path, options)
-      options.reverse_merge!(:merge => false, :inline => false)
+      options.reverse_merge!(merge: false, inline: false)
 
       problem.with_lock do
         clear! unless options[:merge]
@@ -45,18 +44,20 @@ module Problems
       end
     end
 
-    def clear!()
+    def clear!
       problem.test_cases.clear
       problem.test_sets.clear
     end
 
     def drill(path)
-      while true
-        entries = dir.entries(path) - ['.','..']
-        break unless entries.size == 1 and File.expand_path(entries.first, path).try do |candidate|
-          file.directory?(candidate) and path = candidate
+      if file.directory?(path)
+        while true
+          entries = dir.entries(path) - [".", ".."]
+          break unless (entries.size == 1) && File.expand_path(entries.first, path).try do |candidate|
+            file.directory?(candidate) && (path = candidate)
+          end
         end
-      end if file.directory?(path)
+      end
       path
     end
 
@@ -67,7 +68,7 @@ module Problems
     def enter_zip(path, options = {})
       Zip::File.open(path) do |zfs|
         chfs(zfs.dir, zfs.file) do
-          yield '/', options
+          yield "/", options
         end
       end
     end
@@ -87,12 +88,13 @@ module Problems
     end
 
     protected
+
     def casemap
-      @casemap ||= Hash[problem.test_cases.map{ |kase| [kase.name, kase] }]
+      @casemap ||= Hash[problem.test_cases.map { |kase| [kase.name, kase] }]
     end
 
     def setmap
-      @setmap ||= Hash[problem.test_sets.map{ |set| [set.name, set] }]
+      @setmap ||= Hash[problem.test_sets.map { |set| [set.name, set] }]
     end
   end
 end

@@ -1,5 +1,4 @@
 class ContestPolicy < ApplicationPolicy
-
   class Scope < ApplicationPolicy::Scope
     def resolve
       if user.is_a?(User) && user.is_staff?
@@ -7,7 +6,7 @@ class ContestPolicy < ApplicationPolicy
       end
 
       # following uses advanced squeel
-      return scope.where do |contests|
+      scope.where do |contests|
         public_observation = contests.observation == Contest::OBSERVATION[:public]
         grouped = contests.id.in(GroupContest.where do |gc|
           group_contests = (gc.group_id == 0)
@@ -23,7 +22,6 @@ class ContestPolicy < ApplicationPolicy
           visible_contests |= registered | owned | supervising
         end
 
-
         visible_contests
       end
     end
@@ -31,17 +29,17 @@ class ContestPolicy < ApplicationPolicy
 
   def registered?
     return false unless user # signed in
-    record.registrants.where(:id => user.id).exists?
+    record.registrants.where(id: user.id).exists?
   end
 
   def current_contestant?
     return false unless user # signed in
-    record.contest_relations.where{ |relation| (relation.user_id == user.id) & (relation.started_at <= DateTime.now) & (relation.finish_at > DateTime.now) }.exists?
+    record.contest_relations.where { |relation| (relation.user_id == user.id) & (relation.started_at <= DateTime.now) & (relation.finish_at > DateTime.now) }.exists?
   end
 
   def current_or_past_contestant?
     return false unless user # signed in
-    record.contest_relations.where{ |relation| (relation.user_id == user.id) & (relation.started_at <= DateTime.now) }.exists?
+    record.contest_relations.where { |relation| (relation.user_id == user.id) & (relation.started_at <= DateTime.now) }.exists?
   end
 
   def index?
@@ -60,7 +58,7 @@ class ContestPolicy < ApplicationPolicy
   end
 
   def show?
-    return true if record.observation == Contest::OBSERVATION[:public] or record.groups.where(:id => 0).exists? 
+    return true if (record.observation == Contest::OBSERVATION[:public]) || record.groups.where(id: 0).exists?
     return false unless user # signed in
 
     startable? or record.contest_supervisors.where(user_id: user.id).any?
@@ -89,18 +87,19 @@ class ContestPolicy < ApplicationPolicy
 
   def startable?
     return false unless user # signed in
-    user.is_staff? or registered? or record.groups.where(:id => 0).exists? or record.groups.joins(:memberships).where(:memberships => {:member_id => user.id}).exists?
+    user.is_staff? or registered? or record.groups.where(id: 0).exists? or record.groups.joins(:memberships).where(memberships: {member_id: user.id}).exists?
   end
 
   def start?
     # if double-start of clicking start at end of contest
     # Forbidden message is user un-friendly
 
-    #!contestant? and show? and record.start_time <= DateTime.now and record.end_time > DateTime.now
+    # !contestant? and show? and record.start_time <= DateTime.now and record.end_time > DateTime.now
     startable?
   end
 
-  def register? # (current_user)
+  # (current_user)
+  def register?
     start?
   end
 
@@ -127,4 +126,3 @@ class ContestPolicy < ApplicationPolicy
     user && user.is_admin?
   end
 end
-

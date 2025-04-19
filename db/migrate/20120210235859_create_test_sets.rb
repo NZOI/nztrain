@@ -9,7 +9,7 @@ class CreateTestSets < ActiveRecord::Migration
     end
     add_column :test_cases, :test_set_id, :integer
     TestCase.all.each do |tc|
-      ts = TestSet.new()
+      ts = TestSet.new
       ts.problem_id = tc.problem_id
       ts.name = tc.description
       ts.points = tc.points
@@ -21,13 +21,14 @@ class CreateTestSets < ActiveRecord::Migration
     remove_column :test_cases, :problem_id
     rename_column :test_cases, :description, :name
   end
+
   def down
     rename_column :test_cases, :name, :description
     add_column :test_cases, :points, :integer
     add_column :test_cases, :problem_id, :integer
     TestCase.all.each do |tc|
       tc.problem_id = tc.test_set.problem_id
-      tc.points = (tc.test_set.points.to_f/tc.test_set.test_cases.length).ceil.to_i
+      tc.points = (tc.test_set.points.to_f / tc.test_set.test_cases.length).ceil.to_i
       tc.save
     end
     remove_column :test_cases, :test_set_id

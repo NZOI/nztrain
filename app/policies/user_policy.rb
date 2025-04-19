@@ -1,5 +1,4 @@
 class UserPolicy < AuthenticatedPolicy
-
   class Scope < ApplicationPolicy::Scope
     def resolve
       if user
@@ -15,7 +14,7 @@ class UserPolicy < AuthenticatedPolicy
   end
 
   def manage?
-    user.is_admin? and ( (record == User || record.id != 0 && !record.has_role?(:superadmin)) || user.has_role?(:superadmin) )
+    user.is_admin? and ((record == User || record.id != 0 && !record.has_role?(:superadmin)) || user.has_role?(:superadmin))
   end
 
   def inspect?
@@ -23,7 +22,7 @@ class UserPolicy < AuthenticatedPolicy
   end
 
   def show?
-    scope.where(:id => record.id).exists?
+    scope.where(id: record.id).exists?
   end
 
   def create?
@@ -31,7 +30,7 @@ class UserPolicy < AuthenticatedPolicy
   end
 
   def su?
-    user.is_admin? and ( (record == User || record.id != 0 && !record.is_admin?) || user.has_role?(:superadmin) )
+    user.is_admin? and ((record == User || record.id != 0 && !record.is_admin?) || user.has_role?(:superadmin))
   end
 
   def add_brownie?
@@ -42,4 +41,3 @@ class UserPolicy < AuthenticatedPolicy
     user.is_admin?
   end
 end
-

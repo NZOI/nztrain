@@ -13,7 +13,6 @@ class CreateEvaluators < ActiveRecord::Migration
     add_column :problems, :evaluator_id, :integer
     execute "UPDATE problems SET evaluator_id = (SELECT evaluators.id FROM evaluators WHERE evaluators.name = problems.title)"
     remove_column :problems, :evaluator
-
   end
 
   def self.down

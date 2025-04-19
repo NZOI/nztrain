@@ -1,7 +1,8 @@
 class Problems::FilesController < Filelinks::RootsController
-  layout 'problem'
+  layout "problem"
 
   protected
+
   def root_class
     Problem
   end

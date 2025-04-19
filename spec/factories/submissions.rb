@@ -12,7 +12,7 @@ FactoryBot.define do
     updated_at { created_at }
     factory :adding_submission do
       language { LanguageGroup.find_by_identifier("c++").current_language }
-      source { <<sourcecode }
+      source { <<SOURCECODE }
         #include <cstdio>
         using namespace std;
         int main() {
@@ -24,11 +24,11 @@ FactoryBot.define do
           fprintf(out, "%d\\n",c);
           return 0;
         }
-sourcecode
+SOURCECODE
     end
     factory :adding_submission_stdio do
       language { LanguageGroup.find_by_identifier("c++").current_language }
-      source { <<sourcecode }
+      source { <<SOURCECODE }
         #include <cstdio>
         using namespace std;
         int main() {
@@ -38,11 +38,11 @@ sourcecode
           printf("%d\\n",c);
           return 0;
         }
-sourcecode
+SOURCECODE
     end
     factory :adding_char_submission do
       language { LanguageGroup.find_by_identifier("c++").current_language }
-      source { <<sourcecode }
+      source { <<SOURCECODE }
         #include <cstdio>
         using namespace std;
         int main() {
@@ -54,11 +54,11 @@ sourcecode
           fprintf(out, "%d\\n",(int)c);
           return 0;
         }
-sourcecode
+SOURCECODE
     end
     factory :adding_unsigned_submission do
       language { LanguageGroup.find_by_identifier("c++").current_language }
-      source { <<sourcecode }
+      source { <<SOURCECODE }
         #include <cstdio>
         using namespace std;
         int main() {
@@ -70,7 +70,7 @@ sourcecode
           fprintf(out, "%u\\n",(int)c);
           return 0;
         }
-sourcecode
+SOURCECODE
     end
   end
 end

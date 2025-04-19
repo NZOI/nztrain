@@ -1,5 +1,5 @@
 class ContestRelationsController < ApplicationController
-  #filter_resource_access
+  # filter_resource_access
 
   def permitted_params
     @_permitted_params ||= begin
@@ -15,7 +15,7 @@ class ContestRelationsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @contest_relations }
+      format.xml { render xml: @contest_relations }
     end
   end
 
@@ -26,7 +26,7 @@ class ContestRelationsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @contest_relation }
+      format.xml { render xml: @contest_relation }
     end
   end
 
@@ -39,7 +39,7 @@ class ContestRelationsController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @contest }
+      format.xml { render xml: @contest }
     end
   end
 
@@ -56,11 +56,11 @@ class ContestRelationsController < ApplicationController
 
     respond_to do |format|
       if @contest_relation.save
-        format.html { redirect_to(@contest_relation, :notice => 'Contest relation was successfully created.') }
-        format.xml  { render :xml => @contest_relation, :status => :created, :location => @contest_relation }
+        format.html { redirect_to(@contest_relation, notice: "Contest relation was successfully created.") }
+        format.xml { render xml: @contest_relation, status: :created, location: @contest_relation }
       else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @contest_relation.errors, :status => :unprocessable_entity }
+        format.html { render action: "new" }
+        format.xml { render xml: @contest_relation.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -70,11 +70,11 @@ class ContestRelationsController < ApplicationController
   def update
     respond_to do |format|
       if @contest_relation.update_attributes(permitted_params)
-        format.html { redirect_to(@contest_relation, :notice => 'Contest relation was successfully updated.') }
-        format.xml  { head :ok }
+        format.html { redirect_to(@contest_relation, notice: "Contest relation was successfully updated.") }
+        format.xml { head :ok }
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @contest_relation.errors, :status => :unprocessable_entity }
+        format.html { render action: "edit" }
+        format.xml { render xml: @contest_relation.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -84,13 +84,13 @@ class ContestRelationsController < ApplicationController
   def destroy
     @contest_relation = ContestRelation.find(params[:id])
 
-    authorize @contest_relation, :destroy?    
+    authorize @contest_relation, :destroy?
 
     respond_to do |format|
       if @contest_relation.destroy
-        format.html { redirect_to(contestants_contest_path(@contest_relation.contest), :notice => 'Contestant deleted') }
+        format.html { redirect_to(contestants_contest_path(@contest_relation.contest), notice: "Contestant deleted") }
       else
-        format.html { redirect_to(contestants_contest_path(@contest_relation.contest), :alert => 'Could not delete contestant') }
+        format.html { redirect_to(contestants_contest_path(@contest_relation.contest), alert: "Could not delete contestant") }
       end
     end
   end
@@ -99,17 +99,15 @@ class ContestRelationsController < ApplicationController
     @contest_relation = ContestRelation.find(params[:id])
     authorize @contest_relation, :supervise?
     if params[:year_level]
-      year_level = params[:year_level].to_i%15
-      if year_level != 14
-        @contest_relation.school_year = year_level
-      else
-        @contest_relation.school_year = nil
+      year_level = params[:year_level].to_i % 15
+      @contest_relation.school_year = if year_level != 14
+        year_level
       end
       if @contest_relation.save
-        redirect_to(contestants_contest_path(@contest_relation.contest), :notice => 'Contestant year level updated')
+        redirect_to(contestants_contest_path(@contest_relation.contest), notice: "Contestant year level updated")
         return
       end
     end
-    redirect_to(contestants_contest_path(@contest_relation.contest), :alert => 'Could not update year level of contestant')
+    redirect_to(contestants_contest_path(@contest_relation.contest), alert: "Could not update year level of contestant")
   end
 end

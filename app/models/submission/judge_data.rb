@@ -1,4 +1,4 @@
-require 'set'
+require "set"
 
 class Submission
   class Data
@@ -6,10 +6,9 @@ class Submission
       @data = data || {}
     end
 
-    def data
-      @data
-    end
+    attr_reader :data
   end
+
   class JudgeData < Data
     class Meta < Data
       def disp float
@@ -21,10 +20,10 @@ class Submission
 
       def memory
         return "" if data.empty?
-        mem = (data['cg-mem'] || data['max-rss']).to_f
+        mem = (data["cg-mem"] || data["max-rss"]).to_f
         unit = "kB"
-        mem/=1024 and unit="MB" if mem >= 1000
-        mem/=1024 and unit="GB" if mem >= 1000
+        mem /= 1024 and unit = "MB" if mem >= 1000
+        mem /= 1024 and unit = "GB" if mem >= 1000
         "#{disp(mem)} #{unit}"
       end
 
@@ -34,53 +33,53 @@ class Submission
       end
 
       def walltime
-        sprintf "%.3f seconds", data['time-wall'] if data['time-wall']
+        sprintf "%.3f seconds", data["time-wall"] if data["time-wall"]
       end
 
       def exitsig
-        data['exitsig']
+        data["exitsig"]
       end
 
       def time
-        data['time']
+        data["time"]
       end
 
       def message
-        data['message']
+        data["message"]
       end
 
       def status
-        data['status']
+        data["status"]
       end
 
       def result
         case status
-        when 'SG'; exitsig == 9 ? :memory : :signal
-        when 'TO'; message =~ /wall/ ? :walltime : :timeout 
-        when 'RE'; :runtime
+        when "SG" then exitsig == 9 ? :memory : :signal
+        when "TO" then /wall/.match?(message) ? :walltime : :timeout
+        when "RE" then :runtime
         end
       end
     end
 
     module Runnable
       def output
-        data['output'] || ""
+        data["output"] || ""
       end
 
       def output_size
-        data['output_size']
+        data["output_size"]
       end
 
       def log
-        data['log']
+        data["log"]
       end
 
       def errored?
-        meta.nil? || meta.status!='OK'
+        meta.nil? || meta.status != "OK"
       end
 
       def meta
-        Meta.new(data['meta'])
+        Meta.new(data["meta"])
       end
     end
 
@@ -88,31 +87,31 @@ class Submission
       include Runnable
 
       def evalerrored?
-        errored? && data['stat'] == 2
+        errored? && data["stat"] == 2
       end
 
       def command
-        data['command']
+        data["command"]
       end
 
       def status
         return :pending if data.nil? || data == {}
-        return :success if !errored?
-        return meta.result if data['stat'] == 1
-        return :error
+        return :success unless errored?
+        return meta.result if data["stat"] == 1
+        :error
       end
 
       def judgement
         case status
-        when :timeout; "Time Limit Exceeded"
-        when :walltime; "Time Limit Exceeded (Wall)"
+        when :timeout then "Time Limit Exceeded"
+        when :walltime then "Time Limit Exceeded (Wall)"
         # Report runtime errors as compilation errors when executing the compile command
-        when :runtime; "Compilation Error"
-        when :signal; "Fatal Signal"
-        when :memory; "Memory Limit Exceeded"
-        when :pending; "Pending"
-        when :success; "Success"
-        when :error; "Errored"
+        when :runtime then "Compilation Error"
+        when :signal then "Fatal Signal"
+        when :memory then "Memory Limit Exceeded"
+        when :pending then "Pending"
+        when :success then "Success"
+        when :error then "Errored"
         end
       end
     end
@@ -123,21 +122,21 @@ class Submission
         return :correct if evaluation == 1
         return :wrong if evaluation == 0
         return :pending if evaluation.nil?
-        return :partial
+        :partial
       end
 
       def evaluation
-        data['evaluation'].to_f
+        data["evaluation"].to_f
       end
 
       def message
-        return "" if data.nil? || data['message'].nil?
-        data['message']
+        return "" if data.nil? || data["message"].nil?
+        data["message"]
       end
 
       def info
         return "" if data.empty?
-        [data['box'],*data['meta'].map{|k,v|"#{k}:#{v}"},data['log']].compact.join("\n")
+        [data["box"], *data["meta"].map { |k, v| "#{k}:#{v}" }, data["log"]].compact.join("\n")
       end
     end
 
@@ -151,25 +150,25 @@ class Submission
 
       def judgement
         case status
-        when :correct; "Correct!"
-        when :wrong; "Wrong Answer"
-        when :partial; sprintf("Partial Score %.2f/1.00", evaluation)
-        when :error; "Evaluator Errored"
-        when :timeout; "Time Limit Exceeded"
-        when :walltime; "Time Limit Exceeded (Wall)"
-        when :runtime; "Runtime Error"
-        when :signal; "Fatal Signal"
-        when :memory; "Memory Limit Exceeded"
-        when :pending; "Pending"
-        when :cancelled; "Cancelled"
-        end + ( evaluator.message.empty? ? "" : " - " + evaluator.message)
+        when :correct then "Correct!"
+        when :wrong then "Wrong Answer"
+        when :partial then sprintf("Partial Score %.2f/1.00", evaluation)
+        when :error then "Evaluator Errored"
+        when :timeout then "Time Limit Exceeded"
+        when :walltime then "Time Limit Exceeded (Wall)"
+        when :runtime then "Runtime Error"
+        when :signal then "Fatal Signal"
+        when :memory then "Memory Limit Exceeded"
+        when :pending then "Pending"
+        when :cancelled then "Cancelled"
+        end + (evaluator.message.empty? ? "" : " - " + evaluator.message)
       end
 
       def status
         return :cancelled if @cancelled
         return :pending if data.nil? || data == {}
         return :error if evalerrored?
-        return meta.result if data['stat'] == 1
+        return meta.result if data["stat"] == 1
         evaluator.result
       end
 
@@ -178,11 +177,11 @@ class Submission
       end
 
       def evaluator
-        @evaluator ||= Evaluation.new(data['evaluator'])
+        @evaluator ||= Evaluation.new(data["evaluator"])
       end
 
       def evalerrored?
-        data['stat'] == 2 or (!errored? && evaluator.errored?)
+        data["stat"] == 2 or (!errored? && evaluator.errored?)
       end
 
       def evaluation
@@ -190,48 +189,48 @@ class Submission
       end
 
       def print_time
-        return "" if data['time'].nil?
-        "#{meta.disp(data['time'])} seconds"
+        return "" if data["time"].nil?
+        "#{meta.disp(data["time"])} seconds"
       end
 
       def killed?
-        meta.data['killed'] == 1
+        meta.data["killed"] == 1
       end
     end
 
     module Evaluable
       def status
         return :cancelled if @cancelled
-        return :pending if data.nil? || data['status'].nil?
-        case data['status']
-        when 0;
+        return :pending if data.nil? || data["status"].nil?
+        case data["status"]
+        when 0
           return :correct if evaluation == 1
           return :wrong if evaluation == 0
-          return :partial
-        when 1; :pending
-        when 2; :error
+          :partial
+        when 1 then :pending
+        when 2 then :error
         end
       end
 
       def evaluation
-        data['evaluation'].to_f
+        data["evaluation"].to_f
       end
 
       def score
-        data['score']
+        data["score"]
       end
 
       def judgement
         case status
-        when :cancelled; "Cancelled"
-        when :pending; "Pending"
-        when :error; "Errored"
+        when :cancelled then "Cancelled"
+        when :pending then "Pending"
+        when :error then "Errored"
         else; print_score
         end
       end
 
       def print_score
-        score == nil ? "0.00" : sprintf("%.2f", score)
+        score.nil? ? "0.00" : sprintf("%.2f", score)
       end
     end
 
@@ -243,7 +242,7 @@ class Submission
 
       def initialize(data, cases, caseset, prerequisite: false, cancel: false)
         super(data)
-        self.data.delete(:status) if !self.data.has_key?('cases') || self.data['cases'].size != cases.size || (self.data['cases']&cases).size < cases.size # missing test cases
+        self.data.delete(:status) if !self.data.has_key?("cases") || self.data["cases"].size != cases.size || (self.data["cases"] & cases).size < cases.size # missing test cases
         @test_cases = caseset.slice(*cases)
         @cancelled = true if cancel
         @prerequisite = prerequisite
@@ -253,12 +252,10 @@ class Submission
         @prerequisite
       end
 
-      def test_cases
-        @test_cases
-      end
+      attr_reader :test_cases
 
       def print_score
-        "+"+super
+        "+" + super
       end
     end
 
@@ -274,7 +271,7 @@ class Submission
     end
 
     def errored?
-      data.has_key?('error') || status == :error
+      data.has_key?("error") || status == :error
     end
 
     def completed?
@@ -282,19 +279,19 @@ class Submission
     end
 
     def compiled?
-      data.has_key?('compile')
+      data.has_key?("compile")
     end
 
     def evaluator_compiled?
-      data.has_key?('evaluator_compile')
+      data.has_key?("evaluator_compile")
     end
 
     def compilation
-      @compilation ||= Compilation.new(data['compile'])
+      @compilation ||= Compilation.new(data["compile"])
     end
 
     def evaluator_compilation
-      @evaluator_compilation ||= Compilation.new(data['evaluator_compile'])
+      @evaluator_compilation ||= Compilation.new(data["evaluator_compile"])
     end
 
     def prerequisite_sets
@@ -302,32 +299,33 @@ class Submission
     end
 
     def prefail?
-      !@presets.empty? and prerequisites and (prerequisites['status'] != 0 or prerequisites['evaluation'].to_f == 0)
+      !@presets.empty? and prerequisites and (prerequisites["status"] != 0 or prerequisites["evaluation"].to_f == 0)
     end
 
     def prerequisites
-      data['prerequisites']
+      data["prerequisites"]
     end
 
     def test_sets
       cancel = (prefail? ? Set[*@_test_sets.keys] - @presets : [])
-      @test_sets ||= Hash[@_test_sets.map { |id, cases| [id, SetData.new(test_set_data[id.to_s], cases, test_cases, :prerequisite => @presets.include?(id), :cancel => cancel.include?(id))] }]
+      @test_sets ||= Hash[@_test_sets.map { |id, cases| [id, SetData.new(test_set_data[id.to_s], cases, test_cases, prerequisite: @presets.include?(id), cancel: cancel.include?(id))] }]
     end
 
     def test_cases
       cancel = (prefail? ? Set[*@_test_cases] - @precase : [])
-      @test_cases ||= Hash[@_test_cases.map { |id| [id, CaseData.new(test_case_data[id.to_s], :cancel => cancel.include?(id))] }]
+      @test_cases ||= Hash[@_test_cases.map { |id| [id, CaseData.new(test_case_data[id.to_s], cancel: cancel.include?(id))] }]
     end
-    
+
     include Evaluable
 
     private
+
     def test_case_data
-      data['test_cases'] || {}
+      data["test_cases"] || {}
     end
 
     def test_set_data
-      data['test_sets'] || {}
+      data["test_sets"] || {}
     end
 
     def print_score

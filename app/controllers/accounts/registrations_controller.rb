@@ -1,7 +1,6 @@
 class Accounts::RegistrationsController < Devise::RegistrationsController
-
   def create
-    if (!@db_settings["recaptcha/private_key"]) || (@db_settings["recaptcha/private_key"].empty?) || verify_recaptcha(:secret_key => @db_settings["recaptcha/private_key"])
+    if (!@db_settings["recaptcha/private_key"]) || @db_settings["recaptcha/private_key"].empty? || verify_recaptcha(secret_key: @db_settings["recaptcha/private_key"])
       flash.delete :recaptcha_error
       super
     else
@@ -15,7 +14,6 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
   end
 
   def destroy
-    redirect_to root_path, :alert => "Sorry. This feature is disabled. Why? Because cleanup of database objects associated with a user is not implemented."
+    redirect_to root_path, alert: "Sorry. This feature is disabled. Why? Because cleanup of database objects associated with a user is not implemented."
   end
 end
-

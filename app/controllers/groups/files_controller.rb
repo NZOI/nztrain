@@ -1,9 +1,9 @@
 class Groups::FilesController < Filelinks::RootsController
-  layout 'group'
+  layout "group"
 
   protected
+
   def root_class
     Group
   end
 end
-

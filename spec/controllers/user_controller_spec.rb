@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe UserController do
   before(:each) do
@@ -11,7 +11,7 @@ describe UserController do
       sign_in users(:admin)
     end
     can_show :user
-    can_update :user, :attributes => { :name => "A unique name" }
+    can_update :user, attributes: {name: "A unique name"}
   end
 
   context "as a normal user" do

@@ -8,12 +8,12 @@
 # See http://unicorn.bogomips.org/Unicorn/Configurator.html for complete
 # documentation.
 
-require 'yaml'
+require "yaml"
 
-RAILS_ROOT = File.expand_path('..',File.dirname(__FILE__))
-RAILS_ENV = ENV['RAILS_ENV'] || ENV['RACK_ENV'] || 'development'
+RAILS_ROOT = File.expand_path("..", File.dirname(__FILE__))
+RAILS_ENV = ENV["RAILS_ENV"] || ENV["RACK_ENV"] || "development"
 
-config = YAML.load_file(File.expand_path('config/unicorn.yml', RAILS_ROOT))
+config = YAML.load_file(File.expand_path("config/unicorn.yml", RAILS_ROOT))
 
 # Use at least one worker per core if you're on a dedicated server,
 # more will usually help for _short_ waits on databases/caches.
@@ -32,8 +32,8 @@ working_directory RAILS_ROOT # available in 0.94.0+
 
 # listen on both a Unix domain socket and a TCP port,
 # we use a shorter backlog for quicker failover when busy
-listen File.expand_path("tmp/sockets/unicorn.sock", RAILS_ROOT)#, :backlog => 64
-listen (config['port'] || 3000), :tcp_nopush => true if config['port']
+listen File.expand_path("tmp/sockets/unicorn.sock", RAILS_ROOT) # , :backlog => 64
+listen (config["port"] || 3000), tcp_nopush: true if config["port"]
 
 # nuke workers after 30 seconds instead of 60 seconds (the default)
 timeout 30
@@ -44,8 +44,8 @@ pid File.expand_path("tmp/pids/unicorn.pid", RAILS_ROOT)
 # By default, the Unicorn logger will write to stderr.
 # Additionally, ome applications/frameworks log to stderr or stdout,
 # so prevent them from going to /dev/null when daemonized here:
-stderr_path File.expand_path("log/unicorn.stderr.log", RAILS_ROOT) if RAILS_ENV == 'production'
-stdout_path File.expand_path("log/unicorn.stdout.log", RAILS_ROOT) if RAILS_ENV == 'production'
+stderr_path File.expand_path("log/unicorn.stderr.log", RAILS_ROOT) if RAILS_ENV == "production"
+stdout_path File.expand_path("log/unicorn.stdout.log", RAILS_ROOT) if RAILS_ENV == "production"
 
 # combine Ruby 2.0.0dev or REE with "preload_app true" for memory savings
 # http://rubyenterpriseedition.com/faq.html#adapt_apps_for_cow

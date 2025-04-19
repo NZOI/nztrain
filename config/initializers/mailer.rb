@@ -14,4 +14,3 @@ if ActiveRecord::Base.connection.table_exists?(Setting.table_name)
   ActionMailer::Base.smtp_settings[:password] = Setting.find_by_key("system/mailer/password")&.value
   ActionMailer::Base.default from: email_address_with_name(email_setting.value, "NZOI Training") if email_setting&.value.present?
 end
-

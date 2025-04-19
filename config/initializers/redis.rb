@@ -1,4 +1,4 @@
-require 'redis'
+require "redis"
 
 config = YAML.load(ERB.new(File.read(Rails.root.join("config/redis.yml"))).result).symbolize_keys
 REDIS_CONFIG = config[:default].symbolize_keys
@@ -10,10 +10,10 @@ end
 if REDIS_CONFIG.has_key?(:password)
   if REDIS_CONFIG[:password].empty?
     REDIS_CONFIG.delete(:password)
-  elsif REDIS_CONFIG[:password][0]=="@"
+  elsif REDIS_CONFIG[:password][0] == "@"
     redisconf = REDIS_CONFIG[:password]
     redisconf.slice!(0)
-    matcher = File.open(redisconf,"r") { |f| f.read.match(/^ *requirepass +([[:word:]]*) *$/) }
+    matcher = File.open(redisconf, "r") { |f| f.read.match(/^ *requirepass +([[:word:]]*) *$/) }
     if matcher.nil?
       REDIS_CONFIG.delete(:password)
     else
@@ -26,10 +26,8 @@ $redis = Redis.new(REDIS_CONFIG)
 # To clear out the db before each test
 $redis.flushdb if Rails.env == "test"
 
-$qless = Qless::Client.new(REDIS_CONFIG.merge(:redis => $redis))
-$qless.config['heartbeat'] = 1800
+$qless = Qless::Client.new(REDIS_CONFIG.merge(redis: $redis))
+$qless.config["heartbeat"] = 1800
 # To use Redis::Objects
-#require 'redis/objects'
-#Redis::Objects.redis = $redis
- 
-
+# require 'redis/objects'
+# Redis::Objects.redis = $redis

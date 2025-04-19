@@ -7,9 +7,9 @@ class ConvertGroupsUsersToMemberships < ActiveRecord::Migration
     rename_column :memberships, :group_id, :oldgroup_id
     add_column :memberships, :group_id, :integer
     add_column :memberships, :member_id, :integer
-    
+
     # copy the information to new columns
-    execute 'UPDATE memberships SET group_id = oldgroup_id, member_id = user_id;'
+    execute "UPDATE memberships SET group_id = oldgroup_id, member_id = user_id;"
 
     remove_column :memberships, :oldgroup_id
     remove_column :memberships, :user_id

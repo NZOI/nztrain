@@ -4,10 +4,11 @@ class AddLastSeenAtToUsers < ActiveRecord::Migration
 
     User.find_each do |user|
       user.last_seen_at = user.created_at
-      user.last_seen_at = user.last_sign_in_at if !user.last_sign_in_at.nil?
+      user.last_seen_at = user.last_sign_in_at unless user.last_sign_in_at.nil?
       user.save
     end
   end
+
   def down
     remove_column :users, :last_seen_at
   end

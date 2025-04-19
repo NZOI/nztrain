@@ -1,16 +1,16 @@
 class Submission < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
-  
+
   belongs_to :user
   belongs_to :problem
   has_many :contest_scores
   belongs_to :language
 
   def user_problem_relation
-    UserProblemRelation.where(:user_id => user_id, :problem_id => problem_id).first_or_create!
+    UserProblemRelation.where(user_id: user_id, problem_id: problem_id).first_or_create!
   end
-  
-  validates :source, :presence => true
+
+  validates :source, presence: true
   validate do |submission|
     errors.add :language_id, "Invalid language specified" if submission.language.nil?
     errors.add :language_id, "Cannot use protected language" unless Language.submission_options.values.include?(submission.language_id)
@@ -27,71 +27,71 @@ class Submission < ActiveRecord::Base
 
   before_save do
     if source_was.nil?
-      problem = Problem.find(self.problem_id)
+      problem = Problem.find(problem_id)
       self.input = problem.input
       self.output = problem.output
     end
-    self.evaluation = points.nil? || maximum_points.nil? ? nil : (points/maximum_points).to_f
+    self.evaluation = points.nil? || maximum_points.nil? ? nil : (points / maximum_points).to_f
     update_test_messages
     true
   end
 
   before_create do
-    self.classification = (SubmissionPolicy.new(self.user, self).inspect? ? CLASSIFICATION[:unranked] : CLASSIFICATION[:ranked]) if classification.nil?
-    #self.maximum_points = self.problem.test_sets.sum(:points)
+    self.classification = (SubmissionPolicy.new(user, self).inspect? ? CLASSIFICATION[:unranked] : CLASSIFICATION[:ranked]) if classification.nil?
+    # self.maximum_points = self.problem.test_sets.sum(:points)
   end
 
   after_create do
-    self.user_problem_relation.increment!(:submissions_count)
+    user_problem_relation.increment!(:submissions_count)
   end
 
   before_destroy do
-    self.user_problem_relation.decrement!(:submissions_count)
+    user_problem_relation.decrement!(:submissions_count)
     problem.recalculate_tests_and_save!
-    self.problem.decrement!(:test_error_count) unless test_errors.nil?
-    self.problem.decrement!(:test_warning_count) unless test_warnings.nil?
+    problem.decrement!(:test_error_count) unless test_errors.nil?
+    problem.decrement!(:test_warning_count) unless test_warnings.nil?
   end
 
   after_destroy do
-    self.user_problem_relation.recalculate_and_save
+    user_problem_relation.recalculate_and_save
   end
 
   after_save do
-    if self.evaluation_changed? # only update if score changed
-      self.contests.select("contest_relations.id, contests.finalized_at").find_each do |record|
+    if evaluation_changed? # only update if score changed
+      contests.select("contest_relations.id, contests.finalized_at").find_each do |record|
         # only update contest score if contest not yet sealed
         if record.finalized_at.nil? # are results finalized?
-          ContestScore.find_or_initialize_by(contest_relation_id: record.id, problem_id: self.problem_id).recalculate_and_save
+          ContestScore.find_or_initialize_by(contest_relation_id: record.id, problem_id: problem_id).recalculate_and_save
         end
       end
-      self.user_problem_relation.recalculate_and_save
+      user_problem_relation.recalculate_and_save
     end
-    #if self.test_errors_changed?
+    # if self.test_errors_changed?
     #  change = 0
     #  change += 1 if test_errors_was.nil? || test_errors_was.empty?
     #  change -= 1 if test_errors.nil? || test_errors.empty?
     #  problem.increment!(:test_error_count, change) if change != 0
-    #end
-    #if self.test_warnings_changed?
+    # end
+    # if self.test_warnings_changed?
     #  change = 0
     #  change += 1 if test_warnings_was.nil? || test_warnings_was.empty?
     #  change -= 1 if test_warnings.nil? || test_warnings.empty?
     #  problem.increment!(:test_warning_count, change) if change != 0
-    #end
+    # end
     problem.recalculate_tests_and_save!
   end
 
   def contests
     # check if this submission's problem belongs to a contest that the user is competing in
-    @_mycontests ||= Contest.joins(:contest_relations, :problems).where(:contest_relations => {:user_id => user_id}, :problems => {:id => self.problem_id}).where("contest_relations.started_at <= ? AND contest_relations.finish_at > ?", self.created_at, self.created_at)
+    @_mycontests ||= Contest.joins(:contest_relations, :problems).where(contest_relations: {user_id: user_id}, problems: {id: problem_id}).where("contest_relations.started_at <= ? AND contest_relations.finish_at > ?", created_at, created_at)
   end
 
   def self.by_user(user_id)
-    where("submissions.user_id IN (?)", user_id.to_s.split(','))
+    where("submissions.user_id IN (?)", user_id.to_s.split(","))
   end
 
   def self.by_problem(problem_id)
-    where("submissions.problem_id IN (?)", problem_id.to_s.split(','))
+    where("submissions.problem_id IN (?)", problem_id.to_s.split(","))
   end
 
   def ranked?
@@ -99,7 +99,7 @@ class Submission < ActiveRecord::Base
   end
 
   def stale?
-    self.judged_at.nil? || self.judged_at < self.problem.rejudge_at
+    judged_at.nil? || judged_at < problem.rejudge_at
   end
 
   def source_file=(file)
@@ -107,27 +107,27 @@ class Submission < ActiveRecord::Base
   end
 
   def judge_data
-    JudgeData.new(judge_log, Hash[problem.test_sets.map{|s|[s.id,s.test_case_ids]}], problem.test_case_ids, problem.prerequisite_set_ids)
+    JudgeData.new(judge_log, Hash[problem.test_sets.map { |s| [s.id, s.test_case_ids] }], problem.test_case_ids, problem.prerequisite_set_ids)
   end
 
   def test_judge
-    JudgeSubmissionWorker.new.perform(self.id)
+    JudgeSubmissionWorker.new.perform(id)
   end
 
   def judge(queue: nil, delay: 0)
     self.job = JudgeSubmissionWorker.judge(self, queue: queue, delay: delay)
-    self.save
-    self.job
+    save
+    job
   end
 
   def rejudge(queue: nil, delay: 0)
     self.judge_log = nil # TODO: move successful log to another column
     save and judge(queue: queue, delay: delay)
-    self.job
+    job
   end
 
   def weighted_score(weighting = 100)
-    (points.nil? || self.maximum_points == 0) ? nil : (self.points*weighting/(self.maximum_points || 100)).to_i
+    points.nil? || maximum_points == 0 ? nil : (points * weighting / (maximum_points || 100)).to_i
   end
 
   def score
@@ -138,7 +138,7 @@ class Submission < ActiveRecord::Base
   # update problem with any errors/warnings
   def update_test_messages
     classification = Submission::CLASSIFICATION[self.classification]
-    if (self.judge_log_changed? && ![:ranked, :unranked].include?(classification)) || self.classification_changed?
+    if (judge_log_changed? && ![:ranked, :unranked].include?(classification)) || classification_changed?
       if [:ranked, :unranked].include?(classification)
         self.test_errors = nil
         self.test_warnings = nil
@@ -149,7 +149,7 @@ class Submission < ActiveRecord::Base
 
       judge_data = self.judge_data
       return if judge_data.status == :pending # incomplete judge_log
-      return if judge_data.data.has_key?('error') # judge errored - very bad
+      return if judge_data.data.has_key?("error") # judge errored - very bad
 
       errors = []
       warnings = []
@@ -183,9 +183,9 @@ class Submission < ActiveRecord::Base
           return # unsupported classification
         end
 
-        if self.problem.time_limit.to_f > 0
-          judge_data.test_cases.values.map { |case_data| !case_data.meta.time.nil? && (0.7..1).include?(case_data.meta.time/self.problem.time_limit) }.any? and warnings.push "Used more than 70% of the time limit in a test"
-          judge_data.test_cases.values.map { |case_data| !case_data.meta.time.nil? && (1...1.5).include?(case_data.meta.time/self.problem.time_limit) }.any? and warnings.push "Time limit exceeded by less than 50% in a test" if self.classification == :inefficient
+        if problem.time_limit.to_f > 0
+          judge_data.test_cases.values.map { |case_data| !case_data.meta.time.nil? && (0.7..1).include?(case_data.meta.time / problem.time_limit) }.any? and warnings.push "Used more than 70% of the time limit in a test"
+          judge_data.test_cases.values.map { |case_data| !case_data.meta.time.nil? && (1...1.5).include?(case_data.meta.time / problem.time_limit) }.any? and warnings.push "Time limit exceeded by less than 50% in a test" if self.classification == :inefficient
         end
       end
 
@@ -195,6 +195,4 @@ class Submission < ActiveRecord::Base
       self.test_warnings = warnings
     end
   end
-
 end
-

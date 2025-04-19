@@ -1,5 +1,5 @@
 class TestCasesController < ApplicationController
-  #filter_resource_access :collection => []
+  # filter_resource_access :collection => []
 
   def permitted_params
     @_permitted_params ||= begin
@@ -20,10 +20,10 @@ class TestCasesController < ApplicationController
       raise Pundit::NotAuthorizedError
       @test_cases = @test_cases.distinct
     end
-    
+
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @test_cases }
+      format.xml { render xml: @test_cases }
     end
   end
 
@@ -34,7 +34,7 @@ class TestCasesController < ApplicationController
     permitted_to! :inspect, @test_case.problems.first
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @test_case }
+      format.xml { render xml: @test_case }
     end
   end
 
@@ -56,11 +56,11 @@ class TestCasesController < ApplicationController
 
     respond_to do |format|
       if @test_case.update_attributes(permitted_params)
-        format.html { redirect_to(@test_case, :notice => 'Test case was successfully updated.') }
-        format.xml  { head :ok }
+        format.html { redirect_to(@test_case, notice: "Test case was successfully updated.") }
+        format.xml { head :ok }
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @test_case.errors, :status => :unprocessable_entity }
+        format.html { render action: "edit" }
+        format.xml { render xml: @test_case.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -76,7 +76,7 @@ class TestCasesController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to(test_cases_url) }
-      format.xml  { head :ok }
+      format.xml { head :ok }
     end
   end
 end

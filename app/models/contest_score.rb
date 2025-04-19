@@ -16,14 +16,14 @@ class ContestScore < ActiveRecord::Base
       submissions = contest_relation.get_submissions(problem.id).where("evaluation IS NOT NULL") # relevant submissions
       attempts = submissions.count
       if attempts == 0
-        self.destroy # in case already in database - this occurs if submissions get deleted
+        destroy # in case already in database - this occurs if submissions get deleted
       else
         self.attempts = attempts # attempts
         submission = submissions.order("evaluation DESC, created_at ASC").first
-        self.attempt = submissions.where("created_at <= ?",submission.created_at).count # attempts number
+        self.attempt = submissions.where("created_at <= ?", submission.created_at).count # attempts number
         self.submission_id = submission.id
         self.score = submission.weighted_score(contest.problem_set.problem_associations.find_by(problem_id: problem_id).weighting)
-        self.save
+        save
       end
     end
     contest_relation.update_score_and_save # update total score for contest_relation

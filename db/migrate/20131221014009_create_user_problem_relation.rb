@@ -2,7 +2,7 @@ class CreateUserProblemRelation < ActiveRecord::Migration
   def change
     reversible do |dir|
       dir.up do
-        missing_user_ids = Submission.where{ |submission| submission.user_id << User.select(:id) }.pluck(:user_id)
+        missing_user_ids = Submission.where { |submission| submission.user_id << User.select(:id) }.pluck(:user_id)
 
         Submission.where(user_id: missing_user_ids).delete_all
         ContestRelation.where(user_id: missing_user_ids).destroy_all
@@ -17,7 +17,7 @@ class CreateUserProblemRelation < ActiveRecord::Migration
         Submission.order(:id).find_each do |submission|
           if ProblemPolicy.new(submission.user, submission.problem).inspect?
             submission.classification = Submission::CLASSIFICATION[:unranked]
-            raise 'Failed to update submission to unranked' unless submission.save
+            raise "Failed to update submission to unranked" unless submission.save
           end
         end
       end
@@ -53,6 +53,5 @@ class CreateUserProblemRelation < ActiveRecord::Migration
         end
       end
     end
-
   end
 end

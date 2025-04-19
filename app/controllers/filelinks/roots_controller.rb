@@ -1,5 +1,6 @@
 class Filelinks::RootsController < ApplicationController
   private
+
   helper_method :model, :index_path, :show_path, :download_path
 
   def model
@@ -32,6 +33,7 @@ class Filelinks::RootsController < ApplicationController
   end
 
   protected
+
   def load_model
     root_class.find(params[:"#{root_name}_id"])
   end
@@ -41,6 +43,7 @@ class Filelinks::RootsController < ApplicationController
   end
 
   public
+
   def index
     self.model = load_model
     authorize model, :access?
@@ -55,11 +58,11 @@ class Filelinks::RootsController < ApplicationController
       @filelink = model.filelinks.find(params[:id])
     else
       raise ActiveRecord::RecordNotFound if params[:filepath].nil?
-      filepath = [params[:filepath], params[:format]].compact.join('.')
+      filepath = [params[:filepath], params[:format]].compact.join(".")
       @filelink = model.filelinks.find_by_filepath!(filepath)
     end
     authorize @filelink, :show?
-    send_file FileAttachmentUploader.root + @filelink.file_attachment_url, :filename => File.basename(@filelink.filepath), :disposition => 'inline'
+    send_file FileAttachmentUploader.root + @filelink.file_attachment_url, filename: File.basename(@filelink.filepath), disposition: "inline"
   end
 
   def update
@@ -68,11 +71,11 @@ class Filelinks::RootsController < ApplicationController
     @filelink = model.filelinks.find(params[:id])
     attachment_id = filelink_params.fetch(:file_attachment_id, @filelink.file_attachment_id)
     authorize FileAttachment.find(attachment_id), :use? unless @filelink.file_attachment_id == attachment_id
-    
+
     if @filelink.update_attributes(filelink_params)
-      redirect_to(index_path, :notice => "File attachment updated")
+      redirect_to(index_path, notice: "File attachment updated")
     else
-      redirect_to(index_path, :notice => "File attachment not updated")
+      redirect_to(index_path, notice: "File attachment not updated")
     end
   end
 
@@ -82,10 +85,10 @@ class Filelinks::RootsController < ApplicationController
     authorize FileAttachment.find(filelink_params[:file_attachment_id]), :use?
     @new_filelink = model.filelinks.build(filelink_params)
     if @new_filelink.save
-      redirect_to(index_path, :notice => "File attachment added")
+      redirect_to(index_path, notice: "File attachment added")
     else
       @filelinks = model.filelinks.order(:filepath)
-      render :action => :index
+      render action: :index
     end
   end
 
@@ -94,10 +97,9 @@ class Filelinks::RootsController < ApplicationController
     authorize model, :update?
     @filelink = model.filelinks.find(params[:id])
     if model.filelinks.destroy(@filelink)
-      redirect_to(index_path, :notice => "File attachment removed")
+      redirect_to(index_path, notice: "File attachment removed")
     else
-      redirect_to(index_path, :notice => "File attachment not removed")
+      redirect_to(index_path, notice: "File attachment not removed")
     end
   end
 end
-

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe ProblemSetsController do
   before(:all) do
@@ -13,14 +13,14 @@ describe ProblemSetsController do
       sign_in users(:admin)
     end
     can_index :problem_sets
-    can_create :problem_set, :attributes => { :name => "A unique title" }
-    can_manage :problem_set, :attributes => { :name => "A unique title" }
+    can_create :problem_set, attributes: {name: "A unique title"}
+    can_manage :problem_set, attributes: {name: "A unique title"}
   end
 
   context "as an organiser" do
     before(:each) do
       sign_in users(:organiser)
     end
-    can_index :problem_sets, :params => { :filter => 'my' }
+    can_index :problem_sets, params: {filter: "my"}
   end
 end

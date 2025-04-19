@@ -1,5 +1,4 @@
 class ItemPolicy < AuthenticatedPolicy
-
   class Scope < ApplicationPolicy::Scope
     def resolve
       if user.has_role?(:superadmin)
@@ -26,4 +25,3 @@ class ItemPolicy < AuthenticatedPolicy
     manage?
   end
 end
-

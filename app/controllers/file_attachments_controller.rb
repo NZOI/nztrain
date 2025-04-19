@@ -3,7 +3,7 @@ class FileAttachmentsController < ApplicationController
     @_permitted_params ||= begin
       permitted_attributes = [:name_type, :file_attachment, :file_attachment_cache]
       permitted_attributes << :owner_id if policy(@file_attachment || FileAttachment).transfer?
-      permitted_attributes << :name if params.require(:file_attachment)[:name_type] == 'other'
+      permitted_attributes << :name if params.require(:file_attachment)[:name_type] == "other"
       params.require(:file_attachment).permit(*permitted_attributes)
     end
   end
@@ -11,9 +11,9 @@ class FileAttachmentsController < ApplicationController
   # GET /file_attachments
   def index
     case params[:filter].to_s
-    when 'my'
-      authorize FileAttachment.new(:owner_id => current_user.id), :manage?
-      @file_attachments = FileAttachment.where(:owner_id => current_user.id)
+    when "my"
+      authorize FileAttachment.new(owner_id: current_user.id), :manage?
+      @file_attachments = FileAttachment.where(owner_id: current_user.id)
     else
       authorize FileAttachment.new, :manage?
       @file_attachments = FileAttachment.all
@@ -30,12 +30,12 @@ class FileAttachmentsController < ApplicationController
   def download
     @file_attachment = FileAttachment.find(params[:id])
     authorize @file_attachment, :download?
-    send_file FileAttachmentUploader.root + @file_attachment.file_attachment_url, :filename => @file_attachment.filename, :disposition => 'inline'
+    send_file FileAttachmentUploader.root + @file_attachment.file_attachment_url, filename: @file_attachment.filename, disposition: "inline"
   end
 
   # GET /file_attachments/new
   def new
-    @file_attachment = FileAttachment.new(:owner => current_user)
+    @file_attachment = FileAttachment.new(owner: current_user)
     authorize @file_attachment, :new?
   end
 
@@ -52,9 +52,9 @@ class FileAttachmentsController < ApplicationController
     authorize @file_attachment, :create?
     respond_to do |format|
       if @file_attachment.save
-        format.html { redirect_to(@file_attachment, :notice => 'File attachment was successfully created.') }
+        format.html { redirect_to(@file_attachment, notice: "File attachment was successfully created.") }
       else
-        format.html { render :action => "new" }
+        format.html { render action: "new" }
       end
     end
   end
@@ -65,9 +65,9 @@ class FileAttachmentsController < ApplicationController
     authorize @file_attachment, :update?
     respond_to do |format|
       if @file_attachment.update_attributes(permitted_params)
-        format.html { redirect_to(@file_attachment, :notice => 'File attachment was successfully updated.') }
+        format.html { redirect_to(@file_attachment, notice: "File attachment was successfully updated.") }
       else
-        format.html { render :action => "edit" }
+        format.html { render action: "edit" }
       end
     end
   end
@@ -80,8 +80,7 @@ class FileAttachmentsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to(file_attachments_url) }
-      format.xml  { head :ok }
+      format.xml { head :ok }
     end
   end
-
 end

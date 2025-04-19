@@ -1,9 +1,9 @@
 module Accounts::RequestsHelper
   @@request_display = {
-    ['Group','invite','User'] => {
-      description: lambda { |request| "<b>#{link_to(h(request.requester.username), request.requester)}</b> invites #{current_user == request.target ? 'you' : link_to(h(request.target.username), request.target)} to join the group <b>#{policy(request.subject).show? ? link_to(h(request.subject.name), request.subject) : h(request.subject.name)}</b>" },
+    ["Group", "invite", "User"] => {
+      description: lambda { |request| "<b>#{link_to(h(request.requester.username), request.requester)}</b> invites #{current_user == request.target ? "you" : link_to(h(request.target.username), request.target)} to join the group <b>#{policy(request.subject).show? ? link_to(h(request.subject.name), request.subject) : h(request.subject.name)}</b>" },
       accept: lambda { |request| accept_members_group_path(request.subject, request) },
-      reject: lambda { |request| reject_members_group_path(request.subject, request) },
+      reject: lambda { |request| reject_members_group_path(request.subject, request) }
     }
   }
 
@@ -39,7 +39,7 @@ module Accounts::RequestsHelper
     if link.nil?
       "Accept (No link)"
     else
-      link_to 'Accept', link, :method => :put
+      link_to "Accept", link, method: :put
     end
   end
 
@@ -48,7 +48,7 @@ module Accounts::RequestsHelper
     if link.nil?
       "Reject (No link)"
     else
-      link_to 'Reject', link, :method => :put
+      link_to "Reject", link, method: :put
     end
   end
 
