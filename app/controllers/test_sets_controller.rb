@@ -1,9 +1,7 @@
 class TestSetsController < ApplicationController
   def permitted_params
-    @_permitted_params ||= begin
-      permitted_attributes = [:name, :problem_id, :points]
-      params.require(:test_set).permit(*permitted_attributes)
-    end
+    permitted_attributes = [:name, :problem_id, :points]
+    params.require(:test_set).permit(*permitted_attributes)
   end
 
   # GET /test_sets

@@ -1,33 +1,25 @@
 class ProblemsController < ApplicationController
   def permitted_params
-    @_permitted_attributes ||= begin
-      permitted_attributes = [:name, :statement, :memory_limit, :time_limit, :input_type, :output_type, :evaluator_id]
-      permitted_attributes << :owner_id if policy(@problem || Problem).transfer?
-      permitted_attributes << :input if params.require(:problem)[:input_type] == "file"
-      permitted_attributes << :output if params.require(:problem)[:output_type] == "file"
-      permitted_attributes
-    end
-    params.require(:problem).permit(*@_permitted_attributes)
+    permitted_attributes = [:name, :statement, :memory_limit, :time_limit, :input_type, :output_type, :evaluator_id]
+    permitted_attributes << :owner_id if policy(@problem || Problem).transfer?
+    permitted_attributes << :input if params.require(:problem)[:input_type] == "file"
+    permitted_attributes << :output if params.require(:problem)[:output_type] == "file"
+    params.require(:problem).permit(*permitted_attributes)
   end
 
   # attributes allowed to be included in submissions
   def submit_params
-    @_submit_attributes ||= begin
-      submit_attributes = [:language_id, :source_file]
-      submit_attributes << :source if policy(@problem).submit_source?
-      submit_attributes
-    end
-    params.require(:submission).permit(*@_submit_attributes).merge(user_id: current_user.id, problem_id: params[:id])
+    submit_attributes = [:language_id, :source_file]
+    submit_attributes << :source if policy(@problem).submit_source?
+    params.require(:submission).permit(*submit_attributes).merge(user_id: current_user.id, problem_id: params[:id])
   end
 
   def visible_attributes
-    @_visible_attributes ||= begin
-      visible_attributes = [:linked_name, :input, :output, :memory_limit, :time_limit, :linked_owner, :progress_bar]
-      visible_attributes << :edit_link if policy(@problem).update?
-      visible_attributes << :destroy_link if policy(@problem).destroy?
-      visible_attributes << :test_status if policy(@problem).inspect?
-      visible_attributes
-    end
+    visible_attributes = [:linked_name, :input, :output, :memory_limit, :time_limit, :linked_owner, :progress_bar]
+    visible_attributes << :edit_link if policy(@problem).update?
+    visible_attributes << :destroy_link if policy(@problem).destroy?
+    visible_attributes << :test_status if policy(@problem).inspect?
+    visible_attributes
   end
 
   # GET /problems

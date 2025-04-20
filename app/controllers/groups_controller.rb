@@ -1,11 +1,8 @@
 class GroupsController < ApplicationController
   def permitted_params
-    @_permitted_attributes ||= begin
-      permitted_attributes = [:name, :visibility, :membership]
-      permitted_attributes << :owner_id if policy(@group || Group).transfer?
-      permitted_attributes
-    end
-    params.require(:group).permit(*@_permitted_attributes)
+    permitted_attributes = [:name, :visibility, :membership]
+    permitted_attributes << :owner_id if policy(@group || Group).transfer?
+    params.require(:group).permit(*permitted_attributes)
   end
 
   def add_contest

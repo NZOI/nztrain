@@ -2,10 +2,8 @@ class TestCasesController < ApplicationController
   # filter_resource_access :collection => []
 
   def permitted_params
-    @_permitted_params ||= begin
-      permitted_attributes = [:input, :output, :name]
-      params.require(:test_case).permit(*permitted_attributes)
-    end
+    permitted_attributes = [:input, :output, :name]
+    params.require(:test_case).permit(*permitted_attributes)
   end
 
   # GET /test_cases
