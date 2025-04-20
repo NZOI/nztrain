@@ -1,11 +1,9 @@
 class FileAttachmentsController < ApplicationController
   def permitted_params
-    @_permitted_params ||= begin
-      permitted_attributes = [:name_type, :file_attachment, :file_attachment_cache]
-      permitted_attributes << :owner_id if policy(@file_attachment || FileAttachment).transfer?
-      permitted_attributes << :name if params.require(:file_attachment)[:name_type] == "other"
-      params.require(:file_attachment).permit(*permitted_attributes)
-    end
+    permitted_attributes = [:name_type, :file_attachment, :file_attachment_cache]
+    permitted_attributes << :owner_id if policy(@file_attachment || FileAttachment).transfer?
+    permitted_attributes << :name if params.require(:file_attachment)[:name_type] == "other"
+    params.require(:file_attachment).permit(*permitted_attributes)
   end
 
   # GET /file_attachments

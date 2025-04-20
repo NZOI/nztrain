@@ -2,10 +2,8 @@ class ContestRelationsController < ApplicationController
   # filter_resource_access
 
   def permitted_params
-    @_permitted_params ||= begin
-      permitted_attributes = [:user_id, :contest_id, :started_at]
-      params.require(:contest_relation).permit(*permitted_attributes)
-    end
+    permitted_attributes = [:user_id, :contest_id, :started_at]
+    params.require(:contest_relation).permit(*permitted_attributes)
   end
 
   # GET /contest_relations

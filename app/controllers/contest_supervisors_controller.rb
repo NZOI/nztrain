@@ -2,10 +2,8 @@ class ContestSupervisorsController < ApplicationController
   # filter_resource_access
 
   def permitted_params
-    @_permitted_params ||= begin
-      permitted_attributes = [:username, :contest_id, :site_type, :site_id]
-      params.require(:contest_supervisor).permit(*permitted_attributes)
-    end
+    permitted_attributes = [:username, :contest_id, :site_type, :site_id]
+    params.require(:contest_supervisor).permit(*permitted_attributes)
   end
 
   def update_scheduled_time

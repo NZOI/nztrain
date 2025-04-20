@@ -1,10 +1,8 @@
 class ProblemSetsController < ApplicationController
   def permitted_params
-    @_permitted_params ||= begin
-      permitted_attributes = [:name, problem_associations_attributes: [:id, :problem_set_order_position, :weighting]]
-      permitted_attributes << :owner_id if policy(@problem_set || ProblemSet).transfer?
-      params.require(:problem_set).permit(*permitted_attributes)
-    end
+    permitted_attributes = [:name, problem_associations_attributes: [:id, :problem_set_order_position, :weighting]]
+    permitted_attributes << :owner_id if policy(@problem_set || ProblemSet).transfer?
+    params.require(:problem_set).permit(*permitted_attributes)
   end
 
   # unused

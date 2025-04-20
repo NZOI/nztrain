@@ -1,7 +1,7 @@
 class Accounts::SettingsController < Devise::RegistrationsController
   def permitted_params
-    @_permitted_attributes ||= [:name, :avatar, :remove_avatar, :avatar_cache, :country_code, :school_id, {school_graduation: [:enabled, :month, :year], school: [:name, :country_code]}]
-    params.require(:user).permit(*@_permitted_attributes)
+    permitted_attributes = [:name, :avatar, :remove_avatar, :avatar_cache, :country_code, :school_id, {school_graduation: [:enabled, :month, :year], school: [:name, :country_code]}]
+    params.require(:user).permit(*permitted_attributes)
   end
 
   def update

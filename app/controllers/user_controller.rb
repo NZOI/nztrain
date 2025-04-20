@@ -1,20 +1,9 @@
 class UserController < ApplicationController
   # this is for admins, users edit their own accounts using the accounts/ scope
   def permitted_params
-    @_permitted_attributes ||= begin
-      permitted_attributes = [:name, :avatar, :remove_avatar, :avatar_cache, :email, :school_id]
-      permitted_attributes << :brownie_points if policy(@user).add_brownie?
-      permitted_attributes
-    end
-    params.require(:user).permit(*@_permitted_attributes)
-  end
-
-  def visible_attributes
-    @_visible_attributes ||= begin
-      visible_attributes = [:username]
-      visible_attributes += [:name, :email] if policy(@user).inspect?
-      visible_attributes
-    end
+    permitted_attributes = [:name, :avatar, :remove_avatar, :avatar_cache, :email, :school_id]
+    permitted_attributes << :brownie_points if policy(@user).add_brownie?
+    params.require(:user).permit(*permitted_attributes)
   end
 
   def show

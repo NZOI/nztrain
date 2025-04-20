@@ -1,9 +1,7 @@
 class RolesController < ApplicationController
   def permitted_params
-    @_permitted_params ||= begin
-      permitted_attributes = [:name]
-      params.require(:role).permit(*permitted_attributes)
-    end
+    permitted_attributes = [:name]
+    params.require(:role).permit(*permitted_attributes)
   end
 
   # GET /roles
