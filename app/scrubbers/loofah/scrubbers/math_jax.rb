@@ -19,7 +19,7 @@ module Loofah
           regex[:re] = /(?<re>(?<!\\){([^{}]|\\({|})|\g<re>)*(?<!\\)})/ # matches balanced unescaped braces in tex
           regex[:tex] = /([^${}]|(\\(\$|{|}))|#{regex[:re]})+/ # matches any valid tex content, but avoiding unescaped $ delimiter (which ends the tex expression)
           regex[:jax] = /(?<!\\)(?<d>\$?)\$#{regex[:tex]}(?<!\\)\$(?![0-9])\g<d>/ # matches tex - including $ and $$ delimiters
-          while match = content.match(regex[:jax], pos)
+          while (match = content.match(regex[:jax], pos))
             dollars = 1 + match[:d].length
             tex = match[0][dollars...-dollars]
 

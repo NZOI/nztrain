@@ -2,7 +2,7 @@ class FixBadMarkdown < ActiveRecord::Migration
   def fix_titles(string)
     toplevel = 10
     pos = 0
-    while inc = (string.slice(pos, string.length) =~ /^((#+)[^#].*)$/)
+    while (inc = (string.slice(pos, string.length) =~ /^((#+)[^#].*)$/))
       toplevel = [toplevel, $~[2].length].min
       pos += inc + $~[0].length
     end

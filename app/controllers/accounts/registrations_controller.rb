@@ -1,10 +1,9 @@
 class Accounts::RegistrationsController < Devise::RegistrationsController
   def create
+    flash.delete :recaptcha_error
     if (!@db_settings["recaptcha/private_key"]) || @db_settings["recaptcha/private_key"].empty? || verify_recaptcha(secret_key: @db_settings["recaptcha/private_key"])
-      flash.delete :recaptcha_error
       super
     else
-      flash.delete :recaptcha_error
       build_resource(sign_up_params)
       resource.valid?
       resource.errors.add(:base, "There was an error with the recaptcha code below. Please re-enter the code.")

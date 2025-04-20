@@ -3,11 +3,8 @@
 ---
 ignore:
 - Rakefile
-- app/controllers/accounts/registrations_controller.rb
 - app/controllers/contests_controller.rb
-- app/controllers/groups/members_controller.rb
 - app/controllers/importers/problem_series_controller.rb
-- app/controllers/problems_controller.rb
 - app/controllers/test_cases_controller.rb
 - app/controllers/test_sets_controller.rb
 - app/exporters/contests/contest_exporter.rb
@@ -36,9 +33,7 @@ ignore:
 - config/initializers/redis.rb
 - config/routes.rb
 - config/unicorn.rb
-- db/migrate/20131209063832_fix_bad_markdown.rb
 - db/seeds.rb
-- lib/file_size_validator.rb
 - spec/controllers/accounts/passwords_controller_spec.rb
 - spec/importers/problems/flat_case_importer.rb
 - spec/importers/problems/test_case_importer.rb

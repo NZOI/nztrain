@@ -145,7 +145,7 @@ class ProblemSeries
           previous_id = filelink.file_attachment_id
           filelink.file_attachment_id = file_attachment.id
           filelink.save or log "Filelink for #{attachment_name} failed to be created"
-          if previous_attachment = FileAttachment.where(id: previous_id).first
+          if (previous_attachment = FileAttachment.where(id: previous_id).first)
             if previous_attachment.filelinks.count == 0 && previous_attachment.owner_id == 0
               previous_attachment.destroy or log "Orphaned file attachment #{previous_attachment.name} failed to be destroyed."
             end
