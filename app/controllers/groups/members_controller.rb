@@ -116,18 +116,21 @@ class Groups::MembersController < ApplicationController
     when :join_request then authorize @group, :invite?
     else raise Pundit::NotAuthorizedError
     end
-    if @request_type == :invitation
+    case @request_type
+    when :invitation
       if @group.join(@request.target)
         @request.accept!
         redirect_to(@group, notice: "Invitation accepted")
       else
         redirect_to(@group, alert: "Failed to join group")
       end
-    elsif @group.join(@request.subject) # :join_request
-      @request.accept!
-      redirect_to(join_requests_members_group_path(@group), notice: "Join request accepted")
-    else
-      redirect_to(@group, alert: "Failed to accept join request")
+    when :join_request
+      if @group.join(@request.subject)
+        @request.accept!
+        redirect_to(join_requests_members_group_path(@group), notice: "Join request accepted")
+      else
+        redirect_to(@group, alert: "Failed to accept join request")
+      end
     end
   end
 
