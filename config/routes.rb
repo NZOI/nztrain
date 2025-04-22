@@ -55,7 +55,6 @@ NZTrain::Application.routes.draw do
     end
   end
 
-  # resources :contest_relations
   resources :contest_relations, only: :destroy do
     member do
       post "update_year_level"
