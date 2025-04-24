@@ -27,9 +27,11 @@ class SubmissionsController < ApplicationController
   def show
     @submission = Submission.find(params[:id])
     authorize @submission, :show?
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml { render xml: @submission }
+
+    if params.key?(:debug) && current_user.is_admin?
+      render xml: @submission
+    else
+      render :show
     end
   end
 
