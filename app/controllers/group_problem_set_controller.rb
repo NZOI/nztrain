@@ -7,8 +7,6 @@ class GroupProblemSetController < ApplicationController
     # TODO: check for existence of problem and problem set
     @group.problem_sets.push(@problem_set)
 
-    respond_to do |format|
-      format.html { redirect_to(@problem_set, notice: "Problem set added to group") }
-    end
+    redirect_to(@problem_set, notice: "Problem set added to group")
   end
 end

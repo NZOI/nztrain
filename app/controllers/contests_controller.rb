@@ -5,8 +5,6 @@ class ContestsController < ApplicationController
     params.require(:contest).permit(*permitted_attributes)
   end
 
-  # GET /contests
-  # GET /contests.xml
   def index
     case params[:filter].to_s
     when "my"
@@ -15,10 +13,6 @@ class ContestsController < ApplicationController
     else
       authorize Contest.new, :manage?
       @contests = Contest.order("end_time DESC")
-    end
-
-    respond_to do |format|
-      format.html # index.html.erb
     end
   end
 
@@ -42,8 +36,6 @@ class ContestsController < ApplicationController
     end
   end
 
-  # GET /contests/1
-  # GET /contests/1.xml
   def show
     @contest = Contest.find(params[:id])
     if !policy(@contest).overview?
@@ -102,22 +94,14 @@ class ContestsController < ApplicationController
     render layout: "contest"
   end
 
-  # GET /contests/new
-  # GET /contests/new.xml
   def new
     @contest = Contest.new(owner: current_user)
     authorize @contest, :new?
     @problem_sets = ProblemSet.all
     @start_time = ""
     @end_time = ""
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml { render xml: @contest }
-    end
   end
 
-  # GET /contests/1/edit
   def edit
     @contest = Contest.find(params[:id])
     authorize @contest, :edit?
@@ -126,8 +110,6 @@ class ContestsController < ApplicationController
     @end_time = @contest.end_time.try(:strftime, "%d/%m/%Y %H:%M")
   end
 
-  # POST /contests
-  # POST /contests.xml
   def create
     @contest = Contest.new(permitted_params)
     @contest.owner ||= current_user
@@ -139,19 +121,13 @@ class ContestsController < ApplicationController
 
     logger.debug "time zone is " + Time.zone.to_s
 
-    respond_to do |format|
-      if @contest.save
-        format.html { redirect_to(@contest, notice: "Contest was successfully created.") }
-        format.xml { render xml: @contest, status: :created, location: @contest }
-      else
-        format.html { render action: "new" }
-        format.xml { render xml: @contest.errors, status: :unprocessable_entity }
-      end
+    if @contest.save
+      redirect_to(@contest, notice: "Contest was successfully created.")
+    else
+      render action: "new"
     end
   end
 
-  # PUT /contests/1
-  # PUT /contests/1.xml
   def update
     @contest = Contest.find(params[:id])
     authorize @contest, :update?
@@ -160,28 +136,20 @@ class ContestsController < ApplicationController
     params[:contest][:start_time] = Time.zone.parse(params[:contest][:start_time])
     params[:contest][:end_time] = Time.zone.parse(params[:contest][:end_time])
 
-    respond_to do |format|
-      if @contest.update_attributes(permitted_params)
-        format.html { redirect_to(@contest, notice: "Contest was successfully updated.") }
-        format.xml { head :ok }
-      else
-        format.html { render action: "edit" }
-        format.xml { render xml: @contest.errors, status: :unprocessable_entity }
-      end
+    if @contest.update_attributes(permitted_params)
+      redirect_to(@contest, notice: "Contest was successfully updated.")
+    else
+      render action: "edit"
     end
   end
 
-  # DELETE /contests/1
-  # DELETE /contests/1.xml
   def destroy
     @contest = Contest.find(params[:id])
     authorize @contest, :destroy?
-    @contest.destroy
 
-    respond_to do |format|
-      format.html { redirect_to(contests_url) }
-      format.xml { head :ok }
-    end
+    @contest.destroy!
+
+    redirect_to(contests_url)
   end
 
   def start
@@ -195,12 +163,10 @@ class ContestsController < ApplicationController
         return
       end
 
-      respond_to do |format|
-        if @contest.start(current_user, true)
-          format.html { redirect_to(@contest, notice: "Contest started.") }
-        else
-          format.html { redirect_to(@contest, alert: @contest.errors.full_messages_for(:contest).join(" ")) }
-        end
+      if @contest.start(current_user, true)
+        redirect_to(@contest, notice: "Contest started.")
+      else
+        redirect_to(@contest, alert: @contest.errors.full_messages_for(:contest).join(" "))
       end
     else
       raise "ERROR"
@@ -233,14 +199,12 @@ class ContestsController < ApplicationController
       raise "ERROR"
     end
 
-    respond_to do |format|
-      if user.nil?
-        format.html { redirect_to(redirect_path, alert: "No such user exists.") }
-      elsif @contest.register(user)
-        format.html { redirect_to(redirect_path, notice: "Registered #{params[:username]} for contest.") }
-      else
-        format.html { redirect_to(redirect_path, alert: @contest.errors.full_messages_for(:contest).join(" ")) }
-      end
+    if user.nil?
+      redirect_to(redirect_path, alert: "No such user exists.")
+    elsif @contest.register(user)
+      redirect_to(redirect_path, notice: "Registered #{params[:username]} for contest.")
+    else
+      redirect_to(redirect_path, alert: @contest.errors.full_messages_for(:contest).join(" "))
     end
   end
 

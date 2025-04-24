@@ -7,9 +7,7 @@ class ProblemProblemSetController < ApplicationController
     # TODO: check for existence of problem and problem set
     @problem_set.problems.push(@problem)
 
-    respond_to do |format|
-      format.html { redirect_to(@problem, notice: "Problem added to problem set") }
-    end
+    redirect_to(@problem, notice: "Problem added to problem set")
   end
 
   def remove
@@ -19,8 +17,6 @@ class ProblemProblemSetController < ApplicationController
     # TODO: check for existence of problem and problem set
     @problem_set.problems.delete(@problem)
 
-    respond_to do |format|
-      format.html { redirect_to(edit_problem_set_path(@problem_set), notice: "problem removed from problem set") }
-    end
+    redirect_to(edit_problem_set_path(@problem_set), notice: "problem removed from problem set")
   end
 end

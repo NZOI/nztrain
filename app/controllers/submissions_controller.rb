@@ -8,8 +8,6 @@ class SubmissionsController < ApplicationController
   has_scope :by_user
   has_scope :by_problem
 
-  # GET /submissions
-  # GET /submissions.xml
   def index
     params[:by_user] = current_user.id.to_s if params[:filter] == "my"
     if !params[:by_user].nil? && params[:by_user].to_i != current_user.id
@@ -24,15 +22,8 @@ class SubmissionsController < ApplicationController
     end
     @submissions = @submissions.order(created_at: :desc).page(params[:page]).per_page(20)
     # TODO: fix submission permissions
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml { render xml: @submissions }
-    end
   end
 
-  # GET /submissions/1
-  # GET /submissions/1.xml
   def show
     @submission = Submission.find(params[:id])
     authorize @submission, :show?
@@ -42,22 +33,14 @@ class SubmissionsController < ApplicationController
     end
   end
 
-  # GET /submissions/new
-  # GET /submissions/new.xml
   def new
     @submission = Submission.new
     authorize @submission, :new?
     @problem = params[:problem]
     logger.debug "going to submit, problem is #{@problem} and params are:"
     logger.debug params
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml { render xml: @submission }
-    end
   end
 
-  # GET /submissions/1/edit
   def edit
     @submission = Submission.find(params[:id])
     authorize @submission, :edit?
@@ -74,54 +57,41 @@ class SubmissionsController < ApplicationController
     end
   end
 
-  # POST /submissions
-  # POST /submissions.xml
   def create
     # don't let users submit to problems they don't have access to (which they could do by id speculatively to try get access to problem name, # of test cases etc.) (ie. they should have read access)
     authorize Problem.find(params[:submission][:problem_id]), :submit?
     params[:submission][:source] = IO.read(params[:submission][:source].path)
     @submission = Submission.new(permitted_params.merge(score: nil, user_id: current_user.id))
+
     authorize @submission, :create?
-    respond_to do |format|
-      if @submission.save
-        @submission.judge
-        format.html { redirect_to(@submission, notice: "Submission was successfully created.") }
-        format.xml { render xml: @submission, status: :created, location: @submission }
-      else
-        format.html { render action: "new" }
-        format.xml { render xml: @submission.errors, status: :unprocessable_entity }
-      end
+
+    if @submission.save
+      @submission.judge
+      redirect_to(@submission, notice: "Submission was successfully created.")
+    else
+      render action: "new"
     end
   end
 
-  # PUT /submissions/1
-  # PUT /submissions/1.xml
   def update
     @submission = Submission.find(params[:id])
     authorize @submission, :update?
+
     params[:submission][:source] = IO.read(params[:submission][:source].path) if params[:submission][:source]
 
-    respond_to do |format|
-      if @submission.update_attributes(permitted_params)
-        format.html { redirect_to(@submission, notice: "Submission was successfully updated.") }
-        format.xml { head :ok }
-      else
-        format.html { render action: "edit" }
-        format.xml { render xml: @submission.errors, status: :unprocessable_entity }
-      end
+    if @submission.update_attributes(permitted_params)
+      redirect_to(@submission, notice: "Submission was successfully updated.")
+    else
+      render action: "edit"
     end
   end
 
-  # DELETE /submissions/1
-  # DELETE /submissions/1.xml
   def destroy
     @submission = Submission.find(params[:id])
     authorize @submission, :destroy?
-    @submission.destroy
 
-    respond_to do |format|
-      format.html { redirect_to(submissions_url) }
-      format.xml { head :ok }
-    end
+    @submission.destroy!
+
+    redirect_to(submissions_url)
   end
 end
