@@ -55,6 +55,7 @@ RSpec.configure do |config|
   end
 
   config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::Test::IntegrationHelpers, type: :request
   config.include FixturesSpecHelper, type: :controller # supply fixtures variables
   config.include ControllersSpecHelper, type: :controller # some macros for testing controllers
   config.render_views # don't stub views when testing controllers
