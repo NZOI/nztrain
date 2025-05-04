@@ -435,7 +435,7 @@ DEPENDENCIES
   factory_bot_rails
   foreman
   has_scope
-  loofah
+  loofah (<= 2.20.0)
   mechanize
   mini_racer (~> 0.4.0)
   newrelic_rpm
