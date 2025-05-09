@@ -7,7 +7,7 @@ class ContestRelation < ActiveRecord::Base
   belongs_to :school
   belongs_to :supervisor, class_name: :User
 
-  scope :active, -> { where { (started_at <= DateTime.now) & (finish_at > DateTime.now) } }
+  scope :active, -> { where("started_at <= :now AND finish_at > :now", now: DateTime.now) }
   scope :absent, -> { where(checked_in: false) }
   scope :user, ->(u_id) { where(user_id: u_id) }
 
