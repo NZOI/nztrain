@@ -17,6 +17,14 @@ module ControllersSpecHelper
     hash
   end
 
+  def subject_object(resource)
+    if respond_to?(resource)
+      send(resource)
+    else
+      instance_variable_get("@#{resource}")
+    end
+  end
+
   module ClassMethods
     def _process_options options
       options[:attributes] ||= {}
@@ -62,8 +70,9 @@ module ControllersSpecHelper
 
     def can_show resource, options = {}
       options = process_options resource, options
+
       it "can show #{resource}" do
-        object = instance_variable_get "@#{resource}"
+        object = subject_object(resource)
         get :show, id: object.to_param
         expect(response).to be_success
       end
@@ -71,14 +80,16 @@ module ControllersSpecHelper
 
     def can_update resource, options = {}
       options = process_options resource, options
+
       it "can edit #{resource}" do
-        object = instance_variable_get "@#{resource}"
+        object = subject_object(resource)
         get :edit, id: object.to_param
         expect(response).to be_success
         assigns(options[:resource_name]).instance_of?(object.class)
       end
+
       it "can update #{resource}" do
-        object = instance_variable_get "@#{resource}"
+        object = subject_object(resource)
         put :update, :id => object.to_param, options[:resource_name] => object.attributes.symbolize_keys.merge(options[:attributes])
         expect(response).to redirect_to send "#{options[:resource_name]}_path", assigns(options[:resource_name])
         expect(assigns(options[:resource_name])).to have_attributes(options[:attributes])
@@ -87,10 +98,12 @@ module ControllersSpecHelper
 
     def can_create resource, options = {}
       options = process_options resource, options
+
       it "can get new #{resource}" do
         get :new
         expect(response).to be_success
       end
+
       it "can create #{resource}" do
         expect do
           post :create, options[:resource_name] => options[:attributes]
@@ -102,16 +115,19 @@ module ControllersSpecHelper
 
     def can_destroy resource, options = {}
       options = process_options resource, options
+
       it "can destroy #{resource}" do
-        object = instance_variable_get "@#{resource}"
+        object = subject_object(resource)
         expect do
           delete :destroy, id: object.to_param
-        end.to change { object.class.count }.by(-1)
+        end.to change { object.class.count }
+           .by(-1)
         expect(response).to be_redirect
       end
     end
   end
-  # Instance methods
+
+  # Instance methodss
   RSpec::Matchers.define :have_attributes do |expected|
     match do |actual|
       matching = true
