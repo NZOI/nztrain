@@ -49,22 +49,13 @@ RSpec.configure do |config|
   #
   config.infer_spec_type_from_file_location!
 
-  config.before(:suite) do
-    FixturesSpecHelper.initialize
-  end
-  config.after(:suite) do
-    FixturesSpecHelper.destroy
-  end
 
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::IntegrationHelpers, type: :request
-  config.include FixturesSpecHelper, type: :controller # supply fixtures variables
   config.include ControllersSpecHelper, type: :controller # some macros for testing controllers
   config.render_views # don't stub views when testing controllers
 
-  config.include FixturesSpecHelper, type: :feature # supply fixture variables
   config.include RequestsSpecHelper, type: :feature # use warden to shortcut login
 
-  config.include FixturesSpecHelper, type: :presenter, file_path: %r{spec/presenters} # supply fixture variables
   config.include ActionView::TestCase::Behavior, type: :presenter, file_path: %r{spec/presenters}
 end

@@ -1,26 +1,23 @@
 require "spec_helper"
 
 describe RolesController do
-  before(:all) do
-    @role = FactoryBot.create(:role)
-  end
-  after(:all) do
-    @role.destroy
+  let(:role) { FactoryBot.create(:role) }
+
+  before do
+    sign_in user
   end
 
   context "as superadmin" do
-    before(:each) do
-      sign_in users(:superadmin)
-    end
+    let(:user) { FactoryBot.create(:superadmin) }
+
     can_index :roles
     can_create :role, attributes: {name: "A unique name"}
     can_manage :role, attributes: {name: "A unique name"}
   end
 
   context "as admin" do
-    before(:each) do
-      sign_in users(:admin)
-    end
+    let(:user) { FactoryBot.create(:admin) }
+
     can_index :roles
   end
 end
