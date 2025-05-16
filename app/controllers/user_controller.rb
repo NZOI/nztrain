@@ -10,11 +10,6 @@ class UserController < ApplicationController
     @user = User.find(params[:id])
     authorize @user, :show?
     @solved_problems = @user.user_problem_relations.where(ranked_score: 100).joins(:problem).select([:problem_id, :ranked_submission_id, {problem: :name}]).order("problems.name")
-
-    respond_to do |format|
-      format.html
-      format.xml { render xml: @user }
-    end
   end
 
   def edit
@@ -25,14 +20,11 @@ class UserController < ApplicationController
   def update
     @user = User.find(params[:id])
     authorize @user, :update?
-    respond_to do |format|
-      if @user.update_attributes(permitted_params)
-        format.html { redirect_to(@user, notice: "User was successfully updated.") }
-        format.xml { head :ok }
-      else
-        format.html { render action: "edit" }
-        format.xml { render xml: @user.errors, status: :unprocessable_entity }
-      end
+
+    if @user.update_attributes(permitted_params)
+      redirect_to(@user, notice: "User was successfully updated.")
+    else
+      render action: "edit"
     end
   end
 
@@ -63,10 +55,7 @@ class UserController < ApplicationController
     authorize @user, :destroy?
     @user.destroy
 
-    respond_to do |format|
-      format.html { redirect_to(users_url) }
-      format.xml { head :ok }
-    end
+    redirect_to(users_url)
   end
 
   def su
