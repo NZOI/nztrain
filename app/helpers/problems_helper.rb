@@ -40,4 +40,18 @@ module ProblemsHelper
     end
     content.to_s.html_safe
   end
+
+  def test_status(problem)
+    colour = case problem.test_status
+             when -1 then "#FF0000"
+             when -2 then "#FF8000"
+             when 0 then "#808080"
+             when 1 then "#FFFF00"
+             when 2 then "#80FF00"
+             when 3 then "#00C000"
+             else; "#808080"
+    end
+
+    content_tag :div, " ", style: "border-radius: 50%; width: 15px; height: 15px; background-color: #{colour}; display: inline-block"
+  end
 end

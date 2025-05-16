@@ -56,6 +56,4 @@ RSpec.configure do |config|
   config.render_views # don't stub views when testing controllers
 
   config.include RequestsSpecHelper, type: :feature # use warden to shortcut login
-
-  config.include ActionView::TestCase::Behavior, type: :presenter, file_path: %r{spec/presenters}
 end
