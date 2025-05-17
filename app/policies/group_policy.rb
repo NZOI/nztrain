@@ -4,7 +4,11 @@ class GroupPolicy < AuthenticatedPolicy
       if user.is_staff?
         scope.all
       else
-        scope.where { |groups| (groups.id == 0) | (groups.visibility == Group::VISIBILITY[:public]) | (groups.owner_id == user.id) }
+        scope.where(
+          "id = 0 OR visibility = :public OR owner_id = :user_id",
+          public: Group::VISIBILITY[:public],
+          user_id: user.id
+        )
       end
     end
   end

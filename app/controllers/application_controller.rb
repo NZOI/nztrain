@@ -76,7 +76,7 @@ class ApplicationController < ActionController::Base
 
   def update_contest_checkin
     if user_signed_in?
-      original_user.contest_relations.active.absent.each do |relation|
+      original_user.contest_relations.active.merge(ContestRelation.absent).each do |relation|
         relation.checked_in = true
         relation.save
       end

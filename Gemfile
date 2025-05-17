@@ -22,7 +22,6 @@ gem "pundit", "~> 1.1.0"
 gem "recaptcha", require: "recaptcha/rails"
 gem "loofah", "<= 2.20.0"
 gem "whenever", require: false # for cron jobs
-gem "squeel" # , '~> 1.1.1' # until version 1.1.2 released
 gem "tilt"
 gem "simple-navigation", "3.11.0"
 gem "simple_form", "3.2.1"
