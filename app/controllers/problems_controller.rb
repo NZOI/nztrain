@@ -22,8 +22,6 @@ class ProblemsController < ApplicationController
     visible_attributes
   end
 
-  # GET /problems
-  # GET /problems.xml
   def index
     raise Pundit::NotAuthorizedError if current_user.nil?
     case params[:filter].to_s
@@ -38,14 +36,8 @@ class ProblemsController < ApplicationController
     authorize @problem, :update?
 
     @problems_presenter = ProblemPresenter::Collection.new(@problems).permit!(*visible_attributes)
-
-    respond_to do |format|
-      format.html # index.html.erb
-    end
   end
 
-  # GET /problems/1
-  # GET /problems/1.xml
   def show
     @problem = Problem.find(params[:id])
     authorize @problem, :show?
@@ -62,13 +54,11 @@ class ProblemsController < ApplicationController
     end
     @all_subs = @all_subs.map { |s| s[1] }
 
-    respond_to do |format|
-      format.html { render layout: "problem" }
-    end
-
     if user_signed_in?
       UserProblemRelation.where(user_id: current_user.id, problem_id: params[:id]).first_or_create!.view! unless in_su?
     end
+
+    render layout: "problem"
   end
 
   def submit
@@ -76,27 +66,22 @@ class ProblemsController < ApplicationController
     authorize @problem, :submit?
     if request.post? # post request
       @submission = Submission.new(submit_params) # create submission
-      respond_to do |format|
-        source_is_valid = @submission.source.nil? || @submission.source.valid_encoding? && !@submission.source.include?("\0")
-        if !source_is_valid
-          @submission.errors.add :source_file, "has an invalid text encoding. This was likely caused by submitting a compiled file (.exe, .out, .class, ...) instead of a source code file (.cpp, .c, .java, ...)."
-          @submission.source = nil; # Prevent submission form from trying to render the source (and erroring)
-        end
+      source_is_valid = @submission.source.nil? || @submission.source.valid_encoding? && !@submission.source.include?("\0")
 
-        if source_is_valid && @submission.save
-          @submission.judge
-          format.html { redirect_to(@submission, notice: "Submission was successfully created.") }
-          format.xml { render xml: @submission, status: :created, location: @submission }
-        else
-          format.html { render action: "submit", layout: "problem", alert: "Submission failed." }
-          format.xml { render xml: @submission.errors, status: :unprocessable_entity }
-        end
+      if !source_is_valid
+        @submission.errors.add :source_file, "has an invalid text encoding. This was likely caused by submitting a compiled file (.exe, .out, .class, ...) instead of a source code file (.cpp, .c, .java, ...)."
+        @submission.source = nil; # Prevent submission form from trying to render the source (and erroring)
+      end
+
+      if source_is_valid && @submission.save
+        @submission.judge
+        redirect_to(@submission, notice: "Submission was successfully created.")
+      else
+        render action: "submit", layout: "problem", alert: "Submission failed."
       end
     else # get request
       @submission = Submission.new
-      respond_to do |format|
-        format.html { render layout: "problem" }
-      end
+      render layout: "problem"
     end
   end
 
@@ -110,17 +95,14 @@ class ProblemsController < ApplicationController
       @submissions = @problem.submission_history(current_user, start_time)
     end
 
-    respond_to do |format|
-      format.html { render layout: "problem" }
-    end
+    render layout: "problem"
   end
 
   def test_cases
     @problem = Problem.find(params[:id])
     authorize @problem, :inspect?
-    respond_to do |format|
-      format.html { render layout: "problem" }
-    end
+
+    render layout: "problem"
   end
 
   def import
@@ -177,72 +159,51 @@ class ProblemsController < ApplicationController
     @problem = Problem.find(params[:id])
     authorize @problem, :inspect?
     @submissions = @problem.test_submissions
-    respond_to do |format|
-      format.html { render layout: "problem" }
-    end
+
+    render layout: "problem"
   end
 
-  # GET /problems/new
   def new
     @problem = Problem.new(owner: current_user)
     authorize @problem, :new?
-    respond_to do |format|
-      format.html # new.html.erb
-    end
   end
 
-  # GET /problems/1/edit
   def edit
     @problem = Problem.find(params[:id])
     authorize @problem, :edit?
   end
 
-  # POST /problems
   def create
     @problem = Problem.new(permitted_params)
     @problem.owner ||= current_user
     authorize @problem, :create?
 
-    respond_to do |format|
-      if validate(@problem) && @problem.save
-        format.html { redirect_to(@problem, notice: "Problem was successfully created.") }
-        format.xml { render xml: @problem, status: :created, location: @problem }
-      else
-        format.html { render action: "new" }
-        format.xml { render xml: @problem.errors, status: :unprocessable_entity }
-      end
+    if validate(@problem) && @problem.save
+      redirect_to(@problem, notice: "Problem was successfully created.")
+    else
+      render action: "new"
     end
   end
 
-  # PUT /problems/1
-  # PUT /problems/1.xml
   def update
     @problem = Problem.find(params[:id])
     authorize @problem, :update?
 
     @problem.assign_attributes(permitted_params)
-    respond_to do |format|
-      if validate(@problem) && @problem.save
-        format.html { redirect_to(@problem, notice: "Problem was successfully updated.") }
-        format.xml { head :ok }
-      else
-        format.html { render action: "edit" }
-        format.xml { render xml: @problem.errors, status: :unprocessable_entity }
-      end
+
+    if validate(@problem) && @problem.save
+      redirect_to(@problem, notice: "Problem was successfully updated.")
+    else
+      render action: "edit"
     end
   end
 
-  # DELETE /problems/1
-  # DELETE /problems/1.xml
   def destroy
     @problem = Problem.find(params[:id])
     authorize @problem, :destroy?
-    @problem.destroy
+    @problem.destroy!
 
-    respond_to do |format|
-      format.html { redirect_to(problems_url) }
-      format.xml { head :ok }
-    end
+    redirect_to(problems_url)
   end
 
   # Remove the current problem from the selected problem set and refresh the page

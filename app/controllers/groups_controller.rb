@@ -26,8 +26,6 @@ class GroupsController < ApplicationController
     redirect_to(@group, notice: "Contest removed.")
   end
 
-  # GET /groups
-  # GET /groups.xml
   def index
     case params[:filter].to_s
     when "my"
@@ -37,10 +35,6 @@ class GroupsController < ApplicationController
       authorize Group.new, :update?
       @groups = Group.all
     end
-
-    respond_to do |format|
-      format.html # index.html.erb
-    end
   end
 
   def browse
@@ -49,8 +43,6 @@ class GroupsController < ApplicationController
     render "index"
   end
 
-  # GET /groups/1
-  # GET /groups/1.xml
   def show
     @group = Group.find(params[:id])
     if policy(@group).access?
@@ -64,18 +56,16 @@ class GroupsController < ApplicationController
   def contests
     @group = Group.find(params[:id])
     authorize @group, :access?
+
     @contests = @group.contests
-    respond_to do |format|
-      format.html { render layout: "group" }
-    end
+    render layout: "group"
   end
 
   def info
     @group = Group.find(params[:id])
     authorize @group, :show?
-    respond_to do |format|
-      format.html { render layout: "group" }
-    end
+
+    render layout: "group"
   end
 
   def scoreboard
@@ -92,71 +82,47 @@ class GroupsController < ApplicationController
       @scores[relation.user_id][relation.problem_id] = relation
     end
 
-    respond_to do |format|
-      format.html { render layout: "group" }
-    end
+    render layout: "group"
   end
 
-  # GET /groups/new
-  # GET /groups/new.xml
   def new
     @group = Group.new(owner: current_user)
     authorize @group, :new?
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml { render xml: @group }
-    end
   end
 
-  # GET /groups/1/edit
   def edit
     @group = Group.find(params[:id])
     authorize @group, :edit?
   end
 
-  # POST /groups
-  # POST /groups.xml
   def create
     @group = Group.new(permitted_params)
     @group.owner ||= current_user
     authorize @group, :create?
-    respond_to do |format|
-      if @group.save
-        format.html { redirect_to(@group, notice: "Group was successfully created.") }
-        format.xml { render xml: @group, status: :created, location: @group }
-      else
-        format.html { render action: "new" }
-        format.xml { render xml: @group.errors, status: :unprocessable_entity }
-      end
+
+    if @group.save
+      redirect_to(@group, notice: "Group was successfully created.")
+    else
+      render action: "new"
     end
   end
 
-  # PUT /groups/1
-  # PUT /groups/1.xml
   def update
     @group = Group.find(params[:id])
     authorize @group, :update?
-    respond_to do |format|
-      if @group.update_attributes(permitted_params)
-        format.html { redirect_to(@group, notice: "Group was successfully updated.") }
-        format.xml { head :ok }
-      else
-        format.html { render action: "edit" }
-        format.xml { render xml: @group.errors, status: :unprocessable_entity }
-      end
+
+    if @group.update_attributes(permitted_params)
+      redirect_to(@group, notice: "Group was successfully updated.")
+    else
+      render action: "edit"
     end
   end
 
-  # DELETE /groups/1
-  # DELETE /groups/1.xml
   def destroy
     @group = Group.find(params[:id])
     authorize @group, :destroy?
     @group.destroy
 
-    respond_to do |format|
-      format.html { redirect_to(browse_groups_url) }
-      format.xml { head :ok }
-    end
+    redirect_to(browse_groups_url)
   end
 end

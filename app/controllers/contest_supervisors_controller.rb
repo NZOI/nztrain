@@ -11,12 +11,10 @@ class ContestSupervisorsController < ApplicationController
     authorize @contest_supervisor, :use?
     @contest_supervisor.assign_attributes(params.require(:contest_supervisor).permit(:scheduled_start_time))
 
-    respond_to do |format|
-      if @contest_supervisor.save
-        format.html { redirect_to(contestants_contest_path(@contest_supervisor.contest), notice: "Scheduled start time updated.") }
-      else
-        format.html { redirect_to(contestants_contest_path(@contest_supervisor.contest), alert: "Error, could not update scheduled start time") }
-      end
+    if @contest_supervisor.save
+      redirect_to(contestants_contest_path(@contest_supervisor.contest), notice: "Scheduled start time updated.")
+    else
+      redirect_to(contestants_contest_path(@contest_supervisor.contest), alert: "Error, could not update scheduled start time")
     end
   end
 
@@ -24,16 +22,14 @@ class ContestSupervisorsController < ApplicationController
     @contest_supervisor = ContestSupervisor.new(permitted_params)
     authorize @contest_supervisor, :create?
 
-    respond_to do |format|
-      if @contest_supervisor.save
-        format.html { redirect_to(supervisors_contest_path(@contest_supervisor.contest), notice: "Contest supervisor was successfully created.") }
-      else
-        @contest = @contest_supervisor.contest
-        @contest_supervisors = @contest.contest_supervisors
-        @new_supervisor = @contest_supervisor
-        @groups = @contest.groups
-        format.html { render template: "contests/supervisors", layout: "contest" }
-      end
+    if @contest_supervisor.save
+      redirect_to(supervisors_contest_path(@contest_supervisor.contest), notice: "Contest supervisor was successfully created.")
+    else
+      @contest = @contest_supervisor.contest
+      @contest_supervisors = @contest.contest_supervisors
+      @new_supervisor = @contest_supervisor
+      @groups = @contest.groups
+      render template: "contests/supervisors", layout: "contest"
     end
   end
 
@@ -42,12 +38,10 @@ class ContestSupervisorsController < ApplicationController
 
     authorize @contest_supervisor, :destroy?
 
-    respond_to do |format|
-      if @contest_supervisor.destroy
-        format.html { redirect_to(supervisors_contest_path(@contest_supervisor.contest), notice: "Contest supervisor deleted") }
-      else
-        format.html { redirect_to(supervisors_contest_path(@contest_supervisor.contest), alert: "Could not delete contest supervisor") }
-      end
+    if @contest_supervisor.destroy
+      redirect_to(supervisors_contest_path(@contest_supervisor.contest), notice: "Contest supervisor deleted")
+    else
+      redirect_to(supervisors_contest_path(@contest_supervisor.contest), alert: "Could not delete contest supervisor")
     end
   end
 end

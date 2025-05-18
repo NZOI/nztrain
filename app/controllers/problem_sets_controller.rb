@@ -26,8 +26,6 @@ class ProblemSetsController < ApplicationController
     redirect_to(@problem_set, notice: "Problem removed.")
   end
 
-  # GET /problem_sets
-  # GET /problem_sets.xml
   def index
     case params[:filter].to_s
     when "my"
@@ -38,15 +36,8 @@ class ProblemSetsController < ApplicationController
       @problem_sets = ProblemSet.all
     end
     @problem_sets = @problem_sets.order(name: :asc).page(params[:page]).per_page(25)
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml { render xml: @problem_sets }
-    end
   end
 
-  # GET /problem_sets/1
-  # GET /problem_sets/1.xml
   def show
     @problem_set = ProblemSet.find(params[:id])
     authorize @problem_set, :show?
@@ -57,73 +48,46 @@ class ProblemSetsController < ApplicationController
         Group.where(owner_id: current_user.id)
       end
     end
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml { render xml: @problem_set }
-    end
   end
 
-  # GET /problem_sets/new
-  # GET /problem_sets/new.xml
   def new
     @problem_set = ProblemSet.new(owner: current_user)
     authorize @problem_set, :new?
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml { render xml: @problem_set }
-    end
   end
 
-  # GET /problem_sets/1/edit
   def edit
     @problem_set = ProblemSet.find(params[:id])
     authorize @problem_set, :edit?
   end
 
-  # POST /problem_sets
-  # POST /problem_sets.xml
   def create
     @problem_set = ProblemSet.new(permitted_params)
     @problem_set.owner ||= current_user
     authorize @problem_set, :create?
-    respond_to do |format|
-      if @problem_set.save
-        format.html { redirect_to(@problem_set, notice: "Problem set was successfully created.") }
-        format.xml { render xml: @problem_set, status: :created, location: @problem_set }
-      else
-        format.html { render action: "new" }
-        format.xml { render xml: @problem_set.errors, status: :unprocessable_entity }
-      end
+
+    if @problem_set.save
+      redirect_to(@problem_set, notice: "Problem set was successfully created.")
+    else
+      render action: "new"
     end
   end
 
-  # PUT /problem_sets/1
-  # PUT /problem_sets/1.xml
   def update
     @problem_set = ProblemSet.find(params[:id])
     authorize @problem_set, :update?
 
-    respond_to do |format|
-      if @problem_set.update_attributes(permitted_params)
-        format.html { redirect_to(@problem_set, notice: "Problem set was successfully updated.") }
-        format.xml { head :ok }
-      else
-        format.html { render action: "edit" }
-        format.xml { render xml: @problem_set.errors, status: :unprocessable_entity }
-      end
+    if @problem_set.update_attributes(permitted_params)
+      redirect_to(@problem_set, notice: "Problem set was successfully updated.")
+    else
+      render action: "edit"
     end
   end
 
-  # DELETE /problem_sets/1
-  # DELETE /problem_sets/1.xml
   def destroy
     @problem_set = ProblemSet.find(params[:id])
     authorize @problem_set, :destroy?
     @problem_set.destroy
 
-    respond_to do |format|
-      format.html { redirect_to(problem_sets_url) }
-      format.xml { head :ok }
-    end
+    redirect_to(problem_sets_url)
   end
 end
