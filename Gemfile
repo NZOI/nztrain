@@ -80,6 +80,8 @@ group :development, :test do
   gem "byebug"
 
   gem "standard"
+
+  gem "rails-controller-testing", "~> 1.0"
 end
 
 # Gems used only for assets and not required
