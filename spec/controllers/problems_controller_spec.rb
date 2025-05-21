@@ -39,7 +39,7 @@ describe ProblemsController do
     it "can post submit for group problem" do
       expect_any_instance_of(Submission).to receive(:judge)
       # post multi-part form
-      post :submit, id: group_problem.id, submission: {language_id: LanguageGroup.find_by_identifier("c++").current_language, source_file: fixture_file_upload("/files/adding.cpp", "text/plain")}
+      post :submit, id: group_problem.id, submission: {language_id: LanguageGroup.find_by_identifier("c++").current_language.id, source_file: fixture_file_upload("/files/adding.cpp", "text/plain")}
       expect(response).to redirect_to submission_path(assigns(:submission))
       expect(assigns(:submission).problem_id).to eq(group_problem.id)
       expect(assigns(:submission).user_id).to eq(user.id)
