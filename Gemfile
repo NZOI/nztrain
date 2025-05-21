@@ -24,7 +24,7 @@ gem "loofah", "<= 2.20.0"
 gem "whenever", require: false # for cron jobs
 gem "tilt"
 gem "simple-navigation", "3.11.0"
-gem "simple_form", "3.2.1"
+gem "simple_form", "3.3.1"
 gem "render_anywhere"
 gem "pygments.rb", "~> 2.0"
 gem "ranked-model"

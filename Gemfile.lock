@@ -361,7 +361,7 @@ GEM
       faraday (>= 1.0)
     simple-navigation (3.11.0)
       activesupport (>= 2.3.2)
-    simple_form (3.2.1)
+    simple_form (3.3.1)
       actionpack (> 4, < 5.1)
       activemodel (> 4, < 5.1)
     simplecov (0.18.5)
@@ -475,7 +475,7 @@ DEPENDENCIES
   sass-rails
   sentry-raven
   simple-navigation (= 3.11.0)
-  simple_form (= 3.2.1)
+  simple_form (= 3.3.1)
   simplecov
   sinatra
   spring
