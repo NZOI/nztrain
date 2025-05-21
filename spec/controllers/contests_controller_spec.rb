@@ -1,19 +1,14 @@
 require "spec_helper"
 
 describe ContestsController do
-  before(:all) do
-    @problem_set = FactoryBot.create(:problem_set)
-    @contest = FactoryBot.create(:contest, problem_set: @problem_set)
-  end
-  after(:all) do
-    @contest.destroy
-    @problem_set.destroy
-  end
+  let(:problem_set) { FactoryBot.create(:problem_set) }
+  let(:contest) { FactoryBot.create(:contest, problem_set: problem_set) }
 
   context "as admin" do
-    before(:each) do
-      sign_in users(:admin)
+    before do
+      sign_in FactoryBot.create(:admin)
     end
+
     can_index :contests
     can_index :contests, params: {filter: "my"}
 
@@ -22,9 +17,10 @@ describe ContestsController do
   end
 
   context "as an organiser" do
-    before(:each) do
-      sign_in users(:organiser)
+    before do
+      sign_in FactoryBot.create(:organiser)
     end
+
     can_index :contests, params: {filter: "my"}
   end
 end
