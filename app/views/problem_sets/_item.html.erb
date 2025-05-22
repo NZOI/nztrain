@@ -27,7 +27,16 @@
         <tbody>
           <% problems.each do |problem| %>
             <tr>
-              <td width="100%">&nbsp;&nbsp;&nbsp;<%= ProblemPresenter.new(problem).test_status + "&nbsp;".html_safe if policy(problem).inspect? %><%= link_to problem.name, problem %></td>
+              <td width="100%">&nbsp;&nbsp;&nbsp;
+
+                <% if policy(problem).inspect? %>
+                  <%= test_status(problem) %>
+                  &nbsp;
+                <% end %>
+
+                <%= link_to problem.name, problem %>
+              </td>
+
               <td>
                 <%= weighted ? progress_bar(problem.weighted_score, problem.weighting) : progress_bar(problem.weighted_score) %>
               </td>

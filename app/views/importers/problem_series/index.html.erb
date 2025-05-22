@@ -72,7 +72,7 @@
               </td>
               <td>
                 <% if !imported_problem.nil? %>
-                  <%= ProblemPresenter.new(imported_problem).test_status  %>
+                  <%= test_status(imported_problem)  %>
                   <%= link_to imported_problem.try(:name), problem_path(problem[:problem_id]) %>
                   (<%= imported_problem.problem_set_associations.detect{|psa| psa.problem_set_id == issue[:problem_set_id].to_i}.try(:weighting) %>)
                   <%= imported_problem.memory_limit || '?' %> MB, <%= imported_problem.time_limit || '?' %> s
