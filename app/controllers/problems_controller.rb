@@ -91,7 +91,13 @@ class ProblemsController < ApplicationController
     if current_user.openbook?
       @submissions = @problem.submission_history(current_user)
     else
-      start_time = current_user.contest_relations.joins(contest: {problem_set: :problems}).where { (started_at <= DateTime.now) & (finish_at > DateTime.now) & (contest.problem_set.problems.id == my { params[:id] }) }.minimum(:started_at)
+      start_time = current_user
+        .contest_relations
+        .joins(contest: {problem_set: :problems})
+        .where("started_at <= :now AND finish_at > :now", now: DateTime.now)
+        .where(problems: {id: params[:id]})
+        .minimum(:started_at)
+
       @submissions = @problem.submission_history(current_user, start_time)
     end
 

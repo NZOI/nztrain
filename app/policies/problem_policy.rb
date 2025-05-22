@@ -32,12 +32,21 @@ class ProblemPolicy < ApplicationPolicy
     return true if user && user.is_staff?
 
     if user && user.competing?
-      return record.contest_relations.where { |relation| (relation.user_id == user.id) & (relation.started_at <= DateTime.now) & (relation.finish_at > DateTime.now) }.exists?
+      return record
+        .contest_relations
+        .where(contest_relations: { user_id: user.id })
+        .where("started_at <= :now AND finish_at > :now", now: DateTime.now)
+        .exists?
     end
 
     return true if record.groups.where(id: 0).exists?
     return false unless user # signed in
-    user.owns(record) or record.group_memberships.where { |membership| (membership.member_id == user.id) }.exists?
+    return true if user.owns(record)
+
+    record
+      .group_memberships
+      .where(group_memberships: { member_id: user.id })
+      .exists?
   end
 
   def access?

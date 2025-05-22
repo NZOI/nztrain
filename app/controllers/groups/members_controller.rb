@@ -97,8 +97,8 @@ class Groups::MembersController < ApplicationController
         redirect_to(invites_members_group_path(@group), notice: "#{@user.username} has been invited to join this group")
       end
     else # get request
-      @pending_requests = @group.invitations.pending.order(:created_at).reverse_order
-      @requests = @group.invitations.closed.order(:created_at).reverse_order
+      @pending_requests = @group.invitations.merge(Request.pending).order(created_at: :desc)
+      @requests = @group.invitations.merge(Request.closed).order(created_at: :desc)
     end
   end
 

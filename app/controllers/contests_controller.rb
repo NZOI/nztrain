@@ -24,13 +24,24 @@ class ContestsController < ApplicationController
     case params[:filter].to_s
     when "active"
       raise Pundit::NotAuthorizedError unless user_signed_in?
-      @contests = Contest.joins(:contest_relations).where { (contest_relations.user_id == my { current_user.id }) & (contest_relations.finish_at > Time.now) }.order("end_time ASC")
+      @contests = Contest
+        .joins(:contest_relations)
+        .where(contest_relations: { user_id: current_user.id })
+        .where("contest_relations.finish_at > ?", Time.now)
+        .order("end_time ASC")
     when "current"
-      @contests = visible_contests.where { (start_time < Time.now + 30.minutes) & (end_time > Time.now) }.order("end_time ASC")
+      @contests = visible_contests
+        .where("start_time < ?", Time.now + 30.minutes)
+        .where("end_time > ?", Time.now)
+        .order("end_time ASC")
     when "upcoming"
-      @contests = visible_contests.where { (start_time > Time.now + 30.minutes) }.order("start_time ASC")
+      @contests = visible_contests
+        .where("start_time > ?", Time.now + 30.minutes)
+        .order("start_time ASC")
     when "past"
-      @contests = visible_contests.where { (end_time < Time.now) }.order("end_time DESC")
+      @contests = visible_contests
+        .where("end_time < ?", Time.now)
+        .order("end_time DESC")
     else
       raise Pundit::NotAuthorizedError
     end

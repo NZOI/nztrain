@@ -2,7 +2,7 @@ class CreateUserProblemRelation < ActiveRecord::Migration
   def change
     reversible do |dir|
       dir.up do
-        missing_user_ids = Submission.where { |submission| submission.user_id << User.select(:id) }.pluck(:user_id)
+        missing_user_ids = Submission.where("submissions.user_id NOT IN (SELECT id FROM users)").pluck(:user_id)
 
         Submission.where(user_id: missing_user_ids).delete_all
         ContestRelation.where(user_id: missing_user_ids).destroy_all
