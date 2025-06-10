@@ -14,14 +14,6 @@ class ProblemsController < ApplicationController
     params.require(:submission).permit(*submit_attributes).merge(user_id: current_user.id, problem_id: params[:id])
   end
 
-  def visible_attributes
-    visible_attributes = [:linked_name, :input, :output, :memory_limit, :time_limit, :linked_owner, :progress_bar]
-    visible_attributes << :edit_link if policy(@problem).update?
-    visible_attributes << :destroy_link if policy(@problem).destroy?
-    visible_attributes << :test_status if policy(@problem).inspect?
-    visible_attributes
-  end
-
   def index
     raise Pundit::NotAuthorizedError if current_user.nil?
     case params[:filter].to_s
@@ -34,8 +26,6 @@ class ProblemsController < ApplicationController
     end
     @problems = @problems.order(id: :desc)
     authorize @problem, :update?
-
-    @problems_presenter = ProblemPresenter::Collection.new(@problems).permit!(*visible_attributes)
   end
 
   def show

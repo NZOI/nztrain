@@ -11,7 +11,7 @@ feature "Problem browsing" do
 
     headers = find(".main_table > thead > tr").all("th").map(&:text)
     rows = find(".main_table > tbody").all("tr").map { |r| r.all("td").map(&:text) }
-    expect(headers).to eq(["", "Name", "Input", "Output", "Memory Limt", "Time Limit", "Owner", "Progress", "", ""])
+    expect(headers).to eq(["", "Name", "Input", "Output", "Memory limit", "Time limit", "Owner", "Progress", "", ""])
     expect(rows.length).to eq(Problem.count)
 
     expect(rows[0]).to eq(["", problem.name, problem.input, problem.output, "1 MB", "1.0 s", "System", "", "Edit", "Destroy"])

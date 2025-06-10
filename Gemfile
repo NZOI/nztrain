@@ -25,7 +25,6 @@ gem "whenever", require: false # for cron jobs
 gem "tilt"
 gem "simple-navigation", "3.11.0"
 gem "simple_form", "3.2.1"
-gem "strong_presenter", "~> 0.2.2"
 gem "render_anywhere"
 gem "pygments.rb", "~> 2.0"
 gem "ranked-model", "< 0.4.3" # pinned because 0.4.3-0.4.4 are broken (see https://github.com/brendon/ranked-model/issues/139; we also need the fix in https://github.com/brendon/ranked-model/pull/152); we can't update to 0.4.5 yet because it requires activerecord >= 4.2

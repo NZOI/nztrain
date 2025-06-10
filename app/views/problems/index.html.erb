@@ -1,34 +1,49 @@
 <% content_for :title, "Problems" %>
 <% toolbox_push :new, new_problem_path if policy(Problem).create? %>
 
-<% columns = {:test_status => "",
-              :linked_name => "Name",
-              :input => "Input",
-              :output => "Output",
-              :memory_limit => "Memory Limt",
-              :time_limit => "Time Limit",
-              :linked_owner => "Owner",
-              :progress_bar => "Progress",
-              :edit_link => "",
-              :destroy_link => ""} %>
 <table class="main_table">
   <thead>
     <tr>
-      <% @problems_presenter.select_permitted(*columns.keys).each do |key| %>
-        <th><%= columns[key] %></th>
-      <% end %>
+      <% if policy(Problem.new).inspect? %><th></th><% end %>
+      <th>Name</th>
+      <th>Input</th>
+      <th>Output</th>
+      <th>Memory limit</th>
+      <th>Time limit</th>
+      <th>Owner</th>
+      <th>Progress</th>
+      <% if policy(Problem.new).update? %><th></th><% end %>
+      <% if policy(Problem.new).destroy? %><th></th><% end %>
     </tr>
   </thead>
+
   <tbody>
-<% @problems_presenter.each do |problem_presenter| %>
-  <tr>
-    <% problem_presenter.presents(*columns.keys).each do |value| %>
-      <%= content_tag :td, value %>
+    <% @problems.each do |problem| %>
+      <tr>
+        <% if policy(problem).inspect? %>
+          <td><%= test_status(problem) %></td>
+        <% end %>
+
+        <td><%= link_to(problem.name, problem) %></td>
+        <td><%= problem.input || "stdin" %></td>
+        <td><%= problem.output || "stdout" %></td>
+        <td><%= problem.memory_limit %> MB</td>
+        <td><%= problem.time_limit %> s</td>
+        <td><%= link_to(problem.owner.username, problem.owner) if problem.owner.present? %></td>
+        <td><%= progress_bar(problem.score) if problem.score %></td>
+
+        <% if policy(problem).update? %>
+          <td><%= link_to("Edit", problem_path(problem)) %></td>
+        <% end %>
+
+        <% if policy(problem).destroy? %>
+          <td>
+            <%= link_to("Destroy", problem_path(problem), method: :delete, data: { confirm: "Are you sure?" }) %>
+          </td>
+        <% end %>
+      </tr>
     <% end %>
-  </tr>
-<% end %>
   </tbody>
 </table>
 
 <br />
-
