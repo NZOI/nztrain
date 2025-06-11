@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -34,11 +33,10 @@ ActiveRecord::Schema.define(version: 20250318053450) do
     t.integer  "school_year"
     t.integer  "supervisor_id"
     t.boolean  "checked_in",              default: false
+    t.index ["contest_id", "score", "time_taken"], name: "index_contest_relations_on_contest_id_and_score_and_time_taken", order: { score: :desc }, using: :btree
+    t.index ["contest_id", "user_id"], name: "index_contest_relations_on_contest_id_and_user_id", unique: true, using: :btree
+    t.index ["user_id", "started_at"], name: "index_contest_relations_on_user_id_and_started_at", using: :btree
   end
-
-  add_index "contest_relations", ["contest_id", "score", "time_taken"], name: "index_contest_relations_on_contest_id_and_score_and_time_taken", order: {"score"=>:desc}, using: :btree
-  add_index "contest_relations", ["contest_id", "user_id"], name: "index_contest_relations_on_contest_id_and_user_id", unique: true, using: :btree
-  add_index "contest_relations", ["user_id", "started_at"], name: "index_contest_relations_on_user_id_and_started_at", using: :btree
 
   create_table "contest_scores", force: :cascade do |t|
     t.integer  "contest_relation_id", null: false
@@ -48,9 +46,8 @@ ActiveRecord::Schema.define(version: 20250318053450) do
     t.integer  "attempt"
     t.integer  "submission_id"
     t.datetime "updated_at"
+    t.index ["contest_relation_id", "problem_id"], name: "index_contest_scores_on_contest_relation_id_and_problem_id", using: :btree
   end
-
-  add_index "contest_scores", ["contest_relation_id", "problem_id"], name: "index_contest_scores_on_contest_relation_id_and_problem_id", using: :btree
 
   create_table "contest_supervisors", force: :cascade do |t|
     t.integer  "contest_id"
@@ -111,18 +108,16 @@ ActiveRecord::Schema.define(version: 20250318053450) do
     t.string   "filepath",           limit: 255
     t.string   "root_type",          limit: 255
     t.integer  "visibility",         limit: 2,   default: 0
+    t.index ["file_attachment_id"], name: "index_filelinks_on_file_attachment_id", using: :btree
+    t.index ["root_id", "filepath"], name: "index_filelinks_on_root_id_and_filepath", using: :btree
   end
-
-  add_index "filelinks", ["file_attachment_id"], name: "index_filelinks_on_file_attachment_id", using: :btree
-  add_index "filelinks", ["root_id", "filepath"], name: "index_filelinks_on_root_id_and_filepath", using: :btree
 
   create_table "group_contests", force: :cascade do |t|
     t.integer "group_id"
     t.integer "contest_id"
+    t.index ["contest_id", "group_id"], name: "index_group_contests_on_contest_id_and_group_id", using: :btree
+    t.index ["group_id", "contest_id"], name: "index_group_contests_on_group_id_and_contest_id", using: :btree
   end
-
-  add_index "group_contests", ["contest_id", "group_id"], name: "index_group_contests_on_contest_id_and_group_id", using: :btree
-  add_index "group_contests", ["group_id", "contest_id"], name: "index_group_contests_on_group_id_and_contest_id", using: :btree
 
   create_table "group_memberships", force: :cascade do |t|
     t.integer  "group_id"
@@ -134,10 +129,9 @@ ActiveRecord::Schema.define(version: 20250318053450) do
     t.integer "group_id"
     t.integer "problem_set_id"
     t.string  "name",           limit: 255
+    t.index ["group_id", "problem_set_id"], name: "index_group_problem_sets_on_group_id_and_problem_set_id", using: :btree
+    t.index ["problem_set_id", "group_id"], name: "index_group_problem_sets_on_problem_set_id_and_group_id", using: :btree
   end
-
-  add_index "group_problem_sets", ["group_id", "problem_set_id"], name: "index_group_problem_sets_on_group_id_and_problem_set_id", using: :btree
-  add_index "group_problem_sets", ["problem_set_id", "group_id"], name: "index_group_problem_sets_on_problem_set_id_and_group_id", using: :btree
 
   create_table "groups", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -177,9 +171,8 @@ ActiveRecord::Schema.define(version: 20250318053450) do
     t.integer  "current_language_id"
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
+    t.index ["identifier"], name: "index_language_groups_on_identifier", unique: true, using: :btree
   end
-
-  add_index "language_groups", ["identifier"], name: "index_language_groups_on_identifier", unique: true, using: :btree
 
   create_table "languages", force: :cascade do |t|
     t.string   "identifier",          limit: 255
@@ -198,9 +191,8 @@ ActiveRecord::Schema.define(version: 20250318053450) do
     t.string   "interpreter",         limit: 255
     t.string   "interpreter_command", limit: 255
     t.integer  "processes",                       default: 1
+    t.index ["identifier"], name: "index_languages_on_identifier", unique: true, using: :btree
   end
-
-  add_index "languages", ["identifier"], name: "index_languages_on_identifier", unique: true, using: :btree
 
   create_table "organisations", force: :cascade do |t|
   end
@@ -217,10 +209,9 @@ ActiveRecord::Schema.define(version: 20250318053450) do
     t.integer "problem_id"
     t.integer "problem_set_order"
     t.integer "weighting",         default: 100
+    t.index ["problem_id", "problem_set_id"], name: "index_problem_set_problems_on_problem_id_and_problem_set_id", using: :btree
+    t.index ["problem_set_id", "problem_id"], name: "index_problem_set_problems_on_problem_set_id_and_problem_id", using: :btree
   end
-
-  add_index "problem_set_problems", ["problem_id", "problem_set_id"], name: "index_problem_set_problems_on_problem_id_and_problem_set_id", using: :btree
-  add_index "problem_set_problems", ["problem_set_id", "problem_id"], name: "index_problem_set_problems_on_problem_set_id_and_problem_id", using: :btree
 
   create_table "problem_sets", force: :cascade do |t|
     t.string   "name",                     limit: 255
@@ -248,10 +239,10 @@ ActiveRecord::Schema.define(version: 20250318053450) do
   end
 
   create_table "products", force: :cascade do |t|
-    t.string  "name",        limit: 255
-    t.integer "gtin",        limit: 8
-    t.text    "description"
-    t.string  "image",       limit: 255
+    t.string "name",        limit: 255
+    t.bigint "gtin"
+    t.text   "description"
+    t.string "image",       limit: 255
   end
 
   create_table "requests", force: :cascade do |t|
@@ -289,18 +280,16 @@ ActiveRecord::Schema.define(version: 20250318053450) do
     t.text     "data"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["created_at"], name: "index_sessions_on_created_at", using: :btree
+    t.index ["session_id"], name: "index_sessions_on_session_id", using: :btree
+    t.index ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
   end
-
-  add_index "sessions", ["created_at"], name: "index_sessions_on_created_at", using: :btree
-  add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", using: :btree
-  add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "settings", force: :cascade do |t|
     t.string "key",   limit: 255
     t.string "value", limit: 255
+    t.index ["key"], name: "index_settings_on_key", unique: true, using: :btree
   end
-
-  add_index "settings", ["key"], name: "index_settings_on_key", unique: true, using: :btree
 
   create_table "submissions", force: :cascade do |t|
     t.text     "source"
@@ -321,20 +310,18 @@ ActiveRecord::Schema.define(version: 20250318053450) do
     t.float    "evaluation"
     t.decimal  "points"
     t.integer  "maximum_points"
+    t.index ["problem_id", "created_at"], name: "index_submissions_on_problem_id_and_created_at", using: :btree
+    t.index ["user_id", "problem_id"], name: "index_submissions_on_user_id_and_problem_id", using: :btree
   end
-
-  add_index "submissions", ["problem_id", "created_at"], name: "index_submissions_on_problem_id_and_created_at", using: :btree
-  add_index "submissions", ["user_id", "problem_id"], name: "index_submissions_on_user_id_and_problem_id", using: :btree
 
   create_table "test_case_relations", force: :cascade do |t|
     t.integer  "test_case_id"
     t.integer  "test_set_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+    t.index ["test_case_id"], name: "index_test_case_relations_on_test_case_id", using: :btree
+    t.index ["test_set_id"], name: "index_test_case_relations_on_test_set_id", using: :btree
   end
-
-  add_index "test_case_relations", ["test_case_id"], name: "index_test_case_relations_on_test_case_id", using: :btree
-  add_index "test_case_relations", ["test_set_id"], name: "index_test_case_relations_on_test_set_id", using: :btree
 
   create_table "test_cases", force: :cascade do |t|
     t.text     "input"
@@ -345,9 +332,8 @@ ActiveRecord::Schema.define(version: 20250318053450) do
     t.integer  "problem_id"
     t.boolean  "sample",                    default: false
     t.integer  "problem_order"
+    t.index ["problem_id", "name"], name: "index_test_cases_on_problem_id_and_name", unique: true, using: :btree
   end
-
-  add_index "test_cases", ["problem_id", "name"], name: "index_test_cases_on_problem_id_and_name", unique: true, using: :btree
 
   create_table "test_sets", force: :cascade do |t|
     t.integer  "problem_id"
@@ -357,9 +343,8 @@ ActiveRecord::Schema.define(version: 20250318053450) do
     t.datetime "updated_at"
     t.boolean  "prerequisite",              default: false
     t.integer  "problem_order"
+    t.index ["problem_id", "name"], name: "index_test_sets_on_problem_id_and_name", unique: true, using: :btree
   end
-
-  add_index "test_sets", ["problem_id", "name"], name: "index_test_sets_on_problem_id_and_name", unique: true, using: :btree
 
   create_table "user_problem_relations", force: :cascade do |t|
     t.integer  "problem_id"
@@ -372,10 +357,9 @@ ActiveRecord::Schema.define(version: 20250318053450) do
     t.datetime "first_viewed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["problem_id", "ranked_score"], name: "index_user_problem_relations_on_problem_id_and_ranked_score", using: :btree
+    t.index ["user_id", "problem_id"], name: "index_user_problem_relations_on_user_id_and_problem_id", unique: true, using: :btree
   end
-
-  add_index "user_problem_relations", ["problem_id", "ranked_score"], name: "index_user_problem_relations_on_problem_id_and_ranked_score", using: :btree
-  add_index "user_problem_relations", ["user_id", "problem_id"], name: "index_user_problem_relations_on_user_id_and_problem_id", unique: true, using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 255, default: "",    null: false
@@ -403,10 +387,10 @@ ActiveRecord::Schema.define(version: 20250318053450) do
     t.integer  "school_id"
     t.string   "country_code",           limit: 3
     t.date     "school_graduation"
+    t.index "lower((username)::text)", name: "index_users_on_username", unique: true, using: :btree
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
-
-  add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
 end
