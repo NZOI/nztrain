@@ -3,7 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby ">= 2.4.10", "< 2.5"
 
-gem 'rails', '~> 5.0.7.2'
+gem "rails", "~> 5.0.7.2"
 
 gem "devise", "~> 4.0"
 gem "psych", "~> 2.0.2" # part of stdlib, need newer version for safe_load
@@ -12,14 +12,14 @@ gem "rubyzip", "1.3.0"
 
 gem "superfish-rails", "~> 1.6.0"
 
-gem 'nokogiri', '~> 1.10.10'
-gem 'redcarpet'
-gem 'rmagick'
-gem 'carrierwave', '1.3.2'
-gem 'will_paginate'
-gem 'has_scope'
-gem 'pundit', '~> 1.1.0'
-gem 'recaptcha', :require => 'recaptcha/rails'
+gem "nokogiri", "~> 1.10.10"
+gem "redcarpet"
+gem "rmagick"
+gem "carrierwave", "1.3.2"
+gem "will_paginate"
+gem "has_scope"
+gem "pundit", "~> 1.1.0"
+gem "recaptcha", require: "recaptcha/rails"
 gem "loofah", "<= 2.20.0"
 gem "whenever", require: false # for cron jobs
 gem "tilt"
@@ -43,7 +43,7 @@ gem "ruby-duration"
 gem "pg"
 gem "backup"
 
-gem 'activemodel-serializers-xml'
+gem "activemodel-serializers-xml"
 
 # Redis and Background Processing
 gem "redis"
