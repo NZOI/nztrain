@@ -48,7 +48,7 @@ function toggle_height(id, displaytype) {
   }
   if ($("#"+id).data("state")==0) {
     $("#"+id).stop();
-    $("#"+id).animate({'height':$("#"+id).data("height")},Math.max(($("#"+id).data("height")-$("#"+id).height())/expandspeed,minduration));
+    $("#"+id).animate({'height':$("#"+id).prop("scrollHeight")},Math.max(($("#"+id).data("height")-$("#"+id).height())/expandspeed,minduration), function() { $("#"+id).height("auto"); });
     $("#"+id).data("state",1);
   }
   else {
