@@ -343,3 +343,14 @@ input[type="file"] {
 .countdown.large {
   font-size: 36px;
 }
+
+tr[aria-expanded].subheading + tr > td > div {
+  overflow-y: hidden;
+  max-height: 1000px;
+  transition: max-height 0.3s cubic-bezier(1,0,1,0);
+}
+
+tr[aria-expanded="false"].subheading + tr > td > div {
+  max-height: 0px;
+  transition: max-height 0.3s cubic-bezier(0,1,0,1);
+}
