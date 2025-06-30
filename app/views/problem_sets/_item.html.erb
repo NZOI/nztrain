@@ -22,7 +22,7 @@
 </tr>
 <tr>
   <td colspan="<%= @colspan %>" style="padding: 0px;">
-    <div id="problemset<%= problem_set.id %>problems" style="display: none; overflow-y: hidden;">
+    <div id="problemset<%= problem_set.id %>problems" style="display: none; overflow-y: scroll;">
       <table class="main_table hoverable selectable" onClick="event.cancelBubble = true;">
         <tbody>
           <% problems.each do |problem| %>
