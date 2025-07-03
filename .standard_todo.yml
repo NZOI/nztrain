@@ -37,5 +37,4 @@ ignore:
 - spec/controllers/accounts/passwords_controller_spec.rb
 - spec/importers/problems/flat_case_importer.rb
 - spec/importers/problems/test_case_importer.rb
-- spec/spec_helper.rb
 - spec/support/controllers_spec_helper.rb
