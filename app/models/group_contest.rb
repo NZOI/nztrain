@@ -1,4 +1,4 @@
-class GroupContest < ActiveRecord::Base
+class GroupContest < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :group, inverse_of: :contest_associations

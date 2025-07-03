@@ -1,4 +1,4 @@
-class ProblemSeries < ActiveRecord::Base
+class ProblemSeries < ApplicationRecord
   def index
     Psych.safe_load(index_yaml || "", [Symbol], %i[name local url issues problem_set_id timestamp tasks testdata solutions results problems problem_id points images tests submission_id model language_id file_attachment_id]) || []
   end

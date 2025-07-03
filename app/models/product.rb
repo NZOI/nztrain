@@ -1,4 +1,4 @@
-class Product < ActiveRecord::Base
+class Product < ApplicationRecord
   belongs_to :identifier_type
   has_many :items
 

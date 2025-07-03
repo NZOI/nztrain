@@ -1,4 +1,4 @@
-class UserProblemRelation < ActiveRecord::Base
+class UserProblemRelation < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection # all model attributes automatically generated
 
   belongs_to :problem

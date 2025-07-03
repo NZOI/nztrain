@@ -1,4 +1,4 @@
-class GroupProblemSet < ActiveRecord::Base
+class GroupProblemSet < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :group, inverse_of: :problem_set_associations

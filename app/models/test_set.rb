@@ -1,4 +1,4 @@
-class TestSet < ActiveRecord::Base
+class TestSet < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :problem, inverse_of: :test_sets, touch: :rejudge_at

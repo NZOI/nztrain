@@ -1,2 +1,2 @@
-class IdentifierType < ActiveRecord::Base
+class IdentifierType < ApplicationRecord
 end

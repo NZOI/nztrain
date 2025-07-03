@@ -1,4 +1,4 @@
-class Filelink < ActiveRecord::Base
+class Filelink < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :root, polymorphic: true

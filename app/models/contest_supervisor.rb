@@ -1,4 +1,4 @@
-class ContestSupervisor < ActiveRecord::Base
+class ContestSupervisor < ApplicationRecord
   belongs_to :contest
   belongs_to :user
   belongs_to :site, polymorphic: true

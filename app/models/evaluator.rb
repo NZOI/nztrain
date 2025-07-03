@@ -1,4 +1,4 @@
-class Evaluator < ActiveRecord::Base
+class Evaluator < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   has_many :problems

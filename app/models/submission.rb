@@ -1,4 +1,4 @@
-class Submission < ActiveRecord::Base
+class Submission < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :user

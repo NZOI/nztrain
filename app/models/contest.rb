@@ -1,4 +1,4 @@
-class Contest < ActiveRecord::Base
+class Contest < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :problem_set

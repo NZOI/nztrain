@@ -1,4 +1,4 @@
-class TestCase < ActiveRecord::Base
+class TestCase < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   has_many :test_case_relations, inverse_of: :test_case, dependent: :destroy

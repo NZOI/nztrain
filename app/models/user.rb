@@ -1,6 +1,6 @@
 require "file_size_validator"
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   # Include devise modules. Others available are:

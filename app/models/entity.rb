@@ -1,4 +1,4 @@
-class Entity < ActiveRecord::Base
+class Entity < ApplicationRecord
   belongs_to :entity, polymorphic: true
 
   def definite_article

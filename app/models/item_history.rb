@@ -1,4 +1,4 @@
-class ItemHistory < ActiveRecord::Base
+class ItemHistory < ApplicationRecord
   belongs_to :item
   belongs_to :holder, class_name: User
 

@@ -1,4 +1,4 @@
-class ContestRelation < ActiveRecord::Base
+class ContestRelation < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :user

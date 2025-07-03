@@ -1,4 +1,4 @@
-class ProblemSet < ActiveRecord::Base
+class ProblemSet < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   has_many :problem_associations, -> { rank(:problem_set_order) }, class_name: ProblemSetProblem, inverse_of: :problem_set, dependent: :destroy
