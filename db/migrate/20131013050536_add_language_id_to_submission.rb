@@ -3,7 +3,7 @@ class AddLanguageIdToSubmission < ActiveRecord::Migration
     add_column :submissions, :language_id, :integer
     rename_column :submissions, :language, :old_language
 
-    Submission.select(:old_language).uniq.each do |submission|
+    Submission.select(:old_language).distinct.each do |submission|
       Language.where(name: submission.old_language).first_or_create!
     end
 
