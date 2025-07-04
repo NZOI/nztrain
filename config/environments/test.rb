@@ -10,6 +10,12 @@ NZTrain::Application.configure do
   # and recreated between test runs.  Don't rely on the data there!
   config.cache_classes = true
 
+  # Configure public file server for tests with Cache-Control for performance.
+  config.public_file_server.enabled = true
+  config.public_file_server.headers = {
+    'Cache-Control' => 'public, max-age=3600'
+  }
+
   # Show full error reports and disable caching
   config.consider_all_requests_local = true
   config.action_controller.perform_caching = false
@@ -34,10 +40,6 @@ NZTrain::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
-
-  # Configure static asset server for tests with Cache-Control for performance
-  config.serve_static_files = true
-  config.static_cache_control = "public, max-age=3600"
 
   # Raise exception on mass assignment protection for Active Record models
   # config.active_record.mass_assignment_sanitizer = :strict # Can't do this yet
