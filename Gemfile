@@ -3,7 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby ">= 2.4.10", "< 2.5"
 
-gem "rails", "~> 5.0.7.2"
+gem "rails", "~> 5.1.7"
 
 gem "devise", "~> 4.0"
 gem "psych", "~> 2.0.2" # part of stdlib, need newer version for safe_load
@@ -24,7 +24,7 @@ gem "loofah", "<= 2.20.0"
 gem "whenever", require: false # for cron jobs
 gem "tilt"
 gem "simple-navigation", "3.11.0"
-gem "simple_form", "3.3.1"
+gem "simple_form", "~> 4.1.0"
 gem "render_anywhere"
 gem "pygments.rb", "~> 2.0"
 gem "ranked-model"
