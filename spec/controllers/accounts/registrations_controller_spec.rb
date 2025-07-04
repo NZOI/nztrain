@@ -8,7 +8,7 @@ describe Accounts::RegistrationsController do
 
   it "can signup (create action)" do
     expect do
-      post :create, user: {username: "signup_username", name: "Mr. SignUp", email: "signup@nztrain.com", password: "password", password_confirmation: "password"}
+      post :create, params: { user: {username: "signup_username", name: "Mr. SignUp", email: "signup@nztrain.com", password: "password", password_confirmation: "password"} }
     end.to change { User.count }.by(1)
     # check signup attributes saved
     newuser = User.find_by_username("signup_username")
@@ -34,12 +34,12 @@ describe Accounts::RegistrationsController do
     end
 
     it "can get edit password form" do
-      get :edit, type: "password"
+      get :edit, params: { type: "password" }
       expect(response).to be_success
     end
 
     it "can get edit email form" do
-      get :edit, type: "email"
+      get :edit, params: { type: "email" }
       expect(response).to be_success
     end
   end

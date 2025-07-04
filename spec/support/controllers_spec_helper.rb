@@ -51,7 +51,7 @@ module ControllersSpecHelper
     def can_index resource, options = {}
       options = process_plural_options resource, {action: :index}.merge(options)
       it "can #{options[:action]} #{resource}" do
-        get options[:action], (process_hash options[:params])
+        get options[:action], params: process_hash(options[:params])
         expect(response).to be_success
         collection = assigns(options[:resources_name])
         expect(collection.is_a?(ActiveRecord::Relation) || collection.is_a?(Array)).to be true
@@ -73,7 +73,7 @@ module ControllersSpecHelper
 
       it "can show #{resource}" do
         object = subject_object(resource)
-        get :show, id: object.to_param
+        get :show, params: { id: object.to_param }
         expect(response).to be_success
       end
     end
@@ -83,14 +83,14 @@ module ControllersSpecHelper
 
       it "can edit #{resource}" do
         object = subject_object(resource)
-        get :edit, id: object.to_param
+        get :edit, params: { id: object.to_param }
         expect(response).to be_success
         assigns(options[:resource_name]).instance_of?(object.class)
       end
 
       it "can update #{resource}" do
         object = subject_object(resource)
-        put :update, :id => object.to_param, options[:resource_name] => object.attributes.symbolize_keys.merge(options[:attributes])
+        put :update, params: { :id => object.to_param, options[:resource_name] => object.attributes.symbolize_keys.merge(options[:attributes]) }
         expect(response).to redirect_to send "#{options[:resource_name]}_path", assigns(options[:resource_name])
         expect(assigns(options[:resource_name])).to have_attributes(options[:attributes])
       end
@@ -106,7 +106,7 @@ module ControllersSpecHelper
 
       it "can create #{resource}" do
         expect do
-          post :create, options[:resource_name] => options[:attributes]
+          post :create, params: { options[:resource_name] => options[:attributes] }
         end.to change { (Kernel.const_get options[:class_name]).count }.by(1)
         expect(response).to redirect_to send "#{options[:resource_name]}_path", assigns(options[:resource_name])
         expect(assigns(options[:resource_name])).to have_attributes(options[:attributes])
@@ -119,7 +119,7 @@ module ControllersSpecHelper
       it "can destroy #{resource}" do
         object = subject_object(resource)
         expect do
-          delete :destroy, id: object.to_param
+          delete :destroy, params: { id: object.to_param }
         end.to change { object.class.count }
            .by(-1)
         expect(response).to be_redirect

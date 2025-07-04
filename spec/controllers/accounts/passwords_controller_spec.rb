@@ -10,7 +10,7 @@ describe Accounts::PasswordsController do
     end
 
     it "can send password reset email" do
-      post :create, user: {email: user.email}
+      post :create, parans: { user: {email: user.email} }
 
       expect(mail = ActionMailer::Base.deliveries.last).to_not be_nil
 
@@ -25,12 +25,12 @@ describe Accounts::PasswordsController do
     end
 
     it "can edit password" do
-      get :edit, reset_password_token: @token
+      get :edit, params: { reset_password_token: @token }
       expect(response).to be_success
     end
 
     it "can update password" do
-      post :update, user: {reset_password_token: @token, password: "newpassword", password_confirmation: "newpassword"}
+      post :update, params: { user: {reset_password_token: @token, password: "newpassword", password_confirmation: "newpassword"} }
 
       expect(user.reload.valid_password?("newpassword")).to be true
     end
