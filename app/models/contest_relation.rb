@@ -67,8 +67,8 @@ class ContestRelation < ApplicationRecord
     update_finish_at
   end
 
-  def contest_with_update=(contest)
-    self.contest_without_update = (contest)
+  def contest=(contest)
+    super
     update_finish_at
   end
 
@@ -76,7 +76,7 @@ class ContestRelation < ApplicationRecord
     self[:extra_time] = extra_time
     update_finish_at
   end
-  alias_method_chain :contest=, :update
+
   def update_finish_at
     self.finish_at = [contest.end_time, started_at.advance(hours: contest.duration.to_f)].min.advance(seconds: extra_time) unless contest.nil? || started_at.nil?
   end
