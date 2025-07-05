@@ -75,7 +75,7 @@ GEM
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
       rouge (>= 1.0.0)
-    bigdecimal (3.0.2)
+    bigdecimal (1.4.4)
     binding_of_caller (1.0.1)
       debug_inspector (>= 1.2.0)
     builder (3.3.0)
@@ -413,6 +413,7 @@ DEPENDENCIES
   activemodel-serializers-xml
   backup
   better_errors
+  bigdecimal (< 2.0)
   binding_of_caller
   byebug
   capybara
