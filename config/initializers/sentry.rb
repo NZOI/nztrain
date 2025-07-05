@@ -4,4 +4,6 @@ Sentry.init do |config|
     dsn = Setting.find_by_key("sentry_dsn")&.value
     config.dsn = dsn if dsn.present?
   end
+
+  config.traces_sample_rate = 1.0
 end
