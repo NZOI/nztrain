@@ -1,4 +1,4 @@
-class ContestScore < ActiveRecord::Base
+class ContestScore < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection # all model attributes automatically generated
 
   # remembers the score a user scored for a problem in a contest when it was last updated

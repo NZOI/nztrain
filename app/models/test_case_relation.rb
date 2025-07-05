@@ -1,4 +1,4 @@
-class TestCaseRelation < ActiveRecord::Base
+class TestCaseRelation < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :test_case, inverse_of: :test_case_relations

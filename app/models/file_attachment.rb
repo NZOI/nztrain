@@ -1,4 +1,4 @@
-class FileAttachment < ActiveRecord::Base
+class FileAttachment < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :owner, class_name: :User

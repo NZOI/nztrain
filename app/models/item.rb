@@ -1,4 +1,4 @@
-class Item < ActiveRecord::Base
+class Item < ApplicationRecord
   belongs_to :product
   belongs_to :owner, class_name: Entity
   belongs_to :organisation

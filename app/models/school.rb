@@ -1,4 +1,4 @@
-class School < ActiveRecord::Base
+class School < ApplicationRecord
   has_many :users, dependent: :nullify
 
   has_many :synonyms, class_name: School, as: :synonym

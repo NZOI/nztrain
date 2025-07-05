@@ -1,4 +1,4 @@
-class Request < ActiveRecord::Base
+class Request < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :requester, class_name: :User # entity that initiated request

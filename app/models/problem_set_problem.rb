@@ -1,4 +1,4 @@
-class ProblemSetProblem < ActiveRecord::Base
+class ProblemSetProblem < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   belongs_to :problem_set, inverse_of: :problem_associations

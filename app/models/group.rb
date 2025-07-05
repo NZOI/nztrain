@@ -1,4 +1,4 @@
-class Group < ActiveRecord::Base
+class Group < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   has_many :memberships, class_name: GroupMembership, dependent: :destroy

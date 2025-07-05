@@ -70,7 +70,7 @@ RSpec.describe ContestRelationsController, type: :request do
       context "when selecting a year level between 1-13" do
         it "updates the year level" do
           expect {
-            post "/contest_relations/#{contest_relation.id}/update_year_level", {year_level: 12}
+            post "/contest_relations/#{contest_relation.id}/update_year_level", params: {year_level: 12}
           }
             .to change { contest_relation.reload.school_year }
             .from(nil).to(12)

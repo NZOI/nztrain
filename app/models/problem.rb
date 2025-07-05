@@ -1,4 +1,4 @@
-class Problem < ActiveRecord::Base
+class Problem < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   has_many :problem_set_associations, class_name: ProblemSetProblem, inverse_of: :problem, dependent: :destroy
@@ -18,7 +18,7 @@ class Problem < ActiveRecord::Base
 
   has_many :contests, through: :problem_sets
   has_many :contest_relations, through: :contests
-  has_many :groups, -> { uniq }, through: :problem_sets
+  has_many :groups, -> { distinct }, through: :problem_sets
   has_many :group_memberships, through: :groups, source: :memberships
 
   has_many :filelinks, -> { includes(:file_attachment) }, as: :root, dependent: :destroy

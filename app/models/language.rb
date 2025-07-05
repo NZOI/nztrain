@@ -1,4 +1,4 @@
-class Language < ActiveRecord::Base
+class Language < ApplicationRecord
   belongs_to :group, class_name: LanguageGroup
 
   def source_filename
