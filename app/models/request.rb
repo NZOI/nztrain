@@ -31,8 +31,7 @@ class Request < ActiveRecord::Base
   scope :pending, -> { status_pending.merge(not_past_expiry) }
   scope :expired, -> { status_pending.merge(past_expiry) }
 
-  # TODO(Rails5): Convert to where.not(pending).or(past_expiry)
-  scope :closed, -> { where("status != ? OR expired_at <= ?", STATUS[:pending], DateTime.now) }
+  scope :closed, -> { where.not(pending).or(past_expiry) }
 
   def pending?
     status == STATUS[:pending] && (expired_at == Float::INFINITY || expired_at > DateTime.now)
