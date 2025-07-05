@@ -19,7 +19,9 @@ redis-server --version 2>/dev/null | bash script/extract_version.bash | bash scr
   apt-get install chkconfig
 
   # install redis
-  bash "`dirname $0`/redis-installer.bash"
+  # version temporarily locked to 7, because 8.0+ don't compile on Ubuntu 16.04 / gcc 5.4.0
+  # TODO: once that issue is fixed, "--version ..." can be removed to switch back to "stable"
+  bash "`dirname $0`/redis-installer.bash" --version 7.4.4
   result=$?
 
   if [[ "$result" -eq 0 ]] ; then
