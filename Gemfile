@@ -59,6 +59,9 @@ gem "newrelic_rpm"
 gem "simplecov", require: false
 gem "sentry-rails"
 
+# Remove once on ruby >= 2.6
+gem "bigdecimal", "< 2.0"
+
 group :development do
   gem "better_errors"
   gem "binding_of_caller"
