@@ -57,7 +57,7 @@ gem "sinatra"
 # Monitoring
 gem "newrelic_rpm"
 gem "simplecov", require: false
-gem "sentry-raven"
+gem "sentry-rails"
 
 group :development do
   gem "better_errors"
