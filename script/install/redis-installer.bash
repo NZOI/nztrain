@@ -6,7 +6,7 @@
 #
 # Changes:
 #   Author: Ronald Chan <ronalchn@gmail.com>
-#     * Changed links to http://download.redis.io
+#     * Changed links to https://download.redis.io
 #     * Automatically detect latest stable version
 #     * Get init script the same directory
 #     * requirepass a random password
@@ -92,7 +92,7 @@ fi
 
 if [[ "${version}" = "stable" ]]; then
   # sets REDIS_VERSION
-  eval $(curl -L "http://download.redis.io/redis-stable/src/version.h" | grep -w REDIS_VERSION | sed 's/#define *REDIS_VERSION */REDIS_VERSION=/g')
+  eval $(curl -L "https://download.redis.io/redis-stable/src/version.h" | grep -w REDIS_VERSION | sed 's/#define *REDIS_VERSION */REDIS_VERSION=/g')
   version="$REDIS_VERSION"
 fi
 
@@ -130,7 +130,7 @@ cd $source_path
 #
 printf "\nDownloading  ${package}-${version}.${archive_format} ...\n"
 
-curl -O -L "http://download.redis.io/releases/${package}-${version}.${archive_format}"
+curl -O -L "https://download.redis.io/releases/${package}-${version}.${archive_format}"
 
 result=$? ; if [[ "$result" -gt 0 ]] ; then
 
