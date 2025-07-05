@@ -91,9 +91,7 @@ else
 fi
 
 if [[ "${version}" = "stable" ]]; then
-  # sets REDIS_VERSION
-  eval $(curl -L "https://download.redis.io/redis-stable/src/version.h" | grep -w REDIS_VERSION | sed 's/#define *REDIS_VERSION */REDIS_VERSION=/g')
-  version="$REDIS_VERSION"
+  version=$(curl -L "https://download.redis.io/redis-stable/src/version.h" | sed -n 's/^#define REDIS_VERSION "\(.*\)"$/\1/p')
 fi
 
 config_template="${config_template:-"${source_path}/${package}-${version}/redis.conf"}"
