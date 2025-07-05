@@ -179,3 +179,8 @@ $(document).ready(function() {
 
   $("#main").focus();
 });
+
+function toggleVisibility(element) {
+  let prevValue = element.getAttribute("aria-expanded") === "true";
+  element.setAttribute("aria-expanded", !prevValue);
+}
