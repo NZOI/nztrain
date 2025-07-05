@@ -90,8 +90,6 @@ end
 # Gems used only for assets and not required
 # in production environments by default.
 # group :assets do
-gem "sass"
-gem "sass-rails"
 gem "uglifier", ">=1.0.3"
 # Provide a JS runtime to execjs without needing to
 # have node, bun, or similar installed on the relevant
