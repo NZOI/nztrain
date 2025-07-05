@@ -35,7 +35,7 @@ sudo aptitude install $PRE_PACK
 mkdir $TEMP_DIR; cd $TEMP_DIR
 
 # download and install
-wget -q http://nginx.org/download/nginx-$VER.tar.gz
+wget -q https://nginx.org/download/nginx-$VER.tar.gz
 tar xzf ng*.tar.gz && rm -f ng*.tar.gz; cd nginx-*
 ./configure $CONFIGURE_OPTIONS
 make && make install
