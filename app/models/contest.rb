@@ -75,7 +75,7 @@ class Contest < ActiveRecord::Base
   end
 
   def scoreboard
-    scoreboard = contestant_records.select([:score, :time_taken, :user_id, :school_id, :school_year, :country_code]).order("contest_relations.score DESC, time_taken").includes(:user)
+    scoreboard = contestant_records.select([:score, :time_taken, :user_id, :school_id, :school_year, :country_code]).order("contest_relations.score DESC, time_taken").includes(:user, :school)
     problem_set.problems.each do |problem| # for each problem, query problem score as well
       scoreboard = scoreboard.select("scores_#{problem.id}.score AS score_#{problem.id}, scores_#{problem.id}.attempt AS attempt_#{problem.id}, scores_#{problem.id}.attempts AS attempts_#{problem.id}, scores_#{problem.id}.submission_id AS sub_#{problem.id}").joins("LEFT OUTER JOIN contest_scores AS scores_#{problem.id} ON scores_#{problem.id}.contest_relation_id = contest_relations.id AND scores_#{problem.id}.problem_id = #{problem.id}")
     end
