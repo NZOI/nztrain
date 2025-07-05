@@ -52,9 +52,8 @@ NZTrain::Application.configure do
   config.active_support.deprecation = :log
 
   # Compress JavaScript and CSS
-  config.assets.compress = true
-  config.assets.css_compressor = :yui
-  config.assets.js_compressor = :uglifier
+  # config.assets.css_compressor = :yui
+  # config.assets.js_compressor = :uglifier
 
   # Don't fallback to assets pipeline
   # config.assets.compile = false

@@ -123,7 +123,6 @@ GEM
     erubi (1.13.1)
     erubis (2.7.0)
     eventmachine (1.2.7)
-    execjs (2.9.0)
     factory_bot (5.2.0)
       activesupport (>= 4.2.0)
     factory_bot_rails (5.2.0)
@@ -145,7 +144,6 @@ GEM
     i18n_data (0.11.0)
     iso8601 (0.13.0)
     json (2.7.6)
-    libv8-node (15.14.0.1)
     logger (1.5.3)
     loofah (2.20.0)
       crass (~> 1.0.2)
@@ -173,8 +171,6 @@ GEM
     mime-types-data (3.2025.0415)
     mini_mime (1.1.2)
     mini_portile2 (2.4.0)
-    mini_racer (0.4.0)
-      libv8-node (~> 15.14.0.0)
     minitest (5.15.0)
     mustermann (2.0.2)
       ruby2_keywords (~> 0.0.1)
@@ -356,8 +352,6 @@ GEM
     ttfunk (1.6.2.1)
     tzinfo (1.2.11)
       thread_safe (~> 0.1)
-    uglifier (4.2.1)
-      execjs (>= 0.3.0, < 3)
     unf (0.2.0)
     unicode-display_width (2.6.0)
     unicode_utils (1.4.0)
@@ -378,7 +372,6 @@ GEM
       i18n (>= 0.6)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    yui-compressor (0.12.0)
 
 PLATFORMS
   ruby
@@ -402,7 +395,6 @@ DEPENDENCIES
   has_scope
   loofah (<= 2.20.0)
   mechanize
-  mini_racer (~> 0.4.0)
   newrelic_rpm
   nokogiri (~> 1.10.10)
   pdf-reader
@@ -435,11 +427,9 @@ DEPENDENCIES
   standard
   superfish-rails (~> 1.6.0)
   tilt
-  uglifier (>= 1.0.3)
   whenever
   will_paginate
   world-flags
-  yui-compressor
 
 RUBY VERSION
    ruby 2.4.10p364
