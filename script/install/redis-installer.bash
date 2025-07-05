@@ -220,8 +220,7 @@ fi
 # Configure, if necessary.
 #
 if [[ ! -s "${config_path}/redis.conf" ]] ; then
-pwd
-echo $config_template
+
   if [[ -s "${config_template}" ]] ; then
 
     # Filter sample config file into actual config file using defaults/settings.
