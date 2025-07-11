@@ -32,6 +32,6 @@ namespace :qless do
     queues = %w[judge queue stalejudge importer].map { |name| $qless.queues[name] }
     job_reserver = Qless::JobReservers::Ordered.new(queues)
 
-    worker = Qless::Workers::ForkingWorker.new(job_reserver, num_workers: 2, interval: 2).run
+    worker = Qless::Workers::ForkingWorker.new(job_reserver, num_workers: 2, interval: 2, log_level: Logger::INFO).run
   end
 end
