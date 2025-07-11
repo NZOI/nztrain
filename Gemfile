@@ -55,7 +55,6 @@ gem "sinatra"
 # gem 'capistrano'
 
 # Monitoring
-gem "newrelic_rpm"
 gem "simplecov", require: false
 gem "sentry-rails"
 
