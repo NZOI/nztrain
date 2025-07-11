@@ -27,11 +27,11 @@ class Contest < ApplicationRecord
   scope :not_ended, -> { where("end_time > ?", Time.current) }
   scope :publicly_observable, -> { where(observation: OBSERVATION[:public]) }
 
-  before_save do # update the end time that was cached
+  after_save do
     if duration_changed? || end_time_changed?
       contest_relations.find_each do |relation|
         relation.finish_at = [end_time, relation.started_at.advance(hours: duration.to_f)].min.advance(seconds: relation.extra_time) unless relation.started_at.nil?
-        relation.save
+        relation.save!
       end
     end
 
