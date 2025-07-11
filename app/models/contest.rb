@@ -27,14 +27,9 @@ class Contest < ApplicationRecord
   scope :not_ended, -> { where("end_time > ?", Time.current) }
   scope :publicly_observable, -> { where(observation: OBSERVATION[:public]) }
 
-  after_save do
-    if duration_changed? || end_time_changed?
-      contest_relations.find_each do |relation|
-        relation.finish_at = [end_time, relation.started_at.advance(hours: duration.to_f)].min.advance(seconds: relation.extra_time) unless relation.started_at.nil?
-        relation.save!
-      end
-    end
+  after_save :update_contest_relations
 
+  after_save do
     update_contest_scores if finalized_at_was && finalized_at.nil?
     true
   end
@@ -171,5 +166,11 @@ class Contest < ApplicationRecord
 
   def max_extra_time
     (duration * 3600).to_i
+  end
+
+  def update_contest_relations
+    return unless duration_changed? || end_time_changed?
+
+    contest_relations.where.not(started_at: nil).find_each(&:set_finish_at!)
   end
 end
