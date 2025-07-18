@@ -176,7 +176,7 @@ class JudgeSubmissionWorker < ApplicationWorker
   end
 
   def compile!(source, language, output)
-    result = language.compile(box, source, output, mem: 393216, wall_time: 60)
+    result = language.compile(box, source, output, mem: 393216, wall_time: 60, open_files: 128)
     FileUtils.copy(box.expand_path(output), File.expand_path(output, tmpdir)) if result["stat"] == 0
     result
   ensure
