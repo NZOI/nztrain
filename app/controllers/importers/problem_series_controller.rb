@@ -1,5 +1,5 @@
 class Importers::ProblemSeriesController < ApplicationController
-  before_filter do
+  before_action do
     raise Pundit::NotAuthorizedError unless current_user.is_superadmin?
     raise ActiveRecord::RecordNotFound if importer.nil?
   end

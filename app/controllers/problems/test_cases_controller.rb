@@ -1,7 +1,7 @@
 class Problems::TestCasesController < ApplicationController
   layout "problem"
 
-  before_filter do
+  before_action do
     @problem = Problem.find(params[:problem_id])
   end
 

@@ -1,7 +1,7 @@
 class Groups::ProblemSetsController < ApplicationController
   layout "group"
 
-  before_filter do
+  before_action do
     @group = Group.find(params[:group_id])
   end
 
