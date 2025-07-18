@@ -16,9 +16,9 @@ chroot "$ISOLATE_ROOT" add-apt-repository universe
 chroot "$ISOLATE_ROOT" apt-get install -y apt-transport-https
 chroot "$ISOLATE_ROOT" apt-get update
 
-: Installing dotnet 3.1
+: Installing dotnet 8.0
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
-chroot "$ISOLATE_ROOT" apt-get install -y dotnet-sdk-3.1
+chroot "$ISOLATE_ROOT" apt-get install -y dotnet-sdk-8.0
 
 : Creating runtime config file
 # The dotnet command requires executables to have a corresponding file

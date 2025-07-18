@@ -8,9 +8,9 @@ echo
 set -x
 
 : Installing dependencies
-sudo apt-get install python -y
 sudo apt-get install git -y
 sudo apt-get install wget -y
+sudo apt-get install ninja-build -y
 
 : Making temporary directory
 build="$HOME/v8-build"
