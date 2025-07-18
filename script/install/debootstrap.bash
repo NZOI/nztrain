@@ -138,6 +138,37 @@ chroot "$ISOLATE_ROOT" apt-get install ruby # Ruby (ruby)
   chroot "$ISOLATE_ROOT" apt-get install python3.8 # Python 3.8
   # note: when updating these Python versions, also update the check for adding the PPA above
 
+  # Compile Python 3.14-prerelease from source
+  echo "Downloading Python 3.14.0b4 source"
+  wget https://www.python.org/ftp/python/3.14.0/Python-3.14.0b4.tgz
+  echo "Extracting Python 3.14.0b4"
+  tar -xzf Python-3.14.0b4.tgz
+  rm Python-3.14.0b4.tgz
+
+  echo "Configuring Python 3.14 build"
+  cd Python-3.14.0b4
+  ./configure --enable-optimizations --prefix=$(pwd)/build
+
+  echo "Building Python 3.14"
+  make -j$(nproc)
+
+  echo "Installing Python 3.14 to build directory"
+  make install
+
+  echo "Creating target directory in chroot"
+  mkdir -p "$ISOLATE_ROOT/opt/python/3.14"
+
+  echo "Copying Python 3.14 build to chroot"
+  cp -r build/* "$ISOLATE_ROOT/opt/python/3.14/"
+
+  echo "Creating symlink in chroot"
+  chroot "$ISOLATE_ROOT" ln -sf /opt/python/3.14/bin/python3.14 /usr/bin/python3.14
+
+  echo "Cleaning up Python 3.14 build directory"
+  cd ..
+  rm -rf Python-3.14.0b4
+
+
   # PyPy
   # https://www.pypy.org
   echo "$chroot_install pypy3"
