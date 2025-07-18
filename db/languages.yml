@@ -119,6 +119,9 @@ python:
     pypy3:
       name: "Python 3.6 (PyPy 7.3)"
       interpreter: /usr/bin/pypy3
+    pypy3.11:
+      name: "Python 3.11 (PyPy)"
+      interpreter: /usr/bin/pypy3.11
 
 ruby:
   name: Ruby

@@ -174,6 +174,25 @@ chroot "$ISOLATE_ROOT" apt-get install ruby # Ruby (ruby)
   echo "$chroot_install pypy3"
   chroot "$ISOLATE_ROOT" apt-get install pypy3
 
+  # Detect architecture
+  ARCH=$(uname -m)
+
+  # Determine URL based on architecture
+  if [[ "$ARCH" == "aarch64" || "$ARCH" == "arm64" ]]; then
+      URL="https://downloads.python.org/pypy/pypy3.11-v7.3.20-aarch64.tar.bz2"
+      FILE="pypy3.11-v7.3.20-aarch64.tar.bz2"
+  else
+      URL="https://downloads.python.org/pypy/pypy3.11-v7.3.20-linux64.tar.bz2"
+      FILE="pypy3.11-v7.3.20-linux64.tar.bz2"
+  fi
+
+  echo "Installing PyPy 3.11 for $ARCH"
+  wget -O $FILE $URL
+  mkdir -p $ISOLATE_ROOT/opt/pypy/3.11
+  tar --strip-components=1 -xvf $FILE -C $ISOLATE_ROOT/opt/pypy/3.11
+  rm $FILE
+  chroot "$ISOLATE_ROOT" ln -sf /opt/pypy/3.11/bin/pypy3 /usr/bin/pypy3.11
+
 
   echo "$chroot_install ruby2.2"
   chroot "$ISOLATE_ROOT" apt-get install ruby2.2
