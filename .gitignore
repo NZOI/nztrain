@@ -17,6 +17,7 @@
 /script/update.time
 /db/backup/
 /db/backups/
+.DS_Store
 /.fontello
 /coverage/
 /vendor/bundle
