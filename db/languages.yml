@@ -97,7 +97,7 @@ python:
   lexer: python
   compiled: no
   interpreted: yes
-  current: python3.8
+  current: python3.14
   extension: .py
   source_filename: program
   processes: 1
@@ -113,9 +113,15 @@ python:
     python3.8:
       name: "Python 3.8"
       interpreter: /usr/bin/python3.8
+    python3.14:
+      name: "Python 3.14"
+      interpreter: /usr/bin/python3.14
     pypy3:
       name: "Python 3.6 (PyPy 7.3)"
       interpreter: /usr/bin/pypy3
+    pypy3.11:
+      name: "Python 3.11 (PyPy)"
+      interpreter: /usr/bin/pypy3.11
 
 ruby:
   name: Ruby
