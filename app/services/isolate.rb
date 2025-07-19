@@ -241,7 +241,6 @@ EOF
       "opt" => [], # for ghc from ppa:hvr/ghc
       "etc" => []
       # 'etc/alternatives' => [], # required for many symbolic links to work
-      # 'etc/j' => [], # required for J to work (load profile)
     }.map do |dir, opt|
       fullpath = File.expand_path(dir, isolate_root)
       boxpath = File.expand_path(dir, "/")

@@ -1,5 +1,5 @@
 class Accounts::RequestsController < ApplicationController
-  before_filter do
+  before_action do
     raise Pundit::NotAuthorizedError unless user_signed_in?
   end
 
