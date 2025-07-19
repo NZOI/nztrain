@@ -14,7 +14,7 @@ module ControllersSpecHelper
         hash[key] = process_hash value
       end
     end
-    hash
+    hash || {}
   end
 
   def subject_object(resource)
