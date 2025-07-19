@@ -1,4 +1,4 @@
-class ChangeSchoolCountryCode < ActiveRecord::Migration
+class ChangeSchoolCountryCode < ActiveRecord::Migration[4.2]
   def change
     rename_column :schools, :country, :country_code
 

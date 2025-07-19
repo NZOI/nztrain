@@ -1,4 +1,4 @@
-class ConvertTestCaseAssociations < ActiveRecord::Migration
+class ConvertTestCaseAssociations < ActiveRecord::Migration[4.2]
   def up
     execute "INSERT INTO test_case_relations (test_set_id, test_case_id, created_at, updated_at) (SELECT test_set_id, id, created_at, updated_at FROM test_cases);"
 

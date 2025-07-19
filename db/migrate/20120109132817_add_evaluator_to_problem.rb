@@ -1,4 +1,4 @@
-class AddEvaluatorToProblem < ActiveRecord::Migration
+class AddEvaluatorToProblem < ActiveRecord::Migration[4.2]
   def self.up
     add_column :problems, :evaluator, :text
   end

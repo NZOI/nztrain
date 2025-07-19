@@ -1,4 +1,4 @@
-class NormalizeLineEndings < ActiveRecord::Migration
+class NormalizeLineEndings < ActiveRecord::Migration[4.2]
   def change
     TestCase.where("(input LIKE '%\r%') OR (output LIKE '%\r%')").find_each do |tc|
       tc.input = tc.input

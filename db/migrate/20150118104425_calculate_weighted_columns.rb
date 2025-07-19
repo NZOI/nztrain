@@ -1,6 +1,6 @@
 require "bigdecimal"
 
-class CalculateWeightedColumns < ActiveRecord::Migration
+class CalculateWeightedColumns < ActiveRecord::Migration[4.2]
   def up
     maxpoints = []
 
