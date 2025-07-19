@@ -133,21 +133,6 @@ ruby:
       name: "Ruby 2.2"
       interpreter: /usr/bin/ruby2.2
 
-j:
-  name: J
-  lexer: text
-  compiled: no
-  interpreted: yes
-  current: j8
-  extension: .ijs
-  source_filename: program
-  processes: 3 # needed for system/main/stdlib.ijs to shell out to uname
-  interpreter_command: "%{interpreter} %{source}"
-  variants:
-    j8:
-      name: "J 8.03"
-      interpreter: /usr/bin/ijconsole-8.0.3
-
 javascript:
   name: JavaScript
   lexer: javascript
