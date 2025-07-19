@@ -6,11 +6,11 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery
 
-  before_filter :update_last_seen_at
-  before_filter :update_contest_checkin
-  before_filter :read_settings
-  before_filter :check_su_loss
-  before_filter :configure_permitted_parameters, if: :devise_controller?
+  before_action :update_last_seen_at
+  before_action :update_contest_checkin
+  before_action :read_settings
+  before_action :check_su_loss
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
   # helper ApplicationHelper
   # helper ProblemsHelper

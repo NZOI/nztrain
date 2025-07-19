@@ -1,6 +1,6 @@
 class ContestRelationsController < ApplicationController
   before_action :authenticate_user!
-  before_filter :find_contest_relation
+  before_action :find_contest_relation
 
   def destroy
     authorize @contest_relation, :destroy?
