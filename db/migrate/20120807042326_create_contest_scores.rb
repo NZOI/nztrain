@@ -1,4 +1,4 @@
-class CreateContestScores < ActiveRecord::Migration
+class CreateContestScores < ActiveRecord::Migration[4.2]
   def up
     # table to cache submission score for each problem/user (of all submissions that have been created)
     # however, this score may differ from actual submission score if it gets rejudged after a contest has been sealed

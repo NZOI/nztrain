@@ -1,4 +1,4 @@
-class ChangeLanguageIdentifiersToMatch < ActiveRecord::Migration
+class ChangeLanguageIdentifiersToMatch < ActiveRecord::Migration[4.2]
   def mapping
     {"C++" => "c++03", "C" => "c99", "Python" => "python2", "Haskell" => "haskell2010"}
   end

@@ -1,4 +1,4 @@
-class RenameBadUsernames < ActiveRecord::Migration
+class RenameBadUsernames < ActiveRecord::Migration[4.2]
   def up
     User.find_each do |user|
       if !user.save # bad username

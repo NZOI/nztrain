@@ -1,4 +1,4 @@
-class AddBrowniePointsToUsers < ActiveRecord::Migration
+class AddBrowniePointsToUsers < ActiveRecord::Migration[4.2]
   def self.up
     add_column :users, :brownie_points, :integer, default: 0
   end

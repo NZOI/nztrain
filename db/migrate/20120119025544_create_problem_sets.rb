@@ -1,4 +1,4 @@
-class CreateProblemSets < ActiveRecord::Migration
+class CreateProblemSets < ActiveRecord::Migration[4.2]
   def self.up
     create_table :problem_sets do |t|
       t.string :title, limit: 255

@@ -1,4 +1,4 @@
-class CreateTestCaseRelations < ActiveRecord::Migration
+class CreateTestCaseRelations < ActiveRecord::Migration[4.2]
   def change
     create_table :test_case_relations do |t|
       t.integer :test_case_id

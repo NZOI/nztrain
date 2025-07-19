@@ -1,4 +1,4 @@
-class MakeExistingEmailsUnconfirmedInUsers < ActiveRecord::Migration
+class MakeExistingEmailsUnconfirmedInUsers < ActiveRecord::Migration[4.2]
   def up
     User.find_each do |user|
       if user[:unconfirmed_email].nil?

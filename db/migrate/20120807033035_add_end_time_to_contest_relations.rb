@@ -1,4 +1,4 @@
-class AddEndTimeToContestRelations < ActiveRecord::Migration
+class AddEndTimeToContestRelations < ActiveRecord::Migration[4.2]
   def change
     add_column :contest_relations, :finish_at, :datetime # will be updated by caching
     Contest.find_each do |contest|

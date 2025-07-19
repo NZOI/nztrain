@@ -1,4 +1,4 @@
-class ChangeTestSetAndTestCaseSampleAndPrerequisites < ActiveRecord::Migration
+class ChangeTestSetAndTestCaseSampleAndPrerequisites < ActiveRecord::Migration[4.2]
   def up
     add_column :test_sets, :prerequisite, :boolean, default: false
     add_column :test_cases, :sample, :boolean, default: false

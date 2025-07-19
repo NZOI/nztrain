@@ -1,4 +1,4 @@
-class AddTypeToTestSet < ActiveRecord::Migration
+class AddTypeToTestSet < ActiveRecord::Migration[4.2]
   def up
     add_column :test_sets, :visibility, :integer, limit: 1, null: false, default: 2
     add_column :test_cases, :problem_id, :integer

@@ -1,4 +1,4 @@
-class AddOptionsToContest < ActiveRecord::Migration
+class AddOptionsToContest < ActiveRecord::Migration[4.2]
   def change
     add_column :contests, :startcode, :string, limit: 255 # plain-text start-code
     add_column :contests, :observation, :integer, default: 1 # for observers: public (everyone), protected (groups it is added to even if not competing), private (only if competing)

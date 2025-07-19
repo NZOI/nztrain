@@ -1,4 +1,4 @@
-class RemoveSubmissionClassificationDefault < ActiveRecord::Migration
+class RemoveSubmissionClassificationDefault < ActiveRecord::Migration[4.2]
   def up
     change_column :submissions, :classification, :integer, default: nil
   end
