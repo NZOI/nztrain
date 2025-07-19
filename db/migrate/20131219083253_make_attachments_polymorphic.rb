@@ -1,4 +1,4 @@
-class MakeAttachmentsPolymorphic < ActiveRecord::Migration
+class MakeAttachmentsPolymorphic < ActiveRecord::Migration[4.2]
   def up
     rename_table :group_file_attachments, :filelinks
     rename_column :filelinks, :group_id, :root_id

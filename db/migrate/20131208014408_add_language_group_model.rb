@@ -1,4 +1,4 @@
-class AddLanguageGroupModel < ActiveRecord::Migration
+class AddLanguageGroupModel < ActiveRecord::Migration[4.2]
   def change
     create_table :language_groups do |t|
       t.string :identifier, limit: 255

@@ -1,4 +1,4 @@
-class RenameSettingMailerUsernameToEmail < ActiveRecord::Migration
+class RenameSettingMailerUsernameToEmail < ActiveRecord::Migration[4.2]
   # this migration can be deleted after deploying
 
   def up

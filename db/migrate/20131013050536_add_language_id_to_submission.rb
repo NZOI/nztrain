@@ -1,4 +1,4 @@
-class AddLanguageIdToSubmission < ActiveRecord::Migration
+class AddLanguageIdToSubmission < ActiveRecord::Migration[4.2]
   def up
     add_column :submissions, :language_id, :integer
     rename_column :submissions, :language, :old_language
