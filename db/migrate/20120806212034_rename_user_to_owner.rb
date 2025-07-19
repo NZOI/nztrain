@@ -1,4 +1,4 @@
-class RenameUserToOwner < ActiveRecord::Migration
+class RenameUserToOwner < ActiveRecord::Migration[4.2]
   def change
     rename_column :contests, :user_id, :owner_id
     rename_column :evaluators, :user_id, :owner_id

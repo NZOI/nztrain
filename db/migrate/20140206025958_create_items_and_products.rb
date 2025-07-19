@@ -1,4 +1,4 @@
-class CreateItemsAndProducts < ActiveRecord::Migration
+class CreateItemsAndProducts < ActiveRecord::Migration[4.2]
   def change
     create_table :entities do |t|
       t.string :name, limit: 255

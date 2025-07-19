@@ -1,4 +1,4 @@
-class AddSchoolCountryYearToUsers < ActiveRecord::Migration
+class AddSchoolCountryYearToUsers < ActiveRecord::Migration[4.2]
   def change
     add_column :users, :school_id, :integer
     add_column :users, :country_code, :string, limit: 3
