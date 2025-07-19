@@ -147,36 +147,6 @@ chroot "$ISOLATE_ROOT" apt-get install ruby # Ruby (ruby)
   echo "$chroot_install ruby2.2"
   chroot "$ISOLATE_ROOT" apt-get install ruby2.2
 
-
-  # install J
-  bash script/confirm.bash 'Install J' && {
-    chroot "$ISOLATE_ROOT" mkdir /home/j -p
-    J_TAG="J803"
-    J_DEB="j803_amd64.deb"
-    J_SAVE="/home/j/$J_DEB"
-    [ -f "$ISOLATE_ROOT/$J_SAVE" ] || {
-      echo "wget -O \"$ISOLATE_ROOT/$J_SAVE\" https://github.com/NZOI/J-install/releases/download/$J_TAG/$J_DEB"
-      wget -O "$ISOLATE_ROOT/$J_SAVE" "https://github.com/NZOI/J-install/releases/download/$J_TAG/$J_DEB"
-    }
-
-    echo "$chroot_cmd dpkg -i $J_SAVE"
-    chroot "$ISOLATE_ROOT" dpkg -i "$J_SAVE"
-
-    cat << EOF > "$ISOLATE_ROOT"/home/j/install.ijs
-load 'pacman'
-'update' jpkg ''
-'install' jpkg 'format/printf'
-'install' jpkg 'format/datefmt'
-'install' jpkg 'types/datetime'
-'upgrade' jpkg 'all'
-exit 0
-EOF
-
-    echo "$chroot_cmd ijconsole /home/j/install.ijs"
-    chroot "$ISOLATE_ROOT" ijconsole /home/j/install.ijs
-  }
-  # end install J
-
 }
 
 if [ ! -f "$ISOLATE_ROOT/usr/bin/cint.rb" ] ; then
