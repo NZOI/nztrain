@@ -8,7 +8,7 @@ def email_address_with_name(address, name)
   end.to_s
 end
 
-if ActiveRecord::Base.connection.table_exists?(Setting.table_name)
+if ActiveRecord::Base.connection.data_source_exists?(Setting.table_name)
   email_setting = Setting.find_by_key("system/mailer/email")
   ActionMailer::Base.smtp_settings[:user_name] = email_setting&.value
   ActionMailer::Base.smtp_settings[:password] = Setting.find_by_key("system/mailer/password")&.value
