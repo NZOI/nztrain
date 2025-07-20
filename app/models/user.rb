@@ -29,18 +29,18 @@ class User < ApplicationRecord
   # NOTE: difference between groups and roles
   # Groups are used to assign local permissions, eg. access to individual problems/problem sets
   # Roles are used to assign global permissions, eg. access to problems on the whole site
-  has_many :memberships, class_name: :GroupMembership, foreign_key: :member_id, dependent: :destroy
+  has_many :memberships, class_name: "GroupMembership", foreign_key: :member_id, dependent: :destroy
   has_many :user_problem_relations, dependent: :destroy
   has_many :groups, through: :memberships
   has_and_belongs_to_many :roles
 
   # has_many :group_invitations, :class_name => :Request, :as => :target, :conditions => { :verb => 'invite', :subject_type => 'Group' }
-  has_many :requests, -> { where("requestee_id = target_id") }, class_name: Request, as: :target
+  has_many :requests, -> { where("requestee_id = target_id") }, class_name: "Request", as: :target
   has_one :entity, as: :entity
 
   belongs_to :school, counter_cache: true
 
-  has_many :contest_supervising, class_name: :ContestSupervisor, dependent: :destroy
+  has_many :contest_supervising, class_name: "ContestSupervisor", dependent: :destroy
 
   # Scopes
 

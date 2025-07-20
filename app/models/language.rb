@@ -1,5 +1,5 @@
 class Language < ApplicationRecord
-  belongs_to :group, class_name: LanguageGroup
+  belongs_to :group, class_name: "LanguageGroup"
 
   def source_filename
     self[:source_filename] || "program"
