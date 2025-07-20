@@ -99,3 +99,5 @@ gem "uglifier", ">=1.0.3"
 gem "mini_racer", "~> 0.4.0"
 gem "yui-compressor"
 # end
+
+gem "puma", "~> 6.6"

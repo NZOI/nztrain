@@ -207,6 +207,8 @@ GEM
       ttfunk (~> 1.5)
     psych (2.0.17)
     public_suffix (4.0.7)
+    puma (6.6.0)
+      nio4r (~> 2.0)
     pundit (1.1.0)
       activesupport (>= 3.0.0)
     pygments.rb (2.3.1)
@@ -408,6 +410,7 @@ DEPENDENCIES
   pg
   prawn
   psych (~> 2.0.2)
+  puma (~> 6.6)
   pundit (~> 1.1.0)
   pygments.rb (~> 2.0)
   qless!
