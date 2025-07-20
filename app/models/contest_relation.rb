@@ -5,7 +5,7 @@ class ContestRelation < ApplicationRecord
   belongs_to :contest
   has_many :contest_scores, dependent: :destroy
   belongs_to :school
-  belongs_to :supervisor, class_name: :User
+  belongs_to :supervisor, class_name: "User"
 
   scope :active, -> { where("started_at <= :now AND finish_at > :now", now: DateTime.now) }
   scope :absent, -> { where(checked_in: false) }

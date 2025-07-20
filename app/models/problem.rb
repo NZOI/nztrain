@@ -1,19 +1,19 @@
 class Problem < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
-  has_many :problem_set_associations, class_name: ProblemSetProblem, inverse_of: :problem, dependent: :destroy
+  has_many :problem_set_associations, class_name: "ProblemSetProblem", inverse_of: :problem, dependent: :destroy
   has_many :problem_sets, through: :problem_set_associations
 
   has_many :test_sets, -> { rank(:problem_order) }, inverse_of: :problem, dependent: :destroy
-  has_many :prerequisite_sets, -> { where(prerequisite: true).rank(:problem_order) }, class_name: TestSet
+  has_many :prerequisite_sets, -> { where(prerequisite: true).rank(:problem_order) }, class_name: "TestSet"
   has_many :test_cases, -> { rank(:problem_order) }, inverse_of: :problem, dependent: :destroy
-  has_many :sample_cases, -> { where(sample: true).rank(:problem_order) }, class_name: TestCase
+  has_many :sample_cases, -> { where(sample: true).rank(:problem_order) }, class_name: "TestCase"
   has_many :submissions, dependent: :destroy
-  has_many :test_submissions, -> { where.not(classification: [Submission::CLASSIFICATION[:ranked], Submission::CLASSIFICATION[:unranked]]).order(:evaluation) }, class_name: Submission
+  has_many :test_submissions, -> { where.not(classification: [Submission::CLASSIFICATION[:ranked], Submission::CLASSIFICATION[:unranked]]).order(:evaluation) }, class_name: "Submission"
 
   has_many :user_problem_relations, dependent: :destroy
 
-  belongs_to :owner, class_name: :User
+  belongs_to :owner, class_name: "User"
   belongs_to :evaluator
 
   has_many :contests, through: :problem_sets
