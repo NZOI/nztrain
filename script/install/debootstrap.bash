@@ -17,7 +17,7 @@ do
     esac
 done
 
-SUITE=xenial
+SUITE=noble
 
 
 new_debootstrap=false
@@ -61,8 +61,8 @@ chroot "$ISOLATE_ROOT" apt-get install software-properties-common # provides add
 
 [ -z "$CI" ] && { # if not in CI
   # python ppa
-  if ! chroot "$ISOLATE_ROOT" apt-cache show python3.4 &>/dev/null ||
-      ! chroot "$ISOLATE_ROOT" apt-cache show python3.8 &>/dev/null; then
+  if ! chroot "$ISOLATE_ROOT" apt-cache show python3.8 &>/dev/null ||
+      ! chroot "$ISOLATE_ROOT" apt-cache show python3.13 &>/dev/null; then
     echo "$chroot_cmd add-apt-repository ppa:deadsnakes/ppa -y"
     chroot "$ISOLATE_ROOT" add-apt-repository ppa:deadsnakes/ppa -y
   fi
@@ -70,10 +70,6 @@ chroot "$ISOLATE_ROOT" apt-get install software-properties-common # provides add
   # pypy ppa
   echo "$chroot_cmd add-apt-repository ppa:pypy/ppa -y"
   chroot "$ISOLATE_ROOT" add-apt-repository ppa:pypy/ppa -y
-
-  # ruby ppa
-  echo "$chroot_cmd add-apt-repository ppa:brightbox/ruby-ng -y"
-  chroot "$ISOLATE_ROOT" add-apt-repository ppa:brightbox/ruby-ng -y
 
   echo "$chroot_cmd apt-get update"
   chroot "$ISOLATE_ROOT" apt-get update
@@ -92,18 +88,9 @@ echo "$chroot_install ruby"
 chroot "$ISOLATE_ROOT" apt-get install ruby # Ruby (ruby)
 
 [ -z "$CI" ] && { # if not in CI
-  # add haskell ppa
-  echo "$chroot_cmd add-apt-repository ppa:hvr/ghc -y"
-  chroot "$ISOLATE_ROOT" add-apt-repository ppa:hvr/ghc -y
 
-  echo "$chroot_cmd apt-get update"
-  chroot "$ISOLATE_ROOT" apt-get update
-
-  echo "$chroot_install ghc-8.8.2"
-  chroot "$ISOLATE_ROOT" apt-get install ghc-8.8.2 # Haskell (ghc)
-
-  echo "$chroot_cmd update-alternatives --install /usr/bin/ghc ghc /opt/ghc/8.8.2/bin/ghc 75"
-  chroot "$ISOLATE_ROOT" update-alternatives --install /usr/bin/ghc ghc /opt/ghc/8.8.2/bin/ghc 75
+  echo "$chroot_install ghc"
+  chroot "$ISOLATE_ROOT" apt-get install ghc # Haskell (ghc)
 
   # Note: Running ghc requires /proc to be mounted. The isolate command mounts
   # it, but it might not be mounted if running ghc manually in the chroot.
@@ -130,22 +117,16 @@ chroot "$ISOLATE_ROOT" apt-get install ruby # Ruby (ruby)
 
 [ -z "$CI" ] && { # if not in CI
 
-  # echo "$chroot_install python"
-  # chroot "$ISOLATE_ROOT" apt-get install python # Python 2 (deprecated)
-  echo "$chroot_install python3.4"
-  chroot "$ISOLATE_ROOT" apt-get install python3.4 # Python 3.4
   echo "$chroot_install python3.8"
   chroot "$ISOLATE_ROOT" apt-get install python3.8 # Python 3.8
+  echo "$chroot_install python3.13"
+  chroot "$ISOLATE_ROOT" apt-get install python3.13 # Python 3.13
   # note: when updating these Python versions, also update the check for adding the PPA above
 
   # PyPy
   # https://www.pypy.org
   echo "$chroot_install pypy3"
   chroot "$ISOLATE_ROOT" apt-get install pypy3
-
-
-  echo "$chroot_install ruby2.2"
-  chroot "$ISOLATE_ROOT" apt-get install ruby2.2
 
 }
 

@@ -3,7 +3,7 @@ require "open3"
 class Isolate
   private
 
-  RESOURCE_OPTIONS = {time: "-t", wall_time: "-w", extra_time: "-x", mem: "-m", stack: "-k", processes: "-p", meta: "-M", stderr: "-r", stdin: "-i", stdout: "-o", cg: "--cg", cg_timing: "--cg-timing", cg_mem: "--cg-mem=", inherit_fds: "--inherit-fds"} # TODO: :quota
+  RESOURCE_OPTIONS = {time: "-t", wall_time: "-w", extra_time: "-x", mem: "-m", stack: "-k", processes: "-p", meta: "-M", stderr: "-r", stdin: "-i", stdout: "-o", cg: "--cg", cg_timing: "--cg-timing", cg_mem: "--cg-mem=", inherit_fds: "--inherit-fds", open_files: "--open-files="} # TODO: :quota
   CONFIG = YAML.load_file(File.expand_path("config/isolate.yml", Rails.root)).symbolize_keys
   META = {"time" => :to_f, "time-wall" => :to_f, "max-rss" => :to_i, "csw-voluntary" => :to_i, "csw-forced" => :to_i, "killed" => :to_i, "cg-mem" => :to_i, "exitsig" => :to_i, "exitcode" => :to_i}
 
@@ -238,8 +238,9 @@ EOF
       "lib" => [], # core libraries
       "lib64" => [], # 64-bit libraries
       "usr" => [], # general binaries, includes and libraries
-      "opt" => [], # for ghc from ppa:hvr/ghc
-      "etc" => []
+      "opt" => [], # for ghc
+      "etc" => [],
+      "var/lib/ghc" => [], # for ghc
       # 'etc/alternatives' => [], # required for many symbolic links to work
     }.map do |dir, opt|
       fullpath = File.expand_path(dir, isolate_root)

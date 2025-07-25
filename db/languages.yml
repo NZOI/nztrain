@@ -20,7 +20,7 @@ c++:
       name: "C++03"
       compiler: g++
       compiler_command: "%{compiler} --version | head -n 1 1>&2 && %{compiler} -std=gnu++03 -O2 -o %{output} %{source} -lm"
-    c++11:
+    c++11: # deprecated
       name: "C++11"
       compiler: g++
       compiler_command: "%{compiler} --version | head -n 1 1>&2 && %{compiler} -std=gnu++11 -O2 -o %{output} %{source} -lm"
@@ -85,7 +85,7 @@ haskell:
   extension: .hs
   source_filename: program
   exe_extension: .exe
-  processes: 1
+  processes: 2
   variants:
     haskell2010:
       name: "Haskell 2010"
@@ -97,7 +97,7 @@ python:
   lexer: python
   compiled: no
   interpreted: yes
-  current: python3.8
+  current: python3.13
   extension: .py
   source_filename: program
   processes: 1
@@ -110,11 +110,17 @@ python:
     python3.4: # deprecated
       name: "Python 3.4"
       interpreter: /usr/bin/python3.4
-    python3.8:
+    python3.8: # deprecated
       name: "Python 3.8"
       interpreter: /usr/bin/python3.8
-    pypy3:
-      name: "Python 3.6 (PyPy 7.3)"
+    python3.13:
+      name: "Python 3.13"
+      interpreter: /usr/bin/python3.13
+    pypy3.6: # deprecated
+      name: "Python 3.6 (PyPy 7.3.7)"
+      interpreter: /usr/bin/pypy3
+    pypy3.11:
+      name: "Python 3.11 (PyPy 7.3.19)"
       interpreter: /usr/bin/pypy3
 
 ruby:
@@ -122,46 +128,59 @@ ruby:
   lexer: ruby
   compiled: no
   interpreted: yes
-  current: ruby2.2
+  current: ruby3.2
   extension: .rb
   source_filename: program
-  processes: 2 # ruby seems to have an extra process
   interpreter_command: "%{interpreter} %{source}"
   compiler_command: "%{interpreter} -c %{source}"
   variants:
-    ruby2.2:
+    ruby2.2: # deprecated
       name: "Ruby 2.2"
       interpreter: /usr/bin/ruby2.2
+      processes: 2 # ruby2.2 seems to have an extra process
+    ruby3.2:
+      name: "Ruby 3.2"
+      interpreter: /usr/bin/ruby
+      processes: 1
 
 javascript:
   name: JavaScript
   lexer: javascript
   compiled: no
   interpreted: yes
-  current: v8_8
+  current: v8_14
   extension: .js
   source_filename: program
   interpreter_command: "%{interpreter} %{source}"
   variants:
-    v8_8:
+    v8_8: # deprecated
       name: "JavaScript (V8 8.1)"
       interpreter: /usr/local/bin/d8
       processes: 9
+    v8_14:
+      name: "JavaScript (V8 14.0)"
+      interpreter: /usr/local/bin/d8
+      processes: 4
 
 csharp:
   name: "C#"
   lexer: csharp
   compiled: yes
   interpreted: yes
-  current: csharp8
+  current: csharp12
   extension: .cs
   source_filename: program
   exe_extension: .exe
-  processes: 5
+  processes: 9
   interpreter: /usr/local/bin/dotnet-exec # custom shell script
   variants:
     csharp8:
-      name: "C# 8.0"
+      name: "C# 8.0" # deprecated
       compiler: dotnet-csc # custom shell script (also prints SDK version number)
       compiler_command: "%{compiler} %{source} -optimize+ -out:%{output} -langversion:8.0 -nologo"
+      interpreter_command: "%{interpreter} %{source}"
+    csharp12:
+      name: "C# 12.0"
+      compiler: dotnet-csc # custom shell script (also prints SDK version number)
+      compiler_command: "%{compiler} %{source} -optimize+ -out:%{output} -langversion:12.0 -nologo"
       interpreter_command: "%{interpreter} %{source}"
