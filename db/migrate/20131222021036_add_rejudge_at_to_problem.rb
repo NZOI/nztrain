@@ -1,4 +1,4 @@
-class AddRejudgeAtToProblem < ActiveRecord::Migration
+class AddRejudgeAtToProblem < ActiveRecord::Migration[4.2]
   def change
     add_column :problems, :rejudge_at, :timestamp
 

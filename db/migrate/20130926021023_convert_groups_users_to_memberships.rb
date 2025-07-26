@@ -1,4 +1,4 @@
-class ConvertGroupsUsersToMemberships < ActiveRecord::Migration
+class ConvertGroupsUsersToMemberships < ActiveRecord::Migration[4.2]
   def up
     rename_table :groups_users, :memberships
     add_column :memberships, :id, :primary_key
