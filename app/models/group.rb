@@ -1,23 +1,23 @@
 class Group < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
-  has_many :memberships, class_name: GroupMembership, dependent: :destroy
+  has_many :memberships, class_name: "GroupMembership", dependent: :destroy
   has_many :members, through: :memberships
-  has_many :problem_set_associations, -> { includes(:problem_set).order("COALESCE(group_problem_sets.name,problem_sets.name)").references(:group_problem_sets, :problem_sets) }, class_name: GroupProblemSet, dependent: :destroy, inverse_of: :group
+  has_many :problem_set_associations, -> { includes(:problem_set).order("COALESCE(group_problem_sets.name,problem_sets.name)").references(:group_problem_sets, :problem_sets) }, class_name: "GroupProblemSet", dependent: :destroy, inverse_of: :group
   has_many :problem_sets, through: :problem_set_associations
-  has_many :contest_associations, class_name: GroupContest, inverse_of: :group, dependent: :destroy
+  has_many :contest_associations, class_name: "GroupContest", inverse_of: :group, dependent: :destroy
   has_many :contests, through: :contest_associations
 
-  belongs_to :owner, class_name: :User
+  belongs_to :owner, class_name: "User"
 
-  has_many :join_requests, -> { where(subject_type: "User", verb: "join") }, class_name: :Request, as: :target
+  has_many :join_requests, -> { where(subject_type: "User", verb: "join") }, class_name: "Request", as: :target
   # , -> { where :subject_type => :users, :verb => :join }
   # has_many :applicants, :through => :applications, :source => :subject, :source_type => 'User'
   # def applicants
   #  self.join_requests.pending.subject
   # end
 
-  has_many :invitations, -> { where(verb: "invite", target_type: "User") }, class_name: :Request, as: :subject
+  has_many :invitations, -> { where(verb: "invite", target_type: "User") }, class_name: "Request", as: :subject
   # , -> { where :verb => :invite, :target_type => :users }
   # has_many :invitees, :through => :invitations, :source => :target, :source_type => 'User', :conditions => { :status => Request::STATUS[:pending] } # TODO: expired_at condition
 
