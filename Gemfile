@@ -108,3 +108,4 @@ gem "yui-compressor"
 # end
 
 gem "puma", "~> 6.6"
+gem "sd_notify"

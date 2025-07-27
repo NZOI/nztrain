@@ -329,6 +329,7 @@ GEM
     ruby2_keywords (0.0.5)
     rubyzip (1.3.0)
     rusage (0.2.0)
+    sd_notify (0.1.1)
     sentry-rails (5.26.0)
       railties (>= 5.0)
       sentry-ruby (~> 5.26.0)
@@ -458,6 +459,7 @@ DEPENDENCIES
   rspec-rails (~> 3.0)
   ruby-duration
   rubyzip (= 1.3.0)
+  sd_notify
   sentry-rails
   simple-navigation (= 3.11.0)
   simple_form (= 3.3.1)
