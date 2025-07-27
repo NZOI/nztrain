@@ -1,4 +1,4 @@
-class FixBadMarkdown < ActiveRecord::Migration
+class FixBadMarkdown < ActiveRecord::Migration[4.2]
   def fix_titles(string)
     toplevel = 10
     pos = 0

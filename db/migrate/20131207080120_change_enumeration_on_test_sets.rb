@@ -1,4 +1,4 @@
-class ChangeEnumerationOnTestSets < ActiveRecord::Migration
+class ChangeEnumerationOnTestSets < ActiveRecord::Migration[4.2]
   def up
     change_column :test_sets, :visibility, :integer, limit: 1, default: 0
     execute "UPDATE test_sets SET visibility = 3 WHERE visibility = 0" # sample

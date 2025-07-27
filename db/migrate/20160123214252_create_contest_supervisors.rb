@@ -1,4 +1,4 @@
-class CreateContestSupervisors < ActiveRecord::Migration
+class CreateContestSupervisors < ActiveRecord::Migration[4.2]
   def change
     create_table :contest_supervisors do |t|
       t.integer :contest_id
