@@ -37,7 +37,7 @@ append :linked_dirs, "log", "db/data", "tmp/pids", "tmp/cache", "tmp/sockets", "
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
 
-namespace :deploy do
+namespace :puma do
   task :restart do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
       within release_path do
@@ -45,6 +45,22 @@ namespace :deploy do
       end
     end
   end
-
-  after :deploy, "deploy:restart"
 end
+
+namespace :qless do
+  task :start do
+    on roles(:app), in: :groups, limit: 3, wait: 10 do
+      execute "sudo", "/usr/bin/systemctl", "start", "qless"
+    end
+  end
+
+  task :stop do
+    on roles(:app), in: :groups, limit: 3, wait: 10 do
+      execute "sudo", "/usr/bin/systemctl", "stop", "qless"
+    end
+  end
+end
+
+before "deploy:migrate", "qless:stop"
+after "deploy", "puma:restart"
+after "deploy", "qless:start"
