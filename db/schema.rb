@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20250318053450) do
+ActiveRecord::Schema.define(version: 20250901194834) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -75,6 +75,7 @@ ActiveRecord::Schema.define(version: 20250318053450) do
     t.integer  "affiliation",                                default: 0
     t.boolean  "live_scoreboard",                            default: true
     t.boolean  "only_rank_official_contestants",             default: false
+    t.boolean  "use_subtask_scoring",                        default: false, null: false
   end
 
   create_table "entities", force: :cascade do |t|
