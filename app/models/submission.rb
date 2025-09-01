@@ -110,6 +110,16 @@ class Submission < ApplicationRecord
     JudgeData.new(judge_log, Hash[problem.test_sets.map { |s| [s.id, s.test_case_ids] }], problem.test_case_ids, problem.prerequisite_set_ids)
   end
 
+  # Judge data but without per-testcase information. Is faster to generate since it doesn't query to get the testcases
+  def fast_judge_data
+    JudgeData.new(
+      judge_log,
+      Hash[problem.test_sets.map{|s|[s.id, []]}],
+      [],
+      []
+    );
+  end
+
   def test_judge
     JudgeSubmissionWorker.new.perform(id)
   end

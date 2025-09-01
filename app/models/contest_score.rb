@@ -19,10 +19,18 @@ class ContestScore < ApplicationRecord
         destroy # in case already in database - this occurs if submissions get deleted
       else
         self.attempts = attempts # attempts
-        submission = submissions.order("evaluation DESC, created_at ASC").first
-        self.attempt = submissions.where("created_at <= ?", submission.created_at).count # attempts number
+
+        if self.contest_relation.contest.use_subtask_scoring
+          weighting = contest.problem_set.problem_associations.find_by(problem_id: problem_id).weighting
+          unweighted_score, self.attempt, submission = problem.score_problem_submissions(submissions.order("created_at ASC"))
+          self.score = (unweighted_score * weighting).to_i
+        else
+          submission = submissions.order("evaluation DESC, created_at ASC").first
+          self.attempt = submissions.where("created_at <= ?", submission.created_at).count # attempts number
+          self.score = submission.weighted_score(contest.problem_set.problem_associations.find_by(problem_id: problem_id).weighting)
+        end
+
         self.submission_id = submission.id
-        self.score = submission.weighted_score(contest.problem_set.problem_associations.find_by(problem_id: problem_id).weighting)
         save
       end
     end
