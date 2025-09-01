@@ -35,7 +35,7 @@ class Contest < ApplicationRecord
       end
     end
 
-    update_contest_scores if (finalized_at_was && finalized_at.nil?)
+    update_contest_scores if finalized_at_was && finalized_at.nil?
     true
   end
 

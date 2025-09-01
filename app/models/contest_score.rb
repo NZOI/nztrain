@@ -20,7 +20,7 @@ class ContestScore < ApplicationRecord
       else
         self.attempts = attempts # attempts
 
-        if self.contest_relation.contest.use_subtask_scoring
+        if contest_relation.contest.use_subtask_scoring
           weighting = contest.problem_set.problem_associations.find_by(problem_id: problem_id).weighting
           unweighted_score, self.attempt, submission = problem.score_problem_submissions(submissions.order("created_at ASC"))
           self.score = (unweighted_score * weighting).to_i
