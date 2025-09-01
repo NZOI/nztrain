@@ -35,8 +35,13 @@ class Contest < ApplicationRecord
       end
     end
 
-    update_contest_scores if finalized_at_was && finalized_at.nil?
+    update_contest_scores if (finalized_at_was && finalized_at.nil?)
     true
+  end
+
+  after_save do
+    # Must run after save, since otherwise contest scores won't have the new 'use_subtask_scoring' values
+    update_contest_scores if use_subtask_scoring_changed?
   end
 
   # calculate contest scores again from scratch
