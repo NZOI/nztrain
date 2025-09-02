@@ -39,11 +39,6 @@ class Contest < ApplicationRecord
     true
   end
 
-  after_save do
-    # Must run after save, since otherwise contest scores won't have the new 'use_subtask_scoring' values
-    update_contest_scores if use_subtask_scoring_changed?
-  end
-
   # calculate contest scores again from scratch
   def update_contest_scores
     problems = problem_set.problems

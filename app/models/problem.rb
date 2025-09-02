@@ -25,6 +25,9 @@ class Problem < ApplicationRecord
 
   validates :name, presence: true
 
+  SCORING_METHOD = Enumeration.new 0 => :max_submission, 1 => :subtask_scoring
+  validates :scoring_method, presence: true, inclusion: { in: [0, 1] }
+
   before_save do
     self.input = "data.in" if input == ""
     self.output = "data.out" if output == ""

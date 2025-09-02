@@ -1,6 +1,6 @@
 class ProblemsController < ApplicationController
   def permitted_params
-    permitted_attributes = [:name, :statement, :memory_limit, :time_limit, :input_type, :output_type, :evaluator_id]
+    permitted_attributes = [:name, :statement, :memory_limit, :time_limit, :input_type, :output_type, :evaluator_id, :scoring_method]
     permitted_attributes << :owner_id if policy(@problem || Problem).transfer?
     permitted_attributes << :input if params.require(:problem)[:input_type] == "file"
     permitted_attributes << :output if params.require(:problem)[:output_type] == "file"
