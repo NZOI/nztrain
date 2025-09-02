@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20250902233414) do
+ActiveRecord::Schema.define(version: 20250903000840) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -358,6 +358,7 @@ ActiveRecord::Schema.define(version: 20250902233414) do
     t.datetime "first_viewed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.decimal  "unweighted_score"
     t.index ["problem_id", "ranked_score"], name: "index_user_problem_relations_on_problem_id_and_ranked_score", using: :btree
     t.index ["user_id", "problem_id"], name: "index_user_problem_relations_on_user_id_and_problem_id", unique: true, using: :btree
   end
