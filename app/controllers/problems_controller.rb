@@ -38,9 +38,11 @@ class ProblemsController < ApplicationController
 
     @all_subs = {}
     @sub_count = {}
-    @problem.submissions.each do |sub|
-      @all_subs[sub.user] = [(@all_subs[sub.user] or sub), sub].max_by { |m| m.score or 0 }
-      @sub_count[sub.user] = (@sub_count[sub.user] or 0) + 1
+    @problem.user_problem_relations.order(:created_at).each do |rel|
+      if rel.submissions_count && rel.submissions_count > 0
+        @sub_count[rel.user] = rel.submissions_count
+        @all_subs[rel.user] = [rel.unweighted_score, rel.submission]
+      end
     end
     @all_subs = @all_subs.map { |s| s[1] }
 

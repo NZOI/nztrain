@@ -20,16 +20,9 @@ class ContestScore < ApplicationRecord
       else
         self.attempts = attempts # attempts
 
-        if Problem::SCORING_METHOD[problem.scoring_method] == :subtask_scoring
-          weighting = contest.problem_set.problem_associations.find_by(problem_id: problem_id).weighting
-          unweighted_score, self.attempt, submission = problem.score_problem_submissions(submissions.order("created_at ASC"))
-          self.score = (unweighted_score * weighting).to_i
-        else
-          submission = submissions.order("evaluation DESC, created_at ASC").first
-          self.attempt = submissions.where("created_at <= ?", submission.created_at).count # attempts number
-          self.score = submission.weighted_score(contest.problem_set.problem_associations.find_by(problem_id: problem_id).weighting)
-        end
-
+        weighting = contest.problem_set.problem_associations.find_by(problem_id: problem_id).weighting
+        unweighted_score, self.attempt, submission = problem.score_problem_submissions(submissions) # Does correct subtask or maximum scoring
+        self.score = (unweighted_score * weighting).to_i
         self.submission_id = submission.id
         save
       end
