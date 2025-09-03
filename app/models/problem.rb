@@ -41,6 +41,14 @@ class Problem < ApplicationRecord
       user_problem_relations.find_each do |relation|
         relation.recalculate_and_save
       end
+      # Update unfinalized contests that have this problem
+      problem_sets.each do |set|
+        set.contests.where(finalized_at: nil).each do |contest|
+          ContestScore.joins(:contest_relation).where(contest_relations: {contest_id: contest.id}, problem_id: id).select([:contest_relation_id, :problem_id, :id, :score, :attempts, :attempt, :submission_id, :updated_at]).find_each do |contest_score|
+            contest_score.recalculate_and_save
+          end
+        end
+      end
     end
   end
 
@@ -110,7 +118,7 @@ class Problem < ApplicationRecord
     if submissions.empty?
       return nil, nil, nil
     end
-    
+
     if Problem::SCORING_METHOD[scoring_method] == :subtask_scoring
       testsets = self.test_sets;
       max_points_on_testset = {};
