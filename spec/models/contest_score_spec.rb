@@ -83,18 +83,18 @@ describe ContestRelation do
   context "with subtask scoring" do
     before(:all) do
       @subtask_scoring_problem = FactoryBot.create(:problem, problem_sets: [@problem_set], scoring_method: 1) # Uses subtask scoring
-      @subtask_one = FactoryBot.create(:test_set, points: 13, problem: @subtask_scoring_problem)
-      @subtask_two = FactoryBot.create(:test_set, points: 17, problem: @subtask_scoring_problem)
-      @subtask_three = FactoryBot.create(:test_set, points: 70, problem: @subtask_scoring_problem)
+      @subtask_one = FactoryBot.create(:test_set, points: 25, problem: @subtask_scoring_problem)
+      @subtask_two = FactoryBot.create(:test_set, points: 15, problem: @subtask_scoring_problem)
+      @subtask_three = FactoryBot.create(:test_set, points: 60, problem: @subtask_scoring_problem)
 
       @subtask_one_solution = FactoryBot.create(
-        :submission, user: @user, problem: @subtask_scoring_problem, created_at: @relation.started_at.advance(hours: 1), maximum_points: 100, points: 13,
-                     judge_log: '{"test_cases":{},"test_sets":{"' + @subtask_one.id.to_s + '":{"evaluation":1}, "' + @subtask_two.id.to_s + '":{"evaluation":0}, "' + @subtask_three.id.to_s + '":{"evaluation":0}}}'
+        :submission, user: @user, problem: @subtask_scoring_problem, created_at: @relation.started_at.advance(hours: 1), maximum_points: 100, points: 25,
+                     judge_log: make_eval_string([[@subtask_one, 1], [@subtask_two, 0], [@subtask_three, 0]])
       )
 
       @subtask_two_solution = FactoryBot.create(
-        :submission, user: @user, problem: @subtask_scoring_problem, created_at: @relation.started_at.advance(hours: 1.5), maximum_points: 100, points: 17,
-                     judge_log: '{"test_cases":{},"test_sets":{"' + @subtask_one.id.to_s + '":{"evaluation":0}, "' + @subtask_two.id.to_s + '":{"evaluation":1}, "' + @subtask_three.id.to_s + '":{"evaluation":0}}}'
+        :submission, user: @user, problem: @subtask_scoring_problem, created_at: @relation.started_at.advance(hours: 1.5), maximum_points: 100, points: 15,
+                     judge_log: make_eval_string([[@subtask_one, 0], [@subtask_two, 1], [@subtask_three, 0]])
       )
     end
 
@@ -108,6 +108,21 @@ describe ContestRelation do
     end
 
     it "calculates subtask scores correctly" do
+      expect(ContestScore.where(submission_id: @subtask_two_solution.id).first.try(:score)).to eq(40)
+    end
+    it "updates scores correctly when scoring_method changes" do
+      expect(ContestScore.where(submission_id: @subtask_two_solution.id).first.try(:score)).to eq(40)
+      @subtask_scoring_problem.scoring_method = 0
+      @subtask_scoring_problem.save
+      expect(ContestScore.where(submission_id: @subtask_one_solution.id).first.try(:score)).to eq(25)
+      @subtask_scoring_problem.scoring_method = 1
+      @subtask_scoring_problem.save
+      expect(ContestScore.where(submission_id: @subtask_two_solution.id).first.try(:score)).to eq(40)
+    end
+    it "updates scores correctly when evaluation changes" do
+      expect(ContestScore.where(submission_id: @subtask_two_solution.id).first.try(:score)).to eq(40)
+      @subtask_one_solution.judge_log = make_eval_string([[@subtask_one, 0.6], [@subtask_two, 2.0 / 3.0], [@subtask_three, 0]]) # Stil comes out to 25 points total
+      @subtask_one_solution.save
       expect(ContestScore.where(submission_id: @subtask_two_solution.id).first.try(:score)).to eq(30)
     end
   end

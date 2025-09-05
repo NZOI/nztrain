@@ -57,7 +57,9 @@ class Submission < ApplicationRecord
   end
 
   after_save do
-    if evaluation_changed? # only update if score changed
+    # only update if score changed or judge_log changed (since subtasks scoring depends on judge log). If judge_log has become nil, that means
+    # a rejudge was trigged. We don't update immediately we will wait until the rejudge is done
+    if evaluation_changed? || (judge_log_changed? && !judge_log.nil?)
       contests.select("contest_relations.id, contests.finalized_at").find_each do |record|
         # only update contest score if contest not yet sealed
         if record.finalized_at.nil? # are results finalized?

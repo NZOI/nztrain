@@ -52,6 +52,7 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::IntegrationHelpers, type: :request
   config.include ControllersSpecHelper, type: :controller # some macros for testing controllers
+  config.include ModelsSpecHelper, type: :model
   config.render_views # don't stub views when testing controllers
 
   config.include RequestsSpecHelper, type: :feature # use warden to shortcut login

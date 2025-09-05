@@ -41,17 +41,15 @@ class ProblemsController < ApplicationController
     @problem.user_problem_relations.order(:created_at).each do |rel|
       if rel.submissions_count && rel.submissions_count > 0
         @sub_count[rel.user] = rel.submissions_count
-        if rel.submission.nil? # Submissions errored, has zero points
+        @all_subs[rel.user] = if rel.submission.nil? # Submissions errored, has zero points
           # Find first submission of user, shouldn't happen much so is probably fine if this is "slow"
-          puts "Submissions: #{@submissions.all.map(&:id)} #{current_user}"
-          @all_subs[rel.user] = [rel.unweighted_score, @problem.submissions.where(user_id: rel.user_id).order(:created_at).first]
+          [rel.unweighted_score, @problem.submissions.where(user_id: rel.user_id).order(:created_at).first]
         else
-          @all_subs[rel.user] = [rel.unweighted_score, rel.submission]
+          [rel.unweighted_score, rel.submission]
         end
       end
     end
     @all_subs = @all_subs.map { |s| s[1] }
-    puts "All subs: #{@all_subs}"
 
     if user_signed_in?
       UserProblemRelation.where(user_id: current_user.id, problem_id: params[:id]).first_or_create!.view! unless in_su?
