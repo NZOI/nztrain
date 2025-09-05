@@ -12,7 +12,7 @@
   	  <% if sub.user != nil %>
         <tr>
           <td> <%= link_to handle(sub.user), sub.user %> </td>
-          <td> <%= progress_bar(sub_score*100, sub) %><div style="display: inline-block; vertical-align: middle; text-align: right; width: 2.5em;">(<%= link_to @sub_count[sub.user], :controller => "submissions", :by_user => sub.user, :by_problem => @problem %>)</div> </td>
+          <td> <%= progress_bar(sub_score.nil? ? nil : sub_score*100,sub) %><div style="display: inline-block; vertical-align: middle; text-align: right; width: 2.5em;">(<%= link_to @sub_count[sub.user], :controller => "submissions", :by_user => sub.user, :by_problem => @problem %>)</div> </td>
         </tr>
       <% end %>
     <% end %>
