@@ -1,6 +1,6 @@
 class ProblemsController < ApplicationController
   def permitted_params
-    permitted_attributes = [:name, :statement, :memory_limit, :time_limit, :input_type, :output_type, :evaluator_id]
+    permitted_attributes = [:name, :statement, :memory_limit, :time_limit, :input_type, :output_type, :evaluator_id, :scoring_method]
     permitted_attributes << :owner_id if policy(@problem || Problem).transfer?
     permitted_attributes << :input if params.require(:problem)[:input_type] == "file"
     permitted_attributes << :output if params.require(:problem)[:output_type] == "file"
@@ -38,9 +38,16 @@ class ProblemsController < ApplicationController
 
     @all_subs = {}
     @sub_count = {}
-    @problem.submissions.each do |sub|
-      @all_subs[sub.user] = [(@all_subs[sub.user] or sub), sub].max_by { |m| m.score or 0 }
-      @sub_count[sub.user] = (@sub_count[sub.user] or 0) + 1
+    @problem.user_problem_relations.order(:created_at).each do |rel|
+      if rel.submissions_count && rel.submissions_count > 0
+        @sub_count[rel.user] = rel.submissions_count
+        @all_subs[rel.user] = if rel.submission.nil? # Submissions errored, has zero points
+          # Find first submission of user, shouldn't happen much so is probably fine if this is "slow"
+          [rel.unweighted_score, @problem.submissions.where(user_id: rel.user_id).order(:created_at).first]
+        else
+          [rel.unweighted_score, rel.submission]
+        end
+      end
     end
     @all_subs = @all_subs.map { |s| s[1] }
 

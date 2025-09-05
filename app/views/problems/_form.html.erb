@@ -49,6 +49,14 @@
       <%= handle(@problem.owner) %>
     <% end %>
   </div>
+  <div class="field">
+    <%= f.label :scoring_method %><br />
+    <%= f.select :scoring_method, [["Max Submission", Problem::SCORING_METHOD[:max_submission]], ["Subtask Scoring", Problem::SCORING_METHOD[:subtask_scoring]]] %><br />
+    <ul>
+      <li>Max Submission: A user's score in this problem is determined by the highest scoring submissions they have on this problem.</li>
+      <li>Subtask Scoring: A user's score is the sum of the best scores they have achieved in every subtask, potentially across different submissions.</li>
+    </ul>
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>

@@ -25,6 +25,9 @@ class Problem < ApplicationRecord
 
   validates :name, presence: true
 
+  SCORING_METHOD = Enumeration.new 0 => :max_submission, 1 => :subtask_scoring
+  validates :scoring_method, presence: true, inclusion: { in: [0, 1] }
+
   before_save do
     self.input = "data.in" if input == ""
     self.output = "data.out" if output == ""
@@ -34,6 +37,18 @@ class Problem < ApplicationRecord
   after_save do
     if rejudge_at_changed? && submissions.any?
       job = RejudgeProblemWorker.rejudge(self)
+    elsif scoring_method_changed?
+      user_problem_relations.find_each do |relation|
+        relation.recalculate_and_save
+      end
+      # Update unfinalized contests that have this problem
+      problem_sets.each do |set|
+        set.contests.where(finalized_at: nil).each do |contest|
+          ContestScore.joins(:contest_relation).where(contest_relations: {contest_id: contest.id}, problem_id: id).select([:contest_relation_id, :problem_id, :id, :score, :attempts, :attempt, :submission_id, :updated_at]).find_each do |contest_score|
+            contest_score.recalculate_and_save
+          end
+        end
+      end
     end
   end
 
@@ -92,7 +107,64 @@ class Problem < ApplicationRecord
 
   # only used when properly joined with submission and problem_set_problems
   def weighted_score
-    return nil if points.nil?
-    points * weighting / maximum_points
+    return nil if unweighted_score.nil?
+    unweighted_score * weighting
+  end
+
+  # Calculate's the score for a problem based on a list of submissions
+  # The score is determined using the correct scoring method
+  # Returns [the score (0..1), the number of attempts needed to get that score, the last submission that earned points]
+  def score_problem_submissions(submissions)
+    if submissions.empty?
+      return nil, nil, nil
+    end
+
+    if Problem::SCORING_METHOD[scoring_method] == :subtask_scoring
+      testsets = self.test_sets;
+      max_points_on_testset = {};
+      test_set_values = {};
+
+      # Maximum number of points possible on this problem (sum of testset points)
+      max_points = 0;
+      testsets.each do |testset|
+        max_points_on_testset[testset.id] = 0;
+        test_set_values[testset.id] = testset.points;
+        max_points += testset.points;
+      end
+
+      submissions = submissions.order("created_at ASC");
+
+      best_submission = submissions.first;
+      attempt = 1;
+
+      submissions.each_with_index do |submission, idx|
+        improved_score = false;
+
+        submission.fast_judge_data.test_sets.each do |(test_set_id, set_data)|
+          if test_set_values.has_key?(test_set_id)
+            score_from_test_set = test_set_values[test_set_id] * set_data.evaluation
+            if score_from_test_set > max_points_on_testset[test_set_id]
+              max_points_on_testset[test_set_id] = score_from_test_set
+              improved_score = true;
+            end
+          end
+        end
+
+        if improved_score
+          best_submission = submission;
+          attempt = idx + 1;
+        end
+      end
+
+      total_points = max_points_on_testset.values.sum
+      score = (max_points == 0) ? 0 : total_points / max_points
+      return score, attempt, best_submission
+    else
+      # Max submission scoring
+      submission = submissions.order("evaluation DESC, created_at ASC").first
+      attempt = submissions.where("created_at <= ?", submission.created_at).count
+      score = submission.points.nil? || submission.maximum_points == 0 ? nil : submission.points / submission.maximum_points
+      return score, attempt, submission
+    end
   end
 end
