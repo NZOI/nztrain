@@ -21,7 +21,7 @@ class ContestScore < ApplicationRecord
         self.attempts = attempts # attempts
 
         weighting = contest.problem_set.problem_associations.find_by(problem_id: problem_id).weighting
-        unweighted_score, self.attempt, submission = problem.score_problem_submissions(submissions) # Does correct subtask or maximum scoring
+        unweighted_score, self.attempt, submission = ScoringMethods.score_problem_submissions(problem, submissions) # Does correct subtask or maximum scoring
         self.score = (unweighted_score * weighting).to_i
         self.submission_id = submission.id
         save
