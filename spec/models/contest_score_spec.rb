@@ -6,9 +6,9 @@ describe ContestRelation do
     @contest = FactoryBot.build(:contest, duration: 5.0, start_time: "01/01/2012 9:00:00", end_time: "01/01/2012 18:00:00", problem_set: @problem_set, finalized_at: nil)
     @user = FactoryBot.create(:user, username: "contest_score_spec.model.user")
     @relation = FactoryBot.create(:contest_relation, contest: @contest, user: @user, started_at: @contest.start_time.advance(hours: 2))
-    @problem_stub = FactoryBot.create(:problem, problem_sets: [@problem_set], scoring_method: 0) # Uses max-submission scoring
+    @problem_stub = FactoryBot.create(:problem, problem_sets: [@problem_set], scoring_method: :max_submission_scoring) # Uses max-submission scoring
     @submission_stub = FactoryBot.create(:submission, user: @user, problem: @problem_stub, maximum_points: 100, points: 14, created_at: @relation.started_at.advance(hours: 1))
-    @adding_problem = FactoryBot.create(:adding_problem, problem_sets: [@problem_set], scoring_method: 0)
+    @adding_problem = FactoryBot.create(:adding_problem, problem_sets: [@problem_set], scoring_method: :max_submission_scoring)
     @adding_submission = FactoryBot.create(:adding_submission, user: @user, problem: @adding_problem, created_at: @relation.started_at.advance(hours: 1), maximum_points: 100)
     # @contestscore = FactoryBot.create(:contest_score
   end
@@ -82,7 +82,7 @@ describe ContestRelation do
   end
   context "with subtask scoring" do
     before(:all) do
-      @subtask_scoring_problem = FactoryBot.create(:problem, problem_sets: [@problem_set], scoring_method: 1) # Uses subtask scoring
+      @subtask_scoring_problem = FactoryBot.create(:problem, problem_sets: [@problem_set], scoring_method: :subtask_scoring) # Uses subtask scoring
       @subtask_one = FactoryBot.create(:test_set, points: 25, problem: @subtask_scoring_problem)
       @subtask_two = FactoryBot.create(:test_set, points: 15, problem: @subtask_scoring_problem)
       @subtask_three = FactoryBot.create(:test_set, points: 60, problem: @subtask_scoring_problem)
@@ -112,10 +112,10 @@ describe ContestRelation do
     end
     it "updates scores correctly when scoring_method changes" do
       expect(ContestScore.where(submission_id: @subtask_two_solution.id).first.try(:score)).to eq(40)
-      @subtask_scoring_problem.scoring_method = 0
+      @subtask_scoring_problem.scoring_method = :max_submission_scoring
       @subtask_scoring_problem.save
       expect(ContestScore.where(submission_id: @subtask_one_solution.id).first.try(:score)).to eq(25)
-      @subtask_scoring_problem.scoring_method = 1
+      @subtask_scoring_problem.scoring_method = :subtask_scoring
       @subtask_scoring_problem.save
       expect(ContestScore.where(submission_id: @subtask_two_solution.id).first.try(:score)).to eq(40)
     end

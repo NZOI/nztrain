@@ -9,7 +9,7 @@ describe UserProblemRelation do
   end
   context "with subtask scoring" do
     before(:all) do
-      @subtask_scoring_problem = FactoryBot.create(:problem, scoring_method: 1) # Uses subtask scoring
+      @subtask_scoring_problem = FactoryBot.create(:problem, scoring_method: :subtask_scoring) # Uses subtask scoring
       @subtask_one = FactoryBot.create(:test_set, points: 25, problem: @subtask_scoring_problem)
       @subtask_two = FactoryBot.create(:test_set, points: 15, problem: @subtask_scoring_problem)
       @subtask_three = FactoryBot.create(:test_set, points: 60, problem: @subtask_scoring_problem)
@@ -39,10 +39,10 @@ describe UserProblemRelation do
     end
     it "updates scores correctly when scoring_method changes" do
       expect(UserProblemRelation.where(user_id: @user.id, problem_id: @subtask_scoring_problem.id).first.try(:unweighted_score)).to eq(0.4)
-      @subtask_scoring_problem.scoring_method = 0
+      @subtask_scoring_problem.scoring_method = :max_submission_scoring
       @subtask_scoring_problem.save
       expect(UserProblemRelation.where(user_id: @user.id, problem_id: @subtask_scoring_problem.id).first.try(:unweighted_score)).to eq(0.25)
-      @subtask_scoring_problem.scoring_method = 1
+      @subtask_scoring_problem.scoring_method = :subtask_scoring
       @subtask_scoring_problem.save
       expect(UserProblemRelation.where(user_id: @user.id, problem_id: @subtask_scoring_problem.id).first.try(:unweighted_score)).to eq(0.4)
     end

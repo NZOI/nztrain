@@ -25,8 +25,10 @@ class Problem < ApplicationRecord
 
   validates :name, presence: true
 
-  SCORING_METHOD = Enumeration.new 0 => :max_submission, 1 => :subtask_scoring
-  validates :scoring_method, presence: true, inclusion: { in: [0, 1] }
+  enum scoring_method: {
+    max_submission_scoring: 0,
+    subtask_scoring: 1
+  }
 
   before_save do
     self.input = "data.in" if input == ""
@@ -119,7 +121,7 @@ class Problem < ApplicationRecord
       return nil, nil, nil
     end
 
-    if Problem::SCORING_METHOD[scoring_method] == :subtask_scoring
+    if scoring_method == "subtask_scoring"
       testsets = self.test_sets;
       max_points_on_testset = {};
       test_set_values = {};

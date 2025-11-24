@@ -3,7 +3,7 @@ require "spec_helper"
 describe ProblemSetProblem, type: :model do
   let(:user) { FactoryBot.create(:user) }
 
-  let(:problem) { FactoryBot.create(:problem, scoring_method: 0) } # Use max-submission scoring
+  let(:problem) { FactoryBot.create(:problem, scoring_method: :max_submission_scoring) } # Use max-submission scoring
   let(:problem_set) { FactoryBot.create(:problem_set) }
 
   let(:contest) { FactoryBot.create(:contest, problem_set: problem_set) }
