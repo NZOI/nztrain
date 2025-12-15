@@ -66,7 +66,7 @@ module ScoringMethods
 
     submission = submissions.order("evaluation DESC, created_at ASC").first
     attempt = submissions.where("created_at <= ?", submission.created_at).count
-    score = submission.points.nil? || submission.maximum_points == 0 ? nil : submission.points / submission.maximum_points
+    score = submission.points.nil? || submission.maximum_points == 0 ? 0 : submission.points / submission.maximum_points
     [score, attempt, submission]
   end
 end
