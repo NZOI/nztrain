@@ -60,6 +60,18 @@ describe ContestRelation do
     @relation.update_score_and_save
     expect(@relation.reload.time_taken).to eq(3 * 60 * 60)
   end
+  it "handles submissions with nil points correctly" do
+    @submission_stub.update_attributes(points: nil, evaluation: nil)
+    # ContestScore entry should be removed
+    expect(ContestScore.where(submission_id: @submission_stub.id).count).to eq(0)
+    expect(@relation.reload.score).to eq(0)
+  end
+  it "handles submissions with zero maximum_points correctly" do
+    @submission_stub.update_attributes(points: 0, maximum_points: 0)
+    # ContestScore entry should have a score of zero
+    expect(ContestScore.where(submission_id: @submission_stub.id).first.try(:score)).to eq(0)
+    expect(@relation.reload.score).to eq(0)
+  end
   context "with contest finalized" do
     before(:all) do
       @contest.finalized_at = Time.now
