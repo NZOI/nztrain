@@ -25,6 +25,11 @@ class Problem < ApplicationRecord
 
   validates :name, presence: true
 
+  enum scoring_method: {
+    max_submission_scoring: 0,
+    subtask_scoring: 1
+  }
+
   before_save do
     self.input = "data.in" if input == ""
     self.output = "data.out" if output == ""
@@ -34,6 +39,18 @@ class Problem < ApplicationRecord
   after_save do
     if rejudge_at_changed? && submissions.any?
       job = RejudgeProblemWorker.rejudge(self)
+    elsif scoring_method_changed?
+      user_problem_relations.find_each do |relation|
+        relation.recalculate_and_save
+      end
+      # Update unfinalized contests that have this problem
+      problem_sets.each do |set|
+        set.contests.where(finalized_at: nil).each do |contest|
+          ContestScore.joins(:contest_relation).where(contest_relations: {contest_id: contest.id}, problem_id: id).select([:contest_relation_id, :problem_id, :id, :score, :attempts, :attempt, :submission_id, :updated_at]).find_each do |contest_score|
+            contest_score.recalculate_and_save
+          end
+        end
+      end
     end
   end
 
@@ -92,7 +109,7 @@ class Problem < ApplicationRecord
 
   # only used when properly joined with submission and problem_set_problems
   def weighted_score
-    return nil if points.nil?
-    points * weighting / maximum_points
+    return nil if unweighted_score.nil?
+    unweighted_score * weighting
   end
 end

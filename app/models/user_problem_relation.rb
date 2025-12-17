@@ -16,9 +16,15 @@ class UserProblemRelation < ApplicationRecord
   def recalculate_and_save
     transaction do # to ensure that if eg. multiple submissions finish judging, they do not recalculate at the same time
       self.submissions_count = submissions.count
-      self.submission = submissions.where.not(evaluation: nil).order("evaluation DESC, created_at ASC").first
-      self.ranked_submission = submissions.where(classification: Submission::CLASSIFICATION[:ranked]).where.not(evaluation: nil).order("evaluation DESC, created_at ASC").first
-      self.ranked_score = ranked_submission.score unless ranked_submission.nil?
+      self.unweighted_score, _attempts, self.submission = ScoringMethods.score_problem_submissions(problem, submissions.where.not(evaluation: nil))
+      # No point re-doing all the scoring if they don't have any not ranked submissions (which will be most people, since only admins get unranked submissions)
+      if submissions.where.not(evaluation: nil).where.not(classification: Submission::CLASSIFICATION[:ranked]).any?
+        unweighted_ranked_score, _attempts, self.ranked_submission = ScoringMethods.score_problem_submissions(problem, submissions.where.not(evaluation: nil).where(classification: Submission::CLASSIFICATION[:ranked]))
+      else
+        unweighted_ranked_score, self.ranked_submission = unweighted_score, submission
+      end
+      self.ranked_score = unweighted_ranked_score.nil? ? nil : (100 * unweighted_ranked_score).to_i
+
       save
     end
     # possible update of membership scores
