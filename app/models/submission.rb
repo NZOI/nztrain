@@ -33,7 +33,6 @@ class Submission < ApplicationRecord
     end
     self.evaluation = points.nil? || maximum_points.nil? ? nil : (points / maximum_points).to_f
     update_test_messages
-    true
   end
 
   before_create do
