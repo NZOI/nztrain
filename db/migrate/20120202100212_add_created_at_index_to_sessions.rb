@@ -1,4 +1,4 @@
-class AddCreatedAtIndexToSessions < ActiveRecord::Migration
+class AddCreatedAtIndexToSessions < ActiveRecord::Migration[4.2]
   def self.up
     add_index :sessions, :created_at
   end

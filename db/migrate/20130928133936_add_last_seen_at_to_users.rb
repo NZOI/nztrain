@@ -1,4 +1,4 @@
-class AddLastSeenAtToUsers < ActiveRecord::Migration
+class AddLastSeenAtToUsers < ActiveRecord::Migration[4.2]
   def up
     add_column :users, :last_seen_at, :timestamp
 

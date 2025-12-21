@@ -1,4 +1,4 @@
-class SetNameOfTestSetsAndTestCases < ActiveRecord::Migration
+class SetNameOfTestSetsAndTestCases < ActiveRecord::Migration[4.2]
   def up
     # remove nulls from the name field
     TestSet.find_each do |set|
