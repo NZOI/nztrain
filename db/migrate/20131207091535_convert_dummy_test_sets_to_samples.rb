@@ -1,4 +1,4 @@
-class ConvertDummyTestSetsToSamples < ActiveRecord::Migration
+class ConvertDummyTestSetsToSamples < ActiveRecord::Migration[4.2]
   def up
     # mainly for the COCI problems
     TestSet.where("name LIKE '%dummy%'").find_each do |set|

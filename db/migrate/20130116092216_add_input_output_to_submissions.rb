@@ -1,4 +1,4 @@
-class AddInputOutputToSubmissions < ActiveRecord::Migration
+class AddInputOutputToSubmissions < ActiveRecord::Migration[4.2]
   def up
     add_column :submissions, :input, :string, limit: 255
     add_column :submissions, :output, :string, limit: 255

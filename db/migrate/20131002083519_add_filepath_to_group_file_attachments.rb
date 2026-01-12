@@ -1,4 +1,4 @@
-class AddFilepathToGroupFileAttachments < ActiveRecord::Migration
+class AddFilepathToGroupFileAttachments < ActiveRecord::Migration[4.2]
   def change
     add_column :group_file_attachments, :filepath, :string, limit: 255
 

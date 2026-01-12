@@ -1,4 +1,4 @@
-class AddCreatedAtToGroupMemberships < ActiveRecord::Migration
+class AddCreatedAtToGroupMemberships < ActiveRecord::Migration[4.2]
   def up
     add_column :group_memberships, :created_at, :timestamp
 

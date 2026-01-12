@@ -1,4 +1,4 @@
-class CreateContestGroupTable < ActiveRecord::Migration
+class CreateContestGroupTable < ActiveRecord::Migration[4.2]
   def self.up
     create_table :contests_groups, id: false do |t|
       t.integer :contest_id

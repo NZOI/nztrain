@@ -1,4 +1,4 @@
-class CreateContestsMaxScoreSubmissionsView < ActiveRecord::Migration
+class CreateContestsMaxScoreSubmissionsView < ActiveRecord::Migration[4.2]
   def self.up
     case ActiveRecord::Base.connection.adapter_name
     when "SQLite"

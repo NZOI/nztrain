@@ -1,4 +1,4 @@
-class GenerateScanTokens < ActiveRecord::Migration
+class GenerateScanTokens < ActiveRecord::Migration[4.2]
   def up
     Item.find_each do |item|
       if item[:scan_token].nil?

@@ -1,4 +1,4 @@
-class ChangeHabtmProblemAssociations < ActiveRecord::Migration
+class ChangeHabtmProblemAssociations < ActiveRecord::Migration[4.2]
   def up
     #############################
     # problem sets <=> problems #

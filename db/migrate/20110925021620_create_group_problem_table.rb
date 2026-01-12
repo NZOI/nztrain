@@ -1,4 +1,4 @@
-class CreateGroupProblemTable < ActiveRecord::Migration
+class CreateGroupProblemTable < ActiveRecord::Migration[4.2]
   def self.up
     create_table :groups_problems, id: false do |t|
       t.integer :group_id

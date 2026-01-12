@@ -1,4 +1,4 @@
-class IsolateJudgeToMainScoreField < ActiveRecord::Migration
+class IsolateJudgeToMainScoreField < ActiveRecord::Migration[4.2]
   def up
     execute "UPDATE submissions SET score = isolate_score;"
 

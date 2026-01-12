@@ -1,4 +1,4 @@
-class NilizeEmptyErrorsAndWarnings < ActiveRecord::Migration
+class NilizeEmptyErrorsAndWarnings < ActiveRecord::Migration[4.2]
   def up
     Submission.where.not(test_errors: nil, test_warnings: nil).find_each do |s|
       s.test_errors = nil if s.test_errors.nil? || s.test_errors.empty?

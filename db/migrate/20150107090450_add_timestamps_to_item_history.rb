@@ -1,4 +1,4 @@
-class AddTimestampsToItemHistory < ActiveRecord::Migration
+class AddTimestampsToItemHistory < ActiveRecord::Migration[4.2]
   def change
     add_column :item_histories, :acted_at, :datetime
     add_column :item_histories, :created_at, :datetime

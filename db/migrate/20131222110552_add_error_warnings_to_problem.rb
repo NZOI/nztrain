@@ -1,4 +1,4 @@
-class AddErrorWarningsToProblem < ActiveRecord::Migration
+class AddErrorWarningsToProblem < ActiveRecord::Migration[4.2]
   def change
     add_column :problems, :test_error_count, :integer, default: 0
     add_column :problems, :test_warning_count, :integer, default: 0

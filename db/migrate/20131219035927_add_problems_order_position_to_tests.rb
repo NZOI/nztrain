@@ -1,4 +1,4 @@
-class AddProblemsOrderPositionToTests < ActiveRecord::Migration
+class AddProblemsOrderPositionToTests < ActiveRecord::Migration[4.2]
   def up
     add_column :test_cases, :problem_order, :integer
     add_column :test_sets, :problem_order, :integer

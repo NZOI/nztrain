@@ -1,6 +1,6 @@
 require "set"
 
-class NameAllTestSetsAndCases < ActiveRecord::Migration
+class NameAllTestSetsAndCases < ActiveRecord::Migration[4.2]
   def up
     Problem.find_each do |problem|
       name_uniquely(problem.test_sets)

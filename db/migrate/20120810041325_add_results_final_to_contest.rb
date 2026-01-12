@@ -1,4 +1,4 @@
-class AddResultsFinalToContest < ActiveRecord::Migration
+class AddResultsFinalToContest < ActiveRecord::Migration[4.2]
   def up
     add_column :contests, :finalized_at, :datetime, default: nil
 

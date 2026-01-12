@@ -1,4 +1,4 @@
-class AddIndexesIdFields < ActiveRecord::Migration
+class AddIndexesIdFields < ActiveRecord::Migration[4.2]
   # indexes designed to allow fast table joins, eg. when
   #   - getting users competing in a contest
   #   - getting the contests a user has competed in

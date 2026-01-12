@@ -1,4 +1,4 @@
-class RemoveProblemsContestsGroups < ActiveRecord::Migration
+class RemoveProblemsContestsGroups < ActiveRecord::Migration[4.2]
   def self.up
     drop_table :contests_problems
     drop_table :groups_problems
