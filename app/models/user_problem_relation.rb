@@ -23,7 +23,8 @@ class UserProblemRelation < ApplicationRecord
       else
         unweighted_ranked_score, self.ranked_submission = unweighted_score, submission
       end
-      self.ranked_score = unweighted_ranked_score.nil? ? nil : (100 * unweighted_ranked_score).to_i
+      # +1e-6 to avoid floating point imprecision issues
+      self.ranked_score = unweighted_ranked_score.nil? ? nil : (100 * unweighted_ranked_score + 1e-6).to_i
 
       save
     end

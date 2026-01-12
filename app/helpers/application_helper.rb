@@ -44,7 +44,9 @@ module ApplicationHelper
     if score.nil?
       text = weighting.nil? || options[:size] == :compact ? "-" : "-&nbsp;/#{weighting}"
     else
-      score = score.to_i
+      # The + 1e-6 is necessary to avoid the case where floating point imprecision results in a score
+      # like 57.9999999 which would be truncated to 57 instead of rounded to 58.
+      score = (score + 1e-6).to_i
       text = score.to_s
       unless options[:size] == :compact
         text += if weighting.nil?

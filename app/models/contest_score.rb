@@ -23,7 +23,8 @@ class ContestScore < ApplicationRecord
         weighting = contest.problem_set.problem_associations.find_by(problem_id: problem_id).weighting
         unweighted_score, self.attempt, submission = ScoringMethods.score_problem_submissions(problem, submissions) # Does correct subtask or maximum scoring
         # Set score to zero if we encounter something unexpected
-        self.score = (unweighted_score.nil? || weighting.nil? ? 0 : (unweighted_score * weighting).to_i)
+        # Add +1e-6 to avoid floating point imprecision issues/rounding weirdness
+        self.score = (unweighted_score.nil? || weighting.nil? ? 0 : (unweighted_score * weighting + 1e-6).to_i)
         self.submission_id = submission.id
         save
       end
