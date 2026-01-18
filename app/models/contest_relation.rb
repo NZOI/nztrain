@@ -104,4 +104,9 @@ class ContestRelation < ApplicationRecord
   after_save do
     recalculate_contest_scores_and_save if contest.finalized_at.nil? && extra_time_changed?
   end
+
+  def set_finish_at!
+    new_finish_at = [contest.end_time, started_at + contest.duration.hours].min
+    update!(finish_at: new_finish_at + extra_time.seconds)
+  end
 end
