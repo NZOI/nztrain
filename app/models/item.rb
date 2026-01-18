@@ -12,7 +12,6 @@ class Item < ApplicationRecord
 
   before_create do
     self.scan_token = SecureRandom.random_number(100000000)
-    true
   end
 
   def scan_token

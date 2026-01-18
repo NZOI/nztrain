@@ -36,7 +36,6 @@ class Contest < ApplicationRecord
     end
 
     update_contest_scores if finalized_at_was && finalized_at.nil?
-    true
   end
 
   # calculate contest scores again from scratch
