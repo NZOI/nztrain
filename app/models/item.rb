@@ -1,10 +1,10 @@
 class Item < ApplicationRecord
   belongs_to :product
-  belongs_to :owner, class_name: Entity
+  belongs_to :owner, class_name: "Entity"
   belongs_to :organisation
-  belongs_to :sponsor, class_name: Entity
-  belongs_to :donator, class_name: Entity
-  belongs_to :holder, class_name: User
+  belongs_to :sponsor, class_name: "Entity"
+  belongs_to :donator, class_name: "Entity"
+  belongs_to :holder, class_name: "User"
 
   has_many :item_histories
 

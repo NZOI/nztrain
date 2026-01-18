@@ -5,7 +5,7 @@ class UserProblemRelation < ApplicationRecord
   belongs_to :user
   # caches the score of the best ranked submission and best submission a user scored for a problem
   belongs_to :submission
-  belongs_to :ranked_submission, class_name: Submission
+  belongs_to :ranked_submission, class_name: "Submission"
 
   validates_uniqueness_of :user_id, scope: :problem_id
 

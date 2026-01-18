@@ -7,17 +7,17 @@ class Contest < ApplicationRecord
   has_many :contest_relations, dependent: :destroy
   has_many :registrants, through: :contest_relations, source: :user
 
-  has_many :contestant_records, -> { where(checked_in: true).where.not(started_at: nil) }, class_name: ContestRelation
+  has_many :contestant_records, -> { where(checked_in: true).where.not(started_at: nil) }, class_name: "ContestRelation"
   has_many :contestants, through: :contestant_records, source: :user
 
   has_many :contest_supervisors, dependent: :destroy
   has_many :supervisors, through: :contest_supervisors, source: :user
 
-  has_many :group_associations, class_name: GroupContest, inverse_of: :contest, dependent: :destroy
+  has_many :group_associations, class_name: "GroupContest", inverse_of: :contest, dependent: :destroy
   has_many :groups, through: :group_associations
   has_many :group_members, -> { distinct }, through: :groups, source: :users
 
-  belongs_to :owner, class_name: :User
+  belongs_to :owner, class_name: "User"
 
   validates :name, presence: true
 

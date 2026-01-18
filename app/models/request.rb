@@ -1,11 +1,11 @@
 class Request < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
-  belongs_to :requester, class_name: :User # entity that initiated request
+  belongs_to :requester, class_name: "User" # entity that initiated request
   belongs_to :subject, polymorphic: true # subject controlled by requester
   # verb # action applying subject to target
   belongs_to :target, polymorphic: true # target controlled by requestee
-  belongs_to :requestee, class_name: :User # entity with primary responsibility/right to accept this request
+  belongs_to :requestee, class_name: "User" # entity with primary responsibility/right to accept this request
 
   STATUS = Enumeration.new 0 => :pending, 1 => :accepted, 2 => :rejected, 3 => :cancelled
 
