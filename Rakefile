@@ -27,6 +27,18 @@ namespace :qless do
 
     Qless::Workers::ForkingWorker.send(:include, ActiveRecordReconnect)
 
+    module ActiveRecordReconnectJob
+      def around_perform(job)
+        ActiveRecord::Base.connection_pool.with_connection do
+          super(job)
+        end
+      end
+    end
+
+    Qless::Workers::BaseWorker.class_eval do
+      include ActiveRecordReconnectJob
+    end
+
     # The only required option is QUEUES; the
     # rest have reasonable defaults.
     queues = %w[judge queue stalejudge importer].map { |name| $qless.queues[name] }
